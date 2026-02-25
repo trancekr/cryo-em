@@ -8,45 +8,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-    background: #0c0c16;
+    background: #f5f5f8;
     font-family: 'Inter', -apple-system, sans-serif;
-    color: #e0e0e8; min-height: 100vh;
-    display: flex; justify-content: center; padding: 10px;
+    color: #1a1a2e; min-height: 100vh;
+    display: flex; justify-content: center; padding: 8px;
 }
 #app { max-width: 1500px; width: 100%; }
 
-.header { text-align: center; margin-bottom: 10px; }
+.header { text-align: center; margin-bottom: 8px; }
 .header h1 {
-    font-size: 28px; font-weight: 600; letter-spacing: -0.3px;
-    background: linear-gradient(135deg, #60a5fa, #a78bfa);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    font-size: 26px; font-weight: 700; color: #1a1a2e;
 }
-.header p { font-size: 13px; color: #555; margin-top: 3px; }
+.header p { font-size: 13px; color: #666; margin-top: 2px; }
 
 .card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 12px;
+    background: #fff;
+    border: 1px solid #e0e0e8;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 .card-label {
-    font-size: 12px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 1.2px; color: #666; padding: 8px 12px 4px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.2px; color: #888; padding: 8px 12px 4px;
 }
 
 /* === Main 2-column layout === */
 .main-grid {
     display: grid;
-    grid-template-columns: 1fr 400px;
-    gap: 12px; margin-bottom: 8px;
+    grid-template-columns: 1fr 380px;
+    gap: 10px; margin-bottom: 6px;
 }
 
-/* Left: Ray Diagram - takes full height */
+/* Left: Ray Diagram */
 .col-ray { grid-column: 1; }
-.ray-wrap { position: relative; }
 .ray-wrap canvas {
-    display: block;
-    width: 100%;
-    aspect-ratio: 4 / 3;
+    display: block; width: 100%; aspect-ratio: 4 / 3;
 }
 
 /* Right: Side panel */
@@ -56,15 +52,13 @@ body {
 }
 
 /* Object + Image row */
-.sim-row {
-    display: flex; gap: 8px;
-}
+.sim-row { display: flex; gap: 8px; }
 .sim-cell { flex: 1; }
 .sim-cell canvas { display: block; width: 100%; aspect-ratio: 1; }
 #defocus-badge {
-    text-align: center; padding: 5px;
-    font-size: 13px; font-weight: 500; color: #a78bfa;
-    border-top: 1px solid rgba(255,255,255,0.05);
+    text-align: center; padding: 4px;
+    font-size: 13px; font-weight: 600; color: #5b21b6;
+    border-top: 1px solid #eee;
     font-variant-numeric: tabular-nums;
 }
 
@@ -72,83 +66,82 @@ body {
 .info-card { padding: 14px; display: flex; flex-direction: column; flex: 1; }
 .info-stage {
     display: inline-block; padding: 3px 12px; border-radius: 12px;
-    font-size: 13px; font-weight: 600; letter-spacing: 0.5px;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.5px;
     margin-bottom: 8px; width: fit-content;
 }
-.stage-focus { background: rgba(52,211,153,0.15); color: #34d399; }
-.stage-under { background: rgba(96,165,250,0.15); color: #60a5fa; }
-.stage-over { background: rgba(249,115,22,0.15); color: #f97316; }
-.info-title { font-size: 17px; font-weight: 600; color: #ddd; margin-bottom: 8px; line-height: 1.3; }
-.info-observe { font-size: 14px; color: #888; margin-bottom: 8px; line-height: 1.5; }
-.info-observe span { color: #aaa; }
+.stage-focus { background: #d1fae5; color: #065f46; }
+.stage-under { background: #dbeafe; color: #1e40af; }
+.stage-over { background: #ffedd5; color: #9a3412; }
+.info-title { font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; line-height: 1.3; }
+.info-observe { font-size: 13px; color: #555; margin-bottom: 8px; line-height: 1.5; }
+.info-observe span { color: #1a1a2e; font-weight: 500; }
 .info-physics {
-    font-size: 13px; color: #666; line-height: 1.5;
-    border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; margin-top: auto;
+    font-size: 12px; color: #777; line-height: 1.5;
+    border-top: 1px solid #eee; padding-top: 8px; margin-top: auto;
 }
-.info-physics b { color: #818cf8; font-weight: 500; }
-.info-stat {
-    display: flex; gap: 6px; margin-top: 8px;
-}
+.info-physics b { color: #5b21b6; font-weight: 600; }
+.info-stat { display: flex; gap: 6px; margin-top: 8px; }
 .info-stat div {
-    flex: 1; background: rgba(255,255,255,0.03);
+    flex: 1; background: #f8f8fc;
+    border: 1px solid #e8e8f0;
     border-radius: 8px; padding: 6px; text-align: center;
 }
-.info-stat .val { font-size: 18px; font-weight: 700; color: #a78bfa; }
-.info-stat .lbl { font-size: 10px; color: #555; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+.info-stat .val { font-size: 17px; font-weight: 700; color: #5b21b6; }
+.info-stat .lbl { font-size: 9px; color: #888; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-/* CTF in side panel */
-.ctf-section canvas { display: block; width: 100%; height: 70px; }
-.ctf-section .axis { text-align: center; font-size: 11px; color: #444; padding: 2px 0 4px; }
+/* CTF */
+.ctf-section canvas { display: block; width: 100%; height: 65px; }
+.ctf-section .axis { text-align: center; font-size: 10px; color: #999; padding: 2px 0 4px; }
 
 /* Legend */
 .legend-row {
-    display: flex; gap: 18px; justify-content: center; align-items: center;
-    padding: 4px 0; margin-bottom: 6px;
+    display: flex; gap: 14px; justify-content: center; align-items: center;
+    padding: 4px 0;
 }
-.legend-item { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #888; }
+.legend-item { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #555; font-weight: 500; }
 .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
 
 /* === Controls === */
-.controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 16px; }
+.controls {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 8px 14px; background: #fff;
+}
 .play-btn {
-    width: 36px; height: 36px; border-radius: 50%; border: none;
-    background: linear-gradient(135deg, #60a5fa, #818cf8);
-    color: #fff; font-size: 14px; cursor: pointer;
+    width: 34px; height: 34px; border-radius: 50%; border: none;
+    background: #5b21b6; color: #fff; font-size: 13px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    transition: transform 0.15s; box-shadow: 0 2px 12px rgba(96,165,250,0.25);
+    transition: transform 0.15s; box-shadow: 0 2px 8px rgba(91,33,182,0.25);
 }
 .play-btn:hover { transform: scale(1.08); }
-.slider-wrap { flex: 1; min-width: 140px; position: relative; }
+.slider-wrap { flex: 1; min-width: 140px; }
 .slider-labels {
-    display: flex; justify-content: space-between; font-size: 12px; color: #555;
-    margin-bottom: 3px; padding: 0 2px;
+    display: flex; justify-content: space-between; font-size: 11px; color: #888;
+    margin-bottom: 2px;
 }
 input[type=range] {
     -webkit-appearance: none; width: 100%; height: 5px;
-    background: rgba(255,255,255,0.08); border-radius: 3px; outline: none;
+    background: #e0e0e8; border-radius: 3px; outline: none;
 }
 input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none; width: 16px; height: 16px;
-    border-radius: 50%; background: #818cf8; cursor: pointer;
-    box-shadow: 0 0 6px rgba(129,140,248,0.4);
+    border-radius: 50%; background: #5b21b6; cursor: pointer;
+    box-shadow: 0 0 4px rgba(91,33,182,0.3);
 }
 .slider-val {
-    font-size: 16px; font-weight: 600; color: #a78bfa;
-    min-width: 100px; text-align: right; font-variant-numeric: tabular-nums;
+    font-size: 15px; font-weight: 700; color: #5b21b6;
+    min-width: 90px; text-align: right; font-variant-numeric: tabular-nums;
 }
-.presets { display: flex; gap: 5px; flex-wrap: wrap; }
+.presets { display: flex; gap: 4px; flex-wrap: wrap; }
 .pill {
-    padding: 5px 13px; border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.03);
-    color: #777; font-size: 13px; font-weight: 500; cursor: pointer;
+    padding: 5px 12px; border-radius: 14px;
+    border: 1px solid #d0d0d8;
+    background: #f8f8fc; color: #555; font-size: 12px; font-weight: 600; cursor: pointer;
     transition: all 0.2s;
 }
-.pill:hover { background: rgba(129,140,248,0.12); color: #c4b5fd; border-color: rgba(129,140,248,0.25); }
-.pill.active { background: rgba(129,140,248,0.18); color: #a78bfa; border-color: #818cf8; }
-.pill-over { border-color: rgba(249,115,22,0.3); }
-.pill-over:hover { background: rgba(249,115,22,0.12); color: #fb923c; border-color: rgba(249,115,22,0.4); }
-.pill-over.active { background: rgba(249,115,22,0.18); color: #f97316; border-color: #f97316; }
+.pill:hover { background: #ede9fe; color: #5b21b6; border-color: #c4b5fd; }
+.pill.active { background: #5b21b6; color: #fff; border-color: #5b21b6; }
+.pill-over:hover { background: #fff7ed; color: #c2410c; border-color: #fdba74; }
+.pill-over.active { background: #c2410c; color: #fff; border-color: #c2410c; }
 </style>
 </head>
 <body>
@@ -159,16 +152,13 @@ input[type=range]::-webkit-slider-thumb {
     </div>
 
     <div class="main-grid">
-        <!-- LEFT: Ray Diagram (dominant) -->
         <div class="col-ray">
             <div class="card ray-wrap">
                 <canvas id="rayCanvas" width="1200" height="900"></canvas>
             </div>
         </div>
 
-        <!-- RIGHT: Side panel -->
         <div class="col-side">
-            <!-- Object + Image -->
             <div class="sim-row">
                 <div class="sim-cell">
                     <div class="card">
@@ -185,21 +175,18 @@ input[type=range]::-webkit-slider-thumb {
                 </div>
             </div>
 
-            <!-- Info Panel -->
             <div class="card info-card" id="info-card"></div>
 
-            <!-- CTF Plot -->
             <div class="card ctf-section">
                 <div class="card-label">Contrast Transfer Function</div>
                 <canvas id="ctfCanvas" width="900" height="70"></canvas>
                 <div class="axis">Spatial frequency (Å⁻¹)</div>
             </div>
 
-            <!-- Legend -->
             <div class="legend-row">
-                <div class="legend-item"><div class="legend-dot" style="background:#34d399;"></div>In Focus</div>
-                <div class="legend-item"><div class="legend-dot" style="background:#60a5fa;"></div>Underfocus</div>
-                <div class="legend-item"><div class="legend-dot" style="background:#f97316;"></div>Overfocus</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#059669;"></div>In Focus</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#2563eb;"></div>Underfocus</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#dc2626;"></div>Overfocus</div>
             </div>
         </div>
     </div>
@@ -252,7 +239,7 @@ function drawObject(){
     const id=objCtx.createImageData(N,N);let mx=0;
     for(let i=0;i<N*N;i++)mx=Math.max(mx,Math.abs(objV[i]));
     for(let i=0;i<N*N;i++){const v=Math.max(0,Math.min(255,(objV[i]/mx)*255)),p=i*4;
-        id.data[p]=v*0.7;id.data[p+1]=v*0.85;id.data[p+2]=v;id.data[p+3]=255;}
+        id.data[p]=v*0.3;id.data[p+1]=v*0.5;id.data[p+2]=v*0.7;id.data[p+3]=255;}
     objCtx.putImageData(id,0,0);
 }
 
@@ -271,298 +258,311 @@ function drawImage(nm){
 
 function drawCTF(nm){
     const c=ctfCtx.canvas,w=c.width,h=c.height,dA=nm*10;ctfCtx.clearRect(0,0,w,h);
-    const m={l:30,r:8,t:5,b:12},pw=w-m.l-m.r,ph=h-m.t-m.b,sMax=0.35;
-    ctfCtx.strokeStyle='rgba(255,255,255,0.05)';ctfCtx.lineWidth=0.5;
+    const m={l:28,r:8,t:5,b:12},pw=w-m.l-m.r,ph=h-m.t-m.b,sMax=0.35;
+    ctfCtx.strokeStyle='#e0e0e8';ctfCtx.lineWidth=0.5;
     ctfCtx.beginPath();ctfCtx.moveTo(m.l,m.t+ph/2);ctfCtx.lineTo(m.l+pw,m.t+ph/2);ctfCtx.stroke();
+    const lineColor = nm < -5 ? '#dc2626' : nm > 5 ? '#2563eb' : '#059669';
+    const fillColor = nm < -5 ? 'rgba(220,38,38,0.06)' : nm > 5 ? 'rgba(37,99,235,0.06)' : 'rgba(5,150,105,0.06)';
     ctfCtx.beginPath();ctfCtx.moveTo(m.l,m.t+ph/2);
     for(let i=0;i<=pw;i++){const s=(i/pw)*sMax,s2=s*s,v=ctfValue(s2,dA);ctfCtx.lineTo(m.l+i,m.t+ph/2-v*(ph/2)*0.9);}
-    ctfCtx.lineTo(m.l+pw,m.t+ph/2);ctfCtx.closePath();ctfCtx.fillStyle='rgba(129,140,248,0.06)';ctfCtx.fill();
-    const lineColor = nm < -5 ? '#f97316' : nm > 5 ? '#60a5fa' : '#34d399';
-    ctfCtx.strokeStyle=lineColor;ctfCtx.lineWidth=1.3;ctfCtx.beginPath();
+    ctfCtx.lineTo(m.l+pw,m.t+ph/2);ctfCtx.closePath();ctfCtx.fillStyle=fillColor;ctfCtx.fill();
+    ctfCtx.strokeStyle=lineColor;ctfCtx.lineWidth=1.5;ctfCtx.beginPath();
     for(let i=0;i<=pw;i++){const s=(i/pw)*sMax,s2=s*s,v=ctfValue(s2,dA);const x=m.l+i,y=m.t+ph/2-v*(ph/2)*0.9;i===0?ctfCtx.moveTo(x,y):ctfCtx.lineTo(x,y);}
     ctfCtx.stroke();
-    ctfCtx.fillStyle='#444';ctfCtx.font='11px Inter,sans-serif';
+    ctfCtx.fillStyle='#999';ctfCtx.font='10px Inter,sans-serif';
     ctfCtx.fillText('1',m.l-12,m.t+8);ctfCtx.fillText('-1',m.l-14,m.t+ph);
     ctfCtx.fillText('0',m.l-2,m.t+ph+11);ctfCtx.fillText(sMax.toFixed(2),m.l+pw-18,m.t+ph+11);
 }
 
-// ====== RAY DIAGRAM (proportional coordinates) ======
-const hexToRgba = (hex, a) => {
-    const r = parseInt(hex.slice(1,3), 16);
-    const g = parseInt(hex.slice(3,5), 16);
-    const b = parseInt(hex.slice(5,7), 16);
-    return `rgba(${r},${g},${b},${a})`;
-};
-
+// ====== RAY DIAGRAM ======
 function drawRayDiagram(nm) {
     const c = rayCtx.canvas, w = c.width, h = c.height;
     rayCtx.clearRect(0, 0, w, h);
-
     const um = nm / 1000;
     const cx = w / 2;
 
-    // Proportional Y positions (fraction of canvas height)
-    const gunY = h * 0.04;
-    const specY = h * 0.18;
-    const lensY = h * 0.38;
-    const lensR = h * 0.04;
-    const detY = h * 0.82;
-    const baseFocalY = h * 0.60;
-    const lensW = w * 0.28;
-    const beamW = w * 0.16;  // beam spread width
+    // --- Layout proportions ---
+    const objY = h * 0.06;       // object/specimen
+    const specY = h * 0.14;      // specimen plane line
+    const lensY = h * 0.38;      // objective lens center
+    const lensR = h * 0.045;     // lens half-height
+    const bfpY = h * 0.54;       // back focal plane (fixed)
+    const detY = h * 0.80;       // detector / image plane
+    const planeW = w * 0.50;     // width of drawn planes
+    const lensW = w * 0.30;
 
-    // Focal plane position
-    const maxShift = h * 0.16;
+    // Focal plane: shifts with defocus
+    const baseFocalY = detY;       // in-focus: image plane = detector
+    const maxShift = h * 0.18;
     const defocusClamp = Math.max(-500, Math.min(3000, nm));
-    const focalShift = -(defocusClamp / 1500) * maxShift;
-    const focalY = baseFocalY + focalShift;
+    const focalShift = (defocusClamp / 1500) * maxShift;
+    const imgPlaneY = baseFocalY + focalShift;  // underfocus: below det, overfocus: above det
 
-    // State color
-    const stateColor = nm < -5 ? '#f97316' : nm > 5 ? '#60a5fa' : '#34d399';
+    // State
+    const isInFocus = Math.abs(um) < 0.01;
+    const isUnder = um > 0.01;
+    const isOver = um < -0.01;
+    const stateColor = isOver ? '#dc2626' : isUnder ? '#2563eb' : '#059669';
+    const stateBg = isOver ? '#fef2f2' : isUnder ? '#eff6ff' : '#ecfdf5';
 
-    // Font sizes proportional to canvas
-    const fontXL = Math.round(h * 0.035);   // ~31px at 900h
-    const fontLG = Math.round(h * 0.028);   // ~25px
-    const fontMD = Math.round(h * 0.024);   // ~22px
-    const fontSM = Math.round(h * 0.020);   // ~18px
-    const fontXS = Math.round(h * 0.017);   // ~15px
+    // Font sizes
+    const fXL = Math.round(h * 0.032);
+    const fLG = Math.round(h * 0.026);
+    const fMD = Math.round(h * 0.022);
+    const fSM = Math.round(h * 0.018);
+    const fXS = Math.round(h * 0.015);
 
-    // ── Background gradient ──
-    const grad = rayCtx.createLinearGradient(0, 0, 0, h);
-    grad.addColorStop(0, 'rgba(15,23,42,0.3)');
-    grad.addColorStop(1, 'rgba(12,12,22,0.3)');
-    rayCtx.fillStyle = grad;
+    // --- Background ---
+    rayCtx.fillStyle = '#fafafa';
     rayCtx.fillRect(0, 0, w, h);
 
-    // ── Electron Gun ──
-    rayCtx.fillStyle = '#666';
-    rayCtx.font = `600 ${fontLG}px Inter,sans-serif`;
+    // --- Ray colors (like reference: multiple colored rays) ---
+    const rayColors = ['#059669', '#2563eb', '#dc2626', '#d946ef', '#f59e0b'];
+
+    // --- Object / Specimen ---
+    // Object label
+    rayCtx.fillStyle = '#333';
+    rayCtx.font = `700 ${fLG}px Inter,sans-serif`;
     rayCtx.textAlign = 'center';
-    rayCtx.fillText('e⁻ beam', cx, gunY + fontLG * 0.35);
+    rayCtx.fillText('Object (specimen)', cx, objY + fLG * 0.4);
 
-    // Draw beam arrows (parallel)
-    const rayXs = [-beamW, -beamW/2, 0, beamW/2, beamW];
-    rayCtx.strokeStyle = 'rgba(255,255,255,0.12)';
-    rayCtx.lineWidth = 1.5;
-    rayCtx.setLineDash([6, 5]);
-    for (const rx of rayXs) {
-        rayCtx.beginPath();
-        rayCtx.moveTo(cx + rx, gunY + fontLG * 0.6);
-        rayCtx.lineTo(cx + rx, specY - 8);
-        rayCtx.stroke();
-    }
-    rayCtx.setLineDash([]);
-
-    // Down arrows
-    rayCtx.fillStyle = 'rgba(255,255,255,0.25)';
-    for (const rx of [-beamW/2, 0, beamW/2]) {
-        rayCtx.beginPath();
-        rayCtx.moveTo(cx + rx - 6, specY - 18);
-        rayCtx.lineTo(cx + rx, specY - 8);
-        rayCtx.lineTo(cx + rx + 6, specY - 18);
-        rayCtx.fill();
-    }
-
-    // ── Specimen Plane ──
-    const planeW = w * 0.35;
-    rayCtx.strokeStyle = '#34d399';
-    rayCtx.lineWidth = 2.5;
+    // Specimen plane - thick black line
+    rayCtx.strokeStyle = '#222';
+    rayCtx.lineWidth = 3;
     rayCtx.beginPath();
     rayCtx.moveTo(cx - planeW/2, specY);
     rayCtx.lineTo(cx + planeW/2, specY);
     rayCtx.stroke();
 
-    // Protein icon on specimen
-    rayCtx.fillStyle = 'rgba(52,211,153,0.2)';
-    rayCtx.beginPath();
-    rayCtx.arc(cx, specY, h * 0.018, 0, Math.PI * 2);
-    rayCtx.fill();
-    rayCtx.fillStyle = '#34d399';
-    rayCtx.font = `500 ${fontMD}px Inter,sans-serif`;
-    rayCtx.textAlign = 'center';
-    rayCtx.fillText('specimen', cx, specY + fontMD * 1.6);
+    // Small specimen features (dots)
+    const specPts = [-0.3, -0.15, 0, 0.15, 0.3];
+    for (let i = 0; i < specPts.length; i++) {
+        const sx = cx + specPts[i] * planeW;
+        rayCtx.fillStyle = rayColors[i];
+        rayCtx.beginPath();
+        rayCtx.arc(sx, specY, 5, 0, Math.PI * 2);
+        rayCtx.fill();
+    }
 
-    // ── Objective Lens ──
-    const arcR = lensR * 1.2;
-    rayCtx.strokeStyle = '#a78bfa';
+    // --- Incident beam (parallel arrows from top) ---
+    rayCtx.strokeStyle = '#555';
+    rayCtx.lineWidth = 1.5;
+    rayCtx.setLineDash([]);
+    for (const frac of [-0.15, -0.075, 0, 0.075, 0.15]) {
+        const bx = cx + frac * planeW;
+        // Arrow shaft
+        rayCtx.beginPath();
+        rayCtx.moveTo(bx, 0);
+        rayCtx.lineTo(bx, specY - 8);
+        rayCtx.stroke();
+        // Arrowhead
+        rayCtx.fillStyle = '#555';
+        rayCtx.beginPath();
+        rayCtx.moveTo(bx - 4, specY - 14);
+        rayCtx.lineTo(bx, specY - 5);
+        rayCtx.lineTo(bx + 4, specY - 14);
+        rayCtx.fill();
+    }
+    rayCtx.fillStyle = '#333';
+    rayCtx.font = `600 ${fSM}px Inter,sans-serif`;
+    rayCtx.textAlign = 'left';
+    rayCtx.fillText('e⁻ beam', cx + 0.18 * planeW, h * 0.03);
+
+    // --- Objective Lens (biconvex shape) ---
+    rayCtx.strokeStyle = '#333';
     rayCtx.lineWidth = 3;
-    // Left arc
+    // Left convex arc
     rayCtx.beginPath();
-    rayCtx.ellipse(cx - lensW/2 + arcR*0.8, lensY, arcR*0.8, lensR, 0, -Math.PI/2, Math.PI/2);
+    rayCtx.ellipse(cx - lensW/2 + lensR, lensY, lensR, lensR * 1.1, 0, -Math.PI/2, Math.PI/2);
     rayCtx.stroke();
-    // Right arc
+    // Right convex arc
     rayCtx.beginPath();
-    rayCtx.ellipse(cx + lensW/2 - arcR*0.8, lensY, arcR*0.8, lensR, 0, Math.PI/2, -Math.PI/2);
+    rayCtx.ellipse(cx + lensW/2 - lensR, lensY, lensR, lensR * 1.1, 0, Math.PI/2, -Math.PI/2);
     rayCtx.stroke();
     // Horizontal arms
-    rayCtx.strokeStyle = 'rgba(167,139,250,0.4)';
     rayCtx.lineWidth = 2;
-    const armInset = arcR * 0.8;
     rayCtx.beginPath();
-    rayCtx.moveTo(cx - lensW/2, lensY - lensR);
-    rayCtx.lineTo(cx - lensW/2 + armInset, lensY - lensR);
-    rayCtx.moveTo(cx - lensW/2, lensY + lensR);
-    rayCtx.lineTo(cx - lensW/2 + armInset, lensY + lensR);
-    rayCtx.moveTo(cx + lensW/2, lensY - lensR);
-    rayCtx.lineTo(cx + lensW/2 - armInset, lensY - lensR);
-    rayCtx.moveTo(cx + lensW/2, lensY + lensR);
-    rayCtx.lineTo(cx + lensW/2 - armInset, lensY + lensR);
+    rayCtx.moveTo(cx - lensW/2, lensY - lensR * 1.1);
+    rayCtx.lineTo(cx - lensW/2 + lensR, lensY - lensR * 1.1);
+    rayCtx.moveTo(cx - lensW/2, lensY + lensR * 1.1);
+    rayCtx.lineTo(cx - lensW/2 + lensR, lensY + lensR * 1.1);
+    rayCtx.moveTo(cx + lensW/2, lensY - lensR * 1.1);
+    rayCtx.lineTo(cx + lensW/2 - lensR, lensY - lensR * 1.1);
+    rayCtx.moveTo(cx + lensW/2, lensY + lensR * 1.1);
+    rayCtx.lineTo(cx + lensW/2 - lensR, lensY + lensR * 1.1);
     rayCtx.stroke();
 
-    rayCtx.fillStyle = '#a78bfa';
-    rayCtx.font = `500 ${fontMD}px Inter,sans-serif`;
-    rayCtx.textAlign = 'center';
-    rayCtx.fillText('objective lens', cx, lensY + lensR + fontMD * 1.4);
+    // Lens label
+    rayCtx.fillStyle = '#333';
+    rayCtx.font = `700 ${fMD}px Inter,sans-serif`;
+    rayCtx.textAlign = 'right';
+    rayCtx.fillText('Objective Lens', cx + planeW/2 + fMD * 0.5, lensY + fMD * 0.35);
 
-    // ── Scattered Rays ──
-    const scatterAngles = [-0.28, -0.14, 0, 0.14, 0.28];
-    rayCtx.lineWidth = 2;
+    // --- Colored rays from specimen through lens ---
+    for (let i = 0; i < specPts.length; i++) {
+        const sx = cx + specPts[i] * planeW;
+        const color = rayColors[i];
+        rayCtx.strokeStyle = color;
+        rayCtx.lineWidth = 2;
+        rayCtx.globalAlpha = 0.75;
 
-    for (const angle of scatterAngles) {
-        const sx = cx + angle * 30;
-        const lxAtLens = cx + angle * (lensY - specY) * 0.6;
-        const focalX = cx + angle * 8;
-
-        // Segment 1: Specimen → Lens
-        rayCtx.strokeStyle = stateColor;
-        rayCtx.globalAlpha = 0.6;
+        // Each point scatters to fill the lens aperture
+        // Specimen → Lens
+        const lxAtLens = cx + specPts[i] * (lensY - specY) * 0.2;
         rayCtx.beginPath();
         rayCtx.moveTo(sx, specY + 3);
         rayCtx.lineTo(lxAtLens, lensY - lensR);
         rayCtx.stroke();
 
-        // Segment 2: Lens → Focal convergence point
-        rayCtx.globalAlpha = 0.5;
+        // Lens → Back focal plane convergence
+        const bfpX = cx + specPts[i] * planeW * 0.08;
         rayCtx.beginPath();
         rayCtx.moveTo(lxAtLens, lensY + lensR);
-        rayCtx.lineTo(focalX, focalY);
+        rayCtx.lineTo(bfpX, bfpY);
         rayCtx.stroke();
 
-        // Segment 3: Focal point → Detector
-        if (Math.abs(focalY - detY) > 5) {
-            const detX = focalX + (focalX - lxAtLens) * (detY - focalY) / (focalY - (lensY + lensR));
-            rayCtx.globalAlpha = 0.3;
+        // Back focal plane → Image plane
+        const imgX = cx - specPts[i] * planeW * 0.6; // inverted image
+        if (!isInFocus) {
+            // If defocused, rays continue to actual image plane
             rayCtx.beginPath();
-            rayCtx.moveTo(focalX, focalY);
-            rayCtx.lineTo(detX, detY);
+            rayCtx.moveTo(bfpX, bfpY);
+            rayCtx.lineTo(imgX, imgPlaneY);
+            rayCtx.stroke();
+
+            // Then faint continuation to detector if image plane ≠ detector
+            if (Math.abs(imgPlaneY - detY) > 5) {
+                rayCtx.globalAlpha = 0.25;
+                const t = (detY - bfpY) / (imgPlaneY - bfpY);
+                const detX = bfpX + (imgX - bfpX) * t;
+                rayCtx.beginPath();
+                rayCtx.moveTo(imgX, imgPlaneY);
+                rayCtx.lineTo(detX, detY);
+                rayCtx.stroke();
+            }
+        } else {
+            // In focus: rays converge at detector
+            rayCtx.beginPath();
+            rayCtx.moveTo(bfpX, bfpY);
+            rayCtx.lineTo(imgX, detY);
             rayCtx.stroke();
         }
     }
     rayCtx.globalAlpha = 1.0;
 
-    // ── Focal / Crossover Point ──
-    const glowR = h * 0.04;
-    const glowGrad = rayCtx.createRadialGradient(cx, focalY, 0, cx, focalY, glowR);
-    glowGrad.addColorStop(0, hexToRgba(stateColor, 0.4));
-    glowGrad.addColorStop(1, hexToRgba(stateColor, 0));
-    rayCtx.fillStyle = glowGrad;
-    rayCtx.fillRect(cx - glowR, focalY - glowR, glowR*2, glowR*2);
-
-    // Focal point dot
-    rayCtx.fillStyle = stateColor;
-    rayCtx.beginPath();
-    rayCtx.arc(cx, focalY, 6, 0, Math.PI * 2);
-    rayCtx.fill();
-
-    // Focal plane dashed line
-    rayCtx.strokeStyle = hexToRgba(stateColor, 0.35);
+    // --- Back Focal Plane (BFP) dashed line ---
+    rayCtx.strokeStyle = '#999';
     rayCtx.lineWidth = 1.5;
     rayCtx.setLineDash([8, 5]);
     rayCtx.beginPath();
-    rayCtx.moveTo(cx - planeW * 0.5, focalY);
-    rayCtx.lineTo(cx + planeW * 0.5, focalY);
+    rayCtx.moveTo(cx - planeW * 0.4, bfpY);
+    rayCtx.lineTo(cx + planeW * 0.4, bfpY);
     rayCtx.stroke();
     rayCtx.setLineDash([]);
+    rayCtx.fillStyle = '#666';
+    rayCtx.font = `500 ${fSM}px Inter,sans-serif`;
+    rayCtx.textAlign = 'right';
+    rayCtx.fillText('Back Focal Plane', cx + planeW/2 + fSM * 0.3, bfpY + fSM * 0.4);
 
-    rayCtx.fillStyle = stateColor;
-    rayCtx.font = `500 ${fontSM}px Inter,sans-serif`;
-    rayCtx.textAlign = 'left';
-    rayCtx.fillText('image plane', cx + planeW * 0.52, focalY + fontSM * 0.4);
-
-    // ── Δf arrow ──
-    if (Math.abs(nm) > 10) {
-        const idealY = baseFocalY;
-        const arrowX = cx - planeW * 0.48;
-        rayCtx.strokeStyle = hexToRgba(stateColor, 0.7);
+    // --- Image Plane (actual, moves with defocus) ---
+    if (!isInFocus) {
+        rayCtx.strokeStyle = stateColor;
         rayCtx.lineWidth = 2;
+        rayCtx.setLineDash([10, 5]);
         rayCtx.beginPath();
-        rayCtx.moveTo(arrowX, idealY);
-        rayCtx.lineTo(arrowX, focalY);
+        rayCtx.moveTo(cx - planeW * 0.4, imgPlaneY);
+        rayCtx.lineTo(cx + planeW * 0.4, imgPlaneY);
         rayCtx.stroke();
-        // Arrow heads
-        const dir = focalY > idealY ? 1 : -1;
-        rayCtx.fillStyle = hexToRgba(stateColor, 0.7);
-        rayCtx.beginPath();
-        rayCtx.moveTo(arrowX - 7, focalY);
-        rayCtx.lineTo(arrowX + 7, focalY);
-        rayCtx.lineTo(arrowX, focalY + dir * 12);
-        rayCtx.fill();
-        rayCtx.beginPath();
-        rayCtx.moveTo(arrowX - 7, idealY);
-        rayCtx.lineTo(arrowX + 7, idealY);
-        rayCtx.lineTo(arrowX, idealY - dir * 12);
-        rayCtx.fill();
-        // Label
+        rayCtx.setLineDash([]);
         rayCtx.fillStyle = stateColor;
-        rayCtx.font = `700 ${fontLG}px Inter,sans-serif`;
-        rayCtx.textAlign = 'center';
-        const mid = (idealY + focalY) / 2;
-        rayCtx.fillText('Δf', arrowX - fontLG * 1.5, mid + fontLG * 0.35);
+        rayCtx.font = `600 ${fSM}px Inter,sans-serif`;
+        rayCtx.textAlign = 'right';
+        rayCtx.fillText('Image Plane', cx + planeW/2 + fSM * 0.3, imgPlaneY + fSM * 0.4);
     }
 
-    // ── Detector plane ──
-    rayCtx.strokeStyle = '#888';
-    rayCtx.lineWidth = 2.5;
+    // --- Detector / Recording plane (fixed) ---
+    rayCtx.strokeStyle = '#222';
+    rayCtx.lineWidth = 3;
     rayCtx.beginPath();
     rayCtx.moveTo(cx - planeW/2, detY);
     rayCtx.lineTo(cx + planeW/2, detY);
     rayCtx.stroke();
-    rayCtx.fillStyle = '#888';
-    rayCtx.font = `500 ${fontMD}px Inter,sans-serif`;
-    rayCtx.textAlign = 'center';
-    rayCtx.fillText('detector', cx, detY + fontMD * 1.4);
 
-    // ── Ideal image position indicator (when defocused) ──
-    if (Math.abs(nm) > 10) {
-        rayCtx.strokeStyle = 'rgba(255,255,255,0.15)';
-        rayCtx.lineWidth = 1;
-        rayCtx.setLineDash([4, 4]);
+    // Detector icon (small camera)
+    rayCtx.fillStyle = '#444';
+    const camX = cx - planeW/2 - 50;
+    const camW = 36, camH = 24;
+    rayCtx.fillRect(camX, detY - camH/2, camW, camH);
+    rayCtx.fillStyle = '#888';
+    rayCtx.beginPath();
+    rayCtx.arc(camX + camW/2, detY, 8, 0, Math.PI * 2);
+    rayCtx.fill();
+    rayCtx.fillStyle = '#333';
+    rayCtx.font = `600 ${fSM}px Inter,sans-serif`;
+    rayCtx.textAlign = 'right';
+    const detLabel = isInFocus ? 'Detector = Image Plane' : 'Detector';
+    rayCtx.fillText(detLabel, cx + planeW/2 + fSM * 0.3, detY + fSM * 0.4);
+
+    // --- Δf arrow ---
+    if (!isInFocus) {
+        const arrowX = cx - planeW * 0.46;
+        rayCtx.strokeStyle = stateColor;
+        rayCtx.lineWidth = 2.5;
         rayCtx.beginPath();
-        rayCtx.moveTo(cx - planeW * 0.4, baseFocalY);
-        rayCtx.lineTo(cx + planeW * 0.4, baseFocalY);
+        rayCtx.moveTo(arrowX, detY);
+        rayCtx.lineTo(arrowX, imgPlaneY);
         rayCtx.stroke();
-        rayCtx.setLineDash([]);
-        rayCtx.fillStyle = 'rgba(255,255,255,0.25)';
-        rayCtx.font = `400 ${fontXS}px Inter,sans-serif`;
-        rayCtx.textAlign = 'left';
-        rayCtx.fillText('in-focus position', cx + planeW * 0.42, baseFocalY + fontXS * 0.4);
+        // Arrowheads
+        const dir = imgPlaneY > detY ? 1 : -1;
+        rayCtx.fillStyle = stateColor;
+        rayCtx.beginPath();
+        rayCtx.moveTo(arrowX - 7, imgPlaneY);
+        rayCtx.lineTo(arrowX + 7, imgPlaneY);
+        rayCtx.lineTo(arrowX, imgPlaneY + dir * 12);
+        rayCtx.fill();
+        rayCtx.beginPath();
+        rayCtx.moveTo(arrowX - 7, detY);
+        rayCtx.lineTo(arrowX + 7, detY);
+        rayCtx.lineTo(arrowX, detY - dir * 12);
+        rayCtx.fill();
+        // Δf label
+        rayCtx.fillStyle = stateColor;
+        rayCtx.font = `700 ${fLG}px Inter,sans-serif`;
+        rayCtx.textAlign = 'center';
+        const mid = (detY + imgPlaneY) / 2;
+        rayCtx.fillText('Δf', arrowX - fLG * 1.2, mid + fLG * 0.35);
     }
 
-    // ── State label at bottom ──
-    rayCtx.textAlign = 'center';
+    // --- State badge at bottom ---
     let stateText = '';
-    if (Math.abs(um) < 0.01) stateText = 'IN FOCUS';
-    else if (um > 0) stateText = 'UNDERFOCUS';
+    if (isInFocus) stateText = 'IN FOCUS';
+    else if (isUnder) stateText = 'UNDERFOCUS';
     else stateText = 'OVERFOCUS';
 
-    rayCtx.font = `700 ${fontXL}px Inter,sans-serif`;
-    rayCtx.fillStyle = hexToRgba(stateColor, 0.12);
+    rayCtx.font = `800 ${fXL}px Inter,sans-serif`;
     const tw = rayCtx.measureText(stateText).width + 50;
-    const badgeY = detY + fontMD * 2.2;
+    const badgeY = h * 0.88;
+    // Badge background
+    rayCtx.fillStyle = stateBg;
+    rayCtx.strokeStyle = stateColor;
+    rayCtx.lineWidth = 2;
     rayCtx.beginPath();
-    rayCtx.roundRect(cx - tw/2, badgeY, tw, fontXL * 1.6, 16);
+    rayCtx.roundRect(cx - tw/2, badgeY, tw, fXL * 1.8, 14);
     rayCtx.fill();
+    rayCtx.stroke();
+    // Badge text
     rayCtx.fillStyle = stateColor;
-    rayCtx.fillText(stateText, cx, badgeY + fontXL * 1.15);
+    rayCtx.textAlign = 'center';
+    rayCtx.fillText(stateText, cx, badgeY + fXL * 1.3);
 
     // Sub-label
-    rayCtx.fillStyle = '#666';
-    rayCtx.font = `400 ${fontSM}px Inter,sans-serif`;
+    rayCtx.fillStyle = '#888';
+    rayCtx.font = `500 ${fSM}px Inter,sans-serif`;
     let subText = '';
-    if (Math.abs(um) < 0.01) subText = 'lens exactly focused on specimen';
-    else if (um > 0) subText = 'lens weaker → image plane shifts down';
-    else subText = 'lens stronger → image plane shifts up';
-    rayCtx.fillText(subText, cx, badgeY + fontXL * 1.6 + fontSM * 1.2);
+    if (isInFocus) subText = 'Lens exactly focused — image plane at detector';
+    else if (isUnder) subText = 'Lens weaker → image plane below detector';
+    else subText = 'Lens stronger → image plane above detector';
+    rayCtx.fillText(subText, cx, badgeY + fXL * 1.8 + fSM * 1.2);
 }
 
 // ====== INFO PANEL ======
@@ -581,32 +581,32 @@ function updateInfo(nm) {
     if (Math.abs(um) < 0.01) {
         stage = 'IN FOCUS'; stageClass = 'stage-focus';
         title = 'No phase contrast — image is nearly blank';
-        observe = 'The image shows <span>uniform gray</span>. Rays converge <span>exactly at the detector</span>. CTF is zero everywhere.';
-        physics = 'Biological specimens are <b>weak phase objects</b> — nearly transparent to electrons. At exact focus, phase shifts do not convert to amplitude changes. CTF = −sin(χ) = 0 when Δf = 0.';
+        observe = 'Image shows <span>uniform gray</span>. Rays converge <span>exactly at detector</span>. CTF = 0 everywhere.';
+        physics = 'Biological specimens are <b>weak phase objects</b>. At exact focus, phase shifts do not convert to amplitude. CTF = −sin(χ) = 0 when Δf = 0.';
     } else if (um > 0) {
         stage = 'UNDERFOCUS'; stageClass = 'stage-under';
         if (Math.abs(um - 0.088) < 0.015) {
             title = 'Scherzer defocus — optimal resolution';
-            observe = 'Rays converge <span>slightly below</span> the detector. A <span>faint image</span> appears. CTF has a <span>single broad passband</span>.';
-            physics = `<b>Scherzer defocus</b> Δf = 1.2√(Cs·λ) ≈ 875 Å maximizes the CTF passband. The lens is slightly <b>weaker</b> than needed, shifting the image plane below the detector.`;
+            observe = 'Rays converge <span>slightly below</span> detector. <span>Faint image</span> appears. CTF: <span>single broad passband</span>.';
+            physics = `<b>Scherzer defocus</b> Δf = 1.2√(Cs·λ) ≈ 875 Å maximizes CTF passband. Lens slightly <b>weaker</b>, image plane below detector.`;
         } else if (um < 0.3) {
             title = 'Mild underfocus — contrast building';
-            observe = 'Image plane shifted <span>slightly below</span> detector. Object features begin to appear.';
-            physics = `Underfocus = <b>lens too weak</b> (focal length too long). Image forms below detector. Electrons haven't fully converged, creating phase → amplitude contrast.`;
+            observe = 'Image plane <span>slightly below</span> detector. Object features begin to appear.';
+            physics = `<b>Lens too weak</b> (focal length too long). Image forms below detector. Phase → amplitude contrast conversion begins.`;
         } else if (um < 1.0) {
             title = 'Standard cryo-EM defocus range';
-            observe = 'Image plane <span>well below</span> detector. Object structure <span>clearly visible</span>. CTF creates "Thon rings".';
-            physics = `<b>Typical operating range</b> for single particle analysis (0.5–1.5 μm). Strong contrast for <b>particle picking</b>. CTF correction restores information at zero crossings.`;
+            observe = 'Image plane <span>well below</span> detector. Structure <span>clearly visible</span>. CTF creates "Thon rings".';
+            physics = `<b>Typical range</b> for single particle (0.5–1.5 μm). Strong contrast for <b>particle picking</b>. CTF correction restores info at zero crossings.`;
         } else {
-            title = 'High underfocus — strong contrast, delocalized';
-            observe = '<span>Fresnel fringes</span> surround the object. Rays far from convergence at detector. CTF oscillates rapidly.';
-            physics = `<b>Point spread function</b> broadens. High-resolution info is <b>delocalized</b>. Contrast maximized but spatial resolution severely degraded.`;
+            title = 'High underfocus — strong but delocalized';
+            observe = '<span>Fresnel fringes</span> appear. Rays far from convergence. CTF oscillates rapidly.';
+            physics = `<b>PSF broadens</b>. High-res info <b>delocalized</b>. Max contrast but degraded spatial resolution.`;
         }
     } else {
         stage = 'OVERFOCUS'; stageClass = 'stage-over';
         title = 'Lens too strong — reversed contrast';
-        observe = 'Rays converge <span>above</span> the detector, then diverge. Image shows <span>inverted contrast</span>.';
-        physics = `Overfocus = <b>lens too strong</b> (focal length too short). Image forms above detector. Electrons cross over then diverge. CTF sign reverses: <b>sin(χ) flips</b>.`;
+        observe = 'Rays converge <span>above</span> detector, then diverge. <span>Inverted contrast</span>.';
+        physics = `<b>Lens too strong</b> (focal length too short). Image above detector. Electrons cross over. CTF sign reverses: <b>sin(χ) flips</b>.`;
     }
 
     el.innerHTML = `
@@ -628,7 +628,6 @@ function update(nm) {
     drawCTF(nm);
     drawRayDiagram(nm);
     updateInfo(nm);
-    // Active pill
     document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
     const pm={'-300':0, 0:1, 88:2, 500:3, 1000:4};
     if(pm[String(nm)]!==undefined) document.querySelectorAll('.pill')[pm[String(nm)]].classList.add('active');
