@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cryo-EM: Overfocus & Underfocus in TEM</title>
+<title>TEM Defocus: Effect of Objective Lens Strength</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -57,7 +57,6 @@ body {
   border-bottom: 3px solid;
   display: flex; justify-content: center; align-items: baseline; gap: 14px;
 }
-.col-title .df { font-size: clamp(16px, 2vh, 24px); font-weight: 700; letter-spacing: 0; font-variant-numeric: tabular-nums; }
 .col-title.over  { color: #dc2626; background: #fef2f2; border-color: #fca5a5; }
 .col-title.focus { color: #059669; background: #ecfdf5; border-color: #6ee7b7; }
 .col-title.under { color: #2563eb; background: #eff6ff; border-color: #93c5fd; }
@@ -88,21 +87,22 @@ body {
 <body>
 <div id="app">
   <div class="header">
-    <h1>Cryo-EM: Overfocus &amp; Underfocus in TEM</h1>
-    <p>How objective lens strength affects phase contrast &middot; 300 kV &middot; C<sub>s</sub> = 2.7 mm</p>
+    <h1>TEM Defocus: Effect of Objective Lens Strength</h1>
+    <p>How varying lens excitation shifts the image plane relative to the detector</p>
   </div>
   <div class="columns">
     <!-- Overfocus -->
     <div class="col">
-      <div class="col-title over"><span>OVERFOCUS</span><span class="df">&Delta;f = &minus;0.5 &mu;m</span></div>
+      <div class="col-title over"><span>OVERFOCUS</span></div>
       <div class="ray-wrap"><canvas id="ray-over"></canvas></div>
       <div class="bottom-bar">
         <canvas id="fresnel-over" width="300" height="300"></canvas>
         <div class="bottom-info">
-          <div class="fresnel-label">Bright fringe outside edge</div>
+          <div class="fresnel-label">Lens too strong (f&darr;)</div>
           <ul>
-            <li><span class="key">Lens too strong</span> &mdash; image plane above detector</li>
-            <li>Fresnel fringe on <span class="key">outside</span> of edges</li>
+            <li>Image plane forms <span class="key">above</span> detector</li>
+            <li>Electrons cross over, then diverge at detector</li>
+            <li>Fresnel fringe on <span class="key">outside</span> of edges (bright halo)</li>
             <li>CTF sign reversal &rarr; contrast inversion</li>
           </ul>
         </div>
@@ -110,31 +110,33 @@ body {
     </div>
     <!-- In Focus -->
     <div class="col">
-      <div class="col-title focus"><span>IN FOCUS</span><span class="df">&Delta;f = 0</span></div>
+      <div class="col-title focus"><span>IN FOCUS</span></div>
       <div class="ray-wrap"><canvas id="ray-focus"></canvas></div>
       <div class="bottom-bar">
         <canvas id="fresnel-focus" width="300" height="300"></canvas>
         <div class="bottom-info">
-          <div class="fresnel-label">No Fresnel fringes</div>
+          <div class="fresnel-label">Exact focus</div>
           <ul>
-            <li><span class="key">Exact focus</span> &mdash; image plane = detector</li>
-            <li>Phase objects produce <span class="key">no contrast</span></li>
-            <li>Highest resolution but invisible specimen</li>
+            <li>Image plane <span class="key">=</span> detector plane</li>
+            <li>Phase objects produce <span class="key">no amplitude contrast</span></li>
+            <li>No Fresnel fringes visible</li>
+            <li>Highest resolution but specimen invisible</li>
           </ul>
         </div>
       </div>
     </div>
     <!-- Underfocus -->
     <div class="col">
-      <div class="col-title under"><span>UNDERFOCUS</span><span class="df">&Delta;f = +1.0 &mu;m</span></div>
+      <div class="col-title under"><span>UNDERFOCUS</span></div>
       <div class="ray-wrap"><canvas id="ray-under"></canvas></div>
       <div class="bottom-bar">
         <canvas id="fresnel-under" width="300" height="300"></canvas>
         <div class="bottom-info">
-          <div class="fresnel-label">Dark fringe inside edge</div>
+          <div class="fresnel-label">Lens too weak (f&uarr;)</div>
           <ul>
-            <li><span class="key">Lens too weak</span> &mdash; image plane below detector</li>
-            <li>Fresnel fringe on <span class="key">inside</span> of edges</li>
+            <li>Image plane forms <span class="key">below</span> detector</li>
+            <li>Electrons not yet converged at detector</li>
+            <li>Fresnel fringe on <span class="key">inside</span> of edges (dark halo)</li>
             <li><span class="key">Standard cryo-EM</span>: 0.5&ndash;1.5 &mu;m underfocus</li>
           </ul>
         </div>
@@ -474,10 +476,7 @@ function drawFresnel(canvasId, state) {
         ctx.beginPath(); ctx.arc(cx, cy, R - 1, 0, Math.PI * 2); ctx.stroke();
     }
 
-    ctx.fillStyle = '#444'; ctx.font = '700 22px Inter,sans-serif'; ctx.textAlign = 'center';
-    if (state === 'focus') ctx.fillText('No fringes', cx, h - 12);
-    else if (state === 'under') ctx.fillText('Dark fringe inside', cx, h - 12);
-    else ctx.fillText('Bright fringe outside', cx, h - 12);
+    // No text inside canvas — descriptions are in HTML below
 }
 
 // ====== INIT ======
