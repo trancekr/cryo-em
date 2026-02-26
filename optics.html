@@ -382,8 +382,8 @@ function drawRay(canvasId, state) {
     if (!isInFocus) {
         ctx.strokeStyle = stateColor; ctx.lineWidth = 3; ctx.setLineDash([10, 5]);
         ctx.beginPath();
-        ctx.moveTo(cx - planeW * 0.42, imgPlaneY);
-        ctx.lineTo(cx + planeW * 0.42, imgPlaneY);
+        ctx.moveTo(cx - planeW / 2, imgPlaneY);
+        ctx.lineTo(cx + planeW / 2, imgPlaneY);
         ctx.stroke(); ctx.setLineDash([]);
         labelBg('Image Plane', labelX, imgPlaneY + fSM * 0.35,
             `800 ${fSM}px Inter,sans-serif`, stateColor);
