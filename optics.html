@@ -5,24 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cryo-EM: Overfocus & Underfocus in TEM</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-  background: #f5f5f8;
+  background: #f0f0f5;
   font-family: 'Inter', -apple-system, sans-serif;
   color: #1a1a2e;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 8px 12px;
+  padding: 10px 16px;
   overflow: hidden;
 }
 #app {
-  max-width: 1400px;
+  max-width: 1800px;
   width: 100%;
   height: 100%;
-  max-height: 860px;
   display: flex;
   flex-direction: column;
 }
@@ -30,170 +29,156 @@ body {
 .header {
   flex-shrink: 0;
   text-align: center;
-  margin-bottom: 6px;
+  padding: 6px 0 8px;
 }
-.header h1 { font-size: 24px; font-weight: 800; color: #1a1a2e; }
-.header p { font-size: 13px; color: #888; margin-top: 2px; }
+.header h1 { font-size: clamp(28px, 3.2vh, 42px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(14px, 1.6vh, 20px); color: #777; margin-top: 2px; font-weight: 500; }
 
 .columns {
   flex: 1; min-height: 0;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
+  gap: 14px;
 }
 
 .col {
   background: #fff;
-  border: 1px solid #e0e0e8;
-  border-radius: 10px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  border: 2px solid #e0e0e8;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   display: flex; flex-direction: column;
   min-height: 0; overflow: hidden;
 }
 
 .col-title {
   flex-shrink: 0; text-align: center;
-  padding: 6px 10px;
-  font-size: 15px; font-weight: 800; letter-spacing: 1.5px;
-  border-bottom: 2px solid;
-  display: flex; justify-content: center; align-items: baseline; gap: 10px;
+  padding: clamp(8px, 1vh, 14px) 12px;
+  font-size: clamp(20px, 2.4vh, 30px); font-weight: 900; letter-spacing: 2px;
+  border-bottom: 3px solid;
+  display: flex; justify-content: center; align-items: baseline; gap: 14px;
 }
-.col-title .df { font-size: 13px; font-weight: 600; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.col-title .df { font-size: clamp(16px, 2vh, 24px); font-weight: 700; letter-spacing: 0; font-variant-numeric: tabular-nums; }
 .col-title.over  { color: #dc2626; background: #fef2f2; border-color: #fca5a5; }
 .col-title.focus { color: #059669; background: #ecfdf5; border-color: #6ee7b7; }
 .col-title.under { color: #2563eb; background: #eff6ff; border-color: #93c5fd; }
 
-.ray-wrap { flex-shrink: 0; padding: 2px; }
-.ray-wrap canvas { display: block; width: 100%; aspect-ratio: 11 / 9; }
+.ray-wrap { flex: 1; min-height: 0; padding: 4px; }
+.ray-wrap canvas { display: block; width: 100%; height: 100%; }
 
-/* Fresnel row */
-.fresnel-row {
+/* Fresnel + key points in a bottom bar */
+.bottom-bar {
   flex-shrink: 0;
-  display: flex; align-items: center; gap: 10px;
-  padding: 6px 10px;
-  border-top: 1px solid #f0f0f4;
-  border-bottom: 1px solid #f0f0f4;
+  display: flex; align-items: center; gap: clamp(10px, 1.5vw, 20px);
+  padding: clamp(8px, 1.2vh, 16px) clamp(10px, 1.5vw, 20px);
+  border-top: 2px solid #eee;
   background: #fafafe;
 }
-.fresnel-row canvas {
-  width: 84px; height: 84px;
-  border-radius: 6px; border: 1px solid #e0e0e8;
+.bottom-bar canvas {
+  width: clamp(80px, 10vh, 140px); height: clamp(80px, 10vh, 140px);
+  border-radius: 8px; border: 2px solid #ddd;
   flex-shrink: 0;
 }
-.fresnel-caption { font-size: 12px; color: #555; line-height: 1.5; }
-.fresnel-caption strong { font-size: 13px; color: #222; }
-
-.col-desc {
-  flex: 1; min-height: 0; overflow-y: auto;
-  padding: 8px 12px 10px;
-  font-size: 13px; color: #444; line-height: 1.6;
-}
-.col-desc .key { font-weight: 700; color: #1a1a2e; }
-.col-desc .formula {
-  display: inline-block; background: #f3f0ff;
-  padding: 0 4px; border-radius: 3px;
-  font-size: 12px; color: #5b21b6; font-weight: 600;
-}
-.col-desc ul { margin: 2px 0; padding-left: 16px; }
-.col-desc li { margin-bottom: 1px; }
+.bottom-info { flex: 1; min-width: 0; }
+.bottom-info .fresnel-label { font-size: clamp(15px, 1.8vh, 22px); font-weight: 700; color: #222; margin-bottom: 4px; }
+.bottom-info ul { padding-left: 18px; margin: 0; }
+.bottom-info li { font-size: clamp(14px, 1.6vh, 20px); color: #444; line-height: 1.55; font-weight: 500; }
+.bottom-info .key { font-weight: 800; color: #1a1a2e; }
 </style>
 </head>
 <body>
 <div id="app">
   <div class="header">
     <h1>Cryo-EM: Overfocus &amp; Underfocus in TEM</h1>
-    <p>How objective lens strength affects phase contrast imaging &middot; 300 kV &middot; Cs = 2.7 mm</p>
+    <p>How objective lens strength affects phase contrast &middot; 300 kV &middot; C<sub>s</sub> = 2.7 mm</p>
   </div>
   <div class="columns">
     <!-- Overfocus -->
     <div class="col">
       <div class="col-title over"><span>OVERFOCUS</span><span class="df">&Delta;f = &minus;0.5 &mu;m</span></div>
-      <div class="ray-wrap"><canvas id="ray-over" width="550" height="500"></canvas></div>
-      <div class="fresnel-row">
-        <canvas id="fresnel-over" width="168" height="168"></canvas>
-        <div class="fresnel-caption">
-          <strong>Simulated Image</strong><br>
-          Bright fringe <em>outside</em> object edge. Contrast inverted vs underfocus.
+      <div class="ray-wrap"><canvas id="ray-over"></canvas></div>
+      <div class="bottom-bar">
+        <canvas id="fresnel-over" width="200" height="200"></canvas>
+        <div class="bottom-info">
+          <div class="fresnel-label">Bright fringe outside edge</div>
+          <ul>
+            <li><span class="key">Lens too strong</span> &mdash; image plane above detector</li>
+            <li>Fresnel fringe on <span class="key">outside</span> of edges</li>
+            <li>CTF sign reversal &rarr; contrast inversion</li>
+          </ul>
         </div>
-      </div>
-      <div class="col-desc">
-        <ul>
-          <li><span class="key">Lens too strong</span> (f↓) &mdash; image plane forms <em>above</em> detector</li>
-          <li>Electrons cross over before detector, then diverge</li>
-          <li>Fresnel fringe on <span class="key">outside</span> of edges (white halo)</li>
-          <li>CTF sign reverses &rarr; <span class="key">contrast inversion</span></li>
-          <li>Rarely used in cryo-EM; verifies focus direction</li>
-        </ul>
       </div>
     </div>
     <!-- In Focus -->
     <div class="col">
       <div class="col-title focus"><span>IN FOCUS</span><span class="df">&Delta;f = 0</span></div>
-      <div class="ray-wrap"><canvas id="ray-focus" width="550" height="500"></canvas></div>
-      <div class="fresnel-row">
-        <canvas id="fresnel-focus" width="168" height="168"></canvas>
-        <div class="fresnel-caption">
-          <strong>Simulated Image</strong><br>
-          Nearly blank &mdash; weak phase objects produce almost no amplitude contrast.
+      <div class="ray-wrap"><canvas id="ray-focus"></canvas></div>
+      <div class="bottom-bar">
+        <canvas id="fresnel-focus" width="200" height="200"></canvas>
+        <div class="bottom-info">
+          <div class="fresnel-label">No Fresnel fringes</div>
+          <ul>
+            <li><span class="key">Exact focus</span> &mdash; image plane = detector</li>
+            <li>Phase objects produce <span class="key">no contrast</span></li>
+            <li>Highest resolution but invisible specimen</li>
+          </ul>
         </div>
-      </div>
-      <div class="col-desc">
-        <ul>
-          <li><span class="key">Exact focus</span> &mdash; image plane = detector</li>
-          <li>Phase shifts do <em>not</em> convert to amplitude contrast</li>
-          <li>No Fresnel fringes visible</li>
-          <li><span class="formula">CTF = &minus;sin(&chi;) = 0</span> when &Delta;f = 0</li>
-          <li>Highest resolution but <span class="key">no contrast</span> for biological samples</li>
-        </ul>
       </div>
     </div>
     <!-- Underfocus -->
     <div class="col">
       <div class="col-title under"><span>UNDERFOCUS</span><span class="df">&Delta;f = +1.0 &mu;m</span></div>
-      <div class="ray-wrap"><canvas id="ray-under" width="550" height="500"></canvas></div>
-      <div class="fresnel-row">
-        <canvas id="fresnel-under" width="168" height="168"></canvas>
-        <div class="fresnel-caption">
-          <strong>Simulated Image</strong><br>
-          Dark fringe <em>inside</em> object edge. Standard cryo-EM condition.
+      <div class="ray-wrap"><canvas id="ray-under"></canvas></div>
+      <div class="bottom-bar">
+        <canvas id="fresnel-under" width="200" height="200"></canvas>
+        <div class="bottom-info">
+          <div class="fresnel-label">Dark fringe inside edge</div>
+          <ul>
+            <li><span class="key">Lens too weak</span> &mdash; image plane below detector</li>
+            <li>Fresnel fringe on <span class="key">inside</span> of edges</li>
+            <li><span class="key">Standard cryo-EM</span>: 0.5&ndash;1.5 &mu;m underfocus</li>
+          </ul>
         </div>
-      </div>
-      <div class="col-desc">
-        <ul>
-          <li><span class="key">Lens too weak</span> (f↑) &mdash; image plane forms <em>below</em> detector</li>
-          <li>Electrons not yet converged at detector</li>
-          <li>Fresnel fringe on <span class="key">inside</span> of edges (dark halo)</li>
-          <li>Phase &rarr; amplitude conversion enables structure visibility</li>
-          <li><span class="key">Standard</span>: 0.5&ndash;1.5 &mu;m underfocus for cryo-EM</li>
-        </ul>
       </div>
     </div>
   </div>
 </div>
 
 <script>
+// ====== RESPONSIVE CANVAS SIZING ======
+function initCanvases() {
+    ['ray-over', 'ray-focus', 'ray-under'].forEach(id => {
+        const c = document.getElementById(id);
+        const rect = c.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        c.width = Math.round(rect.width * dpr);
+        c.height = Math.round(rect.height * dpr);
+        c.getContext('2d').scale(dpr, dpr);
+    });
+}
+
 // ====== RAY DIAGRAM ======
 function drawRay(canvasId, state) {
     const canvas = document.getElementById(canvasId);
     const ctx = canvas.getContext('2d');
-    const w = canvas.width, h = canvas.height;
-    ctx.clearRect(0, 0, w, h);
+    const rect = canvas.getBoundingClientRect();
+    const w = rect.width, h = rect.height;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     const cx = w / 2;
 
     const nmMap = { over: -500, focus: 0, under: 1000 };
     const nm = nmMap[state];
     const um = nm / 1000;
 
-    // Layout
+    // Layout — push detector down to use more vertical space
     const specY   = h * 0.06;
-    const lensY   = h * 0.28;
-    const bfpBase = h * 0.44;
-    const detY    = h * 0.66;
-    const planeW  = w * 0.38;
-    const lensW   = w * 0.36;
-    const labelX  = cx + planeW / 2 + 8;
+    const lensY   = h * 0.30;
+    const bfpBase = h * 0.46;
+    const detY    = h * 0.68;
+    const planeW  = w * 0.42;
+    const lensW   = w * 0.40;
+    const labelX  = cx + planeW / 2 + 10;
 
-    // Stronger visual shift for clear angle difference
+    // Strong visual shift for clear angle difference
     const scaledShift = um * h * 0.18;
     const imgPlaneY = detY + Math.max(-h * 0.16, Math.min(h * 0.26, scaledShift));
 
@@ -202,13 +187,18 @@ function drawRay(canvasId, state) {
     const isOver = state === 'over';
     const stateColor = isOver ? '#dc2626' : isUnder ? '#2563eb' : '#059669';
 
-    const fLG = 18, fMD = 15, fSM = 13, fXS = 11;
+    // Responsive font sizes — scale with canvas width
+    const scale = w / 400;
+    const fLG = Math.round(20 * scale);
+    const fMD = Math.round(17 * scale);
+    const fSM = Math.round(15 * scale);
+    const fXS = Math.round(13 * scale);
 
     function labelBg(text, x, y, font, color, align) {
         ctx.font = font;
         ctx.textAlign = align || 'left';
         const m = ctx.measureText(text);
-        const pad = 3;
+        const pad = 4;
         const sz = parseInt((font.match(/(\d+)px/) || [])[1]) || fSM;
         let lx = x;
         if (align === 'center') lx = x - m.width / 2;
@@ -249,30 +239,30 @@ function drawRay(canvasId, state) {
     beamGrad.addColorStop(1, 'rgba(80,110,170,0.03)');
     ctx.fillStyle = beamGrad;
     ctx.fillRect(cx - planeW * 0.12, beamTop, planeW * 0.24, specY - beamTop);
-    ctx.strokeStyle = '#999'; ctx.lineWidth = 1.5;
+    ctx.strokeStyle = '#999'; ctx.lineWidth = 2;
     for (const frac of [-0.035, 0, 0.035]) {
         const bx = cx + frac * planeW;
-        ctx.beginPath(); ctx.moveTo(bx, beamTop + 1); ctx.lineTo(bx, specY - 5); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(bx, beamTop + 1); ctx.lineTo(bx, specY - 6); ctx.stroke();
         ctx.fillStyle = '#888';
         ctx.beginPath();
-        ctx.moveTo(bx - 3, specY - 8); ctx.lineTo(bx, specY - 1); ctx.lineTo(bx + 3, specY - 8);
+        ctx.moveTo(bx - 4, specY - 10); ctx.lineTo(bx, specY - 1); ctx.lineTo(bx + 4, specY - 10);
         ctx.fill();
     }
     ctx.fillStyle = '#555'; ctx.font = `700 ${fMD}px Inter,sans-serif`; ctx.textAlign = 'left';
     ctx.fillText('e\u207B', cx + planeW * 0.08, specY * 0.6);
 
     // --- Specimen ---
-    ctx.strokeStyle = '#222'; ctx.lineWidth = 3;
+    ctx.strokeStyle = '#222'; ctx.lineWidth = 3.5;
     ctx.beginPath(); ctx.moveTo(cx - planeW / 2, specY); ctx.lineTo(cx + planeW / 2, specY); ctx.stroke();
     for (let i = 0; i < specPts.length; i++) {
         ctx.fillStyle = rayColors[i];
-        ctx.beginPath(); ctx.arc(cx + specPts[i] * planeW, specY, 5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(cx + specPts[i] * planeW, specY, 6, 0, Math.PI * 2); ctx.fill();
     }
-    labelBg('Specimen', labelX, specY + fSM * 0.35, `600 ${fSM}px Inter,sans-serif`, '#333');
+    labelBg('Specimen', labelX, specY + fSM * 0.35, `700 ${fSM}px Inter,sans-serif`, '#333');
 
     // --- Objective Lens ---
     const lensBodyW = lensW * 0.55;
-    const lensBodyH = h * 0.032;
+    const lensBodyH = h * 0.035;
     const lensGrad = ctx.createRadialGradient(cx, lensY, 0, cx, lensY, lensBodyW * 0.6);
     lensGrad.addColorStop(0, 'rgba(160,200,255,0.50)');
     lensGrad.addColorStop(1, 'rgba(100,150,220,0.30)');
@@ -282,20 +272,20 @@ function drawRay(canvasId, state) {
     ctx.quadraticCurveTo(cx, lensY - lensBodyH, cx + lensBodyW / 2, lensY);
     ctx.quadraticCurveTo(cx, lensY + lensBodyH, cx - lensBodyW / 2, lensY);
     ctx.closePath(); ctx.fill();
-    ctx.strokeStyle = '#333'; ctx.lineWidth = 2;
+    ctx.strokeStyle = '#333'; ctx.lineWidth = 2.5;
     ctx.beginPath(); ctx.moveTo(cx - lensBodyW / 2, lensY);
     ctx.quadraticCurveTo(cx, lensY - lensBodyH, cx + lensBodyW / 2, lensY); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(cx + lensBodyW / 2, lensY);
     ctx.quadraticCurveTo(cx, lensY + lensBodyH, cx - lensBodyW / 2, lensY); ctx.stroke();
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
     ctx.moveTo(cx - lensBodyW / 2, lensY); ctx.lineTo(cx - lensW / 2, lensY);
     ctx.moveTo(cx + lensBodyW / 2, lensY); ctx.lineTo(cx + lensW / 2, lensY);
     ctx.stroke();
     ctx.fillStyle = '#333';
-    ctx.beginPath(); ctx.moveTo(cx - 5, lensY - lensBodyH - 7); ctx.lineTo(cx, lensY - lensBodyH); ctx.lineTo(cx + 5, lensY - lensBodyH - 7); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(cx - 5, lensY + lensBodyH + 7); ctx.lineTo(cx, lensY + lensBodyH); ctx.lineTo(cx + 5, lensY + lensBodyH + 7); ctx.closePath(); ctx.fill();
-    labelBg('Obj. Lens', labelX, lensY + fSM * 0.35, `700 ${fSM}px Inter,sans-serif`, '#333');
+    ctx.beginPath(); ctx.moveTo(cx - 6, lensY - lensBodyH - 8); ctx.lineTo(cx, lensY - lensBodyH); ctx.lineTo(cx + 6, lensY - lensBodyH - 8); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx - 6, lensY + lensBodyH + 8); ctx.lineTo(cx, lensY + lensBodyH); ctx.lineTo(cx + 6, lensY + lensBodyH + 8); ctx.closePath(); ctx.fill();
+    labelBg('Obj. Lens', labelX, lensY + fSM * 0.35, `800 ${fSM}px Inter,sans-serif`, '#333');
 
     // --- Colored rays with clear refraction ---
     for (let i = 0; i < specPts.length; i++) {
@@ -305,35 +295,31 @@ function drawRay(canvasId, state) {
         const mag = (targetY - lensY) / (lensY - specY);
         const ix = cx - specPts[i] * planeW * mag;
 
-        // Two marginal rays hitting lens at wider positions for clear refraction
         const lensHitFracs = [-0.46, 0.46];
         const detCrossXs = [];
 
         for (const frac of lensHitFracs) {
             const lensHitX = cx + frac * lensW * 0.50;
 
-            // Pre-lens: specimen → lens (diverging)
             ctx.strokeStyle = color;
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 2.5;
             ctx.globalAlpha = 0.65;
             ctx.beginPath();
             ctx.moveTo(sx, specY + 3);
             ctx.lineTo(lensHitX, lensY);
             ctx.stroke();
 
-            // Post-lens: lens → image point (converging — angle shows refraction)
             ctx.beginPath();
             ctx.moveTo(lensHitX, lensY);
             ctx.lineTo(ix, targetY);
             ctx.stroke();
 
-            // Extension beyond image plane (dashed)
             if (!isInFocus && Math.abs(targetY - detY) > 8) {
                 const t = (detY - lensY) / (targetY - lensY);
                 const detCrossX = lensHitX + (ix - lensHitX) * t;
                 detCrossXs.push(detCrossX);
                 ctx.globalAlpha = 0.18;
-                ctx.setLineDash([4, 3]);
+                ctx.setLineDash([5, 4]);
                 ctx.beginPath();
                 if (isUnder) { ctx.moveTo(detCrossX, detY); ctx.lineTo(ix, targetY); }
                 else { ctx.moveTo(ix, targetY); ctx.lineTo(detCrossX, detY); }
@@ -343,14 +329,14 @@ function drawRay(canvasId, state) {
             }
         }
 
-        // Chief ray (through lens center — no refraction)
-        ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.35;
+        // Chief ray
+        ctx.strokeStyle = color; ctx.lineWidth = 1.8; ctx.globalAlpha = 0.35;
         ctx.beginPath(); ctx.moveTo(sx, specY + 3); ctx.lineTo(cx, lensY); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(cx, lensY); ctx.lineTo(ix, targetY); ctx.stroke();
         if (!isInFocus && Math.abs(targetY - detY) > 8) {
             const chiefT = (detY - lensY) / (targetY - lensY);
             const chiefDetX = cx + (ix - cx) * chiefT;
-            ctx.globalAlpha = 0.12; ctx.setLineDash([4, 3]);
+            ctx.globalAlpha = 0.12; ctx.setLineDash([5, 4]);
             ctx.beginPath();
             if (isUnder) { ctx.moveTo(chiefDetX, detY); ctx.lineTo(ix, targetY); }
             else { ctx.moveTo(ix, targetY); ctx.lineTo(chiefDetX, detY); }
@@ -363,82 +349,78 @@ function drawRay(canvasId, state) {
             const barL = Math.min(detCrossXs[0], detCrossXs[1]);
             const barR = Math.max(detCrossXs[0], detCrossXs[1]);
             ctx.fillStyle = color; ctx.globalAlpha = 0.12;
-            ctx.fillRect(barL, detY - 5, barR - barL, 10);
-            ctx.globalAlpha = 0.35; ctx.strokeStyle = color; ctx.lineWidth = 0.8;
-            ctx.strokeRect(barL, detY - 5, barR - barL, 10);
+            ctx.fillRect(barL, detY - 6, barR - barL, 12);
+            ctx.globalAlpha = 0.35; ctx.strokeStyle = color; ctx.lineWidth = 1;
+            ctx.strokeRect(barL, detY - 6, barR - barL, 12);
             ctx.globalAlpha = 1.0;
         }
 
         // Convergence dot
         if (isInFocus) {
             ctx.fillStyle = color; ctx.globalAlpha = 0.9;
-            ctx.beginPath(); ctx.arc(ix, detY, 5, 0, Math.PI * 2); ctx.fill();
-            ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.25;
-            ctx.beginPath(); ctx.arc(ix, detY, 10, 0, Math.PI * 2); ctx.stroke();
+            ctx.beginPath(); ctx.arc(ix, detY, 6, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.globalAlpha = 0.25;
+            ctx.beginPath(); ctx.arc(ix, detY, 12, 0, Math.PI * 2); ctx.stroke();
             ctx.globalAlpha = 1.0;
         } else {
             ctx.fillStyle = color; ctx.globalAlpha = 0.85;
-            ctx.beginPath(); ctx.arc(ix, targetY, 4, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(ix, targetY, 5, 0, Math.PI * 2); ctx.fill();
             ctx.globalAlpha = 1.0;
         }
     }
 
     // --- BFP ---
-    ctx.strokeStyle = '#bbb'; ctx.lineWidth = 1.2; ctx.setLineDash([5, 3]);
-    ctx.beginPath(); ctx.moveTo(cx - planeW * 0.34, bfpBase); ctx.lineTo(cx + planeW * 0.34, bfpBase); ctx.stroke();
+    ctx.strokeStyle = '#bbb'; ctx.lineWidth = 1.5; ctx.setLineDash([6, 4]);
+    ctx.beginPath(); ctx.moveTo(cx - planeW * 0.36, bfpBase); ctx.lineTo(cx + planeW * 0.36, bfpBase); ctx.stroke();
     ctx.setLineDash([]);
-    labelBg('BFP', labelX, bfpBase + fXS * 0.35, `600 ${fXS}px Inter,sans-serif`, '#999');
+    labelBg('BFP', labelX, bfpBase + fXS * 0.35, `700 ${fXS}px Inter,sans-serif`, '#999');
 
     // --- Image Plane (defocused) ---
     if (!isInFocus) {
-        ctx.strokeStyle = stateColor; ctx.lineWidth = 2.5; ctx.setLineDash([8, 4]);
+        ctx.strokeStyle = stateColor; ctx.lineWidth = 3; ctx.setLineDash([10, 5]);
         ctx.beginPath();
-        ctx.moveTo(cx - planeW * 0.40, imgPlaneY);
-        ctx.lineTo(cx + planeW * 0.40, imgPlaneY);
+        ctx.moveTo(cx - planeW * 0.42, imgPlaneY);
+        ctx.lineTo(cx + planeW * 0.42, imgPlaneY);
         ctx.stroke(); ctx.setLineDash([]);
         labelBg('Image Plane', labelX, imgPlaneY + fSM * 0.35,
-            `700 ${fSM}px Inter,sans-serif`, stateColor);
+            `800 ${fSM}px Inter,sans-serif`, stateColor);
     }
 
     // --- Detector ---
-    ctx.strokeStyle = '#222'; ctx.lineWidth = 3;
+    ctx.strokeStyle = '#222'; ctx.lineWidth = 3.5;
     ctx.beginPath(); ctx.moveTo(cx - planeW / 2, detY); ctx.lineTo(cx + planeW / 2, detY); ctx.stroke();
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.moveTo(cx - planeW / 2, detY - 7); ctx.lineTo(cx - planeW / 2, detY + 7);
-    ctx.moveTo(cx + planeW / 2, detY - 7); ctx.lineTo(cx + planeW / 2, detY + 7);
+    ctx.moveTo(cx - planeW / 2, detY - 8); ctx.lineTo(cx - planeW / 2, detY + 8);
+    ctx.moveTo(cx + planeW / 2, detY - 8); ctx.lineTo(cx + planeW / 2, detY + 8);
     ctx.stroke();
 
     if (isInFocus) {
-        labelBg('Detector', labelX, detY + fSM * 0.35, `600 ${fSM}px Inter,sans-serif`, '#333');
-        ctx.fillStyle = '#059669'; ctx.font = `600 ${fXS}px Inter,sans-serif`; ctx.textAlign = 'left';
-        ctx.fillText('= Image Plane', labelX, detY + fSM * 0.35 + fXS * 1.3);
+        labelBg('Detector', labelX, detY + fSM * 0.35, `700 ${fSM}px Inter,sans-serif`, '#333');
+        ctx.fillStyle = '#059669'; ctx.font = `700 ${fXS}px Inter,sans-serif`; ctx.textAlign = 'left';
+        ctx.fillText('= Image Plane', labelX, detY + fSM * 0.35 + fXS * 1.4);
     } else {
-        labelBg('Detector', labelX, detY + fSM * 0.35, `600 ${fSM}px Inter,sans-serif`, '#333');
+        labelBg('Detector', labelX, detY + fSM * 0.35, `700 ${fSM}px Inter,sans-serif`, '#333');
     }
 
-    // --- Δf bracket (prominent, between detector & image plane) ---
+    // --- Δf bracket ---
     if (!isInFocus) {
         const topY = Math.min(detY, imgPlaneY);
         const botY = Math.max(detY, imgPlaneY);
-        const bx = cx - planeW / 2 - 18;
+        const bx = cx - planeW / 2 - 22;
         const midY = (topY + botY) / 2;
 
-        // Bracket line
-        ctx.strokeStyle = stateColor; ctx.lineWidth = 3;
+        ctx.strokeStyle = stateColor; ctx.lineWidth = 3.5;
         ctx.beginPath(); ctx.moveTo(bx, topY + 2); ctx.lineTo(bx, botY - 2); ctx.stroke();
-        // Top/bottom caps
         ctx.beginPath();
-        ctx.moveTo(bx, topY + 2); ctx.lineTo(bx + 8, topY + 2);
-        ctx.moveTo(bx, botY - 2); ctx.lineTo(bx + 8, botY - 2);
+        ctx.moveTo(bx, topY + 2); ctx.lineTo(bx + 10, topY + 2);
+        ctx.moveTo(bx, botY - 2); ctx.lineTo(bx + 10, botY - 2);
         ctx.stroke();
-        // Arrowheads (pointing to both ends)
         ctx.fillStyle = stateColor;
-        ctx.beginPath(); ctx.moveTo(bx - 5, topY + 12); ctx.lineTo(bx, topY + 1); ctx.lineTo(bx + 5, topY + 12); ctx.closePath(); ctx.fill();
-        ctx.beginPath(); ctx.moveTo(bx - 5, botY - 12); ctx.lineTo(bx, botY - 1); ctx.lineTo(bx + 5, botY - 12); ctx.closePath(); ctx.fill();
-        // Δf text
+        ctx.beginPath(); ctx.moveTo(bx - 6, topY + 14); ctx.lineTo(bx, topY + 1); ctx.lineTo(bx + 6, topY + 14); ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(bx - 6, botY - 14); ctx.lineTo(bx, botY - 1); ctx.lineTo(bx + 6, botY - 14); ctx.closePath(); ctx.fill();
         ctx.fillStyle = stateColor;
-        ctx.font = `800 ${fLG}px Inter,sans-serif`;
+        ctx.font = `900 ${fLG}px Inter,sans-serif`;
         ctx.textAlign = 'center';
         ctx.fillText('\u0394f', bx - 2, midY + fLG * 0.35);
     }
@@ -450,7 +432,7 @@ function drawFresnel(canvasId, state) {
     const ctx = canvas.getContext('2d');
     const w = canvas.width, h = canvas.height;
     const cx = w / 2, cy = h / 2;
-    const R = w * 0.28;
+    const R = w * 0.30;
 
     ctx.fillStyle = '#e0e0e0';
     ctx.fillRect(0, 0, w, h);
@@ -458,15 +440,15 @@ function drawFresnel(canvasId, state) {
     if (state === 'focus') {
         ctx.fillStyle = '#dcdcdc';
         ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = 'rgba(180,180,180,0.3)'; ctx.lineWidth = 1;
+        ctx.strokeStyle = 'rgba(180,180,180,0.3)'; ctx.lineWidth = 1.5;
         ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
     } else if (state === 'under') {
         ctx.fillStyle = '#d0d0d0';
         ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = 'rgba(25,25,25,0.6)'; ctx.lineWidth = 5;
+        ctx.strokeStyle = 'rgba(25,25,25,0.6)'; ctx.lineWidth = 6;
         ctx.beginPath(); ctx.arc(cx, cy, R - 3, 0, Math.PI * 2); ctx.stroke();
-        ctx.strokeStyle = 'rgba(40,40,40,0.25)'; ctx.lineWidth = 2.5;
-        ctx.beginPath(); ctx.arc(cx, cy, R - 8, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = 'rgba(40,40,40,0.25)'; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(cx, cy, R - 9, 0, Math.PI * 2); ctx.stroke();
         const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.55);
         grad.addColorStop(0, 'rgba(255,255,255,0.25)');
         grad.addColorStop(1, 'rgba(255,255,255,0)');
@@ -475,27 +457,32 @@ function drawFresnel(canvasId, state) {
     } else {
         ctx.fillStyle = '#b5b5b5';
         ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 5;
-        ctx.beginPath(); ctx.arc(cx, cy, R + 4, 0, Math.PI * 2); ctx.stroke();
-        ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 2.5;
-        ctx.beginPath(); ctx.arc(cx, cy, R + 10, 0, Math.PI * 2); ctx.stroke();
-        ctx.strokeStyle = 'rgba(50,50,50,0.35)'; ctx.lineWidth = 2;
+        ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 6;
+        ctx.beginPath(); ctx.arc(cx, cy, R + 5, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(cx, cy, R + 12, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = 'rgba(50,50,50,0.35)'; ctx.lineWidth = 2.5;
         ctx.beginPath(); ctx.arc(cx, cy, R - 1, 0, Math.PI * 2); ctx.stroke();
     }
 
-    ctx.fillStyle = '#555'; ctx.font = '600 12px Inter,sans-serif'; ctx.textAlign = 'center';
-    if (state === 'focus') ctx.fillText('No fringes', cx, h - 6);
-    else if (state === 'under') ctx.fillText('Dark fringe inside', cx, h - 6);
-    else ctx.fillText('Bright fringe outside', cx, h - 6);
+    ctx.fillStyle = '#555'; ctx.font = '700 14px Inter,sans-serif'; ctx.textAlign = 'center';
+    if (state === 'focus') ctx.fillText('No fringes', cx, h - 8);
+    else if (state === 'under') ctx.fillText('Dark fringe inside', cx, h - 8);
+    else ctx.fillText('Bright fringe outside', cx, h - 8);
 }
 
 // ====== INIT ======
-drawRay('ray-over', 'over');
-drawRay('ray-focus', 'focus');
-drawRay('ray-under', 'under');
-drawFresnel('fresnel-over', 'over');
-drawFresnel('fresnel-focus', 'focus');
-drawFresnel('fresnel-under', 'under');
+function renderAll() {
+    initCanvases();
+    drawRay('ray-over', 'over');
+    drawRay('ray-focus', 'focus');
+    drawRay('ray-under', 'under');
+    drawFresnel('fresnel-over', 'over');
+    drawFresnel('fresnel-focus', 'focus');
+    drawFresnel('fresnel-under', 'under');
+}
+renderAll();
+window.addEventListener('resize', () => { clearTimeout(window._resizeTimer); window._resizeTimer = setTimeout(renderAll, 150); });
 </script>
 </body>
 </html>
