@@ -60,6 +60,7 @@ body {
     font-size: 13px; font-weight: 600; color: #5b21b6;
     border-top: 1px solid #eee;
     font-variant-numeric: tabular-nums;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
 /* Info panel */
@@ -252,8 +253,8 @@ function drawImage(nm){
     const um=nm/1000;let l=`defocus: ${um.toFixed(3)} μm`;
     if(Math.abs(um)<0.001)l+='';
     else if(Math.abs(um-0.088)<0.005)l+=' (Scherzer)';
-    else if(um>0.01)l+=' underfocus';
-    else if(um<-0.01)l+=' overfocus';
+    else if(um>0.01)l+=' (under)';
+    else if(um<-0.01)l+=' (over)';
     document.getElementById('defocus-badge').textContent=l;
 }
 
@@ -289,7 +290,7 @@ function drawRayDiagram(nm) {
     const lensR = h * 0.038;     // lens half-height
     // BFP shifts slightly with defocus (focal length changes)
     const bfpBase = h * 0.39;
-    const bfpShift = Math.max(-h * 0.02, Math.min(h * 0.025, (nm / 2000) * h * 0.025));
+    const bfpShift = Math.max(-h * 0.04, Math.min(h * 0.04, (nm / 1000) * h * 0.04));
     const bfpY = bfpBase + bfpShift; // underfocus: BFP lower, overfocus: BFP higher
     const detY = h * 0.56;       // detector (fixed)
     const planeW = w * 0.50;
@@ -386,26 +387,49 @@ function drawRayDiagram(nm) {
     rayCtx.textAlign = 'left';
     rayCtx.fillText('e⁻ beam', cx + 0.18 * planeW, h * 0.03);
 
-    // --- Objective Lens (biconvex shape) ---
+    // --- Objective Lens (continuous biconvex + arms) ---
+    const lensBulge = lensW * 0.18;          // bulge depth for each curved surface
+    const lensHalf  = lensW * 0.35;          // half-width of the biconvex body
+    const lensTop   = lensY - lensR * 1.1;   // top vertex
+    const lensBot   = lensY + lensR * 1.1;   // bottom vertex
+    // Fill — semi-transparent blue tint
+    rayCtx.fillStyle = 'rgba(130,180,240,0.35)';
+    rayCtx.beginPath();
+    rayCtx.moveTo(cx, lensTop);
+    rayCtx.quadraticCurveTo(cx - lensHalf - lensBulge, lensY, cx, lensBot);
+    rayCtx.quadraticCurveTo(cx + lensHalf + lensBulge, lensY, cx, lensTop);
+    rayCtx.closePath();
+    rayCtx.fill();
+    // Stroke — outline
     rayCtx.strokeStyle = '#333';
-    rayCtx.lineWidth = 3;
+    rayCtx.lineWidth = 2.5;
     rayCtx.beginPath();
-    rayCtx.ellipse(cx - lensW/2 + lensR, lensY, lensR, lensR * 1.1, 0, -Math.PI/2, Math.PI/2);
+    rayCtx.moveTo(cx, lensTop);
+    rayCtx.quadraticCurveTo(cx - lensHalf - lensBulge, lensY, cx, lensBot);
     rayCtx.stroke();
     rayCtx.beginPath();
-    rayCtx.ellipse(cx + lensW/2 - lensR, lensY, lensR, lensR * 1.1, 0, Math.PI/2, -Math.PI/2);
+    rayCtx.moveTo(cx, lensBot);
+    rayCtx.quadraticCurveTo(cx + lensHalf + lensBulge, lensY, cx, lensTop);
     rayCtx.stroke();
+    // Horizontal arms extending outward from lens vertices
     rayCtx.lineWidth = 2;
     rayCtx.beginPath();
-    rayCtx.moveTo(cx - lensW/2, lensY - lensR * 1.1);
-    rayCtx.lineTo(cx - lensW/2 + lensR, lensY - lensR * 1.1);
-    rayCtx.moveTo(cx - lensW/2, lensY + lensR * 1.1);
-    rayCtx.lineTo(cx - lensW/2 + lensR, lensY + lensR * 1.1);
-    rayCtx.moveTo(cx + lensW/2, lensY - lensR * 1.1);
-    rayCtx.lineTo(cx + lensW/2 - lensR, lensY - lensR * 1.1);
-    rayCtx.moveTo(cx + lensW/2, lensY + lensR * 1.1);
-    rayCtx.lineTo(cx + lensW/2 - lensR, lensY + lensR * 1.1);
+    rayCtx.moveTo(cx, lensTop); rayCtx.lineTo(cx - lensW/2, lensTop);
+    rayCtx.moveTo(cx, lensBot); rayCtx.lineTo(cx - lensW/2, lensBot);
+    rayCtx.moveTo(cx, lensTop); rayCtx.lineTo(cx + lensW/2, lensTop);
+    rayCtx.moveTo(cx, lensBot); rayCtx.lineTo(cx + lensW/2, lensBot);
     rayCtx.stroke();
+    // Converging arrowheads at top & bottom vertices
+    rayCtx.fillStyle = '#333';
+    const aw = 5, ah = 8;
+    // Top vertex — two inward arrows
+    rayCtx.beginPath();
+    rayCtx.moveTo(cx - aw, lensTop - ah); rayCtx.lineTo(cx, lensTop);
+    rayCtx.lineTo(cx + aw, lensTop - ah); rayCtx.closePath(); rayCtx.fill();
+    // Bottom vertex — two inward arrows
+    rayCtx.beginPath();
+    rayCtx.moveTo(cx - aw, lensBot + ah); rayCtx.lineTo(cx, lensBot);
+    rayCtx.lineTo(cx + aw, lensBot + ah); rayCtx.closePath(); rayCtx.fill();
 
     // Lens label
     rayCtx.fillStyle = '#333';
@@ -413,22 +437,21 @@ function drawRayDiagram(nm) {
     rayCtx.textAlign = 'right';
     rayCtx.fillText('Objective Lens', cx + planeW/2 + fMD * 0.5, lensY + fMD * 0.35);
 
-    // --- Colored rays with CLEAR BENDING at lens ---
-    // Each specimen point → 2 marginal rays hitting different lens positions
-    // Ray bends at the lens plane (entry angle ≠ exit angle)
+    // --- Colored rays: 2 marginal + 1 chief per specimen point ---
     for (let i = 0; i < specPts.length; i++) {
         const sx = cx + specPts[i] * planeW;
         const ix = cx - specPts[i] * planeW * 0.8; // inverted image position
         const color = rayColors[i];
         const targetY = isInFocus ? detY : imgPlaneY;
 
-        // Two marginal rays per specimen point
-        const lensHitFracs = [-0.4, 0.4];
+        // Collect detector crossing X values for disk-of-confusion bar
+        const detCrossXs = [];
 
+        // ── Two marginal rays ──
+        const lensHitFracs = [-0.4, 0.4];
         for (const frac of lensHitFracs) {
             const lensHitX = cx + frac * lensW * 0.45;
-
-            // PART 1: Specimen → Lens hit point (diverging ray)
+            // Part 1: Specimen → Lens (diverging)
             rayCtx.strokeStyle = color;
             rayCtx.lineWidth = 2;
             rayCtx.globalAlpha = 0.7;
@@ -436,56 +459,80 @@ function drawRayDiagram(nm) {
             rayCtx.moveTo(sx, specY + 3);
             rayCtx.lineTo(lensHitX, lensY);
             rayCtx.stroke();
-
-            // PART 2: Lens hit point → Image point (converging, BENT!)
+            // Part 2: Lens → Image point (converging, bent)
             rayCtx.beginPath();
             rayCtx.moveTo(lensHitX, lensY);
             rayCtx.lineTo(ix, targetY);
             rayCtx.stroke();
 
-            // If defocused: show disk of confusion at detector
+            // If defocused: extension + detector crossing
             if (!isInFocus && Math.abs(targetY - detY) > 8) {
-                // Where does this ray cross the detector plane?
                 const t = (detY - lensY) / (targetY - lensY);
                 const detCrossX = lensHitX + (ix - lensHitX) * t;
-
-                // Faint extension beyond image plane (or to detector)
+                detCrossXs.push(detCrossX);
+                // Dashed extension
                 rayCtx.globalAlpha = 0.2;
                 rayCtx.setLineDash([4, 4]);
+                rayCtx.beginPath();
                 if (isUnder) {
-                    // Underfocus: rays haven't converged at detector, show gap
-                    rayCtx.beginPath();
                     rayCtx.moveTo(detCrossX, detY);
                     rayCtx.lineTo(ix, targetY);
-                    rayCtx.stroke();
                 } else {
-                    // Overfocus: rays crossed above detector, diverging
-                    rayCtx.beginPath();
                     rayCtx.moveTo(ix, targetY);
                     rayCtx.lineTo(detCrossX, detY);
-                    rayCtx.stroke();
                 }
+                rayCtx.stroke();
                 rayCtx.setLineDash([]);
-                rayCtx.globalAlpha = 0.7;
-
-                // Disk of confusion dot at detector
-                rayCtx.globalAlpha = 0.5;
-                rayCtx.fillStyle = color;
-                rayCtx.beginPath();
-                rayCtx.arc(detCrossX, detY, 4, 0, Math.PI * 2);
-                rayCtx.fill();
                 rayCtx.globalAlpha = 0.7;
             }
         }
 
-        // Image convergence point marker
-        rayCtx.globalAlpha = 0.9;
-        rayCtx.fillStyle = color;
+        // ── Chief ray (through lens center, undeviated) ──
+        rayCtx.strokeStyle = color;
+        rayCtx.lineWidth = 1.2;
+        rayCtx.globalAlpha = 0.35;
         rayCtx.beginPath();
-        rayCtx.arc(ix, targetY, 5, 0, Math.PI * 2);
-        rayCtx.fill();
+        rayCtx.moveTo(sx, specY + 3);
+        rayCtx.lineTo(cx, lensY);
+        rayCtx.stroke();
+        // Chief ray continues straight after lens center
+        const chiefDx = cx - sx;
+        const chiefDy = lensY - specY;
+        const chiefExtY = Math.max(targetY, detY) + 10;
+        const chiefExtX = cx + chiefDx * ((chiefExtY - lensY) / chiefDy);
+        rayCtx.beginPath();
+        rayCtx.moveTo(cx, lensY);
+        rayCtx.lineTo(chiefExtX, chiefExtY);
+        rayCtx.stroke();
+        rayCtx.globalAlpha = 1.0;
+
+        // ── Disk of confusion bar at detector (replaces small dots) ──
+        if (!isInFocus && detCrossXs.length === 2) {
+            const barLeft = Math.min(detCrossXs[0], detCrossXs[1]);
+            const barRight = Math.max(detCrossXs[0], detCrossXs[1]);
+            const barH = 16;
+            // Semi-transparent fill bar
+            rayCtx.fillStyle = color;
+            rayCtx.globalAlpha = 0.18;
+            rayCtx.fillRect(barLeft, detY - barH/2, barRight - barLeft, barH);
+            // Outline
+            rayCtx.globalAlpha = 0.5;
+            rayCtx.strokeStyle = color;
+            rayCtx.lineWidth = 1;
+            rayCtx.strokeRect(barLeft, detY - barH/2, barRight - barLeft, barH);
+            rayCtx.globalAlpha = 1.0;
+        }
+
+        // ── Image convergence point marker (skip when in-focus) ──
+        if (!isInFocus) {
+            rayCtx.globalAlpha = 0.9;
+            rayCtx.fillStyle = color;
+            rayCtx.beginPath();
+            rayCtx.arc(ix, targetY, 5, 0, Math.PI * 2);
+            rayCtx.fill();
+            rayCtx.globalAlpha = 1.0;
+        }
     }
-    rayCtx.globalAlpha = 1.0;
 
     // --- Back Focal Plane (BFP) dashed line ---
     rayCtx.strokeStyle = '#999';
@@ -502,6 +549,20 @@ function drawRayDiagram(nm) {
     const bfpLabel = isInFocus ? 'Back Focal Plane (f)' :
         isUnder ? 'BFP (f↑ longer)' : 'BFP (f↓ shorter)';
     rayCtx.fillText(bfpLabel, cx + planeW/2 + fSM * 0.3, bfpY + fSM * 0.4);
+
+    // BFP position tracker triangle (colored, shows shift direction)
+    if (!isInFocus) {
+        const mkX = cx + planeW * 0.4 + 8;
+        rayCtx.fillStyle = stateColor;
+        rayCtx.globalAlpha = 0.6;
+        rayCtx.beginPath();
+        rayCtx.moveTo(mkX, bfpY - 6);
+        rayCtx.lineTo(mkX + 10, bfpY);
+        rayCtx.lineTo(mkX, bfpY + 6);
+        rayCtx.closePath();
+        rayCtx.fill();
+        rayCtx.globalAlpha = 1.0;
+    }
 
     // --- Image Plane (moves with defocus) ---
     if (!isInFocus) {
