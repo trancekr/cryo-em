@@ -67,10 +67,11 @@ body {
 /* Fresnel + key points in a bottom bar */
 .bottom-bar {
   flex-shrink: 0;
-  display: flex; align-items: center; gap: clamp(10px, 1.5vw, 20px);
+  display: flex; align-items: flex-start; gap: clamp(10px, 1.5vw, 20px);
   padding: clamp(8px, 1.2vh, 16px) clamp(10px, 1.5vw, 20px);
   border-top: 2px solid #eee;
   background: #fafafe;
+  /* min-height set by JS to equalize across columns */
 }
 .bottom-bar canvas {
   width: clamp(120px, 16vh, 200px); height: clamp(120px, 16vh, 200px);
@@ -479,6 +480,15 @@ function drawFresnel(canvasId, state) {
     // No text inside canvas — descriptions are in HTML below
 }
 
+// ====== EQUALIZE BOTTOM BARS ======
+function equalizeBottomBars() {
+    const bars = document.querySelectorAll('.bottom-bar');
+    bars.forEach(b => b.style.minHeight = '');
+    let maxH = 0;
+    bars.forEach(b => { if (b.scrollHeight > maxH) maxH = b.scrollHeight; });
+    bars.forEach(b => b.style.minHeight = maxH + 'px');
+}
+
 // ====== INIT ======
 function renderAll() {
     initCanvases();
@@ -488,6 +498,7 @@ function renderAll() {
     drawFresnel('fresnel-over', 'over');
     drawFresnel('fresnel-focus', 'focus');
     drawFresnel('fresnel-under', 'under');
+    equalizeBottomBars();
 }
 renderAll();
 window.addEventListener('resize', () => { clearTimeout(window._resizeTimer); window._resizeTimer = setTimeout(renderAll, 150); });
