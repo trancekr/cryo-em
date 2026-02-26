@@ -182,7 +182,7 @@ function drawRay(canvasId, state) {
     const labelX  = cx + planeW / 2 + 10;
 
     // Image plane positions
-    const imgPlaneMap = { over: detY - h * 0.20, focus: detY, under: detY + h * 0.28 };
+    const imgPlaneMap = { over: detY - h * 0.20, focus: detY, under: detY + h * 0.20 };
     const imgPlaneY = imgPlaneMap[state];
 
     const isInFocus = state === 'focus';
