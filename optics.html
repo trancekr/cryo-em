@@ -42,7 +42,19 @@ body {
 /* Left: Ray Diagram */
 .col-ray { grid-column: 1; }
 .ray-wrap canvas {
-    display: block; width: 100%; aspect-ratio: 5 / 4;
+    display: block; width: 100%; aspect-ratio: 5 / 3;
+}
+#ray-state-badge {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 16px; justify-content: center; flex-wrap: wrap;
+}
+#ray-state-badge .state-pill {
+    display: inline-block; padding: 4px 16px; border-radius: 14px;
+    font-size: 14px; font-weight: 800; letter-spacing: 1px;
+    border: 2px solid; line-height: 1.4;
+}
+#ray-state-badge .state-sub {
+    font-size: 12px; color: #888; font-weight: 500;
 }
 
 /* Right: Side panel */
@@ -157,7 +169,8 @@ input[type=range]::-webkit-slider-thumb {
     <div class="main-grid">
         <div class="col-ray">
             <div class="card ray-wrap">
-                <canvas id="rayCanvas" width="1000" height="800"></canvas>
+                <canvas id="rayCanvas" width="1000" height="600"></canvas>
+                <div id="ray-state-badge"></div>
             </div>
         </div>
 
@@ -285,10 +298,10 @@ function drawRayDiagram(nm) {
     const cx = w / 2;
 
     // --- Layout (spread to fill canvas) ---
-    const specY    = h * 0.13;
-    const lensY    = h * 0.30;
-    const bfpBase  = h * 0.44;
-    const detY     = h * 0.64;
+    const specY    = h * 0.10;
+    const lensY    = h * 0.32;
+    const bfpBase  = h * 0.48;
+    const detY     = h * 0.70;
     const planeW   = w * 0.54;
     const lensW    = w * 0.50;
 
@@ -308,11 +321,11 @@ function drawRayDiagram(nm) {
     const stateBg = isOver ? '#fef2f2' : isUnder ? '#eff6ff' : '#ecfdf5';
 
     // Font sizes
-    const fXL = Math.round(h * 0.044);
-    const fLG = Math.round(h * 0.036);
-    const fMD = Math.round(h * 0.030);
-    const fSM = Math.round(h * 0.025);
-    const fXS = Math.round(h * 0.020);
+    const fXL = Math.round(h * 0.055);
+    const fLG = Math.round(h * 0.045);
+    const fMD = Math.round(h * 0.038);
+    const fSM = Math.round(h * 0.030);
+    const fXS = Math.round(h * 0.025);
 
     // Helper: draw text with white background (prevents overlap with lines)
     function labelWithBg(text, x, y, font, color, align) {
@@ -356,24 +369,33 @@ function drawRayDiagram(nm) {
     const rayColors = ['#dc2626', '#059669', '#2563eb'];
     const specPts = [-0.14, 0, 0.14];
 
-    // --- Beam (subtle strip + small arrows, label on right) ---
-    rayCtx.fillStyle = 'rgba(100,130,180,0.05)';
-    rayCtx.fillRect(cx - planeW * 0.18, h * 0.02, planeW * 0.36, specY - h * 0.02);
-    rayCtx.strokeStyle = '#bbb';
-    rayCtx.lineWidth = 1;
+    // --- Electron Beam (gradient strip + thick arrows + label) ---
+    const beamTop = h * 0.01;
+    const beamGrad = rayCtx.createLinearGradient(0, beamTop, 0, specY);
+    beamGrad.addColorStop(0, 'rgba(80,110,170,0.18)');
+    beamGrad.addColorStop(1, 'rgba(80,110,170,0.03)');
+    rayCtx.fillStyle = beamGrad;
+    rayCtx.fillRect(cx - planeW * 0.18, beamTop, planeW * 0.36, specY - beamTop);
+    rayCtx.strokeStyle = '#999';
+    rayCtx.lineWidth = 2;
     for (const frac of [-0.06, 0, 0.06]) {
         const bx = cx + frac * planeW;
         rayCtx.beginPath();
-        rayCtx.moveTo(bx, h * 0.02); rayCtx.lineTo(bx, specY - 6); rayCtx.stroke();
-        rayCtx.fillStyle = '#bbb';
+        rayCtx.moveTo(bx, beamTop + 2); rayCtx.lineTo(bx, specY - 8); rayCtx.stroke();
+        rayCtx.fillStyle = '#888';
         rayCtx.beginPath();
-        rayCtx.moveTo(bx - 3, specY - 9); rayCtx.lineTo(bx, specY - 2);
-        rayCtx.lineTo(bx + 3, specY - 9); rayCtx.fill();
+        rayCtx.moveTo(bx - 5, specY - 12); rayCtx.lineTo(bx, specY - 2);
+        rayCtx.lineTo(bx + 5, specY - 12); rayCtx.fill();
     }
-    rayCtx.fillStyle = '#999';
-    rayCtx.font = `500 ${fSM}px Inter,sans-serif`;
+    // "e⁻" label (large, bold)
+    rayCtx.fillStyle = '#666';
+    rayCtx.font = `700 ${fMD}px Inter,sans-serif`;
     rayCtx.textAlign = 'left';
-    rayCtx.fillText('e⁻', cx + planeW * 0.10, specY * 0.6);
+    rayCtx.fillText('e⁻', cx + planeW * 0.12, specY * 0.45);
+    // "Electron Beam" subtitle
+    rayCtx.fillStyle = '#aaa';
+    rayCtx.font = `500 ${fXS}px Inter,sans-serif`;
+    rayCtx.fillText('Electron Beam', cx + planeW * 0.12, specY * 0.45 + fXS * 1.3);
 
     // --- Specimen ---
     rayCtx.strokeStyle = '#222';
@@ -394,8 +416,11 @@ function drawRayDiagram(nm) {
     // --- Objective Lens (horizontal biconvex — standard optics symbol) ---
     const lensBodyW = lensW * 0.60;
     const lensBodyH = h * 0.045;
-    // Fill
-    rayCtx.fillStyle = 'rgba(130,180,240,0.25)';
+    // Fill (semi-transparent blue with radial gradient)
+    const lensGrad = rayCtx.createRadialGradient(cx, lensY, 0, cx, lensY, lensBodyW * 0.6);
+    lensGrad.addColorStop(0, 'rgba(160,200,255,0.50)');
+    lensGrad.addColorStop(1, 'rgba(100,150,220,0.30)');
+    rayCtx.fillStyle = lensGrad;
     rayCtx.beginPath();
     rayCtx.moveTo(cx - lensBodyW/2, lensY);
     rayCtx.quadraticCurveTo(cx, lensY - lensBodyH, cx + lensBodyW/2, lensY);
@@ -571,8 +596,14 @@ function drawRayDiagram(nm) {
     rayCtx.stroke();
     rayCtx.setLineDash([]);
     if (isInFocus) {
-        labelWithBg('Back Focal Plane (f)', cx + planeW * 0.36 + fSM, bfpBase + fSM * 0.4,
-            `500 ${fSM}px Inter,sans-serif`, '#888', 'left');
+        // BFP label: "BFP" bold + subtitle
+        const bfpLabelX = cx + planeW * 0.36 + fSM;
+        labelWithBg('BFP', bfpLabelX, bfpBase + fMD * 0.3,
+            `700 ${fMD}px Inter,sans-serif`, '#666', 'left');
+        rayCtx.fillStyle = '#aaa';
+        rayCtx.font = `400 ${fXS}px Inter,sans-serif`;
+        rayCtx.textAlign = 'left';
+        rayCtx.fillText('Back Focal Plane', bfpLabelX, bfpBase + fMD * 0.3 + fXS * 1.2);
     } else {
         // Colored shifted BFP
         rayCtx.strokeStyle = stateColor;
@@ -585,12 +616,14 @@ function drawRayDiagram(nm) {
         rayCtx.stroke();
         rayCtx.setLineDash([]);
         rayCtx.globalAlpha = 1.0;
-        const bfpLabel = isUnder ? 'BFP (f↑)' : 'BFP (f↓)';
-        labelWithBg(bfpLabel, cx + planeW * 0.36 + fSM, bfpY + fSM * 0.4,
-            `600 ${fSM}px Inter,sans-serif`, stateColor, 'left');
+        const bfpArrow = isUnder ? '(f↑)' : '(f↓)';
+        const bfpLabelX2 = cx + planeW * 0.36 + fSM;
+        labelWithBg('BFP ' + bfpArrow, bfpLabelX2, bfpY + fSM * 0.4,
+            `700 ${fSM}px Inter,sans-serif`, stateColor, 'left');
     }
 
     // --- Image Plane (moves with defocus) ---
+    const planeGap = Math.abs(imgPlaneY - detY);
     if (!isInFocus) {
         rayCtx.strokeStyle = stateColor;
         rayCtx.lineWidth = 2.5;
@@ -600,92 +633,81 @@ function drawRayDiagram(nm) {
         rayCtx.lineTo(cx + planeW * 0.4, imgPlaneY);
         rayCtx.stroke();
         rayCtx.setLineDash([]);
-        labelWithBg('Image Plane', cx + planeW / 2 + fSM * 0.5, imgPlaneY + fSM * 0.4,
-            `600 ${fSM}px Inter,sans-serif`, stateColor, 'left');
+        // Label position: right side normally, left side when close to detector to avoid overlap
+        if (planeGap < 35) {
+            labelWithBg('Image Plane', cx - planeW / 2 - fSM * 0.5, imgPlaneY + fSM * 0.4,
+                `600 ${fSM}px Inter,sans-serif`, stateColor, 'right');
+        } else {
+            labelWithBg('Image Plane', cx + planeW / 2 + fSM * 0.5, imgPlaneY + fSM * 0.4,
+                `600 ${fSM}px Inter,sans-serif`, stateColor, 'left');
+        }
     }
 
-    // --- Detector / Recording plane (fixed) ---
+    // --- Detector / Recording plane (fixed, with tick marks) ---
     rayCtx.strokeStyle = '#222';
     rayCtx.lineWidth = 4;
     rayCtx.beginPath();
     rayCtx.moveTo(cx - planeW/2, detY);
     rayCtx.lineTo(cx + planeW/2, detY);
     rayCtx.stroke();
-
-    // Detector icon (small camera)
-    rayCtx.fillStyle = '#444';
-    const camX = cx - planeW/2 + 10;
-    const camW = 36, camH = 24;
-    rayCtx.fillRect(camX, detY - camH/2, camW, camH);
-    rayCtx.fillStyle = '#888';
+    // Tick marks at both ends
+    rayCtx.lineWidth = 3;
+    const tickH = 12;
     rayCtx.beginPath();
-    rayCtx.arc(camX + camW/2, detY, 8, 0, Math.PI * 2);
-    rayCtx.fill();
+    rayCtx.moveTo(cx - planeW/2, detY - tickH); rayCtx.lineTo(cx - planeW/2, detY + tickH);
+    rayCtx.moveTo(cx + planeW/2, detY - tickH); rayCtx.lineTo(cx + planeW/2, detY + tickH);
+    rayCtx.stroke();
     const detLabel = isInFocus ? 'Detector = Image Plane' : 'Detector';
     labelWithBg(detLabel, cx + planeW / 2 + fSM * 0.5, detY + fSM * 0.4,
         `600 ${fSM}px Inter,sans-serif`, '#333', 'left');
 
-    // --- Δf arrow (inward-pointing, no overflow) ---
+    // --- Δf indicator ---
     if (!isInFocus) {
-        const arrowX = cx - planeW / 2 - fSM;
+        const arrowX = cx - planeW / 2 - fSM * 1.2;
         const topEnd = Math.min(detY, imgPlaneY);
         const botEnd = Math.max(detY, imgPlaneY);
-        rayCtx.strokeStyle = stateColor;
-        rayCtx.lineWidth = 2.5;
-        rayCtx.beginPath();
-        rayCtx.moveTo(arrowX, topEnd);
-        rayCtx.lineTo(arrowX, botEnd);
-        rayCtx.stroke();
-        // Inward arrowheads (tips stay inside the span)
+
+        if (planeGap >= 20) {
+            // Full arrow with arrowheads
+            rayCtx.strokeStyle = stateColor;
+            rayCtx.lineWidth = 4;
+            rayCtx.beginPath();
+            rayCtx.moveTo(arrowX, topEnd);
+            rayCtx.lineTo(arrowX, botEnd);
+            rayCtx.stroke();
+            // Larger inward arrowheads
+            rayCtx.fillStyle = stateColor;
+            rayCtx.beginPath();
+            rayCtx.moveTo(arrowX - 10, topEnd + 16);
+            rayCtx.lineTo(arrowX, topEnd);
+            rayCtx.lineTo(arrowX + 10, topEnd + 16);
+            rayCtx.closePath(); rayCtx.fill();
+            rayCtx.beginPath();
+            rayCtx.moveTo(arrowX - 10, botEnd - 16);
+            rayCtx.lineTo(arrowX, botEnd);
+            rayCtx.lineTo(arrowX + 10, botEnd - 16);
+            rayCtx.closePath(); rayCtx.fill();
+            // Δf label (large, bold)
+            rayCtx.fillStyle = stateColor;
+            rayCtx.font = `800 ${fXL}px Inter,sans-serif`;
+            rayCtx.textAlign = 'center';
+            rayCtx.fillText('Δf', arrowX - fXL * 0.8, (topEnd + botEnd) / 2 + fXL * 0.35);
+        }
+        // Value text (always shown, below the lower endpoint)
         rayCtx.fillStyle = stateColor;
-        rayCtx.beginPath();
-        rayCtx.moveTo(arrowX - 6, topEnd + 10);
-        rayCtx.lineTo(arrowX, topEnd);
-        rayCtx.lineTo(arrowX + 6, topEnd + 10);
-        rayCtx.closePath(); rayCtx.fill();
-        rayCtx.beginPath();
-        rayCtx.moveTo(arrowX - 6, botEnd - 10);
-        rayCtx.lineTo(arrowX, botEnd);
-        rayCtx.lineTo(arrowX + 6, botEnd - 10);
-        rayCtx.closePath(); rayCtx.fill();
-        // Δf label
-        rayCtx.fillStyle = stateColor;
-        rayCtx.font = `700 ${fLG}px Inter,sans-serif`;
-        rayCtx.textAlign = 'center';
-        rayCtx.fillText('Δf', arrowX - fLG * 1.2, (topEnd + botEnd) / 2 + fLG * 0.35);
+        rayCtx.font = `600 ${fSM}px Inter,sans-serif`;
+        rayCtx.textAlign = 'left';
+        const valText = `Δf = ${Math.abs(um).toFixed(3)} μm`;
+        rayCtx.fillText(valText, arrowX - fSM * 0.5, botEnd + fSM * 1.8);
     }
 
-    // --- State badge (dynamic position, always below image plane) ---
-    let stateText = '';
-    if (isInFocus) stateText = 'IN FOCUS';
-    else if (isUnder) stateText = 'UNDERFOCUS';
-    else stateText = 'OVERFOCUS';
-
-    rayCtx.font = `800 ${fXL}px Inter,sans-serif`;
-    const tw = rayCtx.measureText(stateText).width + 50;
-    const badgeBase = Math.max(detY, imgPlaneY);
-    const badgeY = Math.min(h - 95, badgeBase + h * 0.10);
-    // Badge background
-    rayCtx.fillStyle = stateBg;
-    rayCtx.strokeStyle = stateColor;
-    rayCtx.lineWidth = 2;
-    rayCtx.beginPath();
-    rayCtx.roundRect(cx - tw/2, badgeY, tw, fXL * 1.8, 14);
-    rayCtx.fill();
-    rayCtx.stroke();
-    // Badge text
-    rayCtx.fillStyle = stateColor;
-    rayCtx.textAlign = 'center';
-    rayCtx.fillText(stateText, cx, badgeY + fXL * 1.3);
-
-    // Sub-label
-    rayCtx.fillStyle = '#888';
-    rayCtx.font = `500 ${fSM}px Inter,sans-serif`;
-    let subText = '';
-    if (isInFocus) subText = 'Lens exactly focused — image plane at detector';
-    else if (isUnder) subText = 'Lens weaker (f↑) → image plane below detector';
-    else subText = 'Lens stronger (f↓) → image plane above detector';
-    rayCtx.fillText(subText, cx, badgeY + fXL * 1.8 + fSM * 1.2);
+    // --- State badge → HTML element (outside canvas) ---
+    let stateText = '', subText = '';
+    if (isInFocus) { stateText = 'IN FOCUS'; subText = 'Lens exactly focused — image plane at detector'; }
+    else if (isUnder) { stateText = 'UNDERFOCUS'; subText = 'Lens weaker (f↑) — image plane below detector'; }
+    else { stateText = 'OVERFOCUS'; subText = 'Lens stronger (f↓) — image plane above detector'; }
+    const badgeEl = document.getElementById('ray-state-badge');
+    badgeEl.innerHTML = `<span class="state-pill" style="background:${stateBg};color:${stateColor};border-color:${stateColor}">${stateText}</span><span class="state-sub">${subText}</span>`;
 }
 
 // ====== INFO PANEL ======
