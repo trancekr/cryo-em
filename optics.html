@@ -172,7 +172,7 @@ function drawRay(canvasId, state) {
     const nm = nmMap[state];
     const um = nm / 1000;
 
-    // Layout — push detector down to use more vertical space
+    // Layout
     const specY   = h * 0.06;
     const lensY   = h * 0.30;
     const bfpBase = h * 0.40;
@@ -181,9 +181,7 @@ function drawRay(canvasId, state) {
     const lensW   = w * 0.40;
     const labelX  = cx + planeW / 2 + 10;
 
-    // Hardcoded image plane positions for DRAMATIC angle difference
-    // Overfocus: image plane far ABOVE detector (strong lens converges steeply)
-    // Underfocus: image plane far BELOW detector (weak lens converges shallowly)
+    // Image plane positions
     const imgPlaneMap = { over: detY - h * 0.20, focus: detY, under: detY + h * 0.28 };
     const imgPlaneY = imgPlaneMap[state];
 
@@ -387,7 +385,7 @@ function drawRay(canvasId, state) {
         ctx.moveTo(cx - planeW * 0.42, imgPlaneY);
         ctx.lineTo(cx + planeW * 0.42, imgPlaneY);
         ctx.stroke(); ctx.setLineDash([]);
-        labelBg('Image Plane', labelX, imgPlaneY + fSM * 0.35,
+        labelBg('Image Plane', labelX, imgPlaneY + fSM * 1.3,
             `800 ${fSM}px Inter,sans-serif`, stateColor);
     }
 
