@@ -283,25 +283,22 @@ function drawRayDiagram(nm) {
     const um = nm / 1000;
     const cx = w / 2;
 
-    // --- Layout proportions (use full vertical space) ---
-    const objY = h * 0.03;       // object label
-    const specY = h * 0.08;      // specimen plane
-    const lensY = h * 0.24;      // objective lens center
-    const lensR = h * 0.042;     // lens half-height (slightly bigger)
-    // BFP shifts slightly with defocus (focal length changes)
-    const bfpBase = h * 0.36;
-    const bfpShift = Math.max(-h * 0.04, Math.min(h * 0.04, (nm / 1000) * h * 0.04));
-    const bfpY = bfpBase + bfpShift; // underfocus: BFP lower, overfocus: BFP higher
-    const detY = h * 0.53;       // detector (fixed)
-    const planeW = w * 0.54;     // wider planes
-    const lensW = w * 0.36;      // wider lens
+    // --- Layout (spread to fill canvas) ---
+    const specY    = h * 0.05;
+    const lensY    = h * 0.22;
+    const bfpBase  = h * 0.35;
+    const detY     = h * 0.50;
+    const planeW   = w * 0.58;
+    const lensW    = w * 0.52;
 
-    // Image plane: sqrt-scaled shift for visibility
-    const baseFocalY = detY;
+    // BFP shifts with defocus
+    const bfpShift = Math.max(-h * 0.04, Math.min(h * 0.04, um * h * 0.04));
+    const bfpY = bfpBase + bfpShift;
+
+    // Image plane (sqrt-scaled, clamped above badge)
     const sign = nm >= 0 ? 1 : -1;
-    const scaledShift = sign * Math.sqrt(Math.abs(nm) / 1000) * h * 0.22;
-    const focalShift = Math.max(-h * 0.14, Math.min(h * 0.28, scaledShift));
-    const imgPlaneY = baseFocalY + focalShift;
+    const scaledShift = sign * Math.sqrt(Math.abs(nm) / 1000) * h * 0.24;
+    const imgPlaneY = detY + Math.max(-h * 0.15, Math.min(h * 0.30, scaledShift));
 
     // State
     const isInFocus = Math.abs(um) < 0.01;
@@ -341,11 +338,11 @@ function drawRayDiagram(nm) {
     // --- Defocus zone shading (subtle gradient) ---
     if (!isInFocus) {
         if (isOver) {
-            const g = rayCtx.createLinearGradient(0, lensY + lensR, 0, detY);
+            const g = rayCtx.createLinearGradient(0, lensY + h * 0.03, 0, detY);
             g.addColorStop(0, 'rgba(220,38,38,0)');
             g.addColorStop(1, 'rgba(220,38,38,0.04)');
             rayCtx.fillStyle = g;
-            rayCtx.fillRect(0, lensY + lensR, w, detY - lensY - lensR);
+            rayCtx.fillRect(0, lensY + h * 0.03, w, detY - lensY - h * 0.03);
         } else {
             const g = rayCtx.createLinearGradient(0, detY, 0, detY + h * 0.26);
             g.addColorStop(0, 'rgba(37,99,235,0.04)');
@@ -355,100 +352,87 @@ function drawRayDiagram(nm) {
         }
     }
 
-    // --- Ray colors (3 specimen points for clarity) ---
+    // --- Ray colors ---
     const rayColors = ['#dc2626', '#059669', '#2563eb'];
     const specPts = [-0.22, 0, 0.22];
 
-    // --- Object / Specimen ---
-    rayCtx.fillStyle = '#333';
-    rayCtx.font = `700 ${fLG}px Inter,sans-serif`;
-    rayCtx.textAlign = 'center';
-    rayCtx.fillText('Object (specimen)', cx, objY + fLG * 0.4);
+    // --- Beam (subtle strip + small arrows, label on right) ---
+    rayCtx.fillStyle = 'rgba(100,130,180,0.05)';
+    rayCtx.fillRect(cx - planeW * 0.18, 0, planeW * 0.36, specY);
+    rayCtx.strokeStyle = '#bbb';
+    rayCtx.lineWidth = 1;
+    for (const frac of [-0.06, 0, 0.06]) {
+        const bx = cx + frac * planeW;
+        rayCtx.beginPath();
+        rayCtx.moveTo(bx, 0); rayCtx.lineTo(bx, specY - 6); rayCtx.stroke();
+        rayCtx.fillStyle = '#bbb';
+        rayCtx.beginPath();
+        rayCtx.moveTo(bx - 3, specY - 9); rayCtx.lineTo(bx, specY - 2);
+        rayCtx.lineTo(bx + 3, specY - 9); rayCtx.fill();
+    }
+    rayCtx.fillStyle = '#999';
+    rayCtx.font = `500 ${fSM}px Inter,sans-serif`;
+    rayCtx.textAlign = 'left';
+    rayCtx.fillText('e⁻', cx + planeW * 0.10, specY * 0.6);
 
-    // Specimen plane - thick black line
+    // --- Specimen ---
     rayCtx.strokeStyle = '#222';
     rayCtx.lineWidth = 3;
     rayCtx.beginPath();
     rayCtx.moveTo(cx - planeW/2, specY);
     rayCtx.lineTo(cx + planeW/2, specY);
     rayCtx.stroke();
-
-    // Specimen feature dots
     for (let i = 0; i < specPts.length; i++) {
-        const sx = cx + specPts[i] * planeW;
         rayCtx.fillStyle = rayColors[i];
         rayCtx.beginPath();
-        rayCtx.arc(sx, specY, 6, 0, Math.PI * 2);
+        rayCtx.arc(cx + specPts[i] * planeW, specY, 6, 0, Math.PI * 2);
         rayCtx.fill();
     }
+    labelWithBg('Specimen', cx + planeW * 0.42, specY + fSM * 0.4,
+        `600 ${fSM}px Inter,sans-serif`, '#333', 'left');
 
-    // --- Incident beam (parallel arrows from top) ---
-    rayCtx.strokeStyle = '#555';
-    rayCtx.lineWidth = 1.5;
-    rayCtx.setLineDash([]);
-    for (const frac of [-0.15, -0.075, 0, 0.075, 0.15]) {
-        const bx = cx + frac * planeW;
-        rayCtx.beginPath();
-        rayCtx.moveTo(bx, 0);
-        rayCtx.lineTo(bx, specY - 8);
-        rayCtx.stroke();
-        rayCtx.fillStyle = '#555';
-        rayCtx.beginPath();
-        rayCtx.moveTo(bx - 4, specY - 14);
-        rayCtx.lineTo(bx, specY - 5);
-        rayCtx.lineTo(bx + 4, specY - 14);
-        rayCtx.fill();
-    }
-    rayCtx.fillStyle = '#333';
-    rayCtx.font = `600 ${fSM}px Inter,sans-serif`;
-    rayCtx.textAlign = 'left';
-    rayCtx.fillText('e⁻ beam', cx + 0.18 * planeW, h * 0.03);
-
-    // --- Objective Lens (continuous biconvex + arms) ---
-    const lensBulge = lensW * 0.18;          // bulge depth for each curved surface
-    const lensHalf  = lensW * 0.35;          // half-width of the biconvex body
-    const lensTop   = lensY - lensR * 1.1;   // top vertex
-    const lensBot   = lensY + lensR * 1.1;   // bottom vertex
-    // Fill — semi-transparent blue tint
-    rayCtx.fillStyle = 'rgba(130,180,240,0.35)';
+    // --- Objective Lens (horizontal biconvex — standard optics symbol) ---
+    const lensBodyW = lensW * 0.50;
+    const lensBodyH = h * 0.030;
+    // Fill
+    rayCtx.fillStyle = 'rgba(130,180,240,0.25)';
     rayCtx.beginPath();
-    rayCtx.moveTo(cx, lensTop);
-    rayCtx.quadraticCurveTo(cx - lensHalf - lensBulge, lensY, cx, lensBot);
-    rayCtx.quadraticCurveTo(cx + lensHalf + lensBulge, lensY, cx, lensTop);
+    rayCtx.moveTo(cx - lensBodyW/2, lensY);
+    rayCtx.quadraticCurveTo(cx, lensY - lensBodyH, cx + lensBodyW/2, lensY);
+    rayCtx.quadraticCurveTo(cx, lensY + lensBodyH, cx - lensBodyW/2, lensY);
     rayCtx.closePath();
     rayCtx.fill();
-    // Stroke — outline
+    // Outline
     rayCtx.strokeStyle = '#333';
     rayCtx.lineWidth = 2.5;
     rayCtx.beginPath();
-    rayCtx.moveTo(cx, lensTop);
-    rayCtx.quadraticCurveTo(cx - lensHalf - lensBulge, lensY, cx, lensBot);
+    rayCtx.moveTo(cx - lensBodyW/2, lensY);
+    rayCtx.quadraticCurveTo(cx, lensY - lensBodyH, cx + lensBodyW/2, lensY);
     rayCtx.stroke();
     rayCtx.beginPath();
-    rayCtx.moveTo(cx, lensBot);
-    rayCtx.quadraticCurveTo(cx + lensHalf + lensBulge, lensY, cx, lensTop);
+    rayCtx.moveTo(cx + lensBodyW/2, lensY);
+    rayCtx.quadraticCurveTo(cx, lensY + lensBodyH, cx - lensBodyW/2, lensY);
     rayCtx.stroke();
-    // Horizontal arms extending outward from lens vertices
+    // Arms (horizontal lines from lens edges outward)
     rayCtx.lineWidth = 2;
     rayCtx.beginPath();
-    rayCtx.moveTo(cx, lensTop); rayCtx.lineTo(cx - lensW/2, lensTop);
-    rayCtx.moveTo(cx, lensBot); rayCtx.lineTo(cx - lensW/2, lensBot);
-    rayCtx.moveTo(cx, lensTop); rayCtx.lineTo(cx + lensW/2, lensTop);
-    rayCtx.moveTo(cx, lensBot); rayCtx.lineTo(cx + lensW/2, lensBot);
+    rayCtx.moveTo(cx - lensBodyW/2, lensY); rayCtx.lineTo(cx - lensW/2, lensY);
+    rayCtx.moveTo(cx + lensBodyW/2, lensY); rayCtx.lineTo(cx + lensW/2, lensY);
     rayCtx.stroke();
-    // Converging arrowheads at top & bottom vertices
+    // Converging arrows at top & bottom of lens body
     rayCtx.fillStyle = '#333';
-    const aw = 5, ah = 8;
-    // Top vertex — two inward arrows
+    const aw = 6, ah = 9;
     rayCtx.beginPath();
-    rayCtx.moveTo(cx - aw, lensTop - ah); rayCtx.lineTo(cx, lensTop);
-    rayCtx.lineTo(cx + aw, lensTop - ah); rayCtx.closePath(); rayCtx.fill();
-    // Bottom vertex — two inward arrows
+    rayCtx.moveTo(cx - aw, lensY - lensBodyH - ah);
+    rayCtx.lineTo(cx, lensY - lensBodyH);
+    rayCtx.lineTo(cx + aw, lensY - lensBodyH - ah);
+    rayCtx.closePath(); rayCtx.fill();
     rayCtx.beginPath();
-    rayCtx.moveTo(cx - aw, lensBot + ah); rayCtx.lineTo(cx, lensBot);
-    rayCtx.lineTo(cx + aw, lensBot + ah); rayCtx.closePath(); rayCtx.fill();
-
-    // Lens label
+    rayCtx.moveTo(cx - aw, lensY + lensBodyH + ah);
+    rayCtx.lineTo(cx, lensY + lensBodyH);
+    rayCtx.lineTo(cx + aw, lensY + lensBodyH + ah);
+    rayCtx.closePath(); rayCtx.fill();
+    // Label
     labelWithBg('Objective Lens', cx + planeW * 0.42, lensY + fMD * 0.35,
         `700 ${fMD}px Inter,sans-serif`, '#333', 'left');
 
@@ -564,32 +548,34 @@ function drawRayDiagram(nm) {
         }
     }
 
-    // --- Back Focal Plane (BFP) dashed line ---
-    rayCtx.strokeStyle = '#999';
-    rayCtx.lineWidth = 1.5;
-    rayCtx.setLineDash([8, 5]);
+    // --- Back Focal Plane (BFP) ---
+    // Reference BFP (always visible, light gray)
+    rayCtx.strokeStyle = '#ddd';
+    rayCtx.lineWidth = 1;
+    rayCtx.setLineDash([6, 4]);
     rayCtx.beginPath();
-    rayCtx.moveTo(cx - planeW * 0.4, bfpY);
-    rayCtx.lineTo(cx + planeW * 0.4, bfpY);
+    rayCtx.moveTo(cx - planeW * 0.36, bfpBase);
+    rayCtx.lineTo(cx + planeW * 0.36, bfpBase);
     rayCtx.stroke();
     rayCtx.setLineDash([]);
-    const bfpLabel = isInFocus ? 'Back Focal Plane (f)' :
-        isUnder ? 'BFP (f↑ longer)' : 'BFP (f↓ shorter)';
-    labelWithBg(bfpLabel, cx + planeW * 0.42, bfpY + fSM * 0.4,
-        `500 ${fSM}px Inter,sans-serif`, '#666', 'left');
-
-    // BFP position tracker triangle (colored, shows shift direction)
-    if (!isInFocus) {
-        const mkX = cx + planeW * 0.4 + 8;
-        rayCtx.fillStyle = stateColor;
-        rayCtx.globalAlpha = 0.6;
+    if (isInFocus) {
+        labelWithBg('Back Focal Plane (f)', cx + planeW * 0.38, bfpBase + fSM * 0.4,
+            `500 ${fSM}px Inter,sans-serif`, '#888', 'left');
+    } else {
+        // Colored shifted BFP
+        rayCtx.strokeStyle = stateColor;
+        rayCtx.lineWidth = 2;
+        rayCtx.globalAlpha = 0.7;
+        rayCtx.setLineDash([8, 5]);
         rayCtx.beginPath();
-        rayCtx.moveTo(mkX, bfpY - 6);
-        rayCtx.lineTo(mkX + 10, bfpY);
-        rayCtx.lineTo(mkX, bfpY + 6);
-        rayCtx.closePath();
-        rayCtx.fill();
+        rayCtx.moveTo(cx - planeW * 0.36, bfpY);
+        rayCtx.lineTo(cx + planeW * 0.36, bfpY);
+        rayCtx.stroke();
+        rayCtx.setLineDash([]);
         rayCtx.globalAlpha = 1.0;
+        const bfpLabel = isUnder ? 'BFP (f↑)' : 'BFP (f↓)';
+        labelWithBg(bfpLabel, cx + planeW * 0.38, bfpY + fSM * 0.4,
+            `600 ${fSM}px Inter,sans-serif`, stateColor, 'left');
     }
 
     // --- Image Plane (moves with defocus) ---
@@ -627,34 +613,34 @@ function drawRayDiagram(nm) {
     labelWithBg(detLabel, cx + planeW * 0.42, detY + fSM * 0.4,
         `600 ${fSM}px Inter,sans-serif`, '#333', 'left');
 
-    // --- Δf arrow (between detector and image plane) ---
+    // --- Δf arrow (inward-pointing, no overflow) ---
     if (!isInFocus) {
-        const arrowX = cx - planeW * 0.46;
+        const arrowX = cx - planeW * 0.44;
+        const topEnd = Math.min(detY, imgPlaneY);
+        const botEnd = Math.max(detY, imgPlaneY);
         rayCtx.strokeStyle = stateColor;
         rayCtx.lineWidth = 2.5;
         rayCtx.beginPath();
-        rayCtx.moveTo(arrowX, detY);
-        rayCtx.lineTo(arrowX, imgPlaneY);
+        rayCtx.moveTo(arrowX, topEnd);
+        rayCtx.lineTo(arrowX, botEnd);
         rayCtx.stroke();
-        // Arrowheads
-        const dir = imgPlaneY > detY ? 1 : -1;
+        // Inward arrowheads (tips stay inside the span)
         rayCtx.fillStyle = stateColor;
         rayCtx.beginPath();
-        rayCtx.moveTo(arrowX - 7, imgPlaneY);
-        rayCtx.lineTo(arrowX + 7, imgPlaneY);
-        rayCtx.lineTo(arrowX, imgPlaneY + dir * 12);
-        rayCtx.fill();
+        rayCtx.moveTo(arrowX - 6, topEnd + 10);
+        rayCtx.lineTo(arrowX, topEnd);
+        rayCtx.lineTo(arrowX + 6, topEnd + 10);
+        rayCtx.closePath(); rayCtx.fill();
         rayCtx.beginPath();
-        rayCtx.moveTo(arrowX - 7, detY);
-        rayCtx.lineTo(arrowX + 7, detY);
-        rayCtx.lineTo(arrowX, detY - dir * 12);
-        rayCtx.fill();
+        rayCtx.moveTo(arrowX - 6, botEnd - 10);
+        rayCtx.lineTo(arrowX, botEnd);
+        rayCtx.lineTo(arrowX + 6, botEnd - 10);
+        rayCtx.closePath(); rayCtx.fill();
         // Δf label
         rayCtx.fillStyle = stateColor;
         rayCtx.font = `700 ${fLG}px Inter,sans-serif`;
         rayCtx.textAlign = 'center';
-        const mid = (detY + imgPlaneY) / 2;
-        rayCtx.fillText('Δf', arrowX - fLG * 1.2, mid + fLG * 0.35);
+        rayCtx.fillText('Δf', arrowX - fLG * 1.2, (topEnd + botEnd) / 2 + fLG * 0.35);
     }
 
     // --- State badge (dynamic position, always below image plane) ---
@@ -665,7 +651,7 @@ function drawRayDiagram(nm) {
 
     rayCtx.font = `800 ${fXL}px Inter,sans-serif`;
     const tw = rayCtx.measureText(stateText).width + 50;
-    const badgeY = Math.max(imgPlaneY + fLG * 2.5, h * 0.82);
+    const badgeY = h * 0.88;
     // Badge background
     rayCtx.fillStyle = stateBg;
     rayCtx.strokeStyle = stateColor;
