@@ -30,7 +30,18 @@ body {
   flex-shrink: 0;
   text-align: center;
   padding: 6px 0 8px;
+  position: relative;
 }
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
 .header h1 { font-size: clamp(28px, 3.2vh, 42px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
 .header p { font-size: clamp(14px, 1.6vh, 20px); color: #777; margin-top: 2px; font-weight: 500; }
 
@@ -88,6 +99,7 @@ body {
 <body>
 <div id="app">
   <div class="header">
+    <a class="home-btn" href="./">&larr; Home</a>
     <h1>Effect of Objective Lens Strength on TEM Image Formation</h1>
     <p>&Delta;f = defocus (image plane &harr; detector distance) &middot; BFP = Back Focal Plane</p>
   </div>
