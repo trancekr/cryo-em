@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CryoSPARC on AWS — 초보자 가이드</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* === CSS Variables (Academic Project Page Template) === */
+:root {
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --secondary-color: #64748b;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-light: #94a3b8;
+  --background-primary: #ffffff;
+  --background-secondary: #f8fafc;
+  --background-accent: #f1f5f9;
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --border-radius: 12px;
+  --border-radius-lg: 16px;
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* === Reset & Base === */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{
+  background:var(--background-secondary);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  color:var(--text-primary);
+  line-height:1.7;
+  font-size:15px;
+}
+::selection{background:#2563eb30;color:var(--text-primary)}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--background-secondary)}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+
+/* === Layout === */
+.page-wrap{
+  display:grid;
+  grid-template-columns:220px 1fr;
+  min-height:100vh;
+}
+@media(max-width:900px){
+  .page-wrap{grid-template-columns:1fr}
+  .sidebar{display:none}
+}
+
+/* === Sidebar === */
+.sidebar{
+  position:fixed;top:0;left:0;
+  width:220px;height:100vh;
+  background:var(--background-primary);
+  border-right:1px solid var(--border-color);
+  padding:24px 16px;
+  overflow-y:auto;
+  z-index:100;
+  box-shadow:var(--shadow-sm);
+}
+.sidebar-title{
+  font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:1.5px;
+  color:var(--text-light);margin-bottom:16px;padding-left:4px;
+}
+.sidebar a{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 10px;border-radius:8px;
+  font-size:12.5px;color:var(--text-secondary);
+  text-decoration:none;transition:all .2s;
+  margin-bottom:2px;
+}
+.sidebar a:hover,.sidebar a.active{background:#eff6ff;color:var(--primary-color)}
+.sidebar a .step-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;border-radius:6px;
+  background:var(--background-accent);
+  font-size:10px;font-weight:700;color:var(--text-light);
+  flex-shrink:0;
+}
+.sidebar a.active .step-num{background:#dbeafe;color:var(--primary-color)}
+
+/* === Main Content === */
+.main-content{
+  grid-column:2;
+  padding:40px clamp(24px,4vw,64px) 120px;
+  max-width:860px;
+  width:100%;
+  min-width:0;
+  overflow-x:hidden;
+}
+@media(max-width:900px){
+  .main-content{grid-column:1;max-width:100%}
+}
+
+/* === Hero === */
+.hero{text-align:center;margin-bottom:56px;padding-top:16px}
+.hero h1{
+  font-size:clamp(26px,4vw,36px);font-weight:800;
+  letter-spacing:-0.5px;
+  color:var(--text-primary);
+  margin-bottom:12px;
+}
+.hero h1::after{
+  content:'';display:block;width:80px;height:4px;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  border-radius:2px;margin:12px auto 0;
+}
+.hero-sub{font-size:14px;color:var(--text-secondary);margin-bottom:24px}
+.hero-badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:20px;
+  font-size:11px;font-weight:500;
+  background:var(--background-accent);
+  border:1px solid var(--border-color);
+  color:var(--text-secondary);
+}
+.badge .dot{width:6px;height:6px;border-radius:50%}
+.dot-blue{background:#2563eb}.dot-purple{background:#7c3aed}.dot-green{background:#16a34a}
+
+/* === Flow Diagram === */
+.flow{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px 14px;
+  margin:32px 0 48px;padding:20px 20px;
+}
+.flow-step{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:12px 8px;border-radius:10px;
+  background:#eff6ff;
+}
+.flow-step .fs-num{
+  font-size:13px;font-weight:800;color:var(--primary-color);
+  width:24px;height:24px;border-radius:50%;
+  background:#dbeafe;
+  display:flex;align-items:center;justify-content:center;
+}
+.flow-step .fs-label{font-size:11px;color:var(--text-secondary);text-align:center;line-height:1.3}
+.flow-arrow{display:none}
+
+/* === Section === */
+.section{margin-bottom:72px;padding-top:32px;border-top:1px solid var(--border-color)}
+.section.first-section{border-top:none;padding-top:0}
+.section-anchor{display:block;height:0;visibility:hidden}
+.section-header{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:20px;padding-bottom:12px;
+}
+.section-header::after{
+  content:'';flex:1;height:3px;
+  background:linear-gradient(90deg,#2563eb20,transparent);
+  border-radius:2px;
+}
+.section-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;border-radius:10px;
+  background:linear-gradient(135deg,#dbeafe,#ede9fe);
+  font-size:14px;font-weight:800;color:var(--primary-color);
+  flex-shrink:0;
+}
+.section-header h2{font-size:20px;font-weight:700;color:var(--text-primary);letter-spacing:-0.3px}
+
+/* === Subsection === */
+.subsection{margin-bottom:36px}
+.subsection h3{
+  font-size:15px;font-weight:600;color:var(--text-primary);
+  margin-bottom:10px;padding-left:2px;
+}
+
+/* === Code Block === */
+.code-wrap{
+  position:relative;
+  margin:12px 0 16px;
+  border-radius:10px;
+  overflow:hidden;
+}
+.code-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 12px;
+  background:var(--background-accent);
+}
+.code-lang{font-size:10px;font-weight:600;text-transform:uppercase;color:var(--text-light);letter-spacing:1px}
+.copy-btn{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 10px;border-radius:6px;border:none;
+  background:var(--background-primary);
+  border:1px solid var(--border-color);
+  color:var(--text-secondary);font-size:11px;cursor:pointer;
+  font-family:'Inter',sans-serif;transition:all .2s;
+}
+.copy-btn:hover{background:#dbeafe;color:var(--primary-color);border-color:#93c5fd}
+.copy-btn.copied{color:#16a34a;border-color:#86efac}
+pre{
+  padding:14px 16px;
+  background:var(--background-accent);
+  overflow-x:auto;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12.5px;line-height:1.7;
+  color:#334155;
+}
+pre .comment{color:#94a3b8}
+pre .highlight{color:var(--primary-color)}
+pre .string{color:#16a34a}
+pre .flag{color:#d97706}
+
+/* === Tables === */
+.table-wrap{
+  overflow-x:auto;margin:12px 0 16px;
+  border-radius:10px;
+}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{
+  background:var(--background-accent);
+  padding:10px 14px;text-align:left;
+  font-weight:600;color:var(--text-secondary);
+  font-size:11px;text-transform:uppercase;letter-spacing:0.5px;
+  border-bottom:1px solid var(--border-color);
+}
+td{
+  padding:10px 14px;
+  border-bottom:1px solid var(--border-color);
+  color:var(--text-primary);
+}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f8fafc}
+td code{
+  background:#eff6ff;
+  padding:2px 6px;border-radius:4px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11.5px;color:var(--primary-color);
+}
+
+/* === Callout === */
+.callout{
+  display:flex;gap:12px;
+  padding:14px 16px;margin:14px 0;
+  border-radius:6px;
+  border-left:3px solid transparent;
+  font-size:13px;line-height:1.6;
+}
+.callout-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.callout-warn{
+  background:#fffbeb;
+  border-left-color:#f59e0b;
+  color:#92400e;
+}
+.callout-tip{
+  background:#f0fdf4;
+  border-left-color:#16a34a;
+  color:#166534;
+}
+.callout-danger{
+  background:#fef2f2;
+  border-left-color:#ef4444;
+  color:#991b1b;
+}
+
+/* Disclaimer Banner */
+.disclaimer-banner{
+  display:flex;gap:12px;align-items:flex-start;
+  background:#fffbeb;
+  border-left:4px solid #f59e0b;
+  border-radius:6px;
+  padding:16px 20px;
+  margin-bottom:32px;
+  font-size:13.5px;line-height:1.65;
+  color:#78350f;
+}
+.disclaimer-banner strong{color:#92400e}
+.disclaimer-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.callout-info{
+  background:#eff6ff;
+  border-left-color:#2563eb;
+  color:#1e40af;
+}
+
+/* === Glossary Grid === */
+.glossary{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:8px;margin:16px 0;
+}
+.gloss-item{
+  padding:12px 14px;
+  border-bottom:1px solid var(--border-color);
+}
+.gloss-term{font-size:13px;font-weight:600;color:var(--primary-color);margin-bottom:3px}
+.gloss-def{font-size:12px;color:var(--text-secondary);line-height:1.5}
+
+/* === Checklist === */
+.checklist{
+  padding:16px 20px;margin:14px 0;
+}
+.checklist-title{font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:10px}
+.check-item{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 0;font-size:13px;color:var(--text-secondary);
+}
+.check-box{
+  width:16px;height:16px;border-radius:4px;
+  border:1.5px solid #cbd5e1;
+  flex-shrink:0;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.check-box.checked{background:var(--primary-color);border-color:var(--primary-color)}
+.check-box.checked::after{content:'\2713';color:#fff;font-size:10px;font-weight:700}
+.check-item.checked-item{color:var(--text-light);text-decoration:line-through}
+
+/* === Quick Ref === */
+.quickref{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;
+}
+@media(max-width:700px){.quickref{grid-template-columns:1fr}}
+.qr-card{
+  padding:16px;border-radius:10px;
+  background:var(--background-primary);
+}
+.qr-card h4{
+  font-size:12px;font-weight:600;color:var(--primary-color);
+  text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;
+}
+.qr-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:5px 0;border-bottom:1px solid var(--border-color);
+  font-size:12px;
+}
+.qr-row:last-child{border-bottom:none}
+.qr-label{color:var(--text-secondary)}
+.qr-cmd{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--primary-color);
+  background:#eff6ff;
+  padding:2px 8px;border-radius:4px;
+  max-width:60%;text-align:right;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* === Collapsible === */
+.collapse-toggle{
+  display:flex;align-items:center;gap:8px;
+  width:100%;padding:10px 14px;
+  background:var(--background-accent);
+  border:none;
+  border-radius:8px;
+  color:var(--text-secondary);font-size:13px;font-weight:500;
+  cursor:pointer;font-family:'Inter',sans-serif;
+  transition:all .2s;margin:8px 0;
+}
+.collapse-toggle:hover{background:var(--background-accent);color:var(--text-primary)}
+.collapse-toggle .arrow{transition:transform .2s;font-size:10px}
+.collapse-toggle.open .arrow{transform:rotate(90deg)}
+.collapse-body{
+  display:none;
+  padding:4px 0 8px;
+}
+.collapse-body.open{display:block}
+
+/* === Cost highlight === */
+.cost-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0;
+}
+@media(max-width:600px){.cost-grid{grid-template-columns:1fr}}
+.cost-card{
+  padding:16px;border-radius:var(--border-radius);text-align:center;
+  background:var(--background-primary);
+}
+.cost-card .cost-val{font-size:22px;font-weight:700;color:var(--primary-color);margin-bottom:4px}
+.cost-card .cost-unit{font-size:11px;color:var(--text-light)}
+.cost-card .cost-label{font-size:11px;color:var(--text-secondary);margin-top:6px}
+
+/* === Back to top === */
+.back-top{
+  position:fixed;bottom:24px;right:24px;
+  width:40px;height:40px;border-radius:var(--border-radius);
+  background:var(--primary-color);
+  border:none;
+  color:#ffffff;font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;opacity:0;transition:opacity .3s;z-index:50;
+  text-decoration:none;
+  box-shadow:var(--shadow-lg);
+}
+.back-top:hover{background:var(--primary-hover)}
+.back-top.visible{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- Sidebar Navigation -->
+<div class="page-wrap">
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-title">가이드 목차</div>
+  <a href="#overview"><span class="step-num">0</span> 전체 흐름</a>
+  <a href="#step1"><span class="step-num">1</span> 사전 준비</a>
+  <a href="#step2"><span class="step-num">2</span> AWS 인프라</a>
+  <a href="#step3"><span class="step-num">3</span> GPU 서버 생성</a>
+  <a href="#step4"><span class="step-num">4</span> 서버 접속/세팅</a>
+  <a href="#step5"><span class="step-num">5</span> CryoSPARC 설치</a>
+  <a href="#step6"><span class="step-num">6</span> 브라우저 접속</a>
+  <a href="#routine"><span class="step-num">↻</span> 세션 루틴</a>
+  <a href="#scaling"><span class="step-num">⬆</span> 확장 아키텍처</a>
+  <a href="#cost"><span class="step-num">$</span> 비용 관리</a>
+  <a href="#trouble"><span class="step-num">!</span> 트러블슈팅</a>
+  <a href="#quickref"><span class="step-num">⌘</span> 빠른 참조</a>
+  <a href="#real-cost"><span class="step-num">💵</span> 실제 비용</a>
+</nav>
+
+<!-- Main Content -->
+<main class="main-content">
+
+<!-- Hero -->
+<div class="hero">
+  <h1>CryoSPARC on AWS</h1>
+  <p class="hero-sub">CryoSPARC 입문자를 위한 AWS 클라우드 GPU 환경 구축 가이드</p>
+  <div class="hero-badges">
+    <span class="badge"><span class="dot dot-blue"></span>AWS EC2 (Seoul)</span>
+    <span class="badge"><span class="dot dot-purple"></span>CryoSPARC v4.7.1</span>
+    <span class="badge"><span class="dot dot-green"></span>Amazon Linux 2</span>
+    <span class="badge"><span class="dot dot-green"></span>Standalone · 단일 GPU</span>
+  </div>
+</div>
+
+<!-- Guide Info -->
+<p style="font-size:13px;color:var(--text-secondary);margin:0 0 18px;line-height:1.8">
+  이 가이드는 CryoSPARC을 처음 사용해 보거나 소규모 데이터로 테스트하는 경우를 기준으로, 단일 GPU(A10G) Standalone 설치를 다룹니다. 작성 환경은 AWS Seoul 리전 · Amazon Linux 2 · CryoSPARC v4.7.1이며, 시점에 따라 UI나 버전이 다를 수 있습니다. 내용이 100% 정확하지 않을 수 있으므로 <a href="https://docs.aws.amazon.com/ec2/" target="_blank" style="color:var(--primary-color)">AWS 공식 문서</a> 및 <a href="https://guide.cryosparc.com/" target="_blank" style="color:var(--primary-color)">CryoSPARC 공식 가이드</a>를 함께 참고하세요. 이 가이드는 계속 수정·보완 중입니다. 대규모 처리가 필요한 경우 <a href="#scaling" style="color:var(--primary-color)">확장 아키텍처</a> 섹션을 참고하세요.
+</p>
+
+<!-- Flow Diagram -->
+<span class="section-anchor" id="overview"></span>
+<div class="section first-section">
+  <div class="section-header">
+    <span class="section-num">0</span>
+    <h2>전체 흐름</h2>
+  </div>
+  <div class="flow">
+    <div class="flow-step"><span class="fs-num">1</span><span class="fs-label">사전<br>준비</span></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step"><span class="fs-num">2</span><span class="fs-label">AWS 인프라<br>설정</span></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step"><span class="fs-num">3</span><span class="fs-label">GPU 서버<br>생성</span></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step"><span class="fs-num">4</span><span class="fs-label">서버 접속<br>환경 세팅</span></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step"><span class="fs-num">5</span><span class="fs-label">CryoSPARC<br>설치</span></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step"><span class="fs-num">6</span><span class="fs-label">데이터<br>업로드</span></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step"><span class="fs-num">7</span><span class="fs-label">브라우저<br>접속</span></div>
+  </div>
+  <p style="font-size:13px;color:var(--text-secondary);margin-top:14px">1~7단계는 초기 설정입니다. 완료 후에는 <a href="#routine" style="color:var(--primary-color)">세션 루틴</a> (서버 시작 → 작업 → 종료)만 반복하면 됩니다.</p>
+</div>
+
+<!-- Step 1 -->
+<span class="section-anchor" id="step1"></span>
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">1</span>
+    <h2>사전 준비</h2>
+  </div>
+
+  <div class="subsection">
+    <h3>1-1. AWS 계정 생성</h3>
+    <p><a href="https://aws.amazon.com" style="color:#2563eb" target="_blank">aws.amazon.com</a>에서 계정을 생성합니다.</p>
+
+    <button class="collapse-toggle" onclick="toggleCollapse(this)">
+      <span class="arrow">▶</span> AWS 계정 생성 절차 (처음이라면 펼쳐보세요)
+    </button>
+    <div class="collapse-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>단계</th><th>참고</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td><a href="https://portal.aws.amazon.com/billing/signup" style="color:#2563eb" target="_blank">aws.amazon.com</a> → "Create an AWS Account"</td><td>이메일 주소, 계정 이름 입력</td></tr>
+            <tr><td>2</td><td>이메일 인증 코드 입력</td><td>입력한 이메일로 인증 코드 발송됨</td></tr>
+            <tr><td>3</td><td>Root 사용자 비밀번호 설정</td><td>강력한 비밀번호 생성</td></tr>
+            <tr><td>4</td><td>연락처 정보 입력</td><td>계정 유형: "Personal" (개인) 선택 가능</td></tr>
+            <tr><td>5</td><td>결제 카드 등록</td><td>해외 결제 가능한 신용/체크카드 필요 (검증용 $1 임시 청구)</td></tr>
+            <tr><td>6</td><td>본인 확인 (SMS 또는 전화)</td><td>한국 전화번호 사용 가능</td></tr>
+            <tr><td>7</td><td>Support 플랜 선택</td><td><strong>"Basic Support — Free"</strong> 선택</td></tr>
+            <tr><td>8</td><td>완료!</td><td>활성화까지 몇 분~24시간 소요 가능</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="subsection" style="margin-top:16px">
+      <h3>1-2. IAM 사용자 설정 (보안 권장)</h3>
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:8px">AWS 계정의 <strong style="color:var(--text-primary)">Root 계정</strong>(가입 시 만든 계정)은 모든 권한을 가지고 있어 위험합니다. 일상 작업에는 별도의 <strong style="color:var(--text-primary)">IAM 사용자</strong>를 만들어 사용하세요.</p>
+
+      <p style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:10px">
+        <span style="color:#dc2626">Root 계정</span> — 가입 시 이메일로 만든 계정. 모든 권한 보유. 결제·계정 관리에만 사용<br>
+        <span style="color:#166534">IAM 사용자</span> — 필요한 권한만 부여받은 계정. EC2, S3 등 일상 작업에 사용
+      </p>
+
+      <button class="collapse-toggle" onclick="toggleCollapse(this)">
+        <span class="arrow">▶</span> IAM 사용자 생성 방법 (AWS 콘솔)
+      </button>
+      <div class="collapse-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>단계</th><th>설정값</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>AWS 콘솔 → IAM → Users → "Create user"</td><td>사용자 이름: <code>cryosparc-admin</code></td></tr>
+              <tr><td>2</td><td>"Attach policies directly" 선택</td><td></td></tr>
+              <tr><td>3</td><td>아래 정책 검색 후 체크</td><td>
+                <code>AmazonEC2FullAccess</code><br>
+                <code>AmazonS3FullAccess</code><br>
+                <code>AmazonVPCFullAccess</code>
+              </td></tr>
+              <tr><td>4</td><td>사용자 생성 완료</td><td></td></tr>
+              <tr><td>5</td><td>해당 사용자 → "Security credentials" 탭</td><td></td></tr>
+              <tr><td>6</td><td>"Create access key" → "CLI" 선택</td><td>Access Key ID + Secret Key 메모!</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout callout-danger">
+          <span class="callout-icon"></span>
+          <div><strong>Secret Access Key는 생성 시 한 번만 보여줍니다!</strong> 반드시 안전한 곳에 저장하세요. 분실 시 새로 발급해야 합니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection" style="margin-top:16px">
+      <h3>1-3. GPU Quota 증가 요청 (필수)</h3>
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:8px">새 AWS 계정은 GPU 인스턴스 사용이 제한되어 있습니다. 미리 한도 증가를 요청해야 합니다.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>단계</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>AWS 콘솔 → <strong>Service Quotas</strong> → Amazon EC2</td></tr>
+            <tr><td>2</td><td><strong>"Running On-Demand G and VT instances"</strong> 검색</td></tr>
+            <tr><td>3</td><td>"Request increase at account level" 클릭</td></tr>
+            <tr><td>4</td><td>새 값: <strong>32</strong> 이상 입력 (g5.4xlarge = 16 vCPU)</td></tr>
+            <tr><td>5</td><td>승인 대기 — <strong>최소 24시간</strong>, 길면 수일</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12px;color:var(--text-secondary);margin-top:10px;line-height:1.7">Quota 승인은 최소 24시간이 걸리므로 미리 신청하세요. Spot을 사용할 경우 <strong style="color:var(--text-primary)">"All G and VT Spot Instance Requests"</strong>도 함께 신청하세요.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>1-4. CryoSPARC 라이선스</h3>
+    <p><a href="https://cryosparc.com" style="color:#2563eb" target="_blank">cryosparc.com</a>에서 학술용 무료 라이선스를 발급받습니다. 발급 시 받는 <strong>License ID</strong>를 메모해 두세요.</p>
+  </div>
+
+  <div class="subsection">
+    <h3>1-5. AWS CLI 설치 및 설정</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash — Mac 터미널</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre><span class="comment"># AWS CLI 설치</span>
+brew install awscli
+
+<span class="comment"># AWS 프로파일 설정</span>
+aws configure <span class="flag">--profile</span> cryosparc
+<span class="comment"># → Access Key ID / Secret Key / Region: ap-northeast-2 / Format: json</span>
+
+<span class="comment"># 기본 프로파일로 설정 (~/.zshrc에 추가 권장)</span>
+<span class="highlight">export</span> AWS_PROFILE=cryosparc</pre>
+    </div>
+  </div>
+</div>
+
+<!-- Step 2 -->
+<span class="section-anchor" id="step2"></span>
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">2</span>
+    <h2>AWS 인프라 설정</h2>
+  </div>
+
+  <div class="subsection">
+    <h3>2-1. SSH 키 만들기</h3>
+    <p>서버 접속에 필요한 "열쇠" 파일을 생성합니다.</p>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre><span class="comment"># 키 이름(my-key-pair)과 저장 경로(~/.ssh/)는 원하는 대로 변경 가능</span>
+aws ec2 create-key-pair \
+  <span class="flag">--key-name</span> my-key-pair \
+  <span class="flag">--region</span> ap-northeast-2 \
+  <span class="flag">--query</span> <span class="string">'KeyMaterial'</span> \
+  <span class="flag">--output</span> text > ~/.ssh/my-key-pair.pem
+
+<span class="comment"># 보안 권한 설정 (필수!)</span>
+chmod 400 ~/.ssh/my-key-pair.pem
+
+<span class="comment"># Mac에서 "Operation not permitted" 시 추가 실행</span>
+xattr -c ~/.ssh/my-key-pair.pem</pre>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>2-2. 보안 그룹 만들기</h3>
+    <p>서버에 누가 접속할 수 있는지를 정합니다.</p>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre><span class="comment"># 보안 그룹 생성 → 출력의 GroupId (sg-xxx) 메모!</span>
+aws ec2 create-security-group \
+  <span class="flag">--group-name</span> cryosparc-sg \
+  <span class="flag">--description</span> <span class="string">"CryoSPARC security group"</span> \
+  <span class="flag">--region</span> ap-northeast-2</pre>
+    </div>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash — sg-XXXXXXXXXX를 위의 GroupId로 교체</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre><span class="comment"># 내 IP에서 SSH(22) 접속 허용</span>
+MY_IP=$(curl -s ifconfig.me)
+aws ec2 authorize-security-group-ingress \
+  <span class="flag">--group-id</span> sg-XXXXXXXXXX \
+  <span class="flag">--protocol</span> tcp <span class="flag">--port</span> 22 \
+  <span class="flag">--cidr</span> ${MY_IP}/32 \
+  <span class="flag">--region</span> ap-northeast-2
+
+<span class="comment"># (선택) CryoSPARC 웹 포트 직접 접속 — SSH 터널 사용 시 생략 가능</span>
+aws ec2 authorize-security-group-ingress \
+  <span class="flag">--group-id</span> sg-XXXXXXXXXX \
+  <span class="flag">--protocol</span> tcp <span class="flag">--port</span> 39000-39010 \
+  <span class="flag">--cidr</span> ${MY_IP}/32 \
+  <span class="flag">--region</span> ap-northeast-2</pre>
+    </div>
+    <p style="font-size:12px;color:var(--text-secondary);margin-top:10px;line-height:1.7">SSH 터널을 사용하면 (<a href="#step6" style="color:var(--primary-color)">Step 6</a>) 39000~39010 포트를 열 필요가 없습니다. SSH(22)만으로 충분합니다.<br>네트워크가 바뀌면 (카페, 연구실 이동 등) IP가 달라집니다. 접속이 안 되면 위 명령을 다시 실행해 현재 IP를 추가하세요.</p>
+  </div>
+</div>
+
+<!-- Step 3 -->
+<span class="section-anchor" id="step3"></span>
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">3</span>
+    <h2>GPU 서버 생성</h2>
+  </div>
+
+  <div class="subsection">
+    <h3>어떤 서버를 골라야 할까?</h3>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">이 가이드는 <strong style="color:var(--text-primary)">Standalone</strong> 방식 (한 대의 서버에서 모든 것을 처리)을 다룹니다. AWS 공식 가이드에서 권장하는 다양한 인스턴스를 용도별로 정리했습니다.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>인스턴스</th><th>GPU</th><th>CUDA 코어</th><th>VRAM</th><th>메모리 대역폭</th><th>RAM</th><th>용도</th></tr></thead>
+        <tbody>
+          <tr style="background:#eff6ff"><td><code>g5.xlarge</code></td><td>A10G</td><td>9,216</td><td>24GB</td><td>600 GB/s</td><td>16GB</td><td>학습/테스트</td></tr>
+          <tr style="background:#eff6ff"><td><code>g5.4xlarge</code></td><td>A10G</td><td>9,216</td><td>24GB</td><td>600 GB/s</td><td><strong>64GB</strong></td><td>학습/테스트 (큰 box)</td></tr>
+          <tr><td><code>g6.xlarge</code></td><td>L4</td><td>7,424</td><td>24GB</td><td>300 GB/s</td><td>16GB</td><td>최신 세대, 전력 효율↑</td></tr>
+          <tr><td><code>p3.2xlarge</code></td><td>V100</td><td>5,120</td><td>16GB</td><td>900 GB/s</td><td>61GB</td><td>연구 프로세싱</td></tr>
+          <tr><td><code>p4d.24xlarge</code></td><td>A100 ×8</td><td>55,296</td><td>320GB</td><td>12.4 TB/s</td><td>1.1TB</td><td>대규모 프로세싱</td></tr>
+          <tr><td><code>p5.48xlarge</code></td><td>H100 ×8</td><td>135,168</td><td>640GB</td><td>26.8 TB/s</td><td>2TB</td><td>최대 성능</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:12px;color:var(--text-light);margin-top:8px;margin-bottom:14px">📎 <strong>게이밍 GPU 참고</strong> — 익숙한 GPU와 비교하면 성능 규모를 가늠할 수 있습니다.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>게이밍 GPU</th><th>CUDA 코어</th><th>VRAM</th><th>메모리 대역폭</th></tr></thead>
+        <tbody>
+          <tr><td>RTX 3090</td><td>10,496</td><td>24GB</td><td>936 GB/s</td></tr>
+          <tr><td>RTX 4090</td><td>16,384</td><td>24GB</td><td>1,008 GB/s</td></tr>
+          <tr><td>RTX 5090</td><td>21,760</td><td>32GB</td><td>1,792 GB/s</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:12px;color:var(--text-secondary);margin-top:10px;line-height:1.7">이 가이드에서는 학습/테스트 목적으로 <code style="color:#166534">g5.xlarge</code> 또는 <code style="color:#166534">g5.4xlarge</code>를 사용합니다. g5의 A10G는 CUDA 코어·VRAM 기준으로 RTX 3090과 비슷한 수준이며, 본격적인 연구 프로세싱에는 A100/H100급 인스턴스(p4d, p5)가 필요합니다.</p>
+    <p style="font-size:12px;color:var(--text-secondary);margin-top:14px;line-height:1.7"><strong style="color:var(--text-primary)">GPU 인스턴스는 모든 AZ에서 사용 가능하지 않습니다.</strong> 서버 생성 전에 원하는 AZ에서 해당 인스턴스를 사용할 수 있는지 확인하세요:</p>
+    <div class="code-wrap" style="margin-top:8px">
+      <div class="code-header"><span class="code-lang">bash — AZ별 인스턴스 가용 확인</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+      <pre>aws ec2 describe-instance-type-offerings \
+  <span class="flag">--location-type</span> availability-zone \
+  <span class="flag">--filters</span> <span class="string">"Name=instance-type,Values=g5.xlarge"</span> \
+  <span class="flag">--region</span> ap-northeast-2 \
+  <span class="flag">--query</span> <span class="string">'InstanceTypeOfferings[*].Location'</span> \
+  <span class="flag">--output</span> table</pre>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>AMI 확인 및 서버 생성</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash — AMI(운영체제 이미지) ID 확인</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre>aws ec2 describe-images \
+  <span class="flag">--owners</span> amazon \
+  <span class="flag">--filters</span> <span class="string">"Name=name,Values=amzn2-ami-kernel-5.10-hvm-*-x86_64-gp2"</span> \
+  <span class="flag">--query</span> <span class="string">'Images | sort_by(@, &amp;CreationDate) | [-1].ImageId'</span> \
+  <span class="flag">--region</span> ap-northeast-2
+<span class="comment"># 출력 예: ami-0xxxxxxxxxxxxxxxxx → 이 값을 아래 명령에서 사용</span></pre>
+    </div>
+
+    <button class="collapse-toggle" onclick="toggleCollapse(this)">
+      <span class="arrow">▶</span> 서버 생성 명령어 — On-Demand (학습/지속 사용 시 권장)
+    </button>
+    <div class="collapse-body">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-lang">bash — AMI ID, 보안 그룹 ID를 실제 값으로 교체</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+        </div>
+        <pre>aws ec2 run-instances \
+  <span class="flag">--image-id</span> ami-0xxxxxxxxxxxxxxxxx \  <span class="comment"># ↑ 위 조회 결과로 교체</span>
+  <span class="flag">--instance-type</span> g5.xlarge \
+  <span class="flag">--key-name</span> my-key-pair \
+  <span class="flag">--security-group-ids</span> sg-XXXXXXXXXX \
+  <span class="flag">--block-device-mappings</span> <span class="string">'[{
+    "DeviceName": "/dev/xvda",
+    "Ebs": {
+      "VolumeSize": 500,
+      "VolumeType": "gp3",
+      "DeleteOnTermination": false
+    }
+  }]'</span> \
+  <span class="flag">--tag-specifications</span> <span class="string">'ResourceType=instance,Tags=[{Key=Name,Value=cryosparc-server}]'</span> \
+  <span class="flag">--region</span> ap-northeast-2</pre>
+      </div>
+      <p style="font-size:12px;color:var(--text-secondary);margin-top:6px">💡 On-Demand는 기본값이므로 별도 옵션이 필요 없습니다. 작업 후 <strong style="color:var(--text-primary)">Stop</strong>으로 서버를 보존할 수 있습니다.</p>
+    </div>
+
+    <button class="collapse-toggle" onclick="toggleCollapse(this)">
+      <span class="arrow">▶</span> 서버 생성 명령어 — Spot (단기 집중 프로세싱 시 고려)
+    </button>
+    <div class="collapse-body">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-lang">bash — AMI ID, 보안 그룹 ID를 실제 값으로 교체</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+        </div>
+        <pre>aws ec2 run-instances \
+  <span class="flag">--image-id</span> ami-0xxxxxxxxxxxxxxxxx \  <span class="comment"># ↑ 위 조회 결과로 교체</span>
+  <span class="flag">--instance-type</span> g5.xlarge \
+  <span class="flag">--key-name</span> my-key-pair \
+  <span class="flag">--security-group-ids</span> sg-XXXXXXXXXX \
+  <span class="flag">--block-device-mappings</span> <span class="string">'[{
+    "DeviceName": "/dev/xvda",
+    "Ebs": {
+      "VolumeSize": 500,
+      "VolumeType": "gp3",
+      "DeleteOnTermination": false
+    }
+  }]'</span> \
+  <span class="flag">--instance-market-options</span> <span class="string">'{"MarketType":"spot"}'</span> \
+  <span class="flag">--tag-specifications</span> <span class="string">'ResourceType=instance,Tags=[{Key=Name,Value=cryosparc-server}]'</span> \
+  <span class="flag">--region</span> ap-northeast-2</pre>
+      </div>
+      <p style="font-size:12px;color:var(--text-secondary);margin-top:6px">💡 On-Demand와의 차이는 <code style="color:#b45309;font-size:11px">--instance-market-options</code> 한 줄뿐입니다. 작업 후 <strong style="color:var(--text-primary)">Terminate</strong>로 종료합니다 (EBS는 <code style="font-size:11px;color:#b45309">DeleteOnTermination: false</code> 덕분에 보존).</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>On-Demand vs Spot: 요금제 선택</h3>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">EC2 인스턴스는 같은 하드웨어라도 <strong style="color:var(--text-primary)">요금 방식</strong>에 따라 가격과 동작이 크게 달라집니다.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+      <div style="padding:16px;background:#eff6ff;border-left:3px solid #2563eb;border-radius:6px">
+        <div style="font-size:13px;font-weight:700;color:#1d4ed8;margin-bottom:8px">💳 On-Demand (정가)</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.7">
+          • <strong style="color:var(--text-primary)">정가 요금</strong> — 사용한 시간만큼 고정 가격<br>
+          • <strong style="color:var(--text-primary)">stop/start 가능</strong> — 서버를 "일시 중지"할 수 있음<br>
+          • <strong style="color:var(--text-primary)">강제 종료 없음</strong> — 내가 끄기 전까지 유지<br>
+          • <strong style="color:var(--text-primary)">EBS 데이터 유지</strong> — stop해도 디스크 안전<br>
+          • 가격 예시: g5.xlarge <span style="color:#1d4ed8;font-weight:600">~$1.24/hr</span>
+        </div>
+      </div>
+      <div style="padding:16px;background:#fffbeb;border-left:3px solid #f59e0b;border-radius:6px">
+        <div style="font-size:13px;font-weight:700;color:#92400e;margin-bottom:8px">⚡ Spot (할인가)</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.7">
+          • <strong style="color:var(--text-primary)">최대 ~70% 할인</strong><br>
+          • <strong style="color:var(--text-primary)">Stop하면 데이터 삭제</strong> — EBS 포함 모든 데이터 삭제됨<br>
+          • <strong style="color:var(--text-primary)">AWS가 회수 가능</strong> — 2분 전 경고 후 종료<br>
+          • <strong style="color:var(--text-primary)">EBS는 안전</strong> — <code style="color:#92400e;font-size:11px">DeleteOnTermination: false</code> 설정 시<br>
+          • 가격 예시: g5.xlarge <span style="color:#92400e;font-weight:600">~$0.36/hr</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:120px"></th><th>On-Demand</th><th>Spot</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--primary-color);font-weight:600">가격</td><td>정가 (g5.xlarge ~$1.24/hr)</td><td><strong style="color:#166534">~70% 할인</strong> (~$0.36/hr)</td></tr>
+          <tr>
+            <td style="color:var(--primary-color);font-weight:600">Stop (중지)</td>
+            <td>✅ <strong>자유롭게 Stop/Start</strong><br><span style="font-size:11px;color:var(--text-light)">→ EC2 비용 0원, EBS 데이터 유지, 재시작 가능</span></td>
+            <td style="color:#dc2626">⚠️ <strong>Stop하면 모든 데이터 삭제</strong><br><span style="font-size:11px;color:var(--text-light)">→ Stop은 가능하지만 EBS 포함 모든 데이터가 삭제됩니다</span></td>
+          </tr>
+          <tr>
+            <td style="color:var(--primary-color);font-weight:600">Terminate (종료)</td>
+            <td>인스턴스 삭제<br><span style="font-size:11px;color:var(--text-light)">→ EBS는 설정에 따라 유지</span></td>
+            <td>인스턴스 삭제 (주 사용 방법)<br><span style="font-size:11px;color:var(--text-light)">→ 작업 완료 후 Terminate</span></td>
+          </tr>
+          <tr>
+            <td style="color:var(--primary-color);font-weight:600">AWS 회수</td>
+            <td>없음 — 내가 끄기 전까지 100% 유지</td>
+            <td style="color:#dc2626"><strong>2분 경고 후 Terminate 가능</strong></td>
+          </tr>
+          <tr><td style="color:var(--primary-color);font-weight:600">EBS 데이터</td><td>stop/terminate 모두 유지*</td><td>terminate 시 유지*</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:11px;color:var(--text-light);margin-top:-8px;margin-bottom:14px">* <code style="font-size:10px">DeleteOnTermination: false</code> 설정 시. 이 가이드의 서버 생성 명령에 이미 포함되어 있습니다.</p>
+
+    <p style="font-size:12px;color:var(--text-secondary);margin-top:12px;line-height:1.7">
+      <strong style="color:var(--text-primary)">어떤 걸 선택할까?</strong><br>
+      • <strong style="color:var(--text-primary)">학습/연습 목적으로 지속 사용</strong> → <span style="color:#166534">On-Demand 권장</span>. 작업 후 Stop으로 서버를 보존하고, 다음에 Start로 이어서 사용<br>
+      • <strong style="color:var(--text-primary)">단기 집중 사용 (2~3일 프로세싱)</strong> → <span style="color:#166534">Spot 고려</span>. ~70% 절감되지만 AWS가 2분 전 경고 후 회수할 수 있음
+    </p>
+  </div>
+
+  <div class="subsection">
+    <h3>서버 상태 확인</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre>aws ec2 describe-instances \
+  <span class="flag">--filters</span> <span class="string">"Name=tag:Name,Values=cryosparc-*"</span> \
+             <span class="string">"Name=instance-state-name,Values=running,stopped"</span> \
+  <span class="flag">--query</span> <span class="string">'Reservations[*].Instances[*].[Tags[?Key==`Name`].Value|[0],InstanceId,State.Name,PublicIpAddress]'</span> \
+  <span class="flag">--output</span> table \
+  <span class="flag">--region</span> ap-northeast-2</pre>
+    </div>
+    <p><code>running</code> 상태가 되면 <code>PublicIpAddress</code>가 표시됩니다. 이 IP로 접속합니다.</p>
+  </div>
+</div>
+
+<!-- Step 4 -->
+<span class="section-anchor" id="step4"></span>
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">4</span>
+    <h2>서버 접속 및 환경 세팅</h2>
+  </div>
+
+  <div class="subsection">
+    <h3>4-1. SSH로 서버 접속</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash — Mac 터미널</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre>ssh -i ~/.ssh/my-key-pair.pem ec2-user@<span class="highlight">[PUBLIC_IP]</span>
+<span class="comment"># 처음 접속 시 "Are you sure...?" → yes 입력</span></pre>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>4-2. 서버 상태 확인</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash — 서버에서 실행</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre>free -h          <span class="comment"># RAM 확인</span>
+nvidia-smi       <span class="comment"># GPU 확인 — "NVIDIA A10G" 보여야 정상</span></pre>
+    </div>
+
+    <button class="collapse-toggle" onclick="toggleCollapse(this)">
+      <span class="arrow">▶</span> nvidia-smi에서 GPU가 안 보이면? (드라이버 설치)
+    </button>
+    <div class="collapse-body">
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <div><strong>가장 확실한 해결법:</strong> 서버 생성 시 AMI를 <code style="color:#166534">Deep Learning AMI GPU (Amazon Linux 2)</code>로 선택하면 NVIDIA 드라이버, CUDA, cuDNN이 사전 설치되어 있습니다. Step 3의 AMI 검색 명령 대신 AWS 콘솔에서 "Deep Learning AMI GPU" 를 검색하세요.</div>
+      </div>
+      <p style="font-size:13px;color:var(--text-secondary);margin:10px 0 8px">Deep Learning AMI를 사용할 수 없는 경우, NVIDIA 공식 <code style="color:var(--primary-color)">.run</code> 설치 파일로 수동 설치할 수 있습니다:</p>
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-lang">bash — NVIDIA 드라이버 수동 설치 (Amazon Linux 2)</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+        </div>
+        <pre><span class="comment"># ① 빌드 도구 및 커널 헤더 설치</span>
+sudo yum install -y gcc make dkms kernel-devel-$(uname -r) kernel-headers-$(uname -r)
+
+<span class="comment"># ② NVIDIA 드라이버 다운로드 (버전은 최신으로 변경)</span>
+<span class="comment"># https://www.nvidia.com/drivers 에서 Linux x86_64 → Data Center 최신 버전 확인</span>
+wget https://us.download.nvidia.com/tesla/535.183.06/NVIDIA-Linux-x86_64-535.183.06.run
+
+<span class="comment"># ③ 설치 실행</span>
+sudo bash NVIDIA-Linux-x86_64-535.183.06.run --silent --dkms
+
+<span class="comment"># ④ 재부팅 후 확인</span>
+sudo reboot
+<span class="comment"># SSH 재접속 → nvidia-smi 확인</span></pre>
+      </div>
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠️</span>
+        <div>Amazon Linux 2의 NVIDIA 공식 yum 리포지토리 지원이 제한적이므로, <code style="color:#92400e">.run</code> 파일 설치가 더 안정적입니다. 드라이버 버전은 <a href="https://www.nvidia.com/drivers" target="_blank" style="color:var(--primary-color)">nvidia.com/drivers</a>에서 "Data Center / Tesla" → Linux 64-bit 최신 R535 이상을 선택하세요.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>4-3. 고속 SSD 마운트 (/scratch)</h3>
+    <p>CryoSPARC의 임시 파일을 저장할 고속 NVMe SSD를 준비합니다.</p>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash — 서버에서 실행</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre>lsblk                                    <span class="comment"># nvme1n1 디바이스 확인 (g5.xlarge: ~250GB)</span>
+sudo mkfs.xfs /dev/nvme1n1               <span class="comment"># 포맷</span>
+sudo mkdir -p /scratch                   <span class="comment"># 마운트 디렉토리</span>
+sudo mount /dev/nvme1n1 /scratch         <span class="comment"># 마운트</span>
+sudo chown -R ec2-user:ec2-user /scratch <span class="comment"># 권한 설정</span>
+df -h /scratch                           <span class="comment"># 확인</span></pre>
+    </div>
+  </div>
+</div>
+
+<!-- Step 5 -->
+<span class="section-anchor" id="step5"></span>
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">5</span>
+    <h2>CryoSPARC 설치</h2>
+  </div>
+
+  <div class="subsection">
+    <h3>5-1. 다운로드</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash — 서버에서 실행 ([LICENSE_ID] 교체)</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre>cd ~
+
+<span class="comment"># Master 다운로드 (~630MB)</span>
+curl -L https://get.cryosparc.com/download/master-latest/<span class="highlight">[LICENSE_ID]</span> \
+  -o cryosparc_master.tar.gz
+
+<span class="comment"># Worker 다운로드 (~4GB)</span>
+curl -L https://get.cryosparc.com/download/worker-latest/<span class="highlight">[LICENSE_ID]</span> \
+  -o cryosparc_worker.tar.gz
+
+<span class="comment"># 압축 해제</span>
+tar -xf cryosparc_master.tar.gz
+tar -xf cryosparc_worker.tar.gz</pre>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>5-2. Standalone 설치</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash — 각 값을 실제 정보로 교체</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre>cd ~/cryosparc_master
+
+./install.sh \
+  <span class="flag">--standalone</span> \
+  <span class="flag">--license</span> <span class="highlight">[LICENSE_ID]</span> \
+  <span class="flag">--worker_path</span> /home/ec2-user/cryosparc_worker \
+  <span class="flag">--ssdpath</span> /scratch \
+  <span class="flag">--initial_email</span> <span class="string">"your@email.com"</span> \
+  <span class="flag">--initial_password</span> <span class="string">"YourPassword#2026"</span> \
+  <span class="flag">--initial_username</span> <span class="string">"yourusername"</span> \
+  <span class="flag">--initial_firstname</span> <span class="string">"First"</span> \
+  <span class="flag">--initial_lastname</span> <span class="string">"Last"</span> \
+  <span class="flag">--port</span> 39000 \
+  <span class="flag">--yes</span></pre>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>옵션</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td><code>--standalone</code></td><td>Master + Worker를 한 서버에 설치</td></tr>
+          <tr><td><code>--ssdpath /scratch</code></td><td>임시 파일용 고속 SSD 경로</td></tr>
+          <tr><td><code>--initial_email / password</code></td><td>웹 로그인에 사용할 계정 정보</td></tr>
+          <tr><td><code>--port 39000</code></td><td>웹 인터페이스 포트</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:12px;color:var(--text-secondary);margin-top:8px">설치에 10~20분 소요됩니다. 자동으로 진행되니 기다리세요.</p>
+  </div>
+
+  <div class="subsection">
+    <h3>5-3. 설치 확인</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre>cryosparcm status</pre>
+    </div>
+    <p>아래와 같이 모두 <strong style="color:#16a34a">RUNNING</strong>이면 성공입니다:</p>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-lang">정상 출력</span></div>
+      <pre><span class="string">database        : RUNNING</span>
+<span class="string">command_core    : RUNNING</span> (port 39002)
+<span class="string">command_rtp     : RUNNING</span> (port 39005)
+<span class="string">command_vis     : RUNNING</span> (port 39003)
+<span class="string">app             : RUNNING</span> (port 39000)
+<span class="string">app_api         : RUNNING</span></pre>
+    </div>
+  </div>
+</div>
+
+<!-- Step 6 -->
+<span class="section-anchor" id="step6"></span>
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">6</span>
+    <h2>데이터 업로드</h2>
+  </div>
+
+  <p style="margin-bottom:16px;color:var(--text-secondary)">CryoSPARC는 EC2 로컬 디스크에 있는 데이터만 읽을 수 있습니다. 로컬 컴퓨터의 micrograph 파일을 서버로 전송합니다.</p>
+
+  <div class="subsection">
+    <h3>6-1. 데이터 저장 위치</h3>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">데이터는 EBS 볼륨에 저장합니다. Stop 후에도 유지되므로 안전합니다.</p>
+    <div class="code-wrap"><pre>mkdir -p /home/ec2-user/data</pre></div>
+    <p style="font-size:12px;color:var(--text-secondary);margin-top:8px;line-height:1.7">전송한 데이터를 <code>/home/ec2-user/data/</code> 아래에 정리하세요. 이후 CryoSPARC에서 Import할 때 이 경로를 사용합니다.</p>
+  </div>
+
+  <div class="subsection">
+    <h3>6-2. scp로 전송 (소규모 데이터)</h3>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">수십 GB 이하의 데이터는 <code>scp</code>로 직접 전송하는 것이 간편합니다.</p>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash — Mac 터미널</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre><span class="comment"># 서버에 데이터 디렉토리 생성 (SSH 접속 후)</span>
+mkdir -p /home/ec2-user/data/project01
+
+<span class="comment"># Mac에서 micrograph 폴더 전송</span>
+scp -i ~/.ssh/my-key-pair.pem <span class="flag">-r</span> \
+  /path/to/micrographs/ \
+  ec2-user@<span class="highlight">[PUBLIC_IP]</span>:/home/ec2-user/data/project01/
+
+<span class="comment"># 전송 확인</span>
+ssh -i ~/.ssh/my-key-pair.pem ec2-user@<span class="highlight">[PUBLIC_IP]</span> \
+  "ls -lh /home/ec2-user/data/project01/ | head"</pre>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>6-3. S3 경유 전송 (대규모 데이터)</h3>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">수백 GB 이상의 데이터는 S3를 경유하면 안정적이고, 중단 후 이어서 전송할 수 있습니다.</p>
+
+    <button class="collapse-toggle" onclick="toggleCollapse(this)">
+      <span class="arrow">▶</span> S3 경유 전송 방법 보기
+    </button>
+    <div class="collapse-body">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-lang">bash — Mac 터미널</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+        </div>
+        <pre><span class="comment"># ① S3 버킷 생성 (최초 1회)</span>
+aws s3 mb s3://cryosparc-data-<span class="highlight">[계정ID]</span>-apne2 \
+  <span class="flag">--region</span> ap-northeast-2
+
+<span class="comment"># ② 로컬 → S3 업로드</span>
+aws s3 sync /path/to/micrographs/ \
+  s3://cryosparc-data-<span class="highlight">[계정ID]</span>-apne2/project01/ \
+  <span class="flag">--region</span> ap-northeast-2
+
+<span class="comment"># ③ S3 → EC2 다운로드 (서버 SSH 접속 후)</span>
+aws s3 sync s3://cryosparc-data-<span class="highlight">[계정ID]</span>-apne2/project01/ \
+  /home/ec2-user/data/project01/</pre>
+      </div>
+      <p style="font-size:12px;color:var(--text-secondary);margin-top:8px;line-height:1.7">같은 리전(Seoul) 안에서 S3↔EC2 전송은 <strong style="color:var(--text-primary)">무료</strong>입니다. 전송이 중단되면 같은 <code>aws s3 sync</code> 명령을 다시 실행하면 이어서 전송됩니다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Step 7 -->
+<span class="section-anchor" id="step7"></span>
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">7</span>
+    <h2>브라우저 접속 & 첫 프로젝트</h2>
+  </div>
+
+  <div class="subsection">
+    <h3>7-1. SSH 터널 열기</h3>
+    <p><strong>Mac 터미널에서</strong> (서버가 아닌 내 컴퓨터에서!) 실행합니다.</p>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash — Mac 터미널 (로컬)</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre>ssh -i ~/.ssh/my-key-pair.pem \
+  <span class="flag">-N</span> <span class="flag">-f</span> \
+  <span class="flag">-L</span> localhost:39000:localhost:39000 \
+  ec2-user@<span class="highlight">[PUBLIC_IP]</span>
+
+<span class="comment"># -N : 명령 실행 없이 터널만 유지</span>
+<span class="comment"># -f : 백그라운드에서 실행</span>
+<span class="comment"># -L : 내 PC 39000 포트 → 서버 39000 포트 연결</span></pre>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>7-2. 브라우저 접속</h3>
+    <p>웹 브라우저 주소창에 입력:</p>
+    <div style="text-align:center;padding:20px;margin:12px 0;background:rgba(79,70,229,0.06);border-radius:6px">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;color:var(--primary-color)">http://localhost:39000</span>
+    </div>
+    <p>설치 시 입력한 이메일/비밀번호로 로그인합니다.</p>
+
+    <button class="collapse-toggle" onclick="toggleCollapse(this)">
+      <span class="arrow">▶</span> 접속이 안 될 때 확인할 것
+    </button>
+    <div class="collapse-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>체크 항목</th><th>확인 방법</th></tr></thead>
+          <tbody>
+            <tr><td>CryoSPARC 실행 상태</td><td>서버에서 <code>cryosparcm status</code></td></tr>
+            <tr><td>SSH 터널 살아있는지</td><td>Mac에서 <code>ps aux | grep "ssh.*39000"</code></td></tr>
+            <tr><td>보안 그룹 IP 등록</td><td>현재 IP가 보안 그룹에 있는지 확인</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>7-3. CryoSPARC에서 Import</h3>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">데이터가 서버에 올라가 있으면 CryoSPARC 웹 UI에서 Import합니다.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>단계</th><th>설정값</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>CryoSPARC 웹 UI에서 프로젝트 생성</td><td>Project Directory: <code>/home/ec2-user/cryosparc/projects</code></td></tr>
+          <tr><td>2</td><td>워크스페이스 생성 후 "Import Movies" 또는 "Import Micrographs" Job 추가</td><td></td></tr>
+          <tr><td>3</td><td>Movies data path에 데이터 경로 입력</td><td><code>/home/ec2-user/data/project01/*.tiff</code></td></tr>
+          <tr><td>4</td><td>Queue Job 클릭</td><td>Import 완료 후 Motion Correction 등 진행</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Routine -->
+<span class="section-anchor" id="routine"></span>
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">↻</span>
+    <h2>세션 시작과 종료</h2>
+  </div>
+
+  <p style="margin-bottom:16px;color:var(--text-secondary)">설치는 한 번만, 이 절차는 매번 반복합니다.</p>
+
+  <div class="subsection">
+    <h3>작업 시작 체크리스트</h3>
+    <div class="checklist">
+      <div class="checklist-title">세션 시작 순서</div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"></span>기존 서버 상태 확인 (중복 생성 방지!)</div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"></span>서버 시작 (또는 새로 생성)</div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"></span>Public IP 확인</div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"></span>SSH 접속</div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"></span>NVMe SSD 재마운트</div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"></span>cryosparcm start</div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"></span>SSH 터널 열기 (Mac에서)</div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"></span>브라우저 접속 확인</div>
+    </div>
+
+    <button class="collapse-toggle" onclick="toggleCollapse(this)">
+      <span class="arrow">▶</span> 시작 전체 명령어 보기
+    </button>
+    <div class="collapse-body">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-lang">bash — Mac 터미널 (순서대로)</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+        </div>
+        <pre><span class="comment"># ① 기존 서버 확인</span>
+aws ec2 describe-instances \
+  <span class="flag">--filters</span> <span class="string">"Name=instance-state-name,Values=running,stopped"</span> \
+  <span class="flag">--region</span> ap-northeast-2 \
+  <span class="flag">--query</span> <span class="string">'Reservations[*].Instances[*].[Tags[?Key==`Name`].Value|[0],InstanceId,State.Name,PublicIpAddress]'</span> \
+  <span class="flag">--output</span> table
+
+<span class="comment"># ② 서버 시작 (stopped 상태인 경우)</span>
+aws ec2 start-instances \
+  <span class="flag">--instance-ids</span> i-XXXXXXXXXXXXXXXXX \
+  <span class="flag">--region</span> ap-northeast-2
+
+<span class="comment"># ③ Public IP 확인 (시작 후 IP가 바뀔 수 있음)</span>
+aws ec2 describe-instances \
+  <span class="flag">--instance-ids</span> i-XXXXXXXXXXXXXXXXX \
+  <span class="flag">--region</span> ap-northeast-2 \
+  <span class="flag">--query</span> <span class="string">'Reservations[0].Instances[0].PublicIpAddress'</span> \
+  <span class="flag">--output</span> text
+
+<span class="comment"># ④ SSH 접속</span>
+ssh -i ~/.ssh/my-key-pair.pem ec2-user@<span class="highlight">[PUBLIC_IP]</span></pre>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-lang">bash — 서버 접속 후</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+        </div>
+        <pre><span class="comment"># ⑤ NVMe SSD 재마운트 (매번 필요!)</span>
+sudo mkfs.xfs /dev/nvme1n1
+sudo mount /dev/nvme1n1 /scratch
+sudo chown -R ec2-user:ec2-user /scratch
+
+<span class="comment"># ⑥ CryoSPARC 시작</span>
+cryosparcm start</pre>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-lang">bash — 다시 Mac 터미널에서 (별도 창)</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+        </div>
+        <pre><span class="comment"># ⑦ SSH 터널</span>
+ssh -i ~/.ssh/my-key-pair.pem <span class="flag">-N</span> <span class="flag">-f</span> \
+  <span class="flag">-L</span> localhost:39000:localhost:39000 ec2-user@<span class="highlight">[PUBLIC_IP]</span>
+
+<span class="comment"># ⑧ 브라우저: http://localhost:39000</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>작업 종료</h3>
+
+    <h4 style="margin-top:20px;margin-bottom:8px;color:#2563eb">On-Demand — 매 세션 후 Stop</h4>
+    <p style="font-size:13px;color:var(--text-light);margin-bottom:10px">Stop하면 EC2 과금이 멈추고, 다음에 Start로 환경을 그대로 이어서 사용할 수 있습니다.</p>
+    <div class="checklist">
+      <div class="checklist-title">세션 종료 순서</div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"></span>cryosparcm stop (서버에서)</div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"></span>aws ec2 stop-instances</div>
+      <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"></span>AWS 콘솔에서 stopped 상태 확인</div>
+    </div>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre><span class="comment"># 서버에서: CryoSPARC 중지</span>
+cryosparcm stop
+
+<span class="comment"># Mac에서: 서버 중지 (Stop)</span>
+aws ec2 stop-instances <span class="flag">--instance-ids</span> i-XXXX <span class="flag">--region</span> ap-northeast-2</pre>
+    </div>
+    <div class="callout callout-warn">
+      <span class="callout-icon"></span>
+      <div><strong>Stop하지 않으면 EC2 요금이 계속 발생합니다.</strong><br><span style="font-size:12px;color:var(--text-light)">서울 리전 기준 g5.xlarge ~$30/일, g5.4xlarge ~$48/일</span></div>
+    </div>
+
+    <h4 style="margin-top:28px;margin-bottom:8px;color:#d97706">Spot — 작업이 끝날 때까지 유지</h4>
+    <p style="font-size:13px;color:var(--text-light);margin-bottom:10px">Spot 인스턴스를 Stop하면 <strong style="color:var(--text-color)">모든 데이터가 삭제</strong>됩니다. 프로세싱이 완전히 끝날 때까지 서버를 유지하고, 모든 작업이 완료된 후에 Terminate하세요.</p>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash — 모든 작업 완료 후</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre><span class="comment"># 서버에서: CryoSPARC 중지</span>
+cryosparcm stop
+
+<span class="comment"># Mac에서: 서버 종료 (Terminate — 되돌릴 수 없음)</span>
+aws ec2 terminate-instances <span class="flag">--instance-ids</span> i-XXXX <span class="flag">--region</span> ap-northeast-2</pre>
+    </div>
+  </div>
+</div>
+
+<!-- Scaling Architecture -->
+<span class="section-anchor" id="scaling"></span>
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">⬆</span>
+    <h2>확장 아키텍처: Standalone을 넘어서</h2>
+  </div>
+
+  <p style="font-size:13px;color:var(--text-secondary);margin-bottom:20px">이 가이드에서는 한 대의 EC2에 CryoSPARC을 설치하는 <strong style="color:var(--text-primary)">Standalone 방식</strong>을 다뤘습니다. 데이터가 커지거나 여러 사용자가 동시에 사용해야 할 때는 AWS의 관리형 HPC 서비스를 활용할 수 있습니다.</p>
+
+  <div class="subsection">
+    <h3>Standalone vs. AWS PCS 비교</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>Standalone (이 가이드)</th><th>AWS PCS / ParallelCluster</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--primary-color);font-weight:600">구성</td><td>EC2 1대에 Head + Worker</td><td>Login Node + 다수의 Compute Node</td></tr>
+          <tr><td style="color:var(--primary-color);font-weight:600">GPU</td><td>A10G 1장 (g5)</td><td>L4/V100/A100 최대 8장 (g6, p3, p4d)</td></tr>
+          <tr><td style="color:var(--primary-color);font-weight:600">스토리지</td><td>EBS + NVMe Instance Store</td><td>S3 + FSx for Lustre + EFS</td></tr>
+          <tr><td style="color:var(--primary-color);font-weight:600">확장</td><td>수직 (인스턴스 타입 변경)</td><td>수평 (노드 자동 추가/제거)</td></tr>
+          <tr><td style="color:var(--primary-color);font-weight:600">스케줄러</td><td>없음 (직접 실행)</td><td>Slurm (작업 큐 자동 관리)</td></tr>
+          <tr><td style="color:var(--primary-color);font-weight:600">비용 구조</td><td>서버 켜 놓은 시간만큼</td><td>작업 실행 시에만 노드 생성 (유휴 비용 최소)</td></tr>
+          <tr><td style="color:var(--primary-color);font-weight:600">적합 대상</td><td>개인 연구자, 소규모 데이터</td><td>연구실/기관, TB 단위 데이터</td></tr>
+          <tr><td style="color:var(--primary-color);font-weight:600">설정 난이도</td><td>⭐⭐ (이 가이드로 1~2시간)</td><td>⭐⭐⭐⭐ (CloudFormation/IaC 필요)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>AWS PCS 아키텍처 개요</h3>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">AWS Parallel Computing Service(PCS)는 관리형 HPC 클러스터 서비스입니다. CryoSPARC과 결합하면 작업 종류별로 다른 인스턴스를 자동으로 할당할 수 있습니다.</p>
+
+    <div style="padding:16px;background:var(--background-primary);border-radius:6px;margin-bottom:14px;box-shadow:var(--shadow-sm)">
+      <div style="font-size:12px;font-weight:600;color:var(--primary-color);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">PCS 3-Queue 아키텍처 (AWS 공식 권장)</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+        <div style="padding:10px;background:#eff6ff;border-radius:6px;text-align:center">
+          <div style="font-size:11px;font-weight:700;color:#2563eb">cpu-queue</div>
+          <div style="font-size:10px;color:var(--text-secondary);margin-top:4px">c5a.8xlarge</div>
+          <div style="font-size:10px;color:var(--text-light)">Import, Motion Correction</div>
+        </div>
+        <div style="padding:10px;background:#f5f3ff;border-radius:6px;text-align:center">
+          <div style="font-size:11px;font-weight:700;color:#7c3aed">single-gpu-queue</div>
+          <div style="font-size:10px;color:var(--text-secondary);margin-top:4px">g6.4xlarge</div>
+          <div style="font-size:10px;color:var(--text-light)">CTF, 2D Class, Refinement</div>
+        </div>
+        <div style="padding:10px;background:#fdf2f8;border-radius:6px;text-align:center">
+          <div style="font-size:11px;font-weight:700;color:#db2777">multi-gpu-queue</div>
+          <div style="font-size:10px;color:var(--text-secondary);margin-top:4px">g6.48xlarge</div>
+          <div style="font-size:10px;color:var(--text-light)">3D Refinement, Polishing</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text-secondary);text-align:center">CryoSPARC의 Lane = PCS의 Queue. 작업 제출 시 적절한 Lane을 선택하면 해당 Queue의 노드가 자동 생성됩니다.</div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>스토리지 아키텍처: S3 + FSx for Lustre</h3>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">대규모 Cryo-EM 데이터(샘플당 수십 TB)를 효율적으로 관리하려면 3-Tier 스토리지 구조가 필요합니다.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">
+      <div style="padding:12px;background:#f0fdf4;border-radius:6px;text-align:center">
+        <div style="font-size:22px;margin-bottom:4px">🗄️</div>
+        <div style="font-size:12px;font-weight:600;color:#16a34a">Amazon S3</div>
+        <div style="font-size:10px;color:var(--text-secondary);margin-top:4px">원본 micrograph 저장<br>~$0.023/GB/월<br><strong style="color:var(--text-primary)">장기 보관</strong></div>
+      </div>
+      <div style="padding:12px;background:#fffbeb;border-radius:6px;text-align:center">
+        <div style="font-size:22px;margin-bottom:4px">⚡</div>
+        <div style="font-size:12px;font-weight:600;color:#d97706">FSx for Lustre</div>
+        <div style="font-size:10px;color:var(--text-secondary);margin-top:4px">S3와 자동 연동 (DRA)<br>250 MB/s/TiB 처리량<br><strong style="color:var(--text-primary)">고속 처리</strong></div>
+      </div>
+      <div style="padding:12px;background:#eff6ff;border-radius:6px;text-align:center">
+        <div style="font-size:22px;margin-bottom:4px">💾</div>
+        <div style="font-size:12px;font-weight:600;color:#2563eb">EFS / EBS</div>
+        <div style="font-size:10px;color:var(--text-secondary);margin-top:4px">CryoSPARC DB, /home<br>노드 간 공유 가능<br><strong style="color:var(--text-primary)">시스템 저장소</strong></div>
+      </div>
+    </div>
+
+    <p style="font-size:12px;color:var(--text-secondary);margin-top:10px;line-height:1.7">DRA (Data Repository Association)를 설정하면 S3 데이터가 FSx for Lustre에 자동으로 나타나고, 처리 결과도 S3에 자동 동기화됩니다.</p>
+  </div>
+
+  <div class="subsection">
+    <h3>우리 Standalone 환경에서 S3 활용하기</h3>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">S3를 이용한 데이터 업로드는 <a href="#step6" style="color:#2563eb">Step 6</a>을 참고하세요. 여기서는 처리 결과의 백업과 관리를 다룹니다.</p>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">bash — 결과 백업 및 S3 관리</span>
+        <button class="copy-btn" onclick="copyCode(this)">📋 복사</button>
+      </div>
+      <pre><span class="comment"># 완료된 결과 S3에 백업</span>
+aws s3 sync /home/ec2-user/cryosparc/projects/P1/ \
+  s3://cryosparc-data-<span class="highlight">[계정ID]</span>-apne2/results/P1/
+
+<span class="comment"># 사용량 확인</span>
+aws s3 ls s3://cryosparc-data-<span class="highlight">[계정ID]</span>-apne2/ \
+  <span class="flag">--recursive</span> <span class="flag">--human-readable</span> <span class="flag">--summarize</span></pre>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>다음 단계로 가려면</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>관심사</th><th>참고 자료</th></tr></thead>
+        <tbody>
+          <tr><td>PCS로 멀티노드 클러스터 구축</td><td><a href="https://aws.amazon.com/blogs/hpc/scalable-cryo-em-on-aws-parallel-computing-service-pcs/" style="color:#2563eb" target="_blank">AWS HPC Blog: Scalable Cryo-EM on PCS</a></td></tr>
+          <tr><td>ParallelCluster 배포 가이드</td><td><a href="https://github.com/aws-solutions-library-samples/guidance-for-scalable-cryo-em-on-aws-parallel-computing-service" style="color:#2563eb" target="_blank">GitHub: Cryo-EM on AWS (CloudFormation 템플릿)</a></td></tr>
+          <tr><td>CryoSPARC 공식 AWS 가이드</td><td><a href="https://guide.cryosparc.com/setup-configuration-and-management/cryosparc-on-aws" style="color:#2563eb" target="_blank">CryoSPARC Guide: CryoSPARC on AWS</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Cost -->
+<span class="section-anchor" id="cost"></span>
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">$</span>
+    <h2>비용 관리</h2>
+  </div>
+  <p style="font-size:13px;color:var(--text-secondary);margin-bottom:14px">AWS 비용은 크게 <strong style="color:var(--primary-color)">GPU 컴퓨팅(EC2)</strong>, <strong style="color:#b45309">디스크(EBS)</strong>, <strong style="color:#166534">객체 저장소(S3)</strong> 세 가지로 나뉩니다. 각각 과금 방식이 다르므로 정확히 이해해야 예상치 못한 청구서를 피할 수 있습니다.</p>
+
+  <div class="cost-grid">
+    <div class="cost-card">
+      <div class="cost-val">$0.4~2.0</div>
+      <div class="cost-unit">/시간</div>
+      <div class="cost-label">EC2 GPU 컴퓨팅<br><small>running 상태일 때만</small></div>
+    </div>
+    <div class="cost-card">
+      <div class="cost-val">~$0.09</div>
+      <div class="cost-unit">/GB/월</div>
+      <div class="cost-label">EBS 디스크<br><small style="color:#dc2626">서버 꺼도 과금!</small></div>
+    </div>
+    <div class="cost-card">
+      <div class="cost-val">~$0.025</div>
+      <div class="cost-unit">/GB/월</div>
+      <div class="cost-label">S3 저장소<br><small>장기 보관용</small></div>
+    </div>
+  </div>
+
+  <!-- GPU Compute -->
+  <div class="subsection">
+    <h3>EC2 GPU 컴퓨팅 비용</h3>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">EC2 컴퓨팅은 서버가 <strong style="color:#166534">Running</strong> 상태인 시간만큼 부과됩니다. On-Demand vs Spot의 차이는 <a href="#step3" style="color:var(--primary-color)">3. GPU 서버 생성</a>에서 상세히 설명합니다.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>인스턴스</th><th>GPU</th><th>RAM</th><th>On-Demand</th><th>Spot (예상)</th><th>CryoSPARC 용도</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>g5.xlarge</code></td><td>A10G ×1</td><td>16 GB</td>
+            <td>~$1.24/hr</td><td style="color:#166534;font-weight:600">~$0.36/hr</td>
+            <td>일반 처리 (Motion Corr, CTF, 2D, Ab-initio)</td>
+          </tr>
+          <tr>
+            <td><code>g5.2xlarge</code></td><td>A10G ×1</td><td>32 GB</td>
+            <td>~$1.49/hr</td><td style="color:#166534;font-weight:600">~$0.36/hr</td>
+            <td>중간 box size refinement</td>
+          </tr>
+          <tr>
+            <td><code>g5.4xlarge</code></td><td>A10G ×1</td><td style="color:#b45309">64 GB</td>
+            <td>~$2.00/hr</td><td style="color:#166534;font-weight:600">~$0.36/hr</td>
+            <td style="color:#b45309">Box 448+ Refinement (필수)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:11px;color:var(--text-light);margin-top:6px">※ 가격은 <code>ap-northeast-2</code> (Seoul) 기준 참고값. 실제 Spot 가격은 수요에 따라 변동됩니다. → <a href="https://aws.amazon.com/ec2/pricing/on-demand/" target="_blank" style="color:var(--primary-color)">On-Demand 가격표</a> · <a href="https://aws.amazon.com/ec2/spot/pricing/" target="_blank" style="color:var(--primary-color)">Spot 가격표</a></p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+      <div style="padding:12px 14px;background:#eff6ff;border-radius:6px">
+        <div style="font-size:12px;font-weight:700;color:var(--primary-color);margin-bottom:6px">💰 비용 계산 예시 (On-Demand)</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6">
+          g5.xlarge × <strong>8시간</strong>/일<br>
+          = $1.24 × 8 = <strong style="color:#b45309">~$10/일</strong>
+        </div>
+      </div>
+      <div style="padding:12px 14px;background:#f0fdf4;border-radius:6px">
+        <div style="font-size:12px;font-weight:700;color:#166534;margin-bottom:6px">✅ 절약 핵심</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6">
+          • <strong>On-Demand</strong>: 작업 후 즉시 <strong>Stop</strong><br>
+          • <strong>Spot</strong>: 프로세싱 완료 후 <strong>Terminate</strong> (EBS 유지 확인)
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:12px;color:var(--text-secondary);margin-top:12px;line-height:1.7">Box size 448 이상의 Refinement는 g5.xlarge(16GB)로 부족합니다. g5.4xlarge(64GB)로 전환하되, 작업 후 다시 g5.xlarge로 돌아가세요. EBS 볼륨은 유지되므로 데이터 손실 없이 전환 가능합니다.</p>
+  </div>
+
+  <!-- EBS Storage -->
+  <div class="subsection">
+    <h3>EBS 스토리지 비용</h3>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">EBS(Elastic Block Store)는 EC2의 하드디스크입니다. <strong style="color:#dc2626">서버를 꺼 놓아도(Stop) 매일 과금</strong>되므로, 스토리지 관리가 비용의 핵심입니다.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>EBS 용량</th><th>월 비용</th><th>일 환산</th><th>적합한 작업</th></tr></thead>
+        <tbody>
+          <tr><td><strong>500 GB</strong> gp3</td><td style="color:#b45309">$46/월</td><td>~$1.5/일</td><td>소규모 데이터 (100~200GB raw)</td></tr>
+          <tr><td><strong>1 TB</strong> gp3</td><td style="color:#b45309">$91/월</td><td>~$3.0/일</td><td>중간 데이터 (300~500GB raw)</td></tr>
+          <tr><td><strong>2 TB</strong> gp3</td><td style="color:#b45309">$182/월</td><td>~$6.1/일</td><td>대규모 데이터 (500GB~1TB raw)</td></tr>
+          <tr><td><strong>3 TB</strong> gp3</td><td style="color:#dc2626;font-weight:600">$274/월</td><td>~$9.1/일</td><td>MRC 형식 대용량 (890GB raw 등)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:11px;color:var(--text-light);margin-top:6px">※ gp3 서울 리전 기준 $0.0912/GB/월. → <a href="https://aws.amazon.com/ebs/pricing/" target="_blank" style="color:var(--primary-color)">공식 가격표</a></p>
+
+  </div>
+
+  <!-- S3 Storage -->
+  <div class="subsection">
+    <h3>S3 저장소 비용</h3>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">S3(Simple Storage Service)는 장기 데이터 보관용 저장소입니다. EBS보다 <strong style="color:#166534">약 3배 저렴</strong>하고, 서버와 독립적으로 존재합니다.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>항목</th><th>가격 (Seoul 리전)</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td><strong>S3 Standard</strong> 저장</td><td style="color:#166534;font-weight:600">~$0.025/GB/월</td><td>자주 접근하는 데이터</td></tr>
+          <tr><td><strong>S3 Glacier Instant</strong></td><td>~$0.005/GB/월</td><td>아카이브 (가끔 접근)</td></tr>
+          <tr><td>PUT 요청 (업로드)</td><td>$0.0045 / 1,000건</td><td>업로드 시 소량 발생</td></tr>
+          <tr><td>GET 요청 (다운로드)</td><td>$0.0004 / 1,000건</td><td>다운로드 시 소량 발생</td></tr>
+          <tr><td style="color:#dc2626">데이터 전송 (S3→외부)</td><td style="color:#dc2626">$0.126/GB</td><td>S3→인터넷. <strong>S3↔EC2는 같은 리전이면 무료</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:11px;color:var(--text-light);margin-top:6px">→ <a href="https://aws.amazon.com/s3/pricing/" target="_blank" style="color:var(--primary-color)">S3 공식 가격표</a></p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+      <div style="padding:12px 14px;background:#f0fdf4;border-radius:6px">
+        <div style="font-size:12px;font-weight:700;color:#166534;margin-bottom:6px">💰 비용 비교: 1TB 한 달 보관</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6">
+          EBS gp3: <strong style="color:#b45309">$91/월</strong><br>
+          S3 Standard: <strong style="color:#166534">$25/월</strong> (3.6배 저렴)<br>
+          S3 Glacier: <strong style="color:#166534">$5/월</strong> (18배 저렴)
+        </div>
+      </div>
+      <div style="padding:12px 14px;background:#eff6ff;border-radius:6px">
+        <div style="font-size:12px;font-weight:700;color:var(--primary-color);margin-bottom:6px">📋 S3 활용 시나리오</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6">
+          • Raw 데이터 장기 보관<br>
+          • 완료된 프로젝트 아카이브<br>
+          • EC2 간 데이터 이동 허브
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:12px;color:var(--text-secondary);margin-top:12px;line-height:1.7">같은 리전 내 S3↔EC2 전송은 무료입니다. 작업 완료 후 결과를 S3에 백업하고 EBS를 정리하는 습관을 들이세요.</p>
+  </div>
+
+</div>
+
+<!-- Troubleshoot -->
+<span class="section-anchor" id="trouble"></span>
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">!</span>
+    <h2>트러블슈팅</h2>
+  </div>
+
+  <button class="collapse-toggle" onclick="toggleCollapse(this)" style="border-left:3px solid #dc2626">
+    <span class="arrow">▶</span> "Permission denied" — SSH 접속 거부
+  </button>
+  <div class="collapse-body">
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+      <pre><span class="comment"># 원인 1: 키 파일 권한</span>
+chmod 400 ~/.ssh/my-key-pair.pem
+xattr -c ~/.ssh/my-key-pair.pem   <span class="comment"># Mac 전용</span>
+
+<span class="comment"># 원인 2: IP가 보안 그룹에 없음 (장소 이동 후)</span>
+aws ec2 authorize-security-group-ingress \
+  <span class="flag">--group-id</span> sg-XXXXXXXXXX \
+  <span class="flag">--protocol</span> tcp <span class="flag">--port</span> 22 \
+  <span class="flag">--cidr</span> $(curl -s ifconfig.me)/32 \
+  <span class="flag">--region</span> ap-northeast-2</pre>
+    </div>
+  </div>
+
+  <button class="collapse-toggle" onclick="toggleCollapse(this)" style="border-left:3px solid #d97706">
+    <span class="arrow">▶</span> "Connection refused" — 브라우저 접속 안 됨
+  </button>
+  <div class="collapse-body">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>체크</th><th>명령어</th></tr></thead>
+        <tbody>
+          <tr><td>CryoSPARC 실행?</td><td><code>cryosparcm status</code></td></tr>
+          <tr><td>SSH 터널 살아있나?</td><td><code>ps aux | grep "ssh.*39000"</code></td></tr>
+          <tr><td>포트 충돌?</td><td>기존 터널 종료 후 다시 열기</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <button class="collapse-toggle" onclick="toggleCollapse(this)" style="border-left:3px solid #7c3aed">
+    <span class="arrow">▶</span> "Out of Memory" — 메모리 부족
+  </button>
+  <div class="collapse-body">
+    <p style="padding:8px 0;color:var(--text-secondary)">g5.xlarge(16GB)에서 box size 448 이상 사용 시 발생합니다.</p>
+    <p style="color:var(--primary-color);font-weight:600">해결: <code style="color:var(--primary-color)">g5.4xlarge</code>(64GB)로 인스턴스 타입 변경</p>
+  </div>
+
+  <button class="collapse-toggle" onclick="toggleCollapse(this)" style="border-left:3px solid #2563eb">
+    <span class="arrow">▶</span> CryoSPARC 시작 실패
+  </button>
+  <div class="collapse-body">
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+      <pre><span class="comment"># 강제 재시작</span>
+cryosparcm stop
+sleep 10
+cryosparcm start
+
+<span class="comment"># 로그 확인</span>
+cryosparcm log database
+cryosparcm log command_core</pre>
+    </div>
+  </div>
+
+  <button class="collapse-toggle" onclick="toggleCollapse(this)" style="border-left:3px solid #16a34a">
+    <span class="arrow">▶</span> NVMe /scratch 마운트 실패
+  </button>
+  <div class="collapse-body">
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+      <pre>lsblk  <span class="comment"># 디바이스 이름 확인 (nvme1n1 또는 nvme2n1)</span>
+sudo mkfs.xfs -f /dev/nvme1n1
+sudo mount /dev/nvme1n1 /scratch
+sudo chown -R ec2-user:ec2-user /scratch</pre>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Ref -->
+<span class="section-anchor" id="quickref"></span>
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">⌘</span>
+    <h2>빠른 참조 카드</h2>
+  </div>
+
+  <div class="quickref">
+    <div class="qr-card">
+      <h4>Mac 터미널 (로컬)</h4>
+      <div class="qr-row"><span class="qr-label">서버 목록</span><span class="qr-cmd">aws ec2 describe-instances ...</span></div>
+      <div class="qr-row"><span class="qr-label">서버 시작</span><span class="qr-cmd">aws ec2 start-instances</span></div>
+      <div class="qr-row"><span class="qr-label">서버 중지</span><span class="qr-cmd">aws ec2 stop-instances</span></div>
+      <div class="qr-row"><span class="qr-label">서버 종료</span><span class="qr-cmd">aws ec2 terminate-instances</span></div>
+      <div class="qr-row"><span class="qr-label">SSH 접속</span><span class="qr-cmd">ssh -i ~/.ssh/my-key-pair.pem ec2-user@IP</span></div>
+      <div class="qr-row"><span class="qr-label">SSH 터널</span><span class="qr-cmd">ssh -N -f -L 39000:...</span></div>
+    </div>
+    <div class="qr-card">
+      <h4>서버 (SSH 접속 후)</h4>
+      <div class="qr-row"><span class="qr-label">NVMe 마운트</span><span class="qr-cmd">mkfs.xfs + mount /scratch</span></div>
+      <div class="qr-row"><span class="qr-label">CS 시작</span><span class="qr-cmd">cryosparcm start</span></div>
+      <div class="qr-row"><span class="qr-label">CS 중지</span><span class="qr-cmd">cryosparcm stop</span></div>
+      <div class="qr-row"><span class="qr-label">CS 상태</span><span class="qr-cmd">cryosparcm status</span></div>
+      <div class="qr-row"><span class="qr-label">GPU 확인</span><span class="qr-cmd">nvidia-smi</span></div>
+      <div class="qr-row"><span class="qr-label">디스크 확인</span><span class="qr-cmd">df -h</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Real Cost Section -->
+<span class="section-anchor" id="real-cost"></span>
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">💵</span>
+    <h2>부록: 실제 비용 사례</h2>
+  </div>
+  <p style="font-size:13px;color:var(--text-secondary);margin-bottom:14px">Apoferritin 맵을 사용한 Pixel size calibration 프로젝트에서 실제 발생한 AWS 비용입니다. 비용 규모를 가늠하는 데 참고하세요.</p>
+
+  <div class="subsection">
+    <h3>환경 요약</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>항목</th><th>값</th></tr></thead>
+        <tbody>
+          <tr><td>리전</td><td><code>ap-northeast-2</code> (Seoul)</td></tr>
+          <tr><td>인스턴스</td><td>g5.xlarge / g5.4xlarge (Spot + On-Demand 혼합)</td></tr>
+          <tr><td>EBS</td><td>500 GB → 최대 3 TB gp3 (배율별 상이)</td></tr>
+          <tr><td>기간</td><td>2026-01 ~ 2026-02 초 (약 5주)</td></tr>
+          <tr><td>작업 내용</td><td>Apoferritin 맵을 사용한 Pixel size calibration — 7개 배율</td></tr>
+          <tr><td>데이터 규모</td><td><strong style="color:#b45309">6,982</strong>개 micrograph · <strong style="color:#b45309">~1.5 TB</strong> (TIFF + MRC)</td></tr>
+          <tr><td>소프트웨어</td><td>CryoSPARC v4.7.1</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>월별 비용 내역</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>EC2 컴퓨팅</th><th>EBS 등 스토리지</th><th>S3</th><th>세금</th><th>기타</th><th style="color:var(--primary-color);font-weight:700">합계</th></tr></thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--primary-color);font-weight:600">2026-01</td>
+            <td>$212.38</td><td>$174.31</td><td>$28.58</td><td>$41.79</td><td>$2.64</td>
+            <td style="color:#b45309;font-weight:600">$459.70</td>
+          </tr>
+          <tr>
+            <td style="color:var(--primary-color);font-weight:600">2026-02</td>
+            <td>$51.78</td><td>$47.85</td><td>$8.14</td><td>$10.78</td><td>$0.13</td>
+            <td style="color:#b45309;font-weight:600">$118.68</td>
+          </tr>
+          <tr style="border-top:2px solid var(--border-color)">
+            <td style="color:#b45309;font-weight:700">총계</td>
+            <td style="font-weight:600">$264.15</td><td style="font-weight:600">$222.17</td><td style="font-weight:600">$36.71</td><td style="font-weight:600">$52.57</td><td style="font-weight:600">$2.77</td>
+            <td style="color:#b45309;font-weight:700;font-size:15px">$578.38</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>비용 구조 분석</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px">
+      <div style="padding:14px;background:#eff6ff;border-radius:6px;text-align:center">
+        <div style="font-size:22px;font-weight:700;color:var(--primary-color)">46%</div>
+        <div style="font-size:11px;color:var(--text-secondary);margin-top:2px">EC2 컴퓨팅<br><span style="color:var(--primary-color)">$264</span></div>
+      </div>
+      <div style="padding:14px;background:#fffbeb;border-radius:6px;text-align:center">
+        <div style="font-size:22px;font-weight:700;color:#b45309">39%</div>
+        <div style="font-size:11px;color:var(--text-secondary);margin-top:2px">EBS 스토리지<br><span style="color:#b45309">$222</span></div>
+      </div>
+      <div style="padding:14px;background:#f0fdf4;border-radius:6px;text-align:center">
+        <div style="font-size:22px;font-weight:700;color:#166534">15%</div>
+        <div style="font-size:11px;color:var(--text-secondary);margin-top:2px">S3 + 세금 + 기타<br><span style="color:#166534">$92</span></div>
+      </div>
+    </div>
+
+    <p style="font-size:12px;color:var(--text-secondary);margin-top:12px;line-height:1.7">EBS 볼륨은 서버를 꺼 놓아도 과금됩니다. 500GB gp3 기준 ~$46/월. 작업이 끝난 데이터는 S3로 옮기고 불필요한 EBS를 삭제하세요.</p>
+  </div>
+
+  <div class="subsection">
+    <h3>처리 데이터 규모</h3>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">Apoferritin (horse spleen) 시료를 7개 배율로 수집한 전체 데이터셋입니다.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>배율</th><th>파일 수</th><th>크기</th><th>형식</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td>64K</td><td>339</td><td>58.6 GB</td><td>TIFF</td><td></td></tr>
+          <tr><td>81K</td><td>304</td><td>49.4 GB</td><td>TIFF</td><td></td></tr>
+          <tr><td>105K</td><td>787</td><td>147.3 GB</td><td>TIFF</td><td>box 125→350px로 해상도 대폭 개선</td></tr>
+          <tr><td>130K</td><td>730</td><td style="color:#b45309;font-weight:600">889.7 GB</td><td>MRC</td><td>EBS 3TB 필요 · g5.4xlarge</td></tr>
+          <tr><td>165K</td><td>1,080</td><td>111.9 GB</td><td>TIFF</td><td>첫 번째 처리 배율</td></tr>
+          <tr><td>215K</td><td>1,285</td><td>108.0 GB</td><td>TIFF</td><td style="color:#166534">최고 해상도 1.76Å ⭐</td></tr>
+          <tr><td>270K</td><td>2,456</td><td>144.8 GB</td><td>TIFF</td><td>가장 많은 파일 수</td></tr>
+          <tr style="border-top:2px solid var(--border-color)">
+            <td style="color:#b45309;font-weight:700">합계</td>
+            <td style="font-weight:600">6,982</td>
+            <td style="color:#b45309;font-weight:700">~1.5 TB</td>
+            <td></td><td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  </div>
+</div>
+
+<p style="text-align:center;color:var(--text-light);font-size:12px;padding-top:32px;border-top:1px solid var(--border-color)">
+  이 가이드는 실제 운영 경험을 바탕으로 작성되었습니다. 2026-03-05
+</p>
+
+<p style="font-size:12px;color:var(--text-light);margin-top:8px;text-align:center">오류·오탈자·문의: <a href="mailto:hanseonk@snu.ac.kr" style="color:var(--primary-color)">hanseonk@snu.ac.kr</a></p>
+
+</main>
+</div>
+
+<!-- Back to top button -->
+<a href="#" class="back-top" id="backTop">↑</a>
+
+<script>
+// Copy code to clipboard
+function copyCode(btn){
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  const text = pre.textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent = '✅ 복사됨';
+    btn.classList.add('copied');
+    setTimeout(()=>{
+      btn.textContent = '📋 복사';
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+// Toggle collapsible sections
+function toggleCollapse(btn){
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// Toggle checklist items
+function toggleCheck(item){
+  const box = item.querySelector('.check-box');
+  box.classList.toggle('checked');
+  item.classList.toggle('checked-item');
+}
+
+// Sidebar active state on scroll
+const sections = document.querySelectorAll('.section-anchor');
+const navLinks = document.querySelectorAll('.sidebar a');
+
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const id = entry.target.id;
+      navLinks.forEach(link=>{
+        link.classList.toggle('active', link.getAttribute('href') === '#'+id);
+      });
+    }
+  });
+},{rootMargin:'-80px 0px -70% 0px'});
+
+sections.forEach(s=>observer.observe(s));
+
+// Back to top visibility
+window.addEventListener('scroll',()=>{
+  document.getElementById('backTop').classList.toggle('visible', window.scrollY > 400);
+});
+</script>
+</body>
+</html>
