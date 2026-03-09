@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Particle Picking</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(22px, 2.8vh, 36px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(11px, 1.3vh, 17px); color: #777; margin-top: 2px; font-weight: 500; }
+
+/* Two-row layout: top=micrograph demo, bottom=methods */
+.content {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-rows: 1.1fr 0.9fr;
+  gap: clamp(6px, 0.8vh, 12px);
+  padding: clamp(3px, 0.4vh, 6px) 0;
+}
+
+.section {
+  background: #fff;
+  border: 2px solid #e0e0e8;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.sec-header {
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1vw, 16px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  border-bottom: 1.5px solid #f0f0f5;
+}
+.sec-dot {
+  width: clamp(8px, 1vh, 12px);
+  height: clamp(8px, 1vh, 12px);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sec-title {
+  font-size: clamp(13px, 1.5vh, 19px);
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.sec-desc {
+  font-size: clamp(10px, 1.1vh, 14px);
+  color: #888;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.sec-canvas {
+  flex: 1; min-height: 0;
+}
+.sec-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="cryo-em-index.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+    <h1>Particle Picking</h1>
+    <p>Identifying and extracting individual particle images from micrographs</p>
+  </div>
+
+  <div class="content">
+    <!-- Section 1: Picking on Micrograph -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-dot" style="background:#8b5cf6"></div>
+        <div class="sec-title">Particle Selection from Micrograph</div>
+        <div class="sec-desc">Locate particles &rarr; extract box images for classification</div>
+      </div>
+      <div class="sec-canvas"><canvas id="cvPick"></canvas></div>
+    </div>
+
+    <!-- Section 2: Picking Methods -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-dot" style="background:#3b82f6"></div>
+        <div class="sec-title">Picking Methods Comparison</div>
+        <div class="sec-desc">Manual &rarr; Blob &rarr; Template &rarr; ML-based</div>
+      </div>
+      <div class="sec-canvas"><canvas id="cvMethods"></canvas></div>
+    </div>
+  </div>
+  <div style="flex-shrink:0;font-size:clamp(8px,0.9vh,11px);color:#aaa;text-align:center;padding:2px 8px;">Bepler et al., Nat Methods (2019) &middot; Wagner et al., Commun Biol (2019)</div>
+</div>
+
+<script>
+function setupCanvas(id) {
+    const c = document.getElementById(id);
+    const rect = c.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    c.width = Math.round(rect.width * dpr);
+    c.height = Math.round(rect.height * dpr);
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: rect.width, h: rect.height };
+}
+
+function mulberry32(a) {
+    return function() {
+        a |= 0; a = a + 0x6D2B79F5 | 0;
+        let t = Math.imul(a ^ a >>> 15, 1 | a);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.arcTo(x + w, y, x + w, y + r, r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+    ctx.lineTo(x + r, y + h);
+    ctx.arcTo(x, y + h, x, y + h - r, r);
+    ctx.lineTo(x, y + r);
+    ctx.arcTo(x, y, x + r, y, r);
+    ctx.closePath();
+}
+
+// Draw a blob (particle) shape
+function drawParticle(ctx, cx, cy, r, seed, brightness) {
+    const rng = mulberry32(seed);
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rng() * Math.PI * 2);
+    ctx.beginPath();
+    const pts = 16;
+    for (let i = 0; i < pts; i++) {
+        const ang = (i / pts) * Math.PI * 2;
+        const rr = r * (0.7 + rng() * 0.45);
+        const x = Math.cos(ang) * rr;
+        const y = Math.sin(ang) * rr;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    const b = brightness || 140;
+    ctx.fillStyle = `rgba(${b},${b},${b + 15},0.55)`;
+    ctx.fill();
+    ctx.restore();
+}
+
+// Generate particle positions (seeded)
+function generateParticles(rng, count, w, h, margin) {
+    const particles = [];
+    for (let i = 0; i < count * 3 && particles.length < count; i++) {
+        const x = margin + rng() * (w - margin * 2);
+        const y = margin + rng() * (h - margin * 2);
+        let ok = true;
+        for (const p of particles) {
+            const dx = x - p.x, dy = y - p.y;
+            if (Math.sqrt(dx * dx + dy * dy) < margin * 1.5) { ok = false; break; }
+        }
+        if (ok) particles.push({ x, y, seed: Math.round(rng() * 10000), r: 6 + rng() * 4 });
+    }
+    return particles;
+}
+
+// ===== Section 1: Picking on Micrograph =====
+function drawPicking(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 1200, h / 400);
+    const pad = 14 * s;
+
+    // Layout: [Micrograph with picks] → [Extracted particles grid]
+    const microW = w * 0.55;
+    const microH = h - pad * 2;
+    const mx = pad;
+    const my = pad;
+
+    // Draw micrograph
+    ctx.save();
+    roundRect(ctx, mx, my, microW, microH, 6);
+    ctx.clip();
+    ctx.fillStyle = '#1a1a2e';
+    ctx.fillRect(mx, my, microW, microH);
+
+    // Noise
+    const rng = mulberry32(300);
+    for (let i = 0; i < 600; i++) {
+        ctx.fillStyle = `rgba(255,255,255,${0.02 + rng() * 0.04})`;
+        ctx.fillRect(mx + rng() * microW, my + rng() * microH, 1.5, 1.5);
+    }
+
+    // Ice contamination (a few blobs)
+    for (let i = 0; i < 3; i++) {
+        ctx.fillStyle = 'rgba(80,80,100,0.15)';
+        ctx.beginPath();
+        ctx.arc(mx + 30 + rng() * (microW - 60), my + 30 + rng() * (microH - 60), 15 + rng() * 20, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // Particles
+    const particles = generateParticles(mulberry32(42), 30, microW, microH, 20);
+    for (const p of particles) {
+        drawParticle(ctx, mx + p.x, my + p.y, p.r * s * 1.3, p.seed, 150);
+    }
+    ctx.restore();
+
+    // Draw picking circles (green for good, red for false positive)
+    const pickRng = mulberry32(77);
+    const boxSize = 20 * s;
+    let goodPicks = [];
+    let falsePicks = [];
+
+    // Good picks on actual particles
+    for (let i = 0; i < Math.min(particles.length, 22); i++) {
+        const p = particles[i];
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.rect(mx + p.x - boxSize, my + p.y - boxSize, boxSize * 2, boxSize * 2);
+        ctx.stroke();
+        goodPicks.push(p);
+    }
+
+    // A few false positives (on ice/noise)
+    for (let i = 0; i < 3; i++) {
+        const fx = mx + 20 + pickRng() * (microW - 40);
+        const fy = my + 20 + pickRng() * (microH - 40);
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.rect(fx - boxSize, fy - boxSize, boxSize * 2, boxSize * 2);
+        ctx.stroke();
+        // X mark
+        ctx.beginPath();
+        ctx.moveTo(fx - boxSize + 3, fy - boxSize + 3);
+        ctx.lineTo(fx + boxSize - 3, fy + boxSize - 3);
+        ctx.moveTo(fx + boxSize - 3, fy - boxSize + 3);
+        ctx.lineTo(fx - boxSize + 3, fy + boxSize - 3);
+        ctx.stroke();
+    }
+
+    // Micrograph label
+    ctx.font = `bold ${Math.round(11 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.textAlign = 'left';
+    ctx.fillText('Micrograph with particle picks', mx + 8, my + 16 * s);
+
+    // Legend on micrograph
+    const legY = my + microH - 28 * s;
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    roundRect(ctx, mx + 6, legY - 4, 200 * s, 26 * s, 4);
+    ctx.fill();
+    ctx.strokeStyle = '#10b981'; ctx.lineWidth = 1.5;
+    ctx.strokeRect(mx + 12, legY + 1, 10 * s, 10 * s);
+    ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#10b981';
+    ctx.fillText('Particle', mx + 26 * s, legY + 10 * s);
+    ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1.5;
+    ctx.strokeRect(mx + 80 * s, legY + 1, 10 * s, 10 * s);
+    ctx.fillStyle = '#ef4444';
+    ctx.fillText('False positive', mx + 94 * s, legY + 10 * s);
+
+    // Arrow from micrograph to extracted
+    const arrowX = mx + microW + 6 * s;
+    const arrowXEnd = mx + microW + w * 0.04;
+    const arrowY = my + microH / 2;
+    ctx.strokeStyle = '#8b5cf6'; ctx.lineWidth = 2.5 * s;
+    ctx.beginPath(); ctx.moveTo(arrowX, arrowY); ctx.lineTo(arrowXEnd, arrowY); ctx.stroke();
+    ctx.fillStyle = '#8b5cf6';
+    ctx.beginPath();
+    ctx.moveTo(arrowXEnd, arrowY);
+    ctx.lineTo(arrowXEnd - 7 * s, arrowY - 5 * s);
+    ctx.lineTo(arrowXEnd - 7 * s, arrowY + 5 * s);
+    ctx.fill();
+
+    ctx.font = `bold ${Math.round(10 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#8b5cf6';
+    ctx.textAlign = 'center';
+    ctx.save();
+    ctx.translate(arrowX + (arrowXEnd - arrowX) / 2, arrowY - 10 * s);
+    ctx.fillText('Extract', 0, 0);
+    ctx.restore();
+
+    // === Extracted particles grid ===
+    const extX = mx + microW + w * 0.06;
+    const extW = w - extX - pad;
+    const extH = microH;
+
+    ctx.font = `bold ${Math.round(11 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#8b5cf6';
+    ctx.textAlign = 'center';
+    ctx.fillText('Extracted Particles', extX + extW / 2, my + 14 * s);
+
+    // Draw grid of extracted boxes
+    const gridPad = 6 * s;
+    const gridTop = my + 24 * s;
+    const availH = extH - 24 * s - 50 * s;
+    const cols = 5;
+    const cellSize = Math.min((extW - gridPad * (cols + 1)) / cols, (availH - gridPad * 5) / 4);
+    const rows = Math.floor(availH / (cellSize + gridPad));
+
+    let idx = 0;
+    for (let r = 0; r < rows && r < 4; r++) {
+        for (let c = 0; c < cols; c++) {
+            if (idx >= goodPicks.length) break;
+            const bx = extX + gridPad + c * (cellSize + gridPad);
+            const by = gridTop + gridPad + r * (cellSize + gridPad);
+
+            // Dark box
+            ctx.fillStyle = '#1a1a2e';
+            roundRect(ctx, bx, by, cellSize, cellSize, 3);
+            ctx.fill();
+
+            // Draw particle in box
+            const p = goodPicks[idx];
+            drawParticle(ctx, bx + cellSize / 2, by + cellSize / 2, cellSize * 0.3, p.seed, 160);
+
+            // Some noise
+            const nrng = mulberry32(p.seed + 100);
+            for (let n = 0; n < 15; n++) {
+                ctx.fillStyle = `rgba(255,255,255,${0.03 + nrng() * 0.04})`;
+                ctx.fillRect(bx + nrng() * cellSize, by + nrng() * cellSize, 1, 1);
+            }
+
+            ctx.strokeStyle = '#3a3a4a';
+            ctx.lineWidth = 0.5;
+            roundRect(ctx, bx, by, cellSize, cellSize, 3);
+            ctx.stroke();
+
+            idx++;
+        }
+    }
+
+    // Stats below
+    const statsY = gridTop + gridPad + Math.min(rows, 4) * (cellSize + gridPad) + 8 * s;
+    ctx.font = `${Math.round(10 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#666';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${goodPicks.length} particles picked`, extX + extW / 2, statsY);
+    ctx.fillText(`Box size: 256 \u00d7 256 px`, extX + extW / 2, statsY + 14 * s);
+    ctx.fillText(`\u2192 Ready for 2D classification`, extX + extW / 2, statsY + 28 * s);
+}
+
+// ===== Section 2: Picking Methods =====
+function drawMethods(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 1200, h / 350);
+    const pad = 14 * s;
+
+    // 4 methods side by side
+    const methods = [
+        {
+            title: 'Manual',
+            color: '#94a3b8',
+            icon: 'hand',
+            pros: ['Precise control', 'No false positives', 'Good for small datasets'],
+            cons: ['Extremely slow', 'Not reproducible', 'Impractical for large data'],
+            speed: 0.15,
+        },
+        {
+            title: 'Blob Detection',
+            color: '#3b82f6',
+            icon: 'circle',
+            pros: ['Fast, no template needed', 'Reference-free', 'Good first pass'],
+            cons: ['Many false positives', 'Size-dependent', 'Misses heterogeneous'],
+            speed: 0.6,
+        },
+        {
+            title: 'Template Matching',
+            color: '#f59e0b',
+            icon: 'template',
+            pros: ['High accuracy', 'Orientation-aware', 'Good for homogeneous'],
+            cons: ['Needs reference', 'Bias toward template', 'Misses novel views'],
+            speed: 0.75,
+        },
+        {
+            title: 'ML-Based',
+            color: '#10b981',
+            icon: 'brain',
+            pros: ['Best accuracy', 'Handles heterogeneity', 'Learns from data'],
+            cons: ['Needs training data', 'GPU required', 'Black box'],
+            speed: 0.95,
+            tools: 'Topaz, crYOLO, WARP',
+        },
+    ];
+
+    const colW = (w - pad * 2 - 12 * s * 3) / 4;
+    const colH = h - pad * 2;
+
+    for (let i = 0; i < 4; i++) {
+        const m = methods[i];
+        const cx = pad + i * (colW + 12 * s);
+        const cy = pad;
+
+        // Card background
+        ctx.fillStyle = m.color + '08';
+        roundRect(ctx, cx, cy, colW, colH, 10);
+        ctx.fill();
+        ctx.strokeStyle = m.color + '40';
+        ctx.lineWidth = 1.5;
+        roundRect(ctx, cx, cy, colW, colH, 10);
+        ctx.stroke();
+
+        // Color strip at top
+        ctx.fillStyle = m.color;
+        roundRect(ctx, cx, cy, colW, 4, [10, 10, 0, 0]);
+        ctx.fill();
+
+        // Title
+        ctx.font = `bold ${Math.round(13 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = m.color;
+        ctx.textAlign = 'center';
+        ctx.fillText(m.title, cx + colW / 2, cy + 22 * s);
+
+        // Icon area
+        const iconY = cy + 30 * s;
+        const iconSize = Math.min(colW * 0.5, colH * 0.18);
+        const iconCX = cx + colW / 2;
+        const iconCY = iconY + iconSize / 2;
+
+        // Mini micrograph with picking visualization
+        const mSize = iconSize * 1.1;
+        ctx.fillStyle = '#1a1a2e';
+        roundRect(ctx, iconCX - mSize / 2, iconCY - mSize / 2, mSize, mSize, 4);
+        ctx.fill();
+
+        // Particles in mini micrograph
+        const prng = mulberry32(200 + i * 100);
+        const miniParticles = [];
+        for (let p = 0; p < 6; p++) {
+            const px = iconCX - mSize * 0.35 + prng() * mSize * 0.7;
+            const py = iconCY - mSize * 0.35 + prng() * mSize * 0.7;
+            miniParticles.push({ x: px, y: py });
+            ctx.fillStyle = 'rgba(160,160,180,0.4)';
+            ctx.beginPath();
+            ctx.arc(px, py, mSize * 0.07, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Different picking visualization per method
+        if (m.icon === 'hand') {
+            // Manual: only 2 picks (slow)
+            for (let p = 0; p < 2; p++) {
+                ctx.strokeStyle = '#10b981';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(miniParticles[p].x - mSize * 0.1, miniParticles[p].y - mSize * 0.1, mSize * 0.2, mSize * 0.2);
+            }
+        } else if (m.icon === 'circle') {
+            // Blob: circles with some false positives
+            for (const p of miniParticles) {
+                ctx.strokeStyle = '#3b82f6';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, mSize * 0.09, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            // false positive
+            ctx.strokeStyle = '#ef4444';
+            ctx.beginPath();
+            ctx.arc(iconCX + mSize * 0.3, iconCY - mSize * 0.2, mSize * 0.09, 0, Math.PI * 2);
+            ctx.stroke();
+        } else if (m.icon === 'template') {
+            // Template: squares matching most
+            for (let p = 0; p < 5; p++) {
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(miniParticles[p].x - mSize * 0.1, miniParticles[p].y - mSize * 0.1, mSize * 0.2, mSize * 0.2);
+            }
+        } else {
+            // ML: all particles found, clean
+            for (const p of miniParticles) {
+                ctx.strokeStyle = '#10b981';
+                ctx.lineWidth = 1.2;
+                ctx.strokeRect(p.x - mSize * 0.1, p.y - mSize * 0.1, mSize * 0.2, mSize * 0.2);
+            }
+        }
+
+        // Accuracy bar
+        const barY = iconCY + mSize / 2 + 12 * s;
+        const barW = colW * 0.7;
+        const barH = 6 * s;
+        const barX = cx + (colW - barW) / 2;
+
+        ctx.fillStyle = '#e8e8f0';
+        roundRect(ctx, barX, barY, barW, barH, 3);
+        ctx.fill();
+        ctx.fillStyle = m.color;
+        roundRect(ctx, barX, barY, barW * m.speed, barH, 3);
+        ctx.fill();
+
+        ctx.font = `${Math.round(8 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = '#999';
+        ctx.textAlign = 'center';
+        ctx.fillText('Accuracy / Throughput', cx + colW / 2, barY + barH + 10 * s);
+
+        // Pros
+        const prosY = barY + barH + 22 * s;
+        ctx.font = `bold ${Math.round(9 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = '#059669';
+        ctx.textAlign = 'left';
+        ctx.fillText('Pros', cx + 10 * s, prosY);
+
+        ctx.font = `${Math.round(8.5 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = '#555';
+        for (let j = 0; j < m.pros.length; j++) {
+            const py = prosY + 12 * s + j * 11 * s;
+            if (py > cy + colH - 50 * s) break;
+            ctx.fillStyle = '#059669';
+            ctx.fillText('+', cx + 10 * s, py);
+            ctx.fillStyle = '#555';
+            ctx.fillText(m.pros[j], cx + 20 * s, py);
+        }
+
+        // Cons
+        const consY = prosY + 12 * s + m.pros.length * 11 * s + 8 * s;
+        ctx.font = `bold ${Math.round(9 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = '#ef4444';
+        ctx.fillText('Cons', cx + 10 * s, consY);
+
+        ctx.font = `${Math.round(8.5 * s)}px Inter, sans-serif`;
+        for (let j = 0; j < m.cons.length; j++) {
+            const py = consY + 12 * s + j * 11 * s;
+            if (py > cy + colH - 16 * s) break;
+            ctx.fillStyle = '#ef4444';
+            ctx.fillText('\u2212', cx + 10 * s, py);
+            ctx.fillStyle = '#555';
+            ctx.fillText(m.cons[j], cx + 20 * s, py);
+        }
+
+        // Tools label for ML
+        if (m.tools) {
+            const toolY = cy + colH - 14 * s;
+            ctx.font = `bold ${Math.round(8 * s)}px Inter, sans-serif`;
+            ctx.fillStyle = m.color;
+            ctx.textAlign = 'center';
+            ctx.fillText(m.tools, cx + colW / 2, toolY);
+        }
+
+        // Arrow between columns
+        if (i < 3) {
+            const ax = cx + colW + 2 * s;
+            const ay = cy + colH * 0.22;
+            ctx.fillStyle = '#ccc';
+            ctx.beginPath();
+            ctx.moveTo(ax, ay - 4 * s);
+            ctx.lineTo(ax + 8 * s, ay);
+            ctx.lineTo(ax, ay + 4 * s);
+            ctx.fill();
+        }
+    }
+}
+
+// ===== Init =====
+function renderAll() {
+    drawPicking('cvPick');
+    drawMethods('cvMethods');
+}
+
+window.addEventListener('DOMContentLoaded', renderAll);
+window.addEventListener('resize', () => {
+    clearTimeout(window._resizeTimer);
+    window._resizeTimer = setTimeout(renderAll, 150);
+});
+</script>
+</body>
+</html>

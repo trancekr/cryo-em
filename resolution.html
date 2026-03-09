@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resolution in Cryo-EM</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(22px, 2.8vh, 36px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(11px, 1.3vh, 17px); color: #777; margin-top: 2px; font-weight: 500; }
+
+/* Two-row layout */
+.content {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: clamp(6px, 0.8vh, 12px);
+  padding: clamp(3px, 0.4vh, 6px) 0;
+}
+
+.section {
+  background: #fff;
+  border: 2px solid #e0e0e8;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.sec-header {
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1vw, 16px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  border-bottom: 1.5px solid #f0f0f5;
+}
+.sec-dot {
+  width: clamp(8px, 1vh, 12px);
+  height: clamp(8px, 1vh, 12px);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sec-title {
+  font-size: clamp(13px, 1.5vh, 19px);
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.sec-desc {
+  font-size: clamp(10px, 1.1vh, 14px);
+  color: #888;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.sec-canvas {
+  flex: 1; min-height: 0;
+}
+.sec-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="cryo-em-index.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+    <h1>Resolution in Cryo-EM</h1>
+    <p>Measuring and understanding map resolution via Fourier Shell Correlation (FSC)</p>
+  </div>
+
+  <div class="content">
+    <!-- Section 1: FSC Curve -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-dot" style="background:#7c3aed"></div>
+        <div class="sec-title">Fourier Shell Correlation (FSC)</div>
+        <div class="sec-desc">Gold-standard method: split data into half-sets, compare in Fourier space</div>
+      </div>
+      <div class="sec-canvas"><canvas id="cvFSC"></canvas></div>
+    </div>
+
+    <!-- Section 2: Resolution Scale -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-dot" style="background:#3b82f6"></div>
+        <div class="sec-title">What Resolution Means</div>
+        <div class="sec-desc">From blobs to atoms: what you can see at each resolution</div>
+      </div>
+      <div class="sec-canvas"><canvas id="cvScale"></canvas></div>
+    </div>
+  </div>
+  <div style="flex-shrink:0;font-size:clamp(8px,0.9vh,11px);color:#aaa;text-align:center;padding:2px 8px;">Harauz &amp; van Heel, Optik (1986) &middot; Scheres &amp; Chen, Nat Methods (2012)</div>
+</div>
+
+<script>
+function setupCanvas(id) {
+    const c = document.getElementById(id);
+    const rect = c.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    c.width = Math.round(rect.width * dpr);
+    c.height = Math.round(rect.height * dpr);
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: rect.width, h: rect.height };
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    if (Array.isArray(r)) {
+        ctx.moveTo(x + r[0], y);
+        ctx.arcTo(x + w, y, x + w, y + h, r[1]);
+        ctx.arcTo(x + w, y + h, x, y + h, r[2]);
+        ctx.arcTo(x, y + h, x, y, r[3]);
+        ctx.arcTo(x, y, x + w, y, r[0]);
+    } else {
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + r, r);
+        ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+        ctx.arcTo(x, y + h, x, y + h - r, r);
+        ctx.arcTo(x, y, x + r, y, r);
+    }
+    ctx.closePath();
+}
+
+function mulberry32(a) {
+    return function() {
+        a |= 0; a = a + 0x6D2B79F5 | 0;
+        let t = Math.imul(a ^ a >>> 15, 1 | a);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+}
+
+// ===== Section 1: FSC Curve =====
+function drawFSC(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 1200, h / 400);
+    const pad = 16 * s;
+
+    // Layout: [FSC explanation] | [FSC plot] | [Key info]
+    const plotW = w * 0.52;
+    const plotH = h - pad * 2 - 30 * s;
+    const plotX = w * 0.28;
+    const plotY = pad + 16 * s;
+
+    // === Left: FSC concept ===
+    const leftW = w * 0.24;
+
+    ctx.font = `bold ${Math.round(12 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#7c3aed';
+    ctx.textAlign = 'center';
+    ctx.fillText('Gold-Standard FSC', pad + leftW / 2, pad + 14 * s);
+
+    // Two half-maps diagram
+    const diagramY = pad + 30 * s;
+    const boxW = leftW * 0.38;
+    const boxH = boxW * 0.7;
+    const bx1 = pad + leftW * 0.08;
+    const bx2 = pad + leftW * 0.54;
+
+    // Half-map 1
+    ctx.fillStyle = '#ede9fe';
+    roundRect(ctx, bx1, diagramY, boxW, boxH, 6);
+    ctx.fill();
+    ctx.strokeStyle = '#7c3aed';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, bx1, diagramY, boxW, boxH, 6);
+    ctx.stroke();
+    ctx.font = `bold ${Math.round(9 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#7c3aed';
+    ctx.textAlign = 'center';
+    ctx.fillText('Half-map 1', bx1 + boxW / 2, diagramY + boxH / 2 + 3);
+
+    // Half-map 2
+    ctx.fillStyle = '#dbeafe';
+    roundRect(ctx, bx2, diagramY, boxW, boxH, 6);
+    ctx.fill();
+    ctx.strokeStyle = '#3b82f6';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, bx2, diagramY, boxW, boxH, 6);
+    ctx.stroke();
+    ctx.fillStyle = '#3b82f6';
+    ctx.fillText('Half-map 2', bx2 + boxW / 2, diagramY + boxH / 2 + 3);
+
+    // Arrow down to "Compare"
+    const compY = diagramY + boxH + 8 * s;
+    ctx.strokeStyle = '#888'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(bx1 + boxW / 2, diagramY + boxH);
+    ctx.lineTo(pad + leftW / 2, compY + 4 * s);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(bx2 + boxW / 2, diagramY + boxH);
+    ctx.lineTo(pad + leftW / 2, compY + 4 * s);
+    ctx.stroke();
+
+    ctx.fillStyle = '#f59e0b';
+    ctx.beginPath();
+    ctx.arc(pad + leftW / 2, compY + 14 * s, 10 * s, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.font = `bold ${Math.round(8 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#fff';
+    ctx.fillText('FT', pad + leftW / 2, compY + 17 * s);
+
+    // Arrow down to FSC curve
+    ctx.strokeStyle = '#888';
+    ctx.beginPath();
+    ctx.moveTo(pad + leftW / 2, compY + 24 * s);
+    ctx.lineTo(pad + leftW / 2, compY + 34 * s);
+    ctx.stroke();
+
+    // FSC text
+    ctx.font = `bold ${Math.round(10 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#666';
+    ctx.textAlign = 'center';
+    ctx.fillText('Compare shells', pad + leftW / 2, compY + 46 * s);
+    ctx.fillText('in Fourier space', pad + leftW / 2, compY + 58 * s);
+
+    // Steps text
+    const stepsY = compY + 78 * s;
+    const steps = [
+        '1. Split particles into 2 random halves',
+        '2. Reconstruct each half independently',
+        '3. Compute correlation per resolution shell',
+        '4. FSC = 0.143 \u2192 reported resolution',
+    ];
+    ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+    ctx.textAlign = 'left';
+    for (let i = 0; i < steps.length; i++) {
+        const py = stepsY + i * 14 * s;
+        if (py > h - 10) break;
+        ctx.fillStyle = '#555';
+        ctx.fillText(steps[i], pad + 4, py);
+    }
+
+    // === Center: FSC Plot ===
+    const gPad = 40 * s;
+    const gx = plotX + gPad * 0.5;
+    const gy = plotY;
+    const gw = plotW - gPad;
+    const gh = plotH - 20 * s;
+
+    // Background
+    ctx.fillStyle = '#fafbfc';
+    ctx.fillRect(gx, gy, gw, gh);
+    ctx.strokeStyle = '#e8e8f0';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(gx, gy, gw, gh);
+
+    // Grid lines
+    ctx.strokeStyle = '#f0f0f5'; ctx.lineWidth = 0.5;
+    for (let i = 1; i < 5; i++) {
+        const yy = gy + i * gh / 5;
+        ctx.beginPath(); ctx.moveTo(gx, yy); ctx.lineTo(gx + gw, yy); ctx.stroke();
+    }
+
+    // Y-axis labels
+    ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#999';
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= 5; i++) {
+        const val = 1 - i * 0.2;
+        const yy = gy + i * gh / 5;
+        ctx.fillText(val.toFixed(1), gx - 4, yy + 3);
+    }
+
+    // Y-axis title
+    ctx.save();
+    ctx.translate(gx - 28 * s, gy + gh / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.font = `${Math.round(10 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#666';
+    ctx.textAlign = 'center';
+    ctx.fillText('FSC', 0, 0);
+    ctx.restore();
+
+    // X-axis: resolution in Å (inverted - high res on right)
+    const resLabels = ['\u221e', '20', '10', '7', '5', '4', '3'];
+    const resFreqs = [0, 0.05, 0.1, 0.143, 0.2, 0.25, 0.333]; // 1/Å
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#999';
+    ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+    for (let i = 0; i < resLabels.length; i++) {
+        const xx = gx + (resFreqs[i] / 0.35) * gw;
+        if (xx <= gx + gw) {
+            ctx.fillText(resLabels[i], xx, gy + gh + 14 * s);
+            ctx.strokeStyle = '#f0f0f5'; ctx.lineWidth = 0.5;
+            ctx.beginPath(); ctx.moveTo(xx, gy); ctx.lineTo(xx, gy + gh); ctx.stroke();
+        }
+    }
+    ctx.fillText('Resolution (\u212b)', gx + gw / 2, gy + gh + 28 * s);
+
+    // FSC curve (simulated - starts at 1, drops smoothly)
+    // Good dataset: drops to 0.143 around 3.2 Å
+    ctx.beginPath();
+    ctx.strokeStyle = '#7c3aed';
+    ctx.lineWidth = 2.5 * s;
+    const fscRes = 3.2; // resolution in Å
+    const fscFreq = 1 / fscRes;
+    for (let i = 0; i <= gw; i++) {
+        const freq = (i / gw) * 0.35;
+        // Sigmoid-like drop
+        const halfFreq = fscFreq * 0.85;
+        const steepness = 25;
+        const fsc = 1 / (1 + Math.exp(steepness * (freq - halfFreq)));
+        const px = gx + i;
+        const py = gy + (1 - fsc) * gh;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+
+    // Second curve (worse resolution - 4.5 Å)
+    ctx.beginPath();
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 1.5 * s;
+    ctx.setLineDash([4, 3]);
+    for (let i = 0; i <= gw; i++) {
+        const freq = (i / gw) * 0.35;
+        const halfFreq = (1 / 4.5) * 0.85;
+        const fsc = 1 / (1 + Math.exp(22 * (freq - halfFreq)));
+        const px = gx + i;
+        const py = gy + (1 - fsc) * gh;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // 0.143 threshold line
+    const threshY = gy + (1 - 0.143) * gh;
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6, 3]);
+    ctx.beginPath(); ctx.moveTo(gx, threshY); ctx.lineTo(gx + gw, threshY); ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.font = `bold ${Math.round(9 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#ef4444';
+    ctx.textAlign = 'left';
+    ctx.fillText('FSC = 0.143', gx + gw - 70 * s, threshY - 6 * s);
+
+    // Mark resolution point
+    const resX = gx + (fscFreq / 0.35) * gw;
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([3, 2]);
+    ctx.beginPath(); ctx.moveTo(resX, gy); ctx.lineTo(resX, gy + gh); ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = '#10b981';
+    ctx.font = `bold ${Math.round(10 * s)}px Inter, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText('3.2 \u212b', resX, gy - 6 * s);
+
+    // Legend
+    ctx.textAlign = 'left';
+    const lx = gx + 10 * s, ly = gy + 12 * s;
+    ctx.fillStyle = '#7c3aed';
+    ctx.fillRect(lx, ly - 4, 14 * s, 3 * s);
+    ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#555';
+    ctx.fillText('Good dataset (3.2 \u212b)', lx + 18 * s, ly);
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1.2;
+    ctx.setLineDash([3, 2]);
+    ctx.beginPath(); ctx.moveTo(lx, ly + 12 * s); ctx.lineTo(lx + 14 * s, ly + 12 * s); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillText('Poor dataset (4.5 \u212b)', lx + 18 * s, ly + 16 * s);
+
+    // === Right: Key info ===
+    const rightX = plotX + plotW + 8 * s;
+    const rightW = w - rightX - pad;
+
+    ctx.font = `bold ${Math.round(12 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#10b981';
+    ctx.textAlign = 'center';
+    ctx.fillText('Key Concepts', rightX + rightW / 2, pad + 14 * s);
+
+    // Info cards
+    const cards = [
+        { title: 'FSC = 0.143', desc: 'Gold-standard threshold\n(half-bit criterion)', color: '#ef4444' },
+        { title: 'FSC = 0.5', desc: 'Older criterion,\nmore conservative', color: '#f59e0b' },
+        { title: 'Half-maps', desc: 'Independent reconstructions\nprevent overfitting', color: '#7c3aed' },
+        { title: 'Factors', desc: '# particles, defocus range,\nice quality, symmetry', color: '#3b82f6' },
+    ];
+
+    const cardH = Math.min((h - pad * 2 - 30 * s - 16 * s * 3) / 4, 60 * s);
+    for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        const cy = pad + 28 * s + i * (cardH + 8 * s);
+
+        ctx.fillStyle = card.color + '0a';
+        roundRect(ctx, rightX, cy, rightW, cardH, 8);
+        ctx.fill();
+        ctx.strokeStyle = card.color + '30';
+        ctx.lineWidth = 1.5;
+        roundRect(ctx, rightX, cy, rightW, cardH, 8);
+        ctx.stroke();
+
+        // Left strip
+        ctx.fillStyle = card.color;
+        ctx.fillRect(rightX, cy + 6, 3, cardH - 12);
+
+        ctx.font = `bold ${Math.round(11 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = card.color;
+        ctx.textAlign = 'left';
+        ctx.fillText(card.title, rightX + 10 * s, cy + 16 * s);
+
+        ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = '#666';
+        const lines = card.desc.split('\n');
+        lines.forEach((l, li) => ctx.fillText(l, rightX + 10 * s, cy + 28 * s + li * 12 * s));
+    }
+
+    // X-ray vs Cryo-EM note at bottom right
+    const noteY = pad + 28 * s + 4 * (cardH + 8 * s) + 4 * s;
+    if (noteY + 30 * s < h - 4) {
+        ctx.fillStyle = '#fef9c3';
+        roundRect(ctx, rightX, noteY, rightW, 34 * s, 6);
+        ctx.fill();
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 1;
+        roundRect(ctx, rightX, noteY, rightW, 34 * s, 6);
+        ctx.stroke();
+
+        ctx.font = `bold ${Math.round(9 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = '#92400e';
+        ctx.textAlign = 'left';
+        ctx.fillText('X-ray: Bragg\'s law (d = \u03bb/2sin\u03b8)', rightX + 8 * s, noteY + 12 * s);
+        ctx.fillText('Cryo-EM: FSC (statistical, data-driven)', rightX + 8 * s, noteY + 26 * s);
+    }
+}
+
+// ===== Section 2: Resolution Scale =====
+function drawScale(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 1200, h / 350);
+    const pad = 16 * s;
+
+    // 5 resolution levels side by side
+    const levels = [
+        { res: '3 \u212b', label: 'Near-atomic', color: '#10b981', detail: 'Side chains\nWater molecules\nLigand binding', quality: 1.0 },
+        { res: '4 \u212b', label: 'High', color: '#3b82f6', detail: 'Secondary structure\n\u03b1-helices, \u03b2-sheets\nBackbone trace', quality: 0.8 },
+        { res: '7 \u212b', label: 'Medium', color: '#f59e0b', detail: 'Helix/sheet visible\nDomain boundaries\nRigid-body fitting', quality: 0.55 },
+        { res: '10 \u212b', label: 'Low', color: '#ef4444', detail: 'Subunit shapes\nDomain positions\nGlobal architecture', quality: 0.35 },
+        { res: '20 \u212b', label: 'Very low', color: '#94a3b8', detail: 'Overall shape\nComplex assembly\nConformational states', quality: 0.15 },
+    ];
+
+    const colW = (w - pad * 2 - 10 * s * 4) / 5;
+    const colH = h - pad * 2;
+
+    for (let i = 0; i < 5; i++) {
+        const lv = levels[i];
+        const cx = pad + i * (colW + 10 * s);
+        const cy = pad;
+
+        // Card
+        ctx.fillStyle = lv.color + '08';
+        roundRect(ctx, cx, cy, colW, colH, 10);
+        ctx.fill();
+        ctx.strokeStyle = lv.color + '40';
+        ctx.lineWidth = 1.5;
+        roundRect(ctx, cx, cy, colW, colH, 10);
+        ctx.stroke();
+
+        // Top color strip
+        ctx.fillStyle = lv.color;
+        roundRect(ctx, cx, cy, colW, 4, [10, 10, 0, 0]);
+        ctx.fill();
+
+        // Resolution label
+        ctx.font = `900 ${Math.round(22 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = lv.color;
+        ctx.textAlign = 'center';
+        ctx.fillText(lv.res, cx + colW / 2, cy + 28 * s);
+
+        ctx.font = `600 ${Math.round(10 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = '#888';
+        ctx.fillText(lv.label, cx + colW / 2, cy + 42 * s);
+
+        // "Density map" visualization
+        const mapSize = Math.min(colW * 0.7, colH * 0.3);
+        const mapCX = cx + colW / 2;
+        const mapCY = cy + 48 * s + mapSize / 2 + 4 * s;
+
+        // Draw protein-like structure with varying blur
+        const blurLevel = 1 - lv.quality; // 0 = sharp, 1 = very blurred
+        drawProteinDensity(ctx, mapCX, mapCY, mapSize, blurLevel, lv.color);
+
+        // What you can see
+        const descY = mapCY + mapSize / 2 + 12 * s;
+        ctx.font = `bold ${Math.round(9 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = lv.color;
+        ctx.textAlign = 'center';
+        ctx.fillText('What you see:', cx + colW / 2, descY);
+
+        ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = '#555';
+        const dLines = lv.detail.split('\n');
+        for (let j = 0; j < dLines.length; j++) {
+            const py = descY + 14 * s + j * 13 * s;
+            if (py > cy + colH - 8) break;
+            ctx.fillText(dLines[j], cx + colW / 2, py);
+        }
+
+        // Arrow between columns
+        if (i < 4) {
+            ctx.fillStyle = '#ddd';
+            const ax = cx + colW + 2 * s;
+            const ay = cy + 28 * s;
+            ctx.beginPath();
+            ctx.moveTo(ax, ay - 4 * s);
+            ctx.lineTo(ax + 6 * s, ay);
+            ctx.lineTo(ax, ay + 4 * s);
+            ctx.fill();
+        }
+    }
+}
+
+// Draw protein density at different resolution levels
+function drawProteinDensity(ctx, cx, cy, size, blur, color) {
+    const r = size / 2;
+
+    // Dark background
+    ctx.fillStyle = '#1a1a2e';
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Draw "protein" features - amount of detail depends on blur level
+    const rng = mulberry32(42);
+
+    if (blur < 0.2) {
+        // Near-atomic: individual dots for atoms, visible side chains
+        for (let i = 0; i < 30; i++) {
+            const a = rng() * Math.PI * 2;
+            const d = rng() * r * 0.7;
+            const pr = 1.5 + rng() * 2;
+            ctx.fillStyle = `rgba(100,200,150,${0.4 + rng() * 0.4})`;
+            ctx.beginPath();
+            ctx.arc(cx + Math.cos(a) * d, cy + Math.sin(a) * d, pr, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        // Helix backbone
+        ctx.strokeStyle = 'rgba(120,220,170,0.7)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let t = 0; t < 20; t++) {
+            const x = cx - r * 0.4 + t * r * 0.04;
+            const y = cy + Math.sin(t * 0.8) * r * 0.15;
+            t === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+    } else if (blur < 0.4) {
+        // High res: helix tubes, sheet ribbons visible
+        ctx.strokeStyle = 'rgba(100,180,240,0.6)';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        for (let t = 0; t < 16; t++) {
+            const x = cx - r * 0.35 + t * r * 0.05;
+            const y = cy + Math.sin(t * 0.7) * r * 0.2;
+            t === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        // Sheet
+        ctx.fillStyle = 'rgba(100,180,240,0.3)';
+        ctx.fillRect(cx - r * 0.3, cy + r * 0.1, r * 0.6, r * 0.2);
+    } else if (blur < 0.6) {
+        // Medium: blobs for domains
+        for (let i = 0; i < 3; i++) {
+            const a = rng() * Math.PI * 2;
+            const d = rng() * r * 0.4;
+            ctx.fillStyle = `rgba(200,160,80,${0.2 + rng() * 0.15})`;
+            ctx.beginPath();
+            ctx.arc(cx + Math.cos(a) * d, cy + Math.sin(a) * d, r * 0.25 + rng() * r * 0.1, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else if (blur < 0.8) {
+        // Low: large blob
+        ctx.fillStyle = 'rgba(230,100,100,0.2)';
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, r * 0.6, r * 0.45, 0.3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(230,100,100,0.15)';
+        ctx.beginPath();
+        ctx.ellipse(cx + r * 0.15, cy - r * 0.1, r * 0.35, r * 0.3, -0.2, 0, Math.PI * 2);
+        ctx.fill();
+    } else {
+        // Very low: single featureless blob
+        ctx.fillStyle = 'rgba(160,160,180,0.18)';
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, r * 0.55, r * 0.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // Border
+    ctx.strokeStyle = color + '50';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+}
+
+// ===== Init =====
+function renderAll() {
+    drawFSC('cvFSC');
+    drawScale('cvScale');
+}
+
+window.addEventListener('DOMContentLoaded', renderAll);
+window.addEventListener('resize', () => {
+    clearTimeout(window._resizeTimer);
+    window._resizeTimer = setTimeout(renderAll, 150);
+});
+</script>
+</body>
+</html>

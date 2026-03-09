@@ -301,6 +301,7 @@ input[type=range]::-webkit-slider-thumb {
       </div>
     </div>
   </div>
+  <div style="flex-shrink:0;font-size:clamp(8px,0.9vh,11px);color:#aaa;text-align:center;padding:2px 8px;">Wade &amp; Frank, Optik (1977) &middot; Williams &amp; Carter, TEM (2009)</div>
 </div>
 
 <script>
@@ -598,7 +599,7 @@ function updateInfo(nm) {
         stage = 'OVERFOCUS'; stageClass = 'stage-over';
         title = 'Lens too strong \u2014 reversed phase';
         observe = 'Similar features with <span>inverted contrast</span> for some frequencies compared to underfocus.';
-        physics = 'Overfocus means the <b>lens is too strong</b>, focusing below the specimen. CTF mirrors underfocus but with opposite sign in certain frequency ranges.';
+        physics = 'Overfocus means the <b>lens is too strong</b>, so the image plane forms above the detector. CTF mirrors underfocus but with opposite sign in certain frequency ranges.';
     }
 
     el.innerHTML = `

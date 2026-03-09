@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motion Correction &amp; Dose Weighting</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(22px, 2.8vh, 36px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(11px, 1.3vh, 17px); color: #777; margin-top: 2px; font-weight: 500; }
+
+/* Two-row layout */
+.content {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: clamp(6px, 0.8vh, 12px);
+  padding: clamp(3px, 0.4vh, 6px) 0;
+}
+
+.section {
+  background: #fff;
+  border: 2px solid #e0e0e8;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.sec-header {
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1vw, 16px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  border-bottom: 1.5px solid #f0f0f5;
+}
+.sec-dot {
+  width: clamp(8px, 1vh, 12px);
+  height: clamp(8px, 1vh, 12px);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sec-title {
+  font-size: clamp(13px, 1.5vh, 19px);
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.sec-desc {
+  font-size: clamp(10px, 1.1vh, 14px);
+  color: #888;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.sec-canvas {
+  flex: 1; min-height: 0;
+}
+.sec-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="cryo-em-index.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+    <h1>Motion Correction &amp; Dose Weighting</h1>
+    <p>Correcting beam-induced motion and optimizing signal-to-noise across electron dose</p>
+  </div>
+
+  <div class="content">
+    <!-- Section 1: Motion Correction -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-dot" style="background:#3b82f6"></div>
+        <div class="sec-title">Motion Correction</div>
+        <div class="sec-desc">Align movie frames to correct beam-induced specimen motion</div>
+      </div>
+      <div class="sec-canvas"><canvas id="cvMotion"></canvas></div>
+    </div>
+
+    <!-- Section 2: Dose Weighting -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-dot" style="background:#10b981"></div>
+        <div class="sec-title">Dose Weighting</div>
+        <div class="sec-desc">Weight frames by accumulated dose to maximize high-resolution signal</div>
+      </div>
+      <div class="sec-canvas"><canvas id="cvDose"></canvas></div>
+    </div>
+  </div>
+  <div style="flex-shrink:0;font-size:clamp(8px,0.9vh,11px);color:#aaa;text-align:center;padding:2px 8px;">Zheng et al., Nat Methods (2017) &middot; Grant &amp; Grigorieff, eLife (2015)</div>
+</div>
+
+<script>
+function setupCanvas(id) {
+    const c = document.getElementById(id);
+    const rect = c.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    c.width = Math.round(rect.width * dpr);
+    c.height = Math.round(rect.height * dpr);
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: rect.width, h: rect.height };
+}
+
+// ===== Shared helpers =====
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.arcTo(x + w, y, x + w, y + r, r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+    ctx.lineTo(x + r, y + h);
+    ctx.arcTo(x, y + h, x, y + h - r, r);
+    ctx.lineTo(x, y + r);
+    ctx.arcTo(x, y, x + r, y, r);
+    ctx.closePath();
+}
+
+// Draw a "micrograph" with fake particles
+function drawMicrograph(ctx, x, y, w, h, seed, offsetX, offsetY, blurred) {
+    ctx.save();
+    ctx.beginPath();
+    roundRect(ctx, x, y, w, h, 4);
+    ctx.clip();
+
+    // Dark background
+    ctx.fillStyle = '#2a2a3a';
+    ctx.fillRect(x, y, w, h);
+
+    // Noise texture
+    const rng = mulberry32(seed);
+    for (let i = 0; i < 200; i++) {
+        const px = x + rng() * w;
+        const py = y + rng() * h;
+        const alpha = 0.03 + rng() * 0.06;
+        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+        ctx.fillRect(px, py, 1.5, 1.5);
+    }
+
+    // Draw particles (circles)
+    const particleCount = 12;
+    for (let i = 0; i < particleCount; i++) {
+        const pr = 3 + rng() * 4;
+        const px = x + 10 + rng() * (w - 20) + (offsetX || 0);
+        const py = y + 10 + rng() * (h - 20) + (offsetY || 0);
+        ctx.beginPath();
+        ctx.arc(px, py, pr, 0, Math.PI * 2);
+        ctx.fillStyle = blurred ? 'rgba(180,180,200,0.15)' : 'rgba(180,180,200,0.35)';
+        ctx.fill();
+        if (!blurred) {
+            ctx.strokeStyle = 'rgba(200,200,220,0.2)';
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+        }
+    }
+    ctx.restore();
+}
+
+// Simple seeded PRNG
+function mulberry32(a) {
+    return function() {
+        a |= 0; a = a + 0x6D2B79F5 | 0;
+        let t = Math.imul(a ^ a >>> 15, 1 | a);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+}
+
+// Arrow
+function drawArrow(ctx, x1, y1, x2, y2, color, lineW) {
+    const headLen = 8;
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    ctx.save();
+    ctx.strokeStyle = color || '#888';
+    ctx.fillStyle = color || '#888';
+    ctx.lineWidth = lineW || 2;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - headLen * Math.cos(angle - 0.4), y2 - headLen * Math.sin(angle - 0.4));
+    ctx.lineTo(x2 - headLen * Math.cos(angle + 0.4), y2 - headLen * Math.sin(angle + 0.4));
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+}
+
+// ===== Section 1: Motion Correction =====
+function drawMotionCorrection(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 1200, h / 400);
+    const pad = 20 * s;
+
+    // Layout: [Movie Frames] -> [Motion Tracks] -> [Aligned Sum]
+    const zoneW = (w - pad * 4) / 3;
+    const zoneH = h - pad * 2;
+
+    // === Zone 1: Movie Frames (stacked frames with offsets) ===
+    const z1x = pad;
+    const z1y = pad;
+
+    // Label
+    ctx.font = `bold ${Math.round(14 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#3b82f6';
+    ctx.textAlign = 'center';
+    ctx.fillText('Movie Frames (40-60 frames)', z1x + zoneW / 2, z1y + 14 * s);
+
+    const frameW = Math.min(zoneW * 0.55, zoneH * 0.6);
+    const frameH = frameW * 0.75;
+    const frameCX = z1x + zoneW / 2;
+    const frameCY = z1y + zoneH * 0.52;
+    const nFrames = 6;
+
+    // Draw stacked frames with slight offsets to show motion
+    for (let i = nFrames - 1; i >= 0; i--) {
+        const dx = (i - nFrames / 2) * 3 * s;
+        const dy = (i - nFrames / 2) * 2.5 * s;
+        const alpha = i === 0 ? 1 : 0.3 + 0.1 * i;
+        ctx.globalAlpha = alpha;
+        const fx = frameCX - frameW / 2 + dx;
+        const fy = frameCY - frameH / 2 + dy;
+        drawMicrograph(ctx, fx, fy, frameW, frameH, 100 + i, dx * 0.5, dy * 0.5, i > 0);
+
+        // Frame border
+        ctx.strokeStyle = i === 0 ? '#3b82f6' : '#555';
+        ctx.lineWidth = i === 0 ? 2 : 1;
+        roundRect(ctx, fx, fy, frameW, frameH, 4);
+        ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    // Frame count label
+    ctx.font = `${Math.round(11 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#888';
+    ctx.textAlign = 'center';
+    ctx.fillText('Each frame = short exposure (~50 ms)', frameCX, frameCY + frameH / 2 + 16 * s);
+    ctx.fillText('Beam-induced motion shifts particles between frames', frameCX, frameCY + frameH / 2 + 30 * s);
+
+    // Arrow 1→2
+    const arrowY = z1y + zoneH * 0.48;
+    drawArrow(ctx, z1x + zoneW - 5, arrowY, z1x + zoneW + pad - 5, arrowY, '#3b82f6', 2.5 * s);
+
+    // === Zone 2: Motion Tracks ===
+    const z2x = z1x + zoneW + pad;
+
+    ctx.font = `bold ${Math.round(14 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#7c3aed';
+    ctx.textAlign = 'center';
+    ctx.fillText('Motion Estimation & Alignment', z2x + zoneW / 2, z1y + 14 * s);
+
+    // Draw a single frame with motion trajectory overlay
+    const trackW = Math.min(zoneW * 0.6, zoneH * 0.6);
+    const trackH = trackW * 0.75;
+    const trackCX = z2x + zoneW / 2;
+    const trackCY = z1y + zoneH * 0.48;
+    const tx = trackCX - trackW / 2;
+    const ty = trackCY - trackH / 2;
+
+    drawMicrograph(ctx, tx, ty, trackW, trackH, 100, 0, 0, false);
+    ctx.strokeStyle = '#7c3aed';
+    ctx.lineWidth = 2;
+    roundRect(ctx, tx, ty, trackW, trackH, 4);
+    ctx.stroke();
+
+    // Draw motion trajectory paths (red curves with dots)
+    const rng = mulberry32(42);
+    const gridN = 4;
+    const trajectoryColors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6'];
+    for (let gx = 0; gx < gridN; gx++) {
+        for (let gy = 0; gy < gridN; gy++) {
+            const cx = tx + (gx + 0.5) * trackW / gridN;
+            const cy = ty + (gy + 0.5) * trackH / gridN;
+            const tColor = trajectoryColors[(gx + gy) % trajectoryColors.length];
+
+            // Draw a small curved path (motion trajectory)
+            ctx.beginPath();
+            ctx.strokeStyle = tColor;
+            ctx.lineWidth = 1.5;
+            let px = cx, py = cy;
+            ctx.moveTo(px, py);
+            const steps = 6;
+            for (let i = 0; i < steps; i++) {
+                px += (rng() - 0.5) * 6 * s;
+                py += (rng() - 0.3) * 4 * s;
+                ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+
+            // Start dot
+            ctx.beginPath();
+            ctx.arc(cx, cy, 2 * s, 0, Math.PI * 2);
+            ctx.fillStyle = tColor;
+            ctx.fill();
+        }
+    }
+
+    // Subtitle for motion tracks
+    ctx.font = `${Math.round(11 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#888';
+    ctx.textAlign = 'center';
+    ctx.fillText('Track particle shifts across frames', trackCX, trackCY + trackH / 2 + 16 * s);
+    ctx.fillText('Global + local (per-patch) alignment', trackCX, trackCY + trackH / 2 + 30 * s);
+
+    // Arrow 2→3
+    drawArrow(ctx, z2x + zoneW - 5, arrowY, z2x + zoneW + pad - 5, arrowY, '#10b981', 2.5 * s);
+
+    // === Zone 3: Aligned & Summed ===
+    const z3x = z2x + zoneW + pad;
+
+    ctx.font = `bold ${Math.round(14 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#10b981';
+    ctx.textAlign = 'center';
+    ctx.fillText('Aligned & Summed Micrograph', z3x + zoneW / 2, z1y + 14 * s);
+
+    // Draw a clean, crisp micrograph
+    const sumW = Math.min(zoneW * 0.6, zoneH * 0.6);
+    const sumH = sumW * 0.75;
+    const sumCX = z3x + zoneW / 2;
+    const sumCY = z1y + zoneH * 0.48;
+    const sx = sumCX - sumW / 2;
+    const sy = sumCY - sumH / 2;
+
+    drawMicrograph(ctx, sx, sy, sumW, sumH, 100, 0, 0, false);
+
+    // Draw clearer particles (overlaid stronger)
+    const rng2 = mulberry32(100);
+    for (let i = 0; i < 12; i++) {
+        const pr = 3 + rng2() * 4;
+        const px = sx + 10 + rng2() * (sumW - 20);
+        const py = sy + 10 + rng2() * (sumH - 20);
+        ctx.beginPath();
+        ctx.arc(px, py, pr, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(200,200,220,0.5)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(220,220,240,0.5)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+    }
+
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth = 2;
+    roundRect(ctx, sx, sy, sumW, sumH, 4);
+    ctx.stroke();
+
+    // Checkmark badge
+    const badgeR = 12 * s;
+    ctx.beginPath();
+    ctx.arc(sx + sumW - 4, sy + 4, badgeR, 0, Math.PI * 2);
+    ctx.fillStyle = '#10b981';
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2.5 * s;
+    ctx.beginPath();
+    ctx.moveTo(sx + sumW - 4 - 5 * s, sy + 4);
+    ctx.lineTo(sx + sumW - 4 - 1 * s, sy + 4 + 4 * s);
+    ctx.lineTo(sx + sumW - 4 + 5 * s, sy + 4 - 5 * s);
+    ctx.stroke();
+
+    ctx.font = `${Math.round(11 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#888';
+    ctx.textAlign = 'center';
+    ctx.fillText('Sharp particles, reduced motion blur', sumCX, sumCY + sumH / 2 + 16 * s);
+    ctx.fillText('Tools: MotionCor2, RELION, cryoSPARC', sumCX, sumCY + sumH / 2 + 30 * s);
+
+    // Bottom info bar
+    const infoY = z1y + zoneH - 22 * s;
+    ctx.font = `${Math.round(11 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#aaa';
+    ctx.textAlign = 'left';
+    ctx.fillText('Why needed: Electron beam causes specimen to move during exposure, blurring high-resolution details', pad, infoY);
+    ctx.fillText('Key concept: Split single exposure into fast sub-frames → estimate drift → shift-align → sum for sharp image', pad, infoY + 15 * s);
+}
+
+// ===== Section 2: Dose Weighting =====
+function drawDoseWeighting(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 1200, h / 400);
+    const pad = 20 * s;
+
+    // Layout: [Frame Damage Timeline] | [Frequency Weight Curve] | [Before/After Comparison]
+    const zoneW = (w - pad * 4) / 3;
+    const zoneH = h - pad * 2;
+
+    // === Zone 1: Radiation Damage Timeline ===
+    const z1x = pad;
+    const z1y = pad;
+
+    ctx.font = `bold ${Math.round(14 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#10b981';
+    ctx.textAlign = 'center';
+    ctx.fillText('Radiation Damage Over Time', z1x + zoneW / 2, z1y + 14 * s);
+
+    // Draw 3 frames: Early / Mid / Late
+    const fLabels = ['Early Frames', 'Mid Frames', 'Late Frames'];
+    const fColors = ['#10b981', '#f59e0b', '#ef4444'];
+    const fDamage = [0, 0.3, 0.7]; // damage level
+    const fW = zoneW * 0.26;
+    const fH = fW * 0.8;
+    const fGap = (zoneW - fW * 3) / 4;
+    const fY = z1y + zoneH * 0.32;
+
+    for (let i = 0; i < 3; i++) {
+        const fx = z1x + fGap + i * (fW + fGap);
+
+        // Frame background
+        ctx.save();
+        roundRect(ctx, fx, fY, fW, fH, 4);
+        ctx.clip();
+        ctx.fillStyle = '#2a2a3a';
+        ctx.fillRect(fx, fY, fW, fH);
+
+        // Particles - more degraded as damage increases
+        const rng = mulberry32(200 + i * 50);
+        for (let p = 0; p < 8; p++) {
+            const pr = 2.5 + rng() * 3;
+            const px = fx + 6 + rng() * (fW - 12);
+            const py = fY + 6 + rng() * (fH - 12);
+            ctx.beginPath();
+            ctx.arc(px, py, pr, 0, Math.PI * 2);
+            const a = Math.max(0.1, 0.45 - fDamage[i] * 0.35);
+            ctx.fillStyle = `rgba(180,180,200,${a})`;
+            ctx.fill();
+        }
+
+        // Damage overlay
+        if (fDamage[i] > 0) {
+            ctx.fillStyle = `rgba(200,80,80,${fDamage[i] * 0.15})`;
+            ctx.fillRect(fx, fY, fW, fH);
+            // Noise/damage artifacts
+            for (let n = 0; n < Math.round(fDamage[i] * 80); n++) {
+                ctx.fillStyle = `rgba(255,100,100,${rng() * 0.12})`;
+                ctx.fillRect(fx + rng() * fW, fY + rng() * fH, 2, 2);
+            }
+        }
+        ctx.restore();
+
+        // Border
+        ctx.strokeStyle = fColors[i];
+        ctx.lineWidth = 2;
+        roundRect(ctx, fx, fY, fW, fH, 4);
+        ctx.stroke();
+
+        // Label
+        ctx.font = `bold ${Math.round(10 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = fColors[i];
+        ctx.textAlign = 'center';
+        ctx.fillText(fLabels[i], fx + fW / 2, fY - 6 * s);
+    }
+
+    // Dose arrow below frames
+    const arrowBaseY = fY + fH + 16 * s;
+    const arrowX1 = z1x + fGap;
+    const arrowX2 = z1x + zoneW - fGap;
+    drawArrow(ctx, arrowX1, arrowBaseY, arrowX2, arrowBaseY, '#888', 1.5);
+    ctx.font = `${Math.round(10 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#888';
+    ctx.textAlign = 'center';
+    ctx.fillText('Accumulated electron dose (e\u207b/\u212b\u00b2)', (arrowX1 + arrowX2) / 2, arrowBaseY + 14 * s);
+
+    // Signal quality indicators
+    const sqY = arrowBaseY + 30 * s;
+    const sqLabels = ['High-res info\nintact', 'Partial\ndamage', 'Significant\ndamage'];
+    for (let i = 0; i < 3; i++) {
+        const fx = z1x + fGap + i * (fW + fGap);
+        ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = '#888';
+        ctx.textAlign = 'center';
+        const lines = sqLabels[i].split('\n');
+        lines.forEach((line, li) => {
+            ctx.fillText(line, fx + fW / 2, sqY + li * 12 * s);
+        });
+    }
+
+    // Arrow zone1 → zone2
+    const arrowMidY = z1y + zoneH * 0.45;
+    drawArrow(ctx, z1x + zoneW - 5, arrowMidY, z1x + zoneW + pad - 5, arrowMidY, '#10b981', 2.5 * s);
+
+    // === Zone 2: Dose-Weighting Curve ===
+    const z2x = z1x + zoneW + pad;
+
+    ctx.font = `bold ${Math.round(14 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#3b82f6';
+    ctx.textAlign = 'center';
+    ctx.fillText('Frequency-Dependent Weighting', z2x + zoneW / 2, z1y + 14 * s);
+
+    // Graph axes
+    const gPad = 40 * s;
+    const gx = z2x + gPad;
+    const gy = z1y + 30 * s;
+    const gw = zoneW - gPad * 1.8;
+    const gh = zoneH * 0.55;
+
+    // Background
+    ctx.fillStyle = '#fafbfc';
+    ctx.fillRect(gx, gy, gw, gh);
+    ctx.strokeStyle = '#ddd';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(gx, gy, gw, gh);
+
+    // Y-axis label
+    ctx.save();
+    ctx.translate(gx - 26 * s, gy + gh / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.font = `${Math.round(10 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#666';
+    ctx.textAlign = 'center';
+    ctx.fillText('Weight', 0, 0);
+    ctx.restore();
+
+    // X-axis label
+    ctx.font = `${Math.round(10 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#666';
+    ctx.textAlign = 'center';
+    ctx.fillText('Spatial Frequency (1/\u212b)', gx + gw / 2, gy + gh + 16 * s);
+
+    // Y-axis ticks
+    ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#999';
+    for (let i = 0; i <= 4; i++) {
+        const yy = gy + gh - i * gh / 4;
+        ctx.fillText((i * 0.25).toFixed(2), gx - 4 * s, yy + 3);
+        ctx.strokeStyle = '#eee';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(gx, yy);
+        ctx.lineTo(gx + gw, yy);
+        ctx.stroke();
+    }
+
+    // X-axis ticks
+    ctx.textAlign = 'center';
+    const xLabels = ['0', '0.1', '0.2', '0.3', '0.4', '0.5'];
+    for (let i = 0; i < xLabels.length; i++) {
+        const xx = gx + i * gw / (xLabels.length - 1);
+        ctx.fillText(xLabels[i], xx, gy + gh + 8 * s);
+    }
+
+    // Draw dose weighting curves for early, mid, late frames
+    const curveColors = ['#10b981', '#f59e0b', '#ef4444'];
+    const curveLabels = ['Early (low dose)', 'Mid', 'Late (high dose)'];
+    // B-factor decay: W(q) = exp(-B*q^2), with different B for different cumulative doses
+    const bFactors = [5, 40, 150]; // Increasing B = faster falloff
+
+    for (let c = 0; c < 3; c++) {
+        ctx.beginPath();
+        ctx.strokeStyle = curveColors[c];
+        ctx.lineWidth = 2.5 * s;
+        const B = bFactors[c];
+        for (let i = 0; i <= 100; i++) {
+            const t = i / 100;
+            const q = t * 0.5; // spatial frequency 0 to 0.5
+            const weight = Math.exp(-B * q * q);
+            const px = gx + t * gw;
+            const py = gy + gh - weight * gh;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+    }
+
+    // Legend
+    const legX = gx + gw * 0.55;
+    const legY = gy + 14 * s;
+    for (let c = 0; c < 3; c++) {
+        const ly = legY + c * 16 * s;
+        ctx.fillStyle = curveColors[c];
+        ctx.fillRect(legX, ly - 5 * s, 12 * s, 3 * s);
+        ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = '#555';
+        ctx.textAlign = 'left';
+        ctx.fillText(curveLabels[c], legX + 16 * s, ly);
+    }
+
+    // Explanation below curve
+    const expY = gy + gh + 28 * s;
+    ctx.font = `${Math.round(10 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#888';
+    ctx.textAlign = 'center';
+    const expLines = [
+        'High-resolution signal decays faster with dose',
+        'Optimal weight: W(q,N) = exp(-B(N) · q²)',
+        'Down-weight late frames at high spatial frequencies'
+    ];
+    expLines.forEach((line, i) => {
+        ctx.fillText(line, z2x + zoneW / 2, expY + i * 14 * s);
+    });
+
+    // Arrow zone2 → zone3
+    drawArrow(ctx, z2x + zoneW - 5, arrowMidY, z2x + zoneW + pad - 5, arrowMidY, '#3b82f6', 2.5 * s);
+
+    // === Zone 3: Result Comparison ===
+    const z3x = z2x + zoneW + pad;
+
+    ctx.font = `bold ${Math.round(14 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#7c3aed';
+    ctx.textAlign = 'center';
+    ctx.fillText('Effect on Final Image', z3x + zoneW / 2, z1y + 14 * s);
+
+    // Two comparison images: Without vs With dose weighting
+    const cmpW = zoneW * 0.42;
+    const cmpH = cmpW * 0.85;
+    const cmpGap = (zoneW - cmpW * 2) / 3;
+    const cmpY = z1y + zoneH * 0.22;
+
+    // Without dose weighting
+    const noDW_x = z3x + cmpGap;
+    ctx.font = `bold ${Math.round(10 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#ef4444';
+    ctx.textAlign = 'center';
+    ctx.fillText('Without', noDW_x + cmpW / 2, cmpY - 6 * s);
+
+    ctx.save();
+    roundRect(ctx, noDW_x, cmpY, cmpW, cmpH, 4);
+    ctx.clip();
+    ctx.fillStyle = '#2a2a3a';
+    ctx.fillRect(noDW_x, cmpY, cmpW, cmpH);
+    // More noise, less contrast
+    const rngNo = mulberry32(500);
+    for (let i = 0; i < 300; i++) {
+        ctx.fillStyle = `rgba(255,255,255,${0.02 + rngNo() * 0.04})`;
+        ctx.fillRect(noDW_x + rngNo() * cmpW, cmpY + rngNo() * cmpH, 1.5, 1.5);
+    }
+    for (let i = 0; i < 10; i++) {
+        const pr = 3 + rngNo() * 3.5;
+        const px = noDW_x + 8 + rngNo() * (cmpW - 16);
+        const py = cmpY + 8 + rngNo() * (cmpH - 16);
+        ctx.beginPath();
+        ctx.arc(px, py, pr, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(160,160,180,0.2)';
+        ctx.fill();
+    }
+    ctx.restore();
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 2;
+    roundRect(ctx, noDW_x, cmpY, cmpW, cmpH, 4);
+    ctx.stroke();
+
+    // With dose weighting
+    const yesDW_x = z3x + cmpGap * 2 + cmpW;
+    ctx.font = `bold ${Math.round(10 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#10b981';
+    ctx.textAlign = 'center';
+    ctx.fillText('With DW', yesDW_x + cmpW / 2, cmpY - 6 * s);
+
+    ctx.save();
+    roundRect(ctx, yesDW_x, cmpY, cmpW, cmpH, 4);
+    ctx.clip();
+    ctx.fillStyle = '#2a2a3a';
+    ctx.fillRect(yesDW_x, cmpY, cmpW, cmpH);
+    // Less noise, better contrast
+    const rngYes = mulberry32(500);
+    for (let i = 0; i < 150; i++) {
+        ctx.fillStyle = `rgba(255,255,255,${0.015 + rngYes() * 0.025})`;
+        ctx.fillRect(yesDW_x + rngYes() * cmpW, cmpY + rngYes() * cmpH, 1, 1);
+    }
+    for (let i = 0; i < 10; i++) {
+        const pr = 3 + rngYes() * 3.5;
+        const px = yesDW_x + 8 + rngYes() * (cmpW - 16);
+        const py = cmpY + 8 + rngYes() * (cmpH - 16);
+        ctx.beginPath();
+        ctx.arc(px, py, pr, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(190,190,210,0.45)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(210,210,230,0.3)';
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+    }
+    ctx.restore();
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth = 2;
+    roundRect(ctx, yesDW_x, cmpY, cmpW, cmpH, 4);
+    ctx.stroke();
+
+    // Checkmark on DW image
+    const bR = 10 * s;
+    ctx.beginPath();
+    ctx.arc(yesDW_x + cmpW - 4, cmpY + 4, bR, 0, Math.PI * 2);
+    ctx.fillStyle = '#10b981';
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2 * s;
+    ctx.beginPath();
+    ctx.moveTo(yesDW_x + cmpW - 4 - 4 * s, cmpY + 4);
+    ctx.lineTo(yesDW_x + cmpW - 4 - 1 * s, cmpY + 4 + 3 * s);
+    ctx.lineTo(yesDW_x + cmpW - 4 + 4 * s, cmpY + 4 - 4 * s);
+    ctx.stroke();
+
+    // Comparison labels below images
+    const cmpLabelY = cmpY + cmpH + 12 * s;
+    ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#888';
+    ctx.textAlign = 'center';
+    ctx.fillText('Equal weight', noDW_x + cmpW / 2, cmpLabelY);
+    ctx.fillText('all frames', noDW_x + cmpW / 2, cmpLabelY + 12 * s);
+    ctx.fillText('Optimal weight', yesDW_x + cmpW / 2, cmpLabelY);
+    ctx.fillText('per frequency', yesDW_x + cmpW / 2, cmpLabelY + 12 * s);
+
+    // Key benefits
+    const benefitY = cmpLabelY + 36 * s;
+    ctx.font = `bold ${Math.round(11 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#7c3aed';
+    ctx.textAlign = 'center';
+    ctx.fillText('Benefits', z3x + zoneW / 2, benefitY);
+
+    ctx.font = `${Math.round(10 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#666';
+    const benefits = [
+        '\u2022 Improved high-resolution signal',
+        '\u2022 Better CTF estimation',
+        '\u2022 Higher resolution reconstructions',
+        '\u2022 ~0.2-0.5 \u212b improvement'
+    ];
+    benefits.forEach((b, i) => {
+        ctx.textAlign = 'left';
+        ctx.fillText(b, z3x + 10 * s, benefitY + 18 * s + i * 14 * s);
+    });
+
+    // Bottom info bar
+    const infoY = z1y + zoneH - 22 * s;
+    ctx.font = `${Math.round(11 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#aaa';
+    ctx.textAlign = 'left';
+    ctx.fillText('Principle: Later frames have more radiation damage → high-frequency info is destroyed first → down-weight damaged frames at high resolution', pad, infoY);
+    ctx.fillText('Implemented in: MotionCor2 (-FtBin), RELION (relion_motion_correction), cryoSPARC (Patch Motion Correction)', pad, infoY + 15 * s);
+}
+
+// ===== Init =====
+function renderAll() {
+    drawMotionCorrection('cvMotion');
+    drawDoseWeighting('cvDose');
+}
+
+window.addEventListener('DOMContentLoaded', renderAll);
+window.addEventListener('resize', () => {
+    clearTimeout(window._resizeTimer);
+    window._resizeTimer = setTimeout(renderAll, 150);
+});
+</script>
+</body>
+</html>

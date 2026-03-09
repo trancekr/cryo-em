@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2D Classification &amp; 3D Reconstruction</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(22px, 2.8vh, 36px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(11px, 1.3vh, 17px); color: #777; margin-top: 2px; font-weight: 500; }
+
+/* Two-row layout */
+.content {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: clamp(6px, 0.8vh, 12px);
+  padding: clamp(3px, 0.4vh, 6px) 0;
+}
+
+.section {
+  background: #fff;
+  border: 2px solid #e0e0e8;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.sec-header {
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1vw, 16px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  border-bottom: 1.5px solid #f0f0f5;
+}
+.sec-dot {
+  width: clamp(8px, 1vh, 12px);
+  height: clamp(8px, 1vh, 12px);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sec-title {
+  font-size: clamp(13px, 1.5vh, 19px);
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.sec-desc {
+  font-size: clamp(10px, 1.1vh, 14px);
+  color: #888;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.sec-canvas {
+  flex: 1; min-height: 0;
+}
+.sec-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="cryo-em-index.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+    <h1>2D Classification &amp; 3D Reconstruction</h1>
+    <p>From noisy particle images to high-resolution 3D density map</p>
+  </div>
+
+  <div class="content">
+    <!-- Section 1: 2D Classification -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-dot" style="background:#f59e0b"></div>
+        <div class="sec-title">2D Classification</div>
+        <div class="sec-desc">Sort particles by orientation &rarr; average to boost SNR</div>
+      </div>
+      <div class="sec-canvas"><canvas id="cv2d"></canvas></div>
+    </div>
+
+    <!-- Section 2: 3D Reconstruction -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-dot" style="background:#3b82f6"></div>
+        <div class="sec-title">3D Reconstruction (Fourier Slice Theorem)</div>
+        <div class="sec-desc">2D projections &rarr; Fourier space &rarr; 3D volume</div>
+      </div>
+      <div class="sec-canvas"><canvas id="cv3d"></canvas></div>
+    </div>
+  </div>
+  <div style="flex-shrink:0;font-size:clamp(8px,0.9vh,11px);color:#aaa;text-align:center;padding:2px 8px;">Crowther et al., Nature (1970) &middot; Frank, Three-Dimensional Electron Microscopy (2006)</div>
+</div>
+
+<script>
+function setupCanvas(id) {
+    const c = document.getElementById(id);
+    const rect = c.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    c.width = Math.round(rect.width * dpr);
+    c.height = Math.round(rect.height * dpr);
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: rect.width, h: rect.height };
+}
+
+// ===== Simple shape drawing for "particles" =====
+// We'll use a simplified protein-like blob shape
+function drawBlob(ctx, cx, cy, r, angle, color, noise) {
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(angle);
+
+    // Main body (ellipse + bumps)
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    const pts = 24;
+    for (let i = 0; i < pts; i++) {
+        const a = (i / pts) * Math.PI * 2;
+        const bumpR = r * (0.6 + 0.4 * Math.cos(a * 2) + 0.2 * Math.sin(a * 3));
+        const px = Math.cos(a) * bumpR;
+        const py = Math.sin(a) * bumpR * 0.7;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fill();
+
+    // Add internal structure hints
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.beginPath();
+    ctx.ellipse(r * 0.15, -r * 0.1, r * 0.25, r * 0.15, 0.3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(-r * 0.2, r * 0.1, r * 0.2, r * 0.12, -0.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+
+    // Noise overlay
+    if (noise > 0) {
+        const imgD = r * 2.5;
+        for (let nx = -imgD/2; nx < imgD/2; nx += 2) {
+            for (let ny = -imgD/2; ny < imgD/2; ny += 2) {
+                if (Math.random() < noise) {
+                    const v = Math.random() > 0.5 ? 255 : 0;
+                    ctx.fillStyle = `rgba(${v},${v},${v},${noise * 0.3})`;
+                    ctx.fillRect(cx + nx, cy + ny, 2, 2);
+                }
+            }
+        }
+    }
+}
+
+// ===== 2D Classification =====
+function draw2D() {
+    const { ctx, w, h } = setupCanvas('cv2d');
+    const pad = Math.min(w, h) * 0.03;
+
+    // Layout: [Noisy Particles] → [Classification] → [2D Class Averages]
+    // 3 columns with arrows
+
+    const colW = (w - pad * 4) / 3;
+    const colCenters = [pad + colW/2, w/2, w - pad - colW/2];
+
+    // Column labels
+    const labelY = h * 0.06;
+    const labels = ['Raw Particle Images', 'Classification', '2D Class Averages'];
+    const labelColors = ['#888', '#f59e0b', '#10b981'];
+
+    labels.forEach((lbl, i) => {
+        ctx.font = `700 ${Math.round(Math.min(w * 0.014, h * 0.055))}px Inter,sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillStyle = labelColors[i];
+        ctx.fillText(lbl, colCenters[i], labelY);
+    });
+
+    const contentY = h * 0.12;
+    const contentH = h * 0.82;
+
+    // Column 1: Noisy particles (grid of small boxes)
+    const gridCols = 4, gridRows = 4;
+    const cellSize = Math.min(colW / (gridCols + 0.5), contentH / (gridRows + 0.5));
+    const gridW = cellSize * gridCols;
+    const gridH = cellSize * gridRows;
+    const gridX = colCenters[0] - gridW / 2;
+    const gridY = contentY + (contentH - gridH) / 2;
+
+    // Background for grid
+    ctx.fillStyle = '#1a1a2e';
+    ctx.beginPath(); ctx.roundRect(gridX - 4, gridY - 4, gridW + 8, gridH + 8, 6); ctx.fill();
+
+    const particleAngles = [0, 0.5, 1.2, 0.3, 2.1, 0.8, 1.5, 0, 0.5, 2.5, 1.0, 0.3, 1.8, 0.5, 0, 2.0];
+    const particleTypes = [0, 1, 2, 0, 1, 0, 2, 1, 2, 0, 1, 2, 0, 'junk', 1, 0]; // 0=front,1=side,2=top,'junk'
+    const viewColors = ['#6b7280', '#555', '#777'];
+
+    for (let r = 0; r < gridRows; r++) {
+        for (let c = 0; c < gridCols; c++) {
+            const idx = r * gridCols + c;
+            const cx = gridX + c * cellSize + cellSize / 2;
+            const cy = gridY + r * cellSize + cellSize / 2;
+            const pr = cellSize * 0.3;
+
+            // Cell background
+            ctx.fillStyle = '#2a2a3e';
+            ctx.fillRect(gridX + c * cellSize + 1, gridY + r * cellSize + 1, cellSize - 2, cellSize - 2);
+
+            if (particleTypes[idx] === 'junk') {
+                // Junk: random blob
+                ctx.fillStyle = '#555';
+                ctx.beginPath();
+                ctx.arc(cx - pr * 0.3, cy, pr * 0.4, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(cx + pr * 0.4, cy + pr * 0.2, pr * 0.3, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                drawBlob(ctx, cx, cy, pr, particleAngles[idx], viewColors[particleTypes[idx]], 0.4);
+            }
+        }
+    }
+
+    // Column 2: Classification arrows (sorting visual)
+    const arrowX1 = colCenters[0] + colW / 2 + pad * 0.3;
+    const arrowX2 = colCenters[1] - colW / 3;
+    const arrowX3 = colCenters[1] + colW / 3;
+    const arrowX4 = colCenters[2] - colW / 2 - pad * 0.3;
+
+    // Classification box
+    const clsX = colCenters[1] - colW * 0.35;
+    const clsW = colW * 0.7;
+    const clsH = contentH * 0.7;
+    const clsY = contentY + (contentH - clsH) / 2;
+
+    ctx.fillStyle = '#fffbeb';
+    ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.roundRect(clsX, clsY, clsW, clsH, 10); ctx.fill(); ctx.stroke();
+
+    // Sorting lines from left to classification groups
+    const groupColors = ['#3b82f6', '#10b981', '#8b5cf6', '#ef4444'];
+    const groupLabels = ['Front view', 'Side view', 'Top view', 'Junk'];
+    const groupY = [];
+    for (let g = 0; g < 4; g++) {
+        const gy = clsY + clsH * (0.15 + g * 0.22);
+        groupY.push(gy);
+
+        // Group label
+        ctx.fillStyle = groupColors[g];
+        ctx.font = `700 ${Math.round(Math.min(w * 0.012, h * 0.042))}px Inter,sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText(groupLabels[g], colCenters[1], gy + 4);
+
+        // Mini circles
+        const dotR = Math.min(w * 0.006, h * 0.02);
+        for (let d = 0; d < 3; d++) {
+            ctx.fillStyle = groupColors[g] + '40';
+            ctx.beginPath();
+            ctx.arc(colCenters[1] - dotR * 4 + d * dotR * 4, gy + Math.min(w * 0.015, h * 0.04), dotR, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    // Junk X mark
+    const junkY = groupY[3] + Math.min(w * 0.015, h * 0.04);
+    ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2;
+    const xr = Math.min(w * 0.008, h * 0.025);
+    ctx.beginPath(); ctx.moveTo(colCenters[1] - xr, junkY - xr); ctx.lineTo(colCenters[1] + xr, junkY + xr); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(colCenters[1] + xr, junkY - xr); ctx.lineTo(colCenters[1] - xr, junkY + xr); ctx.stroke();
+
+    // Big arrows between sections
+    function drawBigArrow(x1, x2, y) {
+        ctx.strokeStyle = '#ccc'; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke();
+        ctx.fillStyle = '#ccc';
+        ctx.beginPath();
+        ctx.moveTo(x2, y);
+        ctx.lineTo(x2 - 8, y - 5);
+        ctx.lineTo(x2 - 8, y + 5);
+        ctx.closePath(); ctx.fill();
+    }
+
+    const midY = contentY + contentH / 2;
+    drawBigArrow(gridX + gridW + pad * 0.5, clsX - pad * 0.3, midY);
+    drawBigArrow(clsX + clsW + pad * 0.3, colCenters[2] - colW / 2 + pad * 0.3, midY);
+
+    // Column 3: Class averages (clean, high-SNR images)
+    const avgSize = Math.min(colW * 0.42, contentH * 0.22);
+    const avgGrid = 2;
+    const avgW = avgSize * avgGrid + pad;
+    const avgH = avgSize * 3 + pad * 2;
+    const avgX = colCenters[2] - avgW / 2;
+    const avgY = contentY + (contentH - avgH) / 2;
+
+    // Background
+    ctx.fillStyle = '#1a1a2e';
+    ctx.beginPath(); ctx.roundRect(avgX - 4, avgY - 4, avgW + 8, avgH + 8, 6); ctx.fill();
+
+    const avgAngles = [[0, 0], [0.5, 0.5], [1.2, 1.2], [0, 0], [0.5, 0.5], [1.2, 1.2]];
+    const avgViewColors = [groupColors[0], groupColors[0], groupColors[1], groupColors[1], groupColors[2], groupColors[2]];
+
+    for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 2; c++) {
+            const idx = r * 2 + c;
+            const cx = avgX + c * (avgSize + pad / 2) + avgSize / 2;
+            const cy = avgY + r * (avgSize + pad) + avgSize / 2;
+            const pr = avgSize * 0.35;
+
+            ctx.fillStyle = '#2a2a3e';
+            ctx.fillRect(avgX + c * (avgSize + pad / 2), avgY + r * (avgSize + pad), avgSize, avgSize);
+
+            // Clean blob (no noise, brighter)
+            drawBlob(ctx, cx, cy, pr, avgAngles[idx][0], '#aaa', 0);
+
+            // Checkmark for good classes
+            ctx.fillStyle = '#10b981';
+            ctx.font = `700 ${Math.round(avgSize * 0.15)}px Inter,sans-serif`;
+            ctx.textAlign = 'right';
+            ctx.fillText('\u2713', avgX + c * (avgSize + pad/2) + avgSize - 3, avgY + r * (avgSize + pad) + avgSize * 0.18);
+        }
+    }
+
+    // "Increase SNR" label
+    ctx.fillStyle = '#10b981';
+    ctx.font = `700 ${Math.round(Math.min(w * 0.011, h * 0.04))}px Inter,sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText('\u2191 Signal-to-Noise Ratio', colCenters[2], avgY + avgH + Math.min(w * 0.015, h * 0.04));
+}
+
+// ===== 3D Reconstruction (Fourier Slice Theorem) =====
+function draw3D() {
+    const { ctx, w, h } = setupCanvas('cv3d');
+    const pad = Math.min(w, h) * 0.03;
+
+    // Layout: [3D Object] → [2D Projections] → [2D FT slices] → [3D FT] → [Inverse FT] → [3D Map]
+    const steps = 5;
+    const stepW = (w - pad * (steps + 1)) / steps;
+    const iconR = Math.min(stepW * 0.38, h * 0.28);
+
+    const labelY = h * 0.06;
+    const iconCY = h * 0.42;
+
+    const stepLabels = [
+        '3D Specimen',
+        '2D Projections',
+        '2D Fourier\nTransforms',
+        '3D Fourier\nSpace',
+        '3D Map\n(Inverse FT)',
+    ];
+    const stepColors = ['#6366f1', '#8b5cf6', '#a855f7', '#3b82f6', '#10b981'];
+    const stepDescs = [
+        'Unknown orientations',
+        'Different views\nfrom random angles',
+        'Central slices of\n3D Fourier transform',
+        'Fill 3D Fourier\nvolume with slices',
+        'Inverse transform\n\u2192 real-space map',
+    ];
+
+    for (let i = 0; i < steps; i++) {
+        const cx = pad + stepW * i + stepW / 2 + i * pad;
+        const cy = iconCY;
+
+        // Step background circle
+        ctx.fillStyle = stepColors[i] + '0a';
+        ctx.strokeStyle = stepColors[i] + '30';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(cx, cy, iconR * 1.1, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+        // Draw step-specific icon
+        if (i === 0) {
+            // 3D specimen: cube with protein inside
+            drawCube(ctx, cx, cy, iconR * 0.7, stepColors[i]);
+            // Protein blob inside
+            drawBlob(ctx, cx, cy, iconR * 0.35, 0.3, stepColors[i] + '88', 0);
+        } else if (i === 1) {
+            // 2D projections: multiple flat views
+            for (let v = 0; v < 3; v++) {
+                const vx = cx + (v - 1) * iconR * 0.5;
+                const vy = cy + (v - 1) * iconR * 0.15;
+                const vs = iconR * 0.35;
+                ctx.fillStyle = '#e5e7eb';
+                ctx.strokeStyle = stepColors[i]; ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.roundRect(vx - vs, vy - vs, vs * 2, vs * 2, 4); ctx.fill(); ctx.stroke();
+                drawBlob(ctx, vx, vy, vs * 0.6, v * 1.0, '#777', 0);
+            }
+        } else if (i === 2) {
+            // 2D FT: concentric rings
+            for (let v = 0; v < 3; v++) {
+                const vx = cx + (v - 1) * iconR * 0.5;
+                const vy = cy + (v - 1) * iconR * 0.15;
+                const vs = iconR * 0.3;
+                ctx.fillStyle = '#111';
+                ctx.beginPath(); ctx.roundRect(vx - vs, vy - vs, vs * 2, vs * 2, 4); ctx.fill();
+                // Rings
+                for (let ring = 1; ring <= 3; ring++) {
+                    ctx.strokeStyle = stepColors[i] + (ring === 1 ? 'cc' : ring === 2 ? '88' : '44');
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath(); ctx.arc(vx, vy, vs * ring * 0.28, 0, Math.PI * 2); ctx.stroke();
+                }
+                // Center dot
+                ctx.fillStyle = stepColors[i];
+                ctx.beginPath(); ctx.arc(vx, vy, 3, 0, Math.PI * 2); ctx.fill();
+            }
+        } else if (i === 3) {
+            // 3D Fourier: wireframe sphere with slices
+            drawCube(ctx, cx, cy, iconR * 0.65, stepColors[i]);
+            // Slices through cube
+            ctx.globalAlpha = 0.3;
+            ctx.fillStyle = stepColors[i];
+            for (let sl = 0; sl < 3; sl++) {
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(sl * Math.PI / 3);
+                ctx.fillRect(-iconR * 0.5, -1.5, iconR, 3);
+                ctx.restore();
+            }
+            ctx.globalAlpha = 1;
+            // Center
+            ctx.fillStyle = stepColors[i];
+            ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI * 2); ctx.fill();
+        } else {
+            // 3D map: solid blob
+            ctx.fillStyle = stepColors[i] + '30';
+            ctx.beginPath(); ctx.arc(cx, cy, iconR * 0.7, 0, Math.PI * 2); ctx.fill();
+            drawBlob(ctx, cx, cy, iconR * 0.55, 0.2, stepColors[i], 0);
+            // Resolution indicator
+            ctx.strokeStyle = stepColors[i]; ctx.lineWidth = 2;
+            ctx.setLineDash([3, 2]);
+            ctx.beginPath(); ctx.arc(cx, cy, iconR * 0.72, 0, Math.PI * 2); ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // Arrow
+        if (i < steps - 1) {
+            const ax1 = cx + iconR * 1.15;
+            const ax2 = cx + stepW + pad - iconR * 1.15;
+            ctx.strokeStyle = '#bbb'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+            ctx.beginPath(); ctx.moveTo(ax1, cy); ctx.lineTo(ax2, cy); ctx.stroke();
+            ctx.fillStyle = '#bbb';
+            ctx.beginPath();
+            ctx.moveTo(ax2, cy);
+            ctx.lineTo(ax2 - 6, cy - 4);
+            ctx.lineTo(ax2 - 6, cy + 4);
+            ctx.closePath(); ctx.fill();
+        }
+
+        // Step label
+        ctx.fillStyle = stepColors[i];
+        ctx.font = `800 ${Math.round(Math.min(stepW * 0.12, h * 0.045))}px Inter,sans-serif`;
+        ctx.textAlign = 'center';
+        const lines = stepLabels[i].split('\n');
+        const lineH = Math.min(stepW * 0.14, h * 0.05);
+        lines.forEach((line, li) => {
+            ctx.fillText(line, cx, cy + iconR * 1.2 + li * lineH);
+        });
+
+        // Description
+        ctx.fillStyle = '#999';
+        ctx.font = `500 ${Math.round(Math.min(stepW * 0.09, h * 0.032))}px Inter,sans-serif`;
+        const descLines = stepDescs[i].split('\n');
+        descLines.forEach((line, li) => {
+            ctx.fillText(line, cx, cy + iconR * 1.2 + lines.length * lineH + li * lineH * 0.85 + lineH * 0.3);
+        });
+    }
+}
+
+function drawCube(ctx, cx, cy, size, color) {
+    const s = size * 0.5;
+    const dx = s * 0.4, dy = s * 0.25;
+
+    ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.lineCap = 'round';
+    // Front face
+    ctx.beginPath();
+    ctx.moveTo(cx - s, cy - s + dy); ctx.lineTo(cx + s - dx, cy - s + dy);
+    ctx.lineTo(cx + s - dx, cy + s); ctx.lineTo(cx - s, cy + s);
+    ctx.closePath(); ctx.stroke();
+    // Top face
+    ctx.beginPath();
+    ctx.moveTo(cx - s, cy - s + dy); ctx.lineTo(cx - s + dx, cy - s);
+    ctx.lineTo(cx + s, cy - s); ctx.lineTo(cx + s - dx, cy - s + dy);
+    ctx.closePath(); ctx.stroke();
+    // Right face
+    ctx.beginPath();
+    ctx.moveTo(cx + s - dx, cy - s + dy); ctx.lineTo(cx + s, cy - s);
+    ctx.lineTo(cx + s, cy + s - dy); ctx.lineTo(cx + s - dx, cy + s);
+    ctx.closePath(); ctx.stroke();
+}
+
+function renderAll() {
+    draw2D();
+    draw3D();
+}
+
+renderAll();
+window.addEventListener('resize', () => {
+    clearTimeout(window._rt);
+    window._rt = setTimeout(renderAll, 150);
+});
+</script>
+</body>
+</html>

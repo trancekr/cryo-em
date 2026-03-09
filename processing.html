@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cryo-EM Data Processing Pipeline</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 6px 0 4px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(24px, 3vh, 38px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(12px, 1.4vh, 18px); color: #777; margin-top: 2px; font-weight: 500; }
+
+/* Canvas area */
+.canvas-wrap {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+.canvas-wrap canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Info panel (appears on hover) */
+.info-panel {
+  position: absolute;
+  right: clamp(12px, 1.5vw, 24px);
+  top: clamp(8px, 1vh, 16px);
+  width: clamp(220px, 22vw, 320px);
+  background: #fff;
+  border: 2px solid #e0e0e8;
+  border-radius: 14px;
+  padding: clamp(12px, 1.4vh, 20px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity 0.25s, transform 0.25s;
+  pointer-events: none;
+}
+.info-panel.visible {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.info-title {
+  font-size: clamp(15px, 1.7vh, 20px);
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.info-desc {
+  font-size: clamp(11px, 1.2vh, 15px);
+  color: #666;
+  line-height: 1.6;
+  font-weight: 500;
+}
+.info-desc strong { color: #1a1a2e; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="cryo-em-index.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+    <h1>Cryo-EM Data Processing Pipeline</h1>
+    <p>From raw micrograph movies to high-resolution 3D density map</p>
+  </div>
+
+  <div class="canvas-wrap">
+    <canvas id="pipeline"></canvas>
+    <div class="info-panel" id="infoPanel">
+      <div class="info-title" id="infoTitle"></div>
+      <div class="info-desc" id="infoDesc"></div>
+    </div>
+  </div>
+  <div style="flex-shrink:0;font-size:clamp(8px,0.9vh,11px);color:#aaa;text-align:center;padding:2px 8px;">Scheres, J Struct Biol (2012) &middot; Punjani et al., Nat Methods (2017)</div>
+</div>
+
+<script>
+const canvas = document.getElementById('pipeline');
+const ctx = canvas.getContext('2d');
+let W, H, dpr, nodes = [], arrows = [], hoveredNode = null;
+
+// Node definitions
+const NODE_DEFS = [
+    // Main pipeline (top row)
+    { id: 'movies', label: 'Raw Movies', phase: 'input', row: 0, col: 0,
+      desc: 'Raw movie frames from the detector. Each micrograph is a stack of dose-fractionated frames (typically 40-60 frames).' },
+    { id: 'motioncorr', label: 'Motion\nCorrection', phase: 'preproc', row: 0, col: 1,
+      desc: 'Align movie frames to correct for beam-induced motion and stage drift. Output: motion-corrected, dose-weighted micrographs. <strong>Tools: MotionCor2, RELION, cryoSPARC</strong>' },
+    { id: 'ctfest', label: 'CTF\nEstimation', phase: 'preproc', row: 0, col: 2,
+      desc: 'Determine the defocus and astigmatism of each micrograph by fitting the power spectrum. Critical for CTF correction later. <strong>Tools: CTFFIND4, Gctf, cryoSPARC</strong>' },
+    { id: 'picking', label: 'Particle\nPicking', phase: 'picking', row: 0, col: 3,
+      desc: 'Identify and extract individual particle images from micrographs. ML-based pickers (Topaz, crYOLO) now standard. <strong>Methods: blob, template, ML-based</strong>' },
+    { id: 'extract', label: 'Particle\nExtraction', phase: 'picking', row: 0, col: 4,
+      desc: 'Extract particle images as square boxes from micrographs. Typically box size = 1.5-2x particle diameter. Often downsampled for initial processing.' },
+
+    // Second row
+    { id: 'class2d', label: '2D\nClassification', phase: 'classify', row: 1, col: 4,
+      desc: 'Sort particles into groups by orientation. Remove junk particles, ice contamination, and broken particles. Assess sample quality and heterogeneity. <strong>Key diagnostic step!</strong>' },
+    { id: 'abinitio', label: 'Ab Initio\n3D', phase: 'recon', row: 1, col: 3,
+      desc: 'Generate initial 3D volume(s) from scratch without any reference model. Avoids reference bias. Typically generates 2-4 initial volumes.' },
+    { id: 'hetero', label: 'Heterogeneous\nRefinement', phase: 'recon', row: 1, col: 2,
+      desc: '3D classification: separate particles into distinct conformational or compositional states. Reveals structural heterogeneity in the dataset.' },
+
+    // Third row
+    { id: 'homo', label: 'Homogeneous\nRefinement', phase: 'refine', row: 2, col: 2,
+      desc: 'Refine all particles against a single 3D reference. Iteratively updates particle orientations and the 3D map. <strong>Gold-standard FSC with two independent half-maps.</strong>' },
+    { id: 'nonuniform', label: 'Non-uniform\nRefinement', phase: 'refine', row: 2, col: 3,
+      desc: 'Advanced refinement that accounts for local resolution variations. Better for flexible regions. Regularizes based on local SNR. <strong>cryoSPARC specific.</strong>' },
+    { id: 'ctfrefine', label: 'CTF\nRefinement', phase: 'refine', row: 2, col: 4,
+      desc: 'Per-particle CTF refinement: correct for beam tilt, trefoil, and per-particle defocus. Significantly improves resolution beyond 3 Å.' },
+    { id: 'postproc', label: 'Post-\nProcessing', phase: 'output', row: 2, col: 5,
+      desc: 'Map sharpening (B-factor correction), masking, local resolution estimation, and validation. Final map ready for model building. <strong>Output: sharpened 3D density map</strong>' },
+
+    // Branch nodes
+    { id: 'conform', label: 'Conformational\nAnalysis', phase: 'analysis', row: 1, col: 1,
+      desc: '3D Variability Analysis (3DVA) or cryoDRGN: reveal continuous conformational motions. Separate discrete states or visualize dynamics.' },
+    { id: 'local', label: 'Local\nRefinement', phase: 'refine', row: 1, col: 5,
+      desc: 'Focused refinement of a specific region using a soft mask. Improves resolution for flexible domains or ligand binding sites.' },
+];
+
+const PHASE_COLORS = {
+    input: '#94a3b8',
+    preproc: '#3b82f6',
+    picking: '#8b5cf6',
+    classify: '#f59e0b',
+    recon: '#ec4899',
+    refine: '#10b981',
+    output: '#ef4444',
+    analysis: '#6366f1',
+};
+
+const ARROW_DEFS = [
+    // Main flow
+    ['movies', 'motioncorr'],
+    ['motioncorr', 'ctfest'],
+    ['ctfest', 'picking'],
+    ['picking', 'extract'],
+    ['extract', 'class2d'],
+    ['class2d', 'abinitio'],
+    ['abinitio', 'hetero'],
+    ['hetero', 'homo'],
+    ['homo', 'nonuniform'],
+    ['nonuniform', 'ctfrefine'],
+    ['ctfrefine', 'postproc'],
+    // Branches
+    ['hetero', 'conform'],
+    ['nonuniform', 'local'],
+    // Iterative loops (dashed)
+    ['class2d', 'extract', 'loop'],
+    ['homo', 'hetero', 'loop'],
+    ['ctfrefine', 'nonuniform', 'loop'],
+];
+
+function layout() {
+    const rect = canvas.getBoundingClientRect();
+    dpr = window.devicePixelRatio || 1;
+    W = rect.width; H = rect.height;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    // Grid layout
+    const mx = W * 0.06, my = H * 0.06;
+    const usableW = W - mx * 2;
+    const usableH = H - my * 2;
+    const cols = 6, rows = 3;
+    const cellW = usableW / cols;
+    const cellH = usableH / rows;
+    const nodeW = cellW * 0.78;
+    const nodeH = cellH * 0.6;
+
+    nodes = NODE_DEFS.map(def => {
+        const cx = mx + def.col * cellW + cellW / 2;
+        const cy = my + def.row * cellH + cellH / 2;
+        return {
+            ...def,
+            cx, cy,
+            x: cx - nodeW / 2,
+            y: cy - nodeH / 2,
+            w: nodeW,
+            h: nodeH,
+            color: PHASE_COLORS[def.phase],
+        };
+    });
+
+    arrows = ARROW_DEFS.map(([from, to, type]) => {
+        const a = nodes.find(n => n.id === from);
+        const b = nodes.find(n => n.id === to);
+        return { from: a, to: b, loop: type === 'loop' };
+    });
+}
+
+function getEdgePoint(node, targetX, targetY) {
+    const dx = targetX - node.cx;
+    const dy = targetY - node.cy;
+    const hw = node.w / 2 + 2;
+    const hh = node.h / 2 + 2;
+    const absDx = Math.abs(dx), absDy = Math.abs(dy);
+    let t;
+    if (absDx * hh > absDy * hw) {
+        t = hw / absDx;
+    } else {
+        t = hh / absDy;
+    }
+    return { x: node.cx + dx * t, y: node.cy + dy * t };
+}
+
+function drawArrow(from, to, loop) {
+    const p1 = getEdgePoint(from, to.cx, to.cy);
+    const p2 = getEdgePoint(to, from.cx, from.cy);
+
+    ctx.strokeStyle = loop ? '#bbb' : '#999';
+    ctx.lineWidth = loop ? 1.5 : 2;
+    ctx.setLineDash(loop ? [6, 4] : []);
+    ctx.lineCap = 'round';
+
+    // Curved path for loops
+    if (loop) {
+        const midX = (p1.x + p2.x) / 2;
+        const midY = (p1.y + p2.y) / 2;
+        const dx = p2.x - p1.x, dy = p2.y - p1.y;
+        const offset = Math.sqrt(dx * dx + dy * dy) * 0.3;
+        const cpx = midX - dy * 0.3;
+        const cpy = midY + dx * 0.3;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.quadraticCurveTo(cpx, cpy, p2.x, p2.y);
+        ctx.stroke();
+        // Arrowhead
+        const t = 0.9;
+        const ax = 2 * (1 - t) * (cpx - p1.x) + 2 * t * (p2.x - cpx);
+        const ay = 2 * (1 - t) * (cpy - p1.y) + 2 * t * (p2.y - cpy);
+        const angle = Math.atan2(ay, ax);
+        drawArrowhead(p2.x, p2.y, angle, 8);
+    } else {
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+        // Arrowhead
+        const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+        drawArrowhead(p2.x, p2.y, angle, 10);
+    }
+    ctx.setLineDash([]);
+}
+
+function drawArrowhead(x, y, angle, size) {
+    ctx.fillStyle = ctx.strokeStyle;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x - size * Math.cos(angle - 0.4), y - size * Math.sin(angle - 0.4));
+    ctx.lineTo(x - size * Math.cos(angle + 0.4), y - size * Math.sin(angle + 0.4));
+    ctx.closePath();
+    ctx.fill();
+}
+
+function drawNode(node, hovered) {
+    const { x, y, w, h, color, label } = node;
+    const r = Math.min(w, h) * 0.15;
+
+    // Shadow
+    if (hovered) {
+        ctx.shadowColor = color + '44';
+        ctx.shadowBlur = 16;
+        ctx.shadowOffsetY = 4;
+    }
+
+    // Background
+    ctx.fillStyle = hovered ? color + '18' : '#fff';
+    ctx.strokeStyle = hovered ? color : '#d0d0d8';
+    ctx.lineWidth = hovered ? 2.5 : 2;
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, r);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetY = 0;
+
+    // Color strip on top
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, 4, [r, r, 0, 0]);
+    ctx.fill();
+
+    // Label
+    const lines = label.split('\n');
+    const fontSize = Math.round(Math.min(w * 0.13, h * 0.22, 15));
+    ctx.font = `700 ${fontSize}px Inter,sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = hovered ? color : '#333';
+
+    const lineH = fontSize * 1.3;
+    const startY = y + h / 2 + 2 - (lines.length - 1) * lineH / 2;
+    lines.forEach((line, i) => {
+        ctx.fillText(line, x + w / 2, startY + i * lineH);
+    });
+}
+
+function render() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Draw row labels
+    const rowLabels = ['Pre-processing', 'Classification & Reconstruction', 'Refinement & Output'];
+    const rowColors = ['#3b82f6', '#ec4899', '#10b981'];
+    const my = H * 0.06;
+    const usableH = H - my * 2;
+    const cellH = usableH / 3;
+
+    for (let i = 0; i < 3; i++) {
+        const ry = my + i * cellH;
+        // Row background
+        ctx.fillStyle = rowColors[i] + '06';
+        ctx.beginPath();
+        ctx.roundRect(4, ry + 2, W - 8, cellH - 4, 12);
+        ctx.fill();
+        // Row label (left side, rotated)
+        ctx.save();
+        const lx = 14;
+        const ly = ry + cellH / 2;
+        ctx.translate(lx, ly);
+        ctx.rotate(-Math.PI / 2);
+        ctx.font = `700 ${Math.round(Math.min(10, H * 0.015))}px Inter,sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillStyle = rowColors[i] + '88';
+        ctx.fillText(rowLabels[i], 0, 0);
+        ctx.restore();
+    }
+
+    // Draw arrows
+    arrows.forEach(a => drawArrow(a.from, a.to, a.loop));
+
+    // Draw nodes
+    nodes.forEach(n => drawNode(n, n === hoveredNode));
+}
+
+// Mouse interaction
+canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    let found = null;
+    for (const n of nodes) {
+        if (mx >= n.x && mx <= n.x + n.w && my >= n.y && my <= n.y + n.h) {
+            found = n;
+            break;
+        }
+    }
+
+    if (found !== hoveredNode) {
+        hoveredNode = found;
+        canvas.style.cursor = found ? 'pointer' : 'default';
+        render();
+
+        // Update info panel
+        const panel = document.getElementById('infoPanel');
+        if (found) {
+            document.getElementById('infoTitle').textContent = found.label.replace('\n', ' ');
+            document.getElementById('infoTitle').style.color = found.color;
+            document.getElementById('infoDesc').innerHTML = found.desc;
+            panel.style.borderColor = found.color;
+            panel.classList.add('visible');
+        } else {
+            panel.classList.remove('visible');
+        }
+    }
+});
+
+canvas.addEventListener('mouseleave', () => {
+    hoveredNode = null;
+    canvas.style.cursor = 'default';
+    render();
+    document.getElementById('infoPanel').classList.remove('visible');
+});
+
+function init() {
+    layout();
+    render();
+}
+
+init();
+window.addEventListener('resize', () => {
+    clearTimeout(window._rt);
+    window._rt = setTimeout(init, 150);
+});
+</script>
+</body>
+</html>

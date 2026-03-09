@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cryo-EM Sample Preparation &amp; Grid Screening</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(24px, 3vh, 38px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(12px, 1.4vh, 18px); color: #777; margin-top: 2px; font-weight: 500; }
+
+/* Main 2-row layout */
+.content {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: clamp(8px, 1vh, 14px);
+  padding: clamp(4px, 0.5vh, 8px) 0;
+}
+
+.panel {
+  background: #fff;
+  border: 2px solid #e0e0e8;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.panel:hover { border-color: #c4b5fd; }
+
+.panel-header {
+  padding: clamp(6px, 0.8vh, 12px) clamp(10px, 1vw, 16px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  border-bottom: 1.5px solid #f0f0f5;
+}
+.panel-dot {
+  width: clamp(8px, 1vh, 12px);
+  height: clamp(8px, 1vh, 12px);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.panel-title {
+  font-size: clamp(13px, 1.5vh, 19px);
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.panel-canvas {
+  flex: 1; min-height: 0;
+}
+.panel-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 900px) {
+  .content {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+  }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="cryo-em-index.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+    <h1>Sample Preparation &amp; Grid Screening</h1>
+    <p>From purified protein to vitrified cryo-EM grid</p>
+  </div>
+
+  <div class="content">
+    <!-- Panel 1: Grid Structure -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-dot" style="background:#f59e0b"></div>
+        <div class="panel-title">Cryo-EM Grid Structure</div>
+      </div>
+      <div class="panel-canvas"><canvas id="cvGrid"></canvas></div>
+    </div>
+
+    <!-- Panel 2: Vitrification Process -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-dot" style="background:#3b82f6"></div>
+        <div class="panel-title">Vitrification Process</div>
+      </div>
+      <div class="panel-canvas"><canvas id="cvVitri"></canvas></div>
+    </div>
+
+    <!-- Panel 3: Negative Stain vs Cryo-EM -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-dot" style="background:#8b5cf6"></div>
+        <div class="panel-title">Negative Stain vs. Cryo-EM</div>
+      </div>
+      <div class="panel-canvas"><canvas id="cvCompare"></canvas></div>
+    </div>
+
+    <!-- Panel 4: Grid Screening -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-dot" style="background:#10b981"></div>
+        <div class="panel-title">Grid Screening Checklist</div>
+      </div>
+      <div class="panel-canvas"><canvas id="cvScreen"></canvas></div>
+    </div>
+  </div>
+  <div style="flex-shrink:0;font-size:clamp(8px,0.9vh,11px);color:#aaa;text-align:center;padding:2px 8px;">Dubochet et al., Q Rev Biophys (1988) &middot; Passmore &amp; Russo, Methods Enzymol (2016)</div>
+</div>
+
+<script>
+function setupCanvas(id) {
+    const c = document.getElementById(id);
+    const rect = c.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    c.width = Math.round(rect.width * dpr);
+    c.height = Math.round(rect.height * dpr);
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: rect.width, h: rect.height };
+}
+
+// ===== Panel 1: Grid Structure =====
+function drawGrid() {
+    const { ctx, w, h } = setupCanvas('cvGrid');
+    const s = Math.min(w, h);
+    const pad = s * 0.05;
+
+    // Three zoom levels: Grid → Foil → Hole
+    const colW = (w - pad * 4) / 3;
+    const imgH = Math.min(h * 0.55, colW);
+
+    for (let i = 0; i < 3; i++) {
+        const cx = pad * 1.5 + colW * i + colW / 2;
+        const cy = pad + imgH / 2;
+        const r = Math.min(colW, imgH) * 0.42;
+
+        if (i === 0) {
+            // Grid overview - circular mesh
+            ctx.strokeStyle = '#d4a574'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+            ctx.fillStyle = '#fef3c7';
+            ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+
+            // Grid bars
+            ctx.strokeStyle = '#92400e'; ctx.lineWidth = 1.5;
+            const spacing = r * 0.25;
+            for (let g = -3; g <= 3; g++) {
+                const gx = cx + g * spacing;
+                const dy = Math.sqrt(Math.max(0, r * r - (g * spacing) * (g * spacing)));
+                ctx.beginPath(); ctx.moveTo(gx, cy - dy); ctx.lineTo(gx, cy + dy); ctx.stroke();
+                const gy = cy + g * spacing;
+                const dx = Math.sqrt(Math.max(0, r * r - (g * spacing) * (g * spacing)));
+                ctx.beginPath(); ctx.moveTo(cx - dx, gy); ctx.lineTo(cx + dx, gy); ctx.stroke();
+            }
+
+            // Label
+            ctx.font = `800 ${Math.round(s * 0.04)}px Inter,sans-serif`;
+            ctx.fillStyle = '#92400e'; ctx.textAlign = 'center';
+            ctx.fillText('Grid (3 mm)', cx, cy + r + s * 0.06);
+            ctx.font = `500 ${Math.round(s * 0.03)}px Inter,sans-serif`;
+            ctx.fillStyle = '#888';
+            ctx.fillText('Cu/Au mesh, 200-400 bars', cx, cy + r + s * 0.1);
+        } else if (i === 1) {
+            // Foil with holes
+            ctx.fillStyle = '#374151';
+            ctx.beginPath(); ctx.roundRect(cx - r, cy - r * 0.8, r * 2, r * 1.6, 6); ctx.fill();
+
+            // Holes pattern
+            const holeR = r * 0.08;
+            const hSpacing = r * 0.28;
+            ctx.fillStyle = '#9ca3af';
+            for (let gy = -2; gy <= 2; gy++) {
+                for (let gx = -3; gx <= 3; gx++) {
+                    const offset = (gy % 2 !== 0) ? hSpacing * 0.5 : 0;
+                    const hx = cx + gx * hSpacing + offset;
+                    const hy = cy + gy * hSpacing * 0.86;
+                    if (hx > cx - r + holeR && hx < cx + r - holeR && hy > cy - r * 0.8 + holeR && hy < cy + r * 0.8 - holeR) {
+                        ctx.beginPath(); ctx.arc(hx, hy, holeR, 0, Math.PI * 2); ctx.fill();
+                    }
+                }
+            }
+
+            ctx.font = `800 ${Math.round(s * 0.04)}px Inter,sans-serif`;
+            ctx.fillStyle = '#374151'; ctx.textAlign = 'center';
+            ctx.fillText('Foil (Quantifoil)', cx, cy + r + s * 0.06);
+            ctx.font = `500 ${Math.round(s * 0.03)}px Inter,sans-serif`;
+            ctx.fillStyle = '#888';
+            ctx.fillText('Holey carbon/gold', cx, cy + r + s * 0.1);
+        } else {
+            // Single hole with particles
+            ctx.fillStyle = '#e5e7eb';
+            ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+
+            // Vitreous ice (lighter center)
+            ctx.fillStyle = '#f3f4f6';
+            ctx.beginPath(); ctx.arc(cx, cy, r * 0.85, 0, Math.PI * 2); ctx.fill();
+
+            // Particles (small dots)
+            ctx.fillStyle = '#555';
+            const seed = 42;
+            for (let p = 0; p < 30; p++) {
+                const angle = (p * 137.508 * Math.PI / 180);
+                const dist = r * 0.7 * Math.sqrt((p + 1) / 31);
+                const px = cx + Math.cos(angle) * dist;
+                const py = cy + Math.sin(angle) * dist;
+                ctx.beginPath(); ctx.arc(px, py, r * 0.04, 0, Math.PI * 2); ctx.fill();
+            }
+
+            // Foil ring
+            ctx.strokeStyle = '#374151'; ctx.lineWidth = r * 0.08;
+            ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+
+            ctx.font = `800 ${Math.round(s * 0.04)}px Inter,sans-serif`;
+            ctx.fillStyle = '#374151'; ctx.textAlign = 'center';
+            ctx.fillText('Hole (~1 \u03BCm)', cx, cy + r + s * 0.06);
+            ctx.font = `500 ${Math.round(s * 0.03)}px Inter,sans-serif`;
+            ctx.fillStyle = '#888';
+            ctx.fillText('Particles in vitreous ice', cx, cy + r + s * 0.1);
+        }
+
+        // Zoom arrows between panels
+        if (i < 2) {
+            const ax = cx + colW / 2 + pad * 0.3;
+            const bx = ax + pad * 0.9;
+            ctx.strokeStyle = '#bbb'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(ax, cy); ctx.lineTo(bx, cy); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(bx - 5, cy - 4); ctx.lineTo(bx, cy); ctx.lineTo(bx - 5, cy + 4); ctx.stroke();
+            // Magnifying glass icon
+            ctx.strokeStyle = '#aaa'; ctx.lineWidth = 1.5;
+            const mgx = (ax + bx) / 2, mgy = cy - s * 0.05;
+            ctx.beginPath(); ctx.arc(mgx, mgy, 5, 0, Math.PI * 2); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(mgx + 3.5, mgy + 3.5); ctx.lineTo(mgx + 7, mgy + 7); ctx.stroke();
+        }
+    }
+
+    // Layer labels at bottom
+    const layerY = h * 0.82;
+    const layerLabels = [
+        { label: 'Support film', color: '#374151', desc: 'Holey carbon or gold' },
+        { label: 'Foil', color: '#92400e', desc: 'Metal mesh base' },
+        { label: 'Ice + Particles', color: '#3b82f6', desc: 'Vitreous ice layer' },
+    ];
+    const lbW = (w - pad * 5) / 3;
+    for (let i = 0; i < 3; i++) {
+        const lx = pad * 1.5 + lbW * i + i * pad * 0.5;
+        ctx.fillStyle = layerLabels[i].color + '10';
+        ctx.strokeStyle = layerLabels[i].color + '40';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.roundRect(lx, layerY, lbW, h - layerY - pad, 8); ctx.fill(); ctx.stroke();
+        ctx.font = `700 ${Math.round(s * 0.035)}px Inter,sans-serif`;
+        ctx.fillStyle = layerLabels[i].color;
+        ctx.textAlign = 'center';
+        ctx.fillText(layerLabels[i].label, lx + lbW / 2, layerY + (h - layerY - pad) * 0.4);
+        ctx.font = `500 ${Math.round(s * 0.028)}px Inter,sans-serif`;
+        ctx.fillStyle = '#999';
+        ctx.fillText(layerLabels[i].desc, lx + lbW / 2, layerY + (h - layerY - pad) * 0.72);
+    }
+}
+
+// ===== Panel 2: Vitrification =====
+function drawVitrification() {
+    const { ctx, w, h } = setupCanvas('cvVitri');
+    const s = Math.min(w, h);
+    const pad = s * 0.06;
+
+    // 4 steps: Apply → Blot → Plunge → Vitrified
+    const steps = [
+        { label: 'Apply\nSample', color: '#f59e0b' },
+        { label: 'Blot\nExcess', color: '#ef4444' },
+        { label: 'Plunge\nFreeze', color: '#3b82f6' },
+        { label: 'Vitrified\nGrid', color: '#10b981' },
+    ];
+    const stepW = (w - pad * 5) / 4;
+    const iconR = Math.min(stepW * 0.35, h * 0.2);
+
+    for (let i = 0; i < 4; i++) {
+        const cx = pad * 1.5 + stepW * i + stepW / 2 + i * pad * 0.3;
+        const cy = h * 0.32;
+
+        // Icon circle
+        ctx.fillStyle = steps[i].color + '15';
+        ctx.strokeStyle = steps[i].color;
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(cx, cy, iconR, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+        // Step number
+        ctx.fillStyle = steps[i].color;
+        ctx.font = `900 ${Math.round(iconR * 0.5)}px Inter,sans-serif`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(i + 1, cx, cy);
+
+        // Step specific icon
+        ctx.strokeStyle = steps[i].color; ctx.lineWidth = 1.5;
+        if (i === 0) {
+            // Droplet
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - iconR * 0.6);
+            ctx.quadraticCurveTo(cx + iconR * 0.4, cy - iconR * 0.1, cx, cy + iconR * 0.2);
+            ctx.quadraticCurveTo(cx - iconR * 0.4, cy - iconR * 0.1, cx, cy - iconR * 0.6);
+            ctx.stroke();
+        }
+
+        // Label
+        const lines = steps[i].label.split('\n');
+        ctx.font = `700 ${Math.round(s * 0.04)}px Inter,sans-serif`;
+        ctx.fillStyle = steps[i].color;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        lines.forEach((line, li) => {
+            ctx.fillText(line, cx, cy + iconR + s * 0.03 + li * s * 0.05);
+        });
+
+        // Arrow
+        if (i < 3) {
+            const ax = cx + stepW * 0.4;
+            const bx = cx + stepW * 0.7 + pad * 0.3;
+            ctx.strokeStyle = '#ccc'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(ax, cy); ctx.lineTo(bx, cy); ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(bx - 5, cy - 4); ctx.lineTo(bx, cy); ctx.lineTo(bx - 5, cy + 4);
+            ctx.stroke();
+        }
+    }
+
+    // Bottom: cross-section showing ice
+    const csY = h * 0.72;
+    const csH = h * 0.18;
+    const csW = w * 0.7;
+    const csX = (w - csW) / 2;
+
+    // Ice cross-section
+    ctx.fillStyle = '#dbeafe';
+    ctx.beginPath();
+    ctx.roundRect(csX, csY, csW, csH, 8);
+    ctx.fill();
+    ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.roundRect(csX, csY, csW, csH, 8); ctx.stroke();
+
+    // Particles in ice
+    ctx.fillStyle = '#555';
+    for (let p = 0; p < 12; p++) {
+        const px = csX + csW * 0.08 + (csW * 0.84) * (p / 11);
+        const py = csY + csH * (0.3 + Math.sin(p * 1.7) * 0.2);
+        ctx.beginPath(); ctx.arc(px, py, Math.min(csH * 0.1, 5), 0, Math.PI * 2); ctx.fill();
+    }
+
+    // Support film on sides
+    ctx.fillStyle = '#6b7280';
+    ctx.beginPath(); ctx.roundRect(csX - 10, csY - 4, 15, csH + 8, [4, 0, 0, 4]); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(csX + csW - 5, csY - 4, 15, csH + 8, [0, 4, 4, 0]); ctx.fill();
+
+    // Labels
+    ctx.font = `600 ${Math.round(s * 0.03)}px Inter,sans-serif`;
+    ctx.fillStyle = '#3b82f6'; ctx.textAlign = 'center';
+    ctx.fillText('Vitreous ice (~30-80 nm)', w / 2, csY + csH + s * 0.04);
+    ctx.fillStyle = '#6b7280'; ctx.textAlign = 'left';
+    ctx.fillText('Carbon/Au foil', csX - 8, csY - s * 0.02);
+
+    // Key point
+    ctx.font = `600 ${Math.round(s * 0.028)}px Inter,sans-serif`;
+    ctx.fillStyle = '#999'; ctx.textAlign = 'center';
+    ctx.fillText('Rapid cooling (~10\u2074 K/s) prevents crystalline ice formation', w / 2, h - pad);
+}
+
+// ===== Panel 3: Negative Stain vs Cryo =====
+function drawCompare() {
+    const { ctx, w, h } = setupCanvas('cvCompare');
+    const s = Math.min(w, h);
+    const pad = s * 0.05;
+    const colW = (w - pad * 3) / 2;
+
+    // Two columns
+    const cols = [
+        { label: 'Negative Stain', color: '#f59e0b', bg: '#fffbeb',
+          items: ['Dried sample in heavy metal stain', 'Resolution: ~15-25 \u00c5', 'Surface topology only', 'Quick screening (minutes)', 'Dehydration artifacts'],
+          iconType: 'stain' },
+        { label: 'Cryo-EM', color: '#3b82f6', bg: '#eff6ff',
+          items: ['Vitrified sample in native state', 'Resolution: ~2-4 \u00c5', 'Internal structure visible', 'Data collection (hours-days)', 'Near-native conformation'],
+          iconType: 'cryo' },
+    ];
+
+    for (let c = 0; c < 2; c++) {
+        const col = cols[c];
+        const x0 = pad + c * (colW + pad);
+        const y0 = pad;
+
+        // Column background
+        ctx.fillStyle = col.bg;
+        ctx.beginPath(); ctx.roundRect(x0, y0, colW, h - pad * 2, 10); ctx.fill();
+        ctx.strokeStyle = col.color + '40'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.roundRect(x0, y0, colW, h - pad * 2, 10); ctx.stroke();
+
+        // Title
+        ctx.fillStyle = col.color;
+        ctx.font = `800 ${Math.round(s * 0.048)}px Inter,sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText(col.label, x0 + colW / 2, y0 + s * 0.07);
+
+        // Simulated image
+        const imgY = y0 + s * 0.11;
+        const imgH = h * 0.28;
+        const imgW = colW * 0.8;
+        const imgX = x0 + (colW - imgW) / 2;
+
+        if (c === 0) {
+            // Negative stain: dark background, bright particle outlines
+            ctx.fillStyle = '#1a1a1a';
+            ctx.beginPath(); ctx.roundRect(imgX, imgY, imgW, imgH, 6); ctx.fill();
+            // Stain (light halos around particles)
+            for (let p = 0; p < 8; p++) {
+                const px = imgX + imgW * (0.15 + (p % 4) * 0.23);
+                const py = imgY + imgH * (0.3 + Math.floor(p / 4) * 0.4);
+                const pr = Math.min(imgW, imgH) * 0.08;
+                // Bright stain halo
+                ctx.fillStyle = '#d4d4d4';
+                ctx.beginPath(); ctx.arc(px, py, pr * 1.3, 0, Math.PI * 2); ctx.fill();
+                // Dark protein
+                ctx.fillStyle = '#444';
+                ctx.beginPath(); ctx.arc(px, py, pr, 0, Math.PI * 2); ctx.fill();
+            }
+        } else {
+            // Cryo-EM: grey noisy background, subtle particles
+            ctx.fillStyle = '#9ca3af';
+            ctx.beginPath(); ctx.roundRect(imgX, imgY, imgW, imgH, 6); ctx.fill();
+            // Noise
+            const noiseStep = 3;
+            for (let nx = 0; nx < imgW; nx += noiseStep) {
+                for (let ny = 0; ny < imgH; ny += noiseStep) {
+                    const v = 120 + Math.random() * 60;
+                    ctx.fillStyle = `rgb(${v},${v},${v})`;
+                    ctx.fillRect(imgX + nx, imgY + ny, noiseStep, noiseStep);
+                }
+            }
+            // Subtle particles (barely visible in noise)
+            for (let p = 0; p < 8; p++) {
+                const px = imgX + imgW * (0.15 + (p % 4) * 0.23);
+                const py = imgY + imgH * (0.3 + Math.floor(p / 4) * 0.4);
+                const pr = Math.min(imgW, imgH) * 0.07;
+                ctx.fillStyle = 'rgba(80,80,80,0.4)';
+                ctx.beginPath(); ctx.arc(px, py, pr, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+
+        // Bullet points
+        const listY = imgY + imgH + s * 0.04;
+        ctx.textAlign = 'left';
+        col.items.forEach((item, i) => {
+            const iy = listY + i * s * 0.055;
+            ctx.fillStyle = col.color;
+            ctx.font = `700 ${Math.round(s * 0.032)}px Inter,sans-serif`;
+            ctx.fillText('\u2022', x0 + pad, iy);
+            ctx.fillStyle = '#444';
+            ctx.font = `500 ${Math.round(s * 0.032)}px Inter,sans-serif`;
+            ctx.fillText(item, x0 + pad + s * 0.03, iy);
+        });
+    }
+
+    // VS divider
+    ctx.fillStyle = '#fff'; ctx.strokeStyle = '#e0e0e8'; ctx.lineWidth = 2;
+    const vsR = s * 0.04;
+    ctx.beginPath(); ctx.arc(w / 2, h * 0.35, vsR, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#999'; ctx.font = `800 ${Math.round(vsR * 0.8)}px Inter,sans-serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('vs', w / 2, h * 0.35);
+}
+
+// ===== Panel 4: Grid Screening =====
+function drawScreening() {
+    const { ctx, w, h } = setupCanvas('cvScreen');
+    const s = Math.min(w, h);
+    const pad = s * 0.05;
+
+    // 2x2 grid: Good ice / Bad ice / Good distribution / Bad distribution
+    const cells = [
+        { label: 'Good Ice', color: '#10b981', status: '\u2713',
+          desc: 'Thin, uniform vitreous ice' },
+        { label: 'Crystalline Ice', color: '#ef4444', status: '\u2717',
+          desc: 'Ice rings in FFT = crystalline' },
+        { label: 'Good Distribution', color: '#10b981', status: '\u2713',
+          desc: 'Monodisperse, well-separated' },
+        { label: 'Preferred Orientation', color: '#ef4444', status: '\u2717',
+          desc: 'Only 1-2 views visible' },
+    ];
+
+    const cellW = (w - pad * 3) / 2;
+    const cellH = (h - pad * 3) / 2;
+
+    cells.forEach((cell, i) => {
+        const col = i % 2;
+        const row = Math.floor(i / 2);
+        const x0 = pad + col * (cellW + pad);
+        const y0 = pad + row * (cellH + pad);
+
+        // Cell background
+        ctx.fillStyle = cell.color + '08';
+        ctx.strokeStyle = cell.color + '30';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.roundRect(x0, y0, cellW, cellH, 8); ctx.fill(); ctx.stroke();
+
+        // Simulated hole image
+        const imgR = Math.min(cellW, cellH) * 0.25;
+        const imgCx = x0 + cellW * 0.3;
+        const imgCy = y0 + cellH * 0.4;
+
+        // Circle (hole)
+        ctx.fillStyle = '#e5e7eb';
+        ctx.beginPath(); ctx.arc(imgCx, imgCy, imgR, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#6b7280'; ctx.lineWidth = imgR * 0.1;
+        ctx.beginPath(); ctx.arc(imgCx, imgCy, imgR, 0, Math.PI * 2); ctx.stroke();
+
+        if (i === 0) {
+            // Good ice: uniform particles
+            ctx.fillStyle = '#555';
+            for (let p = 0; p < 15; p++) {
+                const a = p * 137.508 * Math.PI / 180;
+                const d = imgR * 0.7 * Math.sqrt((p + 1) / 16);
+                ctx.beginPath(); ctx.arc(imgCx + Math.cos(a) * d, imgCy + Math.sin(a) * d, imgR * 0.06, 0, Math.PI * 2); ctx.fill();
+            }
+        } else if (i === 1) {
+            // Crystalline ice: rings pattern
+            ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1;
+            ctx.setLineDash([2, 2]);
+            for (let r = 1; r <= 3; r++) {
+                ctx.beginPath(); ctx.arc(imgCx, imgCy, imgR * r * 0.3, 0, Math.PI * 2); ctx.stroke();
+            }
+            ctx.setLineDash([]);
+            // Particles with ice contamination
+            ctx.fillStyle = '#999';
+            for (let p = 0; p < 5; p++) {
+                const a = p * 72 * Math.PI / 180;
+                ctx.beginPath(); ctx.arc(imgCx + Math.cos(a) * imgR * 0.4, imgCy + Math.sin(a) * imgR * 0.4, imgR * 0.05, 0, Math.PI * 2); ctx.fill();
+            }
+        } else if (i === 2) {
+            // Good distribution: multiple orientations
+            ctx.fillStyle = '#555';
+            const shapes = ['circle', 'ellipseH', 'ellipseV', 'circle', 'ellipseH'];
+            for (let p = 0; p < 12; p++) {
+                const a = p * 137.508 * Math.PI / 180;
+                const d = imgR * 0.65 * Math.sqrt((p + 1) / 13);
+                const px = imgCx + Math.cos(a) * d;
+                const py = imgCy + Math.sin(a) * d;
+                ctx.save();
+                ctx.translate(px, py);
+                ctx.rotate(p * 0.8);
+                const pr = imgR * 0.06;
+                ctx.beginPath();
+                if (p % 3 === 0) ctx.ellipse(0, 0, pr * 1.5, pr * 0.7, 0, 0, Math.PI * 2);
+                else if (p % 3 === 1) ctx.ellipse(0, 0, pr * 0.7, pr * 1.3, 0, 0, Math.PI * 2);
+                else ctx.arc(0, 0, pr, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        } else {
+            // Preferred orientation: all same view
+            ctx.fillStyle = '#555';
+            for (let p = 0; p < 12; p++) {
+                const a = p * 137.508 * Math.PI / 180;
+                const d = imgR * 0.65 * Math.sqrt((p + 1) / 13);
+                const pr = imgR * 0.06;
+                ctx.beginPath(); ctx.arc(imgCx + Math.cos(a) * d, imgCy + Math.sin(a) * d, pr, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+
+        // Status badge
+        ctx.fillStyle = cell.color;
+        ctx.font = `900 ${Math.round(s * 0.06)}px Inter,sans-serif`;
+        ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+        ctx.fillText(cell.status, x0 + cellW - pad * 0.5, y0 + pad * 0.5);
+
+        // Label and description
+        const textX = x0 + cellW * 0.55;
+        ctx.fillStyle = cell.color;
+        ctx.font = `800 ${Math.round(s * 0.04)}px Inter,sans-serif`;
+        ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        ctx.fillText(cell.label, textX, imgCy - s * 0.02);
+
+        ctx.fillStyle = '#777';
+        ctx.font = `500 ${Math.round(s * 0.03)}px Inter,sans-serif`;
+        ctx.fillText(cell.desc, textX, imgCy + s * 0.04);
+    });
+}
+
+function renderAll() {
+    drawGrid();
+    drawVitrification();
+    drawCompare();
+    drawScreening();
+}
+
+renderAll();
+window.addEventListener('resize', () => {
+    clearTimeout(window._rt);
+    window._rt = setTimeout(renderAll, 150);
+});
+</script>
+</body>
+</html>
