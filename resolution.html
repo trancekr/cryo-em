@@ -173,7 +173,7 @@ function mulberry32(a) {
 // ===== Section 1: FSC Curve =====
 function drawFSC(id) {
     const { ctx, w, h } = setupCanvas(id);
-    const s = Math.min(w / 1200, h / 400);
+    const s = Math.min(w / 950, h / 310);
     const pad = 16 * s;
 
     // Layout: [FSC explanation] | [FSC plot] | [Key info]
@@ -473,7 +473,7 @@ function drawFSC(id) {
 // ===== Section 2: Resolution Scale =====
 function drawScale(id) {
     const { ctx, w, h } = setupCanvas(id);
-    const s = Math.min(w / 1200, h / 350);
+    const s = Math.min(w / 950, h / 270);
     const pad = 16 * s;
 
     // 5 resolution levels side by side

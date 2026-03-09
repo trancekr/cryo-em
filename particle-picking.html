@@ -208,7 +208,7 @@ function generateParticles(rng, count, w, h, margin) {
 // ===== Section 1: Picking on Micrograph =====
 function drawPicking(id) {
     const { ctx, w, h } = setupCanvas(id);
-    const s = Math.min(w / 1200, h / 400);
+    const s = Math.min(w / 950, h / 310);
     const pad = 14 * s;
 
     // Layout: [Micrograph with picks] → [Extracted particles grid]
@@ -386,7 +386,7 @@ function drawPicking(id) {
 // ===== Section 2: Picking Methods =====
 function drawMethods(id) {
     const { ctx, w, h } = setupCanvas(id);
-    const s = Math.min(w / 1200, h / 350);
+    const s = Math.min(w / 950, h / 270);
     const pad = 14 * s;
 
     // 4 methods side by side

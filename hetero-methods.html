@@ -79,7 +79,7 @@ function roundRect(ctx, x, y, w, h, r) {
 
 function draw(id) {
     const { ctx, w, h } = setupCanvas(id);
-    const s = Math.min(w / 1400, h / 700);
+    const s = Math.min(w / 1050, h / 520);
     const pad = 14 * s;
 
     // 4 method cards in a row
@@ -153,121 +153,121 @@ function draw(id) {
         roundRect(ctx, cx, cy, cardW, 4, [10, 10, 0, 0]);
         ctx.fill();
 
-        let y = cy + 14 * s;
+        let y = cy + 18 * s;
 
         // Title (may be multiline)
-        ctx.font = `bold ${Math.round(13 * s)}px Inter,sans-serif`;
+        ctx.font = `bold ${Math.round(16 * s)}px Inter,sans-serif`;
         ctx.fillStyle = m.color;
         ctx.textAlign = 'center';
         const titleLines = m.title.split('\n');
         for (const tl of titleLines) {
             ctx.fillText(tl, cx + cardW / 2, y);
-            y += 16 * s;
+            y += 20 * s;
         }
 
         // Tool pill
-        ctx.font = `bold ${Math.round(9 * s)}px Inter,sans-serif`;
-        const pillW = ctx.measureText(m.tool).width + 14 * s;
+        ctx.font = `bold ${Math.round(11 * s)}px Inter,sans-serif`;
+        const pillW = ctx.measureText(m.tool).width + 16 * s;
         ctx.fillStyle = m.color + '15';
-        roundRect(ctx, cx + (cardW - pillW) / 2, y, pillW, 18 * s, 9 * s);
+        roundRect(ctx, cx + (cardW - pillW) / 2, y, pillW, 22 * s, 11 * s);
         ctx.fill();
         ctx.fillStyle = m.color;
-        ctx.fillText(m.tool, cx + cardW / 2, y + 12 * s);
-        y += 22 * s;
+        ctx.fillText(m.tool, cx + cardW / 2, y + 15 * s);
+        y += 28 * s;
 
         // Approach badge
-        ctx.font = `bold ${Math.round(8 * s)}px Inter,sans-serif`;
+        ctx.font = `bold ${Math.round(10 * s)}px Inter,sans-serif`;
         const apColor = m.approach === 'Discrete' ? '#8b5cf6' : '#10b981';
-        const apW = ctx.measureText(m.approach).width + 12 * s;
+        const apW = ctx.measureText(m.approach).width + 14 * s;
         ctx.fillStyle = apColor + '15';
-        roundRect(ctx, cx + (cardW - apW) / 2, y, apW, 15 * s, 7 * s);
+        roundRect(ctx, cx + (cardW - apW) / 2, y, apW, 19 * s, 9 * s);
         ctx.fill();
         ctx.fillStyle = apColor;
-        ctx.fillText(m.approach, cx + cardW / 2, y + 10 * s);
-        y += 22 * s;
+        ctx.fillText(m.approach, cx + cardW / 2, y + 13 * s);
+        y += 26 * s;
 
         // Description
-        ctx.font = `${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.font = `${Math.round(11 * s)}px Inter,sans-serif`;
         ctx.fillStyle = '#666';
         ctx.textAlign = 'left';
         const words = m.desc.split(' ');
         let line = '';
-        const maxW = cardW - 20 * s;
+        const maxW = cardW - 24 * s;
         for (const word of words) {
             const test = line + (line ? ' ' : '') + word;
             if (ctx.measureText(test).width > maxW && line) {
-                ctx.fillText(line, cx + 10 * s, y);
-                line = word; y += 12 * s;
+                ctx.fillText(line, cx + 12 * s, y);
+                line = word; y += 15 * s;
             } else line = test;
         }
-        if (line) { ctx.fillText(line, cx + 10 * s, y); y += 12 * s; }
+        if (line) { ctx.fillText(line, cx + 12 * s, y); y += 15 * s; }
 
-        y += 6 * s;
+        y += 8 * s;
 
         // How it works
         ctx.fillStyle = m.color + '08';
-        const howH = 54 * s;
+        const howH = 76 * s;
         roundRect(ctx, cx + 6 * s, y, cardW - 12 * s, howH, 6);
         ctx.fill();
-        ctx.font = `bold ${Math.round(8.5 * s)}px Inter,sans-serif`;
+        ctx.font = `bold ${Math.round(11 * s)}px Inter,sans-serif`;
         ctx.fillStyle = m.color;
-        ctx.fillText('How it works', cx + 12 * s, y + 11 * s);
-        ctx.font = `${Math.round(8 * s)}px Inter,sans-serif`;
+        ctx.fillText('How it works', cx + 14 * s, y + 15 * s);
+        ctx.font = `${Math.round(10 * s)}px Inter,sans-serif`;
         ctx.fillStyle = '#555';
-        let hy = y + 22 * s;
+        let hy = y + 28 * s;
         for (let j = 0; j < m.how.length; j++) {
             const hLines = m.how[j].split('\n');
             ctx.fillStyle = m.color;
-            ctx.fillText((j + 1) + '.', cx + 12 * s, hy);
+            ctx.fillText((j + 1) + '.', cx + 14 * s, hy);
             ctx.fillStyle = '#555';
             for (const hl of hLines) {
-                ctx.fillText(hl, cx + 22 * s, hy);
-                hy += 10 * s;
+                ctx.fillText(hl, cx + 26 * s, hy);
+                hy += 14 * s;
             }
         }
-        y += howH + 8 * s;
+        y += howH + 10 * s;
 
         // Best for
         ctx.fillStyle = '#fefce8';
-        roundRect(ctx, cx + 6 * s, y, cardW - 12 * s, 30 * s, 6);
+        roundRect(ctx, cx + 6 * s, y, cardW - 12 * s, 42 * s, 6);
         ctx.fill();
-        ctx.font = `bold ${Math.round(8.5 * s)}px Inter,sans-serif`;
+        ctx.font = `bold ${Math.round(11 * s)}px Inter,sans-serif`;
         ctx.fillStyle = '#92400e';
-        ctx.fillText('Best for:', cx + 12 * s, y + 11 * s);
-        ctx.font = `${Math.round(8 * s)}px Inter,sans-serif`;
+        ctx.fillText('Best for:', cx + 14 * s, y + 15 * s);
+        ctx.font = `${Math.round(10 * s)}px Inter,sans-serif`;
         const bLines = m.best.split('\n');
         for (let bl = 0; bl < bLines.length; bl++) {
-            ctx.fillText(bLines[bl], cx + 12 * s, y + 22 * s + bl * 10 * s);
+            ctx.fillText(bLines[bl], cx + 14 * s, y + 28 * s + bl * 14 * s);
         }
-        y += 38 * s;
+        y += 52 * s;
 
         // Pros
-        ctx.font = `bold ${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.font = `bold ${Math.round(11 * s)}px Inter,sans-serif`;
         ctx.fillStyle = '#10b981';
-        ctx.fillText('Strengths', cx + 10 * s, y);
-        y += 12 * s;
-        ctx.font = `${Math.round(8.5 * s)}px Inter,sans-serif`;
+        ctx.fillText('Strengths', cx + 12 * s, y);
+        y += 16 * s;
+        ctx.font = `${Math.round(10.5 * s)}px Inter,sans-serif`;
         for (const p of m.pros) {
             ctx.fillStyle = '#10b981';
-            ctx.fillText('+', cx + 10 * s, y);
+            ctx.fillText('\u2713', cx + 12 * s, y);
             ctx.fillStyle = '#555';
-            ctx.fillText(p, cx + 20 * s, y);
-            y += 12 * s;
+            ctx.fillText(p, cx + 24 * s, y);
+            y += 15 * s;
         }
-        y += 4 * s;
+        y += 6 * s;
 
         // Cons
-        ctx.font = `bold ${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.font = `bold ${Math.round(11 * s)}px Inter,sans-serif`;
         ctx.fillStyle = '#ef4444';
-        ctx.fillText('Limitations', cx + 10 * s, y);
-        y += 12 * s;
-        ctx.font = `${Math.round(8.5 * s)}px Inter,sans-serif`;
+        ctx.fillText('Limitations', cx + 12 * s, y);
+        y += 16 * s;
+        ctx.font = `${Math.round(10.5 * s)}px Inter,sans-serif`;
         for (const c2 of m.cons) {
             ctx.fillStyle = '#ef4444';
-            ctx.fillText('\u2212', cx + 10 * s, y);
+            ctx.fillText('\u2212', cx + 12 * s, y);
             ctx.fillStyle = '#555';
-            ctx.fillText(c2, cx + 20 * s, y);
-            y += 12 * s;
+            ctx.fillText(c2, cx + 24 * s, y);
+            y += 15 * s;
         }
     }
 }

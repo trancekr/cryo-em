@@ -83,7 +83,7 @@ function mulberry32(a) {
 
 function draw(id) {
     const { ctx, w, h } = setupCanvas(id);
-    const s = Math.min(w / 1400, h / 700);
+    const s = Math.min(w / 1050, h / 520);
     const pad = 12 * s;
 
     // 3 columns × 2 rows = 6 problem cards
@@ -172,50 +172,49 @@ function draw(id) {
         ctx.fill();
 
         // Title row
-        ctx.font = `bold ${Math.round(13 * s)}px Inter,sans-serif`;
+        ctx.font = `bold ${Math.round(16 * s)}px Inter,sans-serif`;
         ctx.fillStyle = p.color;
         ctx.textAlign = 'left';
-        ctx.fillText(p.title, cx + 12 * s, cy + 22 * s);
+        ctx.fillText(p.title, cx + 14 * s, cy + 26 * s);
 
         // Severity pill
         const sevColors = { 'High': '#ef4444', 'Medium': '#f59e0b', 'Variable': '#8b5cf6' };
         const sevC = sevColors[p.severity];
-        ctx.font = `bold ${Math.round(8 * s)}px Inter,sans-serif`;
-        const sevW = ctx.measureText(p.severity).width + 12 * s;
+        ctx.font = `bold ${Math.round(10 * s)}px Inter,sans-serif`;
+        const sevW = ctx.measureText(p.severity).width + 14 * s;
         ctx.fillStyle = sevC + '15';
-        roundRect(ctx, cx + cardW - sevW - 12 * s, cy + 10 * s, sevW, 16 * s, 8 * s);
+        roundRect(ctx, cx + cardW - sevW - 14 * s, cy + 12 * s, sevW, 20 * s, 10 * s);
         ctx.fill();
         ctx.fillStyle = sevC;
         ctx.textAlign = 'center';
-        ctx.fillText(p.severity, cx + cardW - sevW / 2 - 12 * s, cy + 21 * s);
+        ctx.fillText(p.severity, cx + cardW - sevW / 2 - 14 * s, cy + 25 * s);
 
         // Description
-        ctx.font = `${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.font = `${Math.round(11 * s)}px Inter,sans-serif`;
         ctx.fillStyle = '#888';
         ctx.textAlign = 'left';
-        // Word wrap description
         const descWords = p.desc.split(' ');
         let line = '';
-        let dy = cy + 38 * s;
-        const maxW = cardW - 24 * s;
+        let dy = cy + 44 * s;
+        const maxW = cardW - 28 * s;
         for (const word of descWords) {
             const test = line + (line ? ' ' : '') + word;
             if (ctx.measureText(test).width > maxW && line) {
-                ctx.fillText(line, cx + 12 * s, dy);
+                ctx.fillText(line, cx + 14 * s, dy);
                 line = word;
-                dy += 12 * s;
+                dy += 15 * s;
             } else {
                 line = test;
             }
         }
-        if (line) { ctx.fillText(line, cx + 12 * s, dy); dy += 12 * s; }
+        if (line) { ctx.fillText(line, cx + 14 * s, dy); dy += 15 * s; }
 
-        dy += 4 * s;
+        dy += 5 * s;
 
         // Mini illustration area
-        const miniH = 50 * s;
-        const miniX = cx + 12 * s;
-        const miniW = cardW - 24 * s;
+        const miniH = 55 * s;
+        const miniX = cx + 14 * s;
+        const miniW = cardW - 28 * s;
         ctx.fillStyle = p.color + '06';
         roundRect(ctx, miniX, dy, miniW, miniH, 6);
         ctx.fill();
@@ -225,39 +224,39 @@ function draw(id) {
         ctx.stroke();
 
         drawMini(ctx, p.mini, p.color, miniX, dy, miniW, miniH, s);
-        dy += miniH + 8 * s;
+        dy += miniH + 10 * s;
 
         // Symptoms
-        ctx.font = `bold ${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.font = `bold ${Math.round(12 * s)}px Inter,sans-serif`;
         ctx.fillStyle = '#ef4444';
         ctx.textAlign = 'left';
-        ctx.fillText('Symptoms', cx + 12 * s, dy);
-        dy += 12 * s;
+        ctx.fillText('Symptoms', cx + 14 * s, dy);
+        dy += 16 * s;
 
-        ctx.font = `${Math.round(8.5 * s)}px Inter,sans-serif`;
+        ctx.font = `${Math.round(11 * s)}px Inter,sans-serif`;
         for (const sym of p.symptoms) {
             ctx.fillStyle = '#ef4444';
-            ctx.fillText('•', cx + 14 * s, dy);
+            ctx.fillText('•', cx + 16 * s, dy);
             ctx.fillStyle = '#555';
-            ctx.fillText(sym, cx + 24 * s, dy);
-            dy += 11 * s;
+            ctx.fillText(sym, cx + 28 * s, dy);
+            dy += 15 * s;
         }
 
-        dy += 6 * s;
+        dy += 8 * s;
 
         // Solutions
-        ctx.font = `bold ${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.font = `bold ${Math.round(12 * s)}px Inter,sans-serif`;
         ctx.fillStyle = '#10b981';
-        ctx.fillText('Solutions', cx + 12 * s, dy);
-        dy += 12 * s;
+        ctx.fillText('Solutions', cx + 14 * s, dy);
+        dy += 16 * s;
 
-        ctx.font = `${Math.round(8.5 * s)}px Inter,sans-serif`;
+        ctx.font = `${Math.round(11 * s)}px Inter,sans-serif`;
         for (const sol of p.solutions) {
             ctx.fillStyle = '#10b981';
-            ctx.fillText('✓', cx + 14 * s, dy);
+            ctx.fillText('✓', cx + 16 * s, dy);
             ctx.fillStyle = '#555';
-            ctx.fillText(sol, cx + 24 * s, dy);
-            dy += 11 * s;
+            ctx.fillText(sol, cx + 28 * s, dy);
+            dy += 15 * s;
         }
     }
 }

@@ -85,7 +85,7 @@ function mulberry32(a) {
 // === Heterogeneity Problem & Classification ===
 function draw(id) {
     const { ctx, w, h } = setupCanvas(id);
-    const s = Math.min(w / 1400, h / 650);
+    const s = Math.min(w / 1050, h / 490);
     const pad = 12 * s;
 
     // Three zones: Mixed Particles | Classification | Separated Classes
@@ -120,15 +120,16 @@ function draw(id) {
     // Zone 1: Mixed particles (different shapes/colors mixed)
     const z1 = zones[0];
     const rng = mulberry32(42);
-    const particleArea = { x: z1.x + 10 * s, y: pad + 48 * s, w: zoneW - 20 * s, h: h - pad * 2 - 58 * s };
+    const pInset = 16 * s;
+    const particleArea = { x: z1.x + pInset, y: pad + 48 * s, w: zoneW - pInset * 2, h: h - pad * 2 - 68 * s };
     const pColors = ['#ef4444', '#3b82f6', '#10b981'];
     const shapes = ['circle', 'square', 'triangle'];
 
-    for (let i = 0; i < 45; i++) {
-        const px = particleArea.x + rng() * particleArea.w;
-        const py = particleArea.y + rng() * particleArea.h;
+    for (let i = 0; i < 40; i++) {
+        const px = particleArea.x + pInset / 2 + rng() * (particleArea.w - pInset);
+        const py = particleArea.y + pInset / 2 + rng() * (particleArea.h - pInset);
         const ci = Math.floor(rng() * 3);
-        const sz = (6 + rng() * 5) * s;
+        const sz = (5 + rng() * 4) * s;
         ctx.fillStyle = pColors[ci] + '50';
         ctx.strokeStyle = pColors[ci] + '90';
         ctx.lineWidth = 1.2;

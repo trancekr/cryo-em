@@ -232,7 +232,7 @@ function drawArrow(ctx, x1, y1, x2, y2, color, lineW) {
 // ===== Section 1: Motion Correction =====
 function drawMotionCorrection(id) {
     const { ctx, w, h } = setupCanvas(id);
-    const s = Math.min(w / 1200, h / 400);
+    const s = Math.min(w / 950, h / 310);
     const pad = 20 * s;
 
     // Layout: [Movie Frames] -> [Motion Tracks] -> [Aligned Sum]
@@ -418,7 +418,7 @@ function drawMotionCorrection(id) {
 // ===== Section 2: Dose Weighting =====
 function drawDoseWeighting(id) {
     const { ctx, w, h } = setupCanvas(id);
-    const s = Math.min(w / 1200, h / 400);
+    const s = Math.min(w / 950, h / 310);
     const pad = 20 * s;
 
     // Layout: [Frame Damage Timeline] | [Frequency Weight Curve] | [Before/After Comparison]
