@@ -82,11 +82,29 @@ function mulberry32(a) {
     return ((t ^ t >>> 14) >>> 0) / 4294967296; };
 }
 
-// === Heterogeneity Problem & Classification ===
+// === Heterogeneity Problem & Classification — Animated ===
+let confAnimId = null;
+let confStart = null;
+function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
 function draw(id) {
+    if (confAnimId) cancelAnimationFrame(confAnimId);
+    confStart = performance.now();
+    animateConf(id);
+}
+
+function animateConf(id) {
     const { ctx, w, h } = setupCanvas(id);
     const s = Math.min(w / 1050, h / 490);
     const pad = 12 * s;
+    const elapsed = ((performance.now() - confStart) / 1000) % 7;
+
+    // Animation interpolation: 0 = mixed, 1 = sorted by class
+    let t;
+    if (elapsed < 1.5) t = 0;                                        // hold mixed
+    else if (elapsed < 3.5) t = easeOutCubic((elapsed - 1.5) / 2);   // sort
+    else if (elapsed < 5.5) t = 1;                                    // hold sorted
+    else t = 1 - easeOutCubic((elapsed - 5.5) / 1.5);                // unsort
 
     // Three zones: Mixed Particles | Classification | Separated Classes
     const zoneW = (w - pad * 4) / 3;
@@ -117,7 +135,7 @@ function draw(id) {
         ctx.fillText(z.sub, z.x + zoneW / 2, pad + 36 * s);
     }
 
-    // Zone 1: Mixed particles (different shapes/colors mixed)
+    // Zone 1: Animated particles — sort from mixed → grouped by class
     const z1 = zones[0];
     const rng = mulberry32(42);
     const pInset = 16 * s;
@@ -125,23 +143,78 @@ function draw(id) {
     const pColors = ['#ef4444', '#3b82f6', '#10b981'];
     const shapes = ['circle', 'square', 'triangle'];
 
-    for (let i = 0; i < 40; i++) {
-        const px = particleArea.x + pInset / 2 + rng() * (particleArea.w - pInset);
-        const py = particleArea.y + pInset / 2 + rng() * (particleArea.h - pInset);
+    // Generate deterministic particle data
+    const ptcls = [];
+    for (let i = 0; i < 45; i++) {
+        const rx = rng(), ry = rng();
         const ci = Math.floor(rng() * 3);
         const sz = (5 + rng() * 4) * s;
-        ctx.fillStyle = pColors[ci] + '50';
-        ctx.strokeStyle = pColors[ci] + '90';
-        ctx.lineWidth = 1.2;
+        ptcls.push({ ci, sz, rx, ry, sx: 0, sy: 0 });
+    }
 
-        if (shapes[ci] === 'circle') {
-            ctx.beginPath(); ctx.arc(px, py, sz, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-        } else if (shapes[ci] === 'square') {
-            ctx.fillRect(px - sz, py - sz, sz * 2, sz * 2);
-            ctx.strokeRect(px - sz, py - sz, sz * 2, sz * 2);
+    // Compute sorted target positions (3 vertical columns by class)
+    const grps = [[], [], []];
+    ptcls.forEach((p, idx) => grps[p.ci].push(idx));
+    for (let g = 0; g < 3; g++) {
+        const ids = grps[g];
+        const cols = Math.min(4, Math.ceil(Math.sqrt(ids.length)));
+        const rows = Math.ceil(ids.length / cols);
+        ids.forEach((idx, j) => {
+            ptcls[idx].sx = (g + (j % cols + 0.5) / cols) / 3;
+            ptcls[idx].sy = (Math.floor(j / cols) + 0.5) / rows;
+        });
+    }
+
+    // Draw particles with interpolated positions
+    for (const p of ptcls) {
+        const nx = p.rx + (p.sx - p.rx) * t;
+        const ny = p.ry + (p.sy - p.ry) * t;
+        const px = particleArea.x + pInset / 2 + nx * (particleArea.w - pInset);
+        const py = particleArea.y + pInset / 2 + ny * (particleArea.h - pInset);
+        ctx.fillStyle = pColors[p.ci] + '70';
+        ctx.strokeStyle = pColors[p.ci] + 'bb';
+        ctx.lineWidth = 1.2;
+        if (shapes[p.ci] === 'circle') {
+            ctx.beginPath(); ctx.arc(px, py, p.sz, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        } else if (shapes[p.ci] === 'square') {
+            ctx.fillRect(px - p.sz, py - p.sz, p.sz * 2, p.sz * 2);
+            ctx.strokeRect(px - p.sz, py - p.sz, p.sz * 2, p.sz * 2);
         } else {
-            ctx.beginPath(); ctx.moveTo(px, py - sz); ctx.lineTo(px + sz, py + sz); ctx.lineTo(px - sz, py + sz); ctx.closePath(); ctx.fill(); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(px, py - p.sz); ctx.lineTo(px + p.sz, py + p.sz); ctx.lineTo(px - p.sz, py + p.sz); ctx.closePath(); ctx.fill(); ctx.stroke();
         }
+    }
+
+    // Show colored group backgrounds + dividers when sorted
+    if (t > 0.3) {
+        const sortAlpha = Math.min((t - 0.3) / 0.4, 1);
+        const groupW = particleArea.w / 3;
+        // Colored backgrounds for each group
+        ctx.globalAlpha = sortAlpha * 0.12;
+        for (let g = 0; g < 3; g++) {
+            ctx.fillStyle = pColors[g];
+            roundRect(ctx, particleArea.x + g * groupW + 2, particleArea.y + 2, groupW - 4, particleArea.h - 4, 6);
+            ctx.fill();
+        }
+        // Divider lines
+        ctx.globalAlpha = sortAlpha * 0.5;
+        ctx.setLineDash([4, 3]);
+        ctx.strokeStyle = '#aaa';
+        ctx.lineWidth = 1;
+        for (let g = 1; g < 3; g++) {
+            const dx = particleArea.x + groupW * g;
+            ctx.beginPath(); ctx.moveTo(dx, particleArea.y); ctx.lineTo(dx, particleArea.y + particleArea.h); ctx.stroke();
+        }
+        ctx.setLineDash([]);
+        // Group labels
+        ctx.globalAlpha = sortAlpha;
+        ctx.font = `bold ${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.textAlign = 'center';
+        const gLabels = ['Class 1', 'Class 2', 'Class 3'];
+        for (let g = 0; g < 3; g++) {
+            ctx.fillStyle = pColors[g];
+            ctx.fillText(gLabels[g], particleArea.x + groupW * (g + 0.5), particleArea.y + particleArea.h - 6 * s);
+        }
+        ctx.globalAlpha = 1;
     }
 
     // Zone 2: Classification process
@@ -296,6 +369,8 @@ function draw(id) {
         ctx.fillStyle = '#bbb';
         ctx.beginPath(); ctx.moveTo(az.x2, ay); ctx.lineTo(az.x2 - 8 * s, ay - 5 * s); ctx.lineTo(az.x2 - 8 * s, ay + 5 * s); ctx.closePath(); ctx.fill();
     }
+
+    confAnimId = requestAnimationFrame(() => animateConf(id));
 }
 
 function renderAll() { draw('cv'); }

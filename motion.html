@@ -229,84 +229,161 @@ function drawArrow(ctx, x1, y1, x2, y2, color, lineW) {
     ctx.restore();
 }
 
-// ===== Section 1: Motion Correction =====
+// ===== Section 1: Motion Correction (Animated) =====
+let motionAnimId = null;
+let motionStartTime = null;
+
 function drawMotionCorrection(id) {
-    const { ctx, w, h } = setupCanvas(id);
+    if (motionAnimId) cancelAnimationFrame(motionAnimId);
+    motionStartTime = performance.now();
+    animateMotion(id);
+}
+
+function animateMotion(id) {
+    const c = document.getElementById(id);
+    const rect = c.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    if (c.width !== Math.round(rect.width * dpr)) {
+        c.width = Math.round(rect.width * dpr);
+        c.height = Math.round(rect.height * dpr);
+    }
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const w = rect.width, h = rect.height;
+    ctx.clearRect(0, 0, w, h);
+
     const s = Math.min(w / 950, h / 310);
     const pad = 20 * s;
-
-    // Layout: [Movie Frames] -> [Motion Tracks] -> [Aligned Sum]
     const zoneW = (w - pad * 4) / 3;
     const zoneH = h - pad * 2;
 
-    // === Zone 1: Movie Frames (stacked frames with offsets) ===
-    const z1x = pad;
-    const z1y = pad;
+    // Animation timeline: 8s cycle
+    // 0-2s: frames shaking (showing motion)
+    // 2-3.5s: frames slide to aligned positions
+    // 3.5-5s: frames merge into single image
+    // 5-7s: hold result
+    // 7-8s: fade back to start
+    const elapsed = ((performance.now() - motionStartTime) / 1000) % 8;
+    const phase = elapsed < 2 ? 'shake' : elapsed < 3.5 ? 'align' : elapsed < 5 ? 'merge' : elapsed < 7 ? 'hold' : 'reset';
 
-    // Label
+    // Pre-generate frame offsets (seeded)
+    const nFrames = 6;
+    const rngOff = mulberry32(77);
+    const frameOffsets = [];
+    for (let i = 0; i < nFrames; i++) {
+        frameOffsets.push({
+            dx: (rngOff() - 0.5) * 16 * s,
+            dy: (rngOff() - 0.5) * 12 * s
+        });
+    }
+
+    // === Zone 1: Movie Frames with animation ===
+    const z1x = pad, z1y = pad;
     ctx.font = `bold ${Math.round(14 * s)}px Inter, sans-serif`;
     ctx.fillStyle = '#3b82f6';
     ctx.textAlign = 'center';
-    ctx.fillText('Movie Frames (40-60 frames)', z1x + zoneW / 2, z1y + 14 * s);
+    ctx.fillText('Movie Frames (40\u201360 frames)', z1x + zoneW / 2, z1y + 14 * s);
 
     const frameW = Math.min(zoneW * 0.55, zoneH * 0.6);
     const frameH = frameW * 0.75;
     const frameCX = z1x + zoneW / 2;
-    const frameCY = z1y + zoneH * 0.52;
-    const nFrames = 6;
+    const frameCY = z1y + zoneH * 0.48;
 
-    // Draw stacked frames with slight offsets to show motion
+    // Phase label
+    ctx.font = `bold ${Math.round(11 * s)}px Inter, sans-serif`;
+    ctx.textAlign = 'center';
+    if (phase === 'shake') {
+        ctx.fillStyle = '#ef4444';
+        ctx.fillText('\u26a0 Beam-induced motion', frameCX, z1y + 30 * s);
+    } else if (phase === 'align') {
+        ctx.fillStyle = '#7c3aed';
+        ctx.fillText('\u2192 Aligning frames...', frameCX, z1y + 30 * s);
+    } else if (phase === 'merge' || phase === 'hold') {
+        ctx.fillStyle = '#10b981';
+        ctx.fillText('\u2713 Frames aligned & summed', frameCX, z1y + 30 * s);
+    }
+
     for (let i = nFrames - 1; i >= 0; i--) {
-        const dx = (i - nFrames / 2) * 3 * s;
-        const dy = (i - nFrames / 2) * 2.5 * s;
-        const alpha = i === 0 ? 1 : 0.3 + 0.1 * i;
+        let dx = 0, dy = 0, alpha = 1;
+        if (phase === 'shake') {
+            // Frames shake with their random offsets + time-varying oscillation
+            const shakeT = elapsed * 3 + i * 0.7;
+            dx = frameOffsets[i].dx + Math.sin(shakeT) * 3 * s;
+            dy = frameOffsets[i].dy + Math.cos(shakeT * 1.3) * 2 * s;
+            alpha = i === 0 ? 0.9 : 0.2 + 0.1 * (nFrames - i) / nFrames;
+        } else if (phase === 'align') {
+            // Frames interpolate toward center
+            const t = Math.min(1, (elapsed - 2) / 1.5);
+            const ease = 1 - Math.pow(1 - t, 3); // ease-out cubic
+            dx = frameOffsets[i].dx * (1 - ease);
+            dy = frameOffsets[i].dy * (1 - ease);
+            alpha = 0.3 + 0.7 * ease;
+        } else if (phase === 'merge') {
+            // All centered, fading to single image
+            dx = 0; dy = 0;
+            const t = Math.min(1, (elapsed - 3.5) / 1.5);
+            alpha = i === 0 ? 1 : Math.max(0, 1 - t * 2);
+        } else if (phase === 'hold') {
+            dx = 0; dy = 0;
+            alpha = i === 0 ? 1 : 0;
+        } else { // reset
+            const t = (elapsed - 7) / 1;
+            dx = frameOffsets[i].dx * t;
+            dy = frameOffsets[i].dy * t;
+            alpha = i === 0 ? 0.9 : 0.2 * t;
+        }
+
+        if (alpha <= 0.01) continue;
         ctx.globalAlpha = alpha;
         const fx = frameCX - frameW / 2 + dx;
         const fy = frameCY - frameH / 2 + dy;
-        drawMicrograph(ctx, fx, fy, frameW, frameH, 100 + i, dx * 0.5, dy * 0.5, i > 0);
+        const isBlurred = (phase === 'shake' && i > 0);
+        drawMicrograph(ctx, fx, fy, frameW, frameH, 100 + i, dx * 0.3, dy * 0.3, isBlurred);
 
-        // Frame border
-        ctx.strokeStyle = i === 0 ? '#3b82f6' : '#555';
+        ctx.strokeStyle = (phase === 'hold' || phase === 'merge') ? '#10b981' : (i === 0 ? '#3b82f6' : '#555');
         ctx.lineWidth = i === 0 ? 2 : 1;
         roundRect(ctx, fx, fy, frameW, frameH, 4);
         ctx.stroke();
     }
     ctx.globalAlpha = 1;
 
-    // Frame count label
+    // Checkmark on merged result
+    if (phase === 'hold') {
+        const bR = 12 * s;
+        const bx = frameCX + frameW / 2 - 4, by = frameCY - frameH / 2 + 4;
+        ctx.beginPath(); ctx.arc(bx, by, bR, 0, Math.PI * 2); ctx.fillStyle = '#10b981'; ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 2.5 * s;
+        ctx.beginPath(); ctx.moveTo(bx - 5*s, by); ctx.lineTo(bx - 1*s, by + 4*s); ctx.lineTo(bx + 5*s, by - 5*s); ctx.stroke();
+    }
+
     ctx.font = `${Math.round(11 * s)}px Inter, sans-serif`;
     ctx.fillStyle = '#888';
     ctx.textAlign = 'center';
     ctx.fillText('Each frame = short exposure (~50 ms)', frameCX, frameCY + frameH / 2 + 16 * s);
-    ctx.fillText('Beam-induced motion shifts particles between frames', frameCX, frameCY + frameH / 2 + 30 * s);
+    ctx.fillText('Split exposure \u2192 estimate drift \u2192 shift-align \u2192 sum', frameCX, frameCY + frameH / 2 + 30 * s);
 
     // Arrow 1→2
     const arrowY = z1y + zoneH * 0.48;
     drawArrow(ctx, z1x + zoneW - 5, arrowY, z1x + zoneW + pad - 5, arrowY, '#3b82f6', 2.5 * s);
 
-    // === Zone 2: Motion Tracks ===
+    // === Zone 2: Motion Tracks (static) ===
     const z2x = z1x + zoneW + pad;
-
     ctx.font = `bold ${Math.round(14 * s)}px Inter, sans-serif`;
     ctx.fillStyle = '#7c3aed';
     ctx.textAlign = 'center';
     ctx.fillText('Motion Estimation & Alignment', z2x + zoneW / 2, z1y + 14 * s);
 
-    // Draw a single frame with motion trajectory overlay
     const trackW = Math.min(zoneW * 0.6, zoneH * 0.6);
     const trackH = trackW * 0.75;
     const trackCX = z2x + zoneW / 2;
     const trackCY = z1y + zoneH * 0.48;
-    const tx = trackCX - trackW / 2;
-    const ty = trackCY - trackH / 2;
+    const tx = trackCX - trackW / 2, ty = trackCY - trackH / 2;
 
     drawMicrograph(ctx, tx, ty, trackW, trackH, 100, 0, 0, false);
-    ctx.strokeStyle = '#7c3aed';
-    ctx.lineWidth = 2;
-    roundRect(ctx, tx, ty, trackW, trackH, 4);
-    ctx.stroke();
+    ctx.strokeStyle = '#7c3aed'; ctx.lineWidth = 2;
+    roundRect(ctx, tx, ty, trackW, trackH, 4); ctx.stroke();
 
-    // Draw motion trajectory paths (red curves with dots)
+    // Motion trajectory paths
     const rng = mulberry32(42);
     const gridN = 4;
     const trajectoryColors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6'];
@@ -315,104 +392,67 @@ function drawMotionCorrection(id) {
             const cx = tx + (gx + 0.5) * trackW / gridN;
             const cy = ty + (gy + 0.5) * trackH / gridN;
             const tColor = trajectoryColors[(gx + gy) % trajectoryColors.length];
-
-            // Draw a small curved path (motion trajectory)
-            ctx.beginPath();
-            ctx.strokeStyle = tColor;
-            ctx.lineWidth = 1.5;
-            let px = cx, py = cy;
-            ctx.moveTo(px, py);
-            const steps = 6;
-            for (let i = 0; i < steps; i++) {
-                px += (rng() - 0.5) * 6 * s;
-                py += (rng() - 0.3) * 4 * s;
+            ctx.beginPath(); ctx.strokeStyle = tColor; ctx.lineWidth = 1.5;
+            let px = cx, py = cy; ctx.moveTo(px, py);
+            for (let i = 0; i < 6; i++) {
+                px += (rng() - 0.5) * 6 * s; py += (rng() - 0.3) * 4 * s;
                 ctx.lineTo(px, py);
             }
             ctx.stroke();
-
-            // Start dot
-            ctx.beginPath();
-            ctx.arc(cx, cy, 2 * s, 0, Math.PI * 2);
-            ctx.fillStyle = tColor;
-            ctx.fill();
+            ctx.beginPath(); ctx.arc(cx, cy, 2 * s, 0, Math.PI * 2); ctx.fillStyle = tColor; ctx.fill();
         }
     }
-
-    // Subtitle for motion tracks
     ctx.font = `${Math.round(11 * s)}px Inter, sans-serif`;
-    ctx.fillStyle = '#888';
-    ctx.textAlign = 'center';
+    ctx.fillStyle = '#888'; ctx.textAlign = 'center';
     ctx.fillText('Track particle shifts across frames', trackCX, trackCY + trackH / 2 + 16 * s);
     ctx.fillText('Global + local (per-patch) alignment', trackCX, trackCY + trackH / 2 + 30 * s);
 
     // Arrow 2→3
     drawArrow(ctx, z2x + zoneW - 5, arrowY, z2x + zoneW + pad - 5, arrowY, '#10b981', 2.5 * s);
 
-    // === Zone 3: Aligned & Summed ===
+    // === Zone 3: Aligned & Summed (static) ===
     const z3x = z2x + zoneW + pad;
-
     ctx.font = `bold ${Math.round(14 * s)}px Inter, sans-serif`;
-    ctx.fillStyle = '#10b981';
-    ctx.textAlign = 'center';
+    ctx.fillStyle = '#10b981'; ctx.textAlign = 'center';
     ctx.fillText('Aligned & Summed Micrograph', z3x + zoneW / 2, z1y + 14 * s);
 
-    // Draw a clean, crisp micrograph
     const sumW = Math.min(zoneW * 0.6, zoneH * 0.6);
     const sumH = sumW * 0.75;
-    const sumCX = z3x + zoneW / 2;
-    const sumCY = z1y + zoneH * 0.48;
-    const sx = sumCX - sumW / 2;
-    const sy = sumCY - sumH / 2;
+    const sumCX = z3x + zoneW / 2, sumCY = z1y + zoneH * 0.48;
+    const sx = sumCX - sumW / 2, sy = sumCY - sumH / 2;
 
     drawMicrograph(ctx, sx, sy, sumW, sumH, 100, 0, 0, false);
-
-    // Draw clearer particles (overlaid stronger)
     const rng2 = mulberry32(100);
     for (let i = 0; i < 12; i++) {
         const pr = 3 + rng2() * 4;
         const px = sx + 10 + rng2() * (sumW - 20);
         const py = sy + 10 + rng2() * (sumH - 20);
-        ctx.beginPath();
-        ctx.arc(px, py, pr, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(200,200,220,0.5)';
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(220,220,240,0.5)';
-        ctx.lineWidth = 1;
-        ctx.stroke();
+        ctx.beginPath(); ctx.arc(px, py, pr, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(200,200,220,0.5)'; ctx.fill();
+        ctx.strokeStyle = 'rgba(220,220,240,0.5)'; ctx.lineWidth = 1; ctx.stroke();
     }
-
-    ctx.strokeStyle = '#10b981';
-    ctx.lineWidth = 2;
-    roundRect(ctx, sx, sy, sumW, sumH, 4);
-    ctx.stroke();
+    ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2;
+    roundRect(ctx, sx, sy, sumW, sumH, 4); ctx.stroke();
 
     // Checkmark badge
     const badgeR = 12 * s;
-    ctx.beginPath();
-    ctx.arc(sx + sumW - 4, sy + 4, badgeR, 0, Math.PI * 2);
-    ctx.fillStyle = '#10b981';
-    ctx.fill();
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2.5 * s;
-    ctx.beginPath();
-    ctx.moveTo(sx + sumW - 4 - 5 * s, sy + 4);
-    ctx.lineTo(sx + sumW - 4 - 1 * s, sy + 4 + 4 * s);
-    ctx.lineTo(sx + sumW - 4 + 5 * s, sy + 4 - 5 * s);
-    ctx.stroke();
+    ctx.beginPath(); ctx.arc(sx + sumW - 4, sy + 4, badgeR, 0, Math.PI * 2); ctx.fillStyle = '#10b981'; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2.5 * s;
+    ctx.beginPath(); ctx.moveTo(sx + sumW - 4 - 5*s, sy + 4); ctx.lineTo(sx + sumW - 4 - 1*s, sy + 4 + 4*s); ctx.lineTo(sx + sumW - 4 + 5*s, sy + 4 - 5*s); ctx.stroke();
 
     ctx.font = `${Math.round(11 * s)}px Inter, sans-serif`;
-    ctx.fillStyle = '#888';
-    ctx.textAlign = 'center';
+    ctx.fillStyle = '#888'; ctx.textAlign = 'center';
     ctx.fillText('Sharp particles, reduced motion blur', sumCX, sumCY + sumH / 2 + 16 * s);
     ctx.fillText('Tools: MotionCor2, RELION, cryoSPARC', sumCX, sumCY + sumH / 2 + 30 * s);
 
-    // Bottom info bar
+    // Bottom info
     const infoY = z1y + zoneH - 22 * s;
     ctx.font = `${Math.round(11 * s)}px Inter, sans-serif`;
-    ctx.fillStyle = '#aaa';
-    ctx.textAlign = 'left';
+    ctx.fillStyle = '#aaa'; ctx.textAlign = 'left';
     ctx.fillText('Why needed: Electron beam causes specimen to move during exposure, blurring high-resolution details', pad, infoY);
-    ctx.fillText('Key concept: Split single exposure into fast sub-frames → estimate drift → shift-align → sum for sharp image', pad, infoY + 15 * s);
+    ctx.fillText('Implemented in: MotionCor2 (-FtBin), RELION (relion_motion_correction), cryoSPARC (Patch Motion Correction)', pad, infoY + 15 * s);
+
+    motionAnimId = requestAnimationFrame(() => animateMotion(id));
 }
 
 // ===== Section 2: Dose Weighting =====

@@ -365,10 +365,40 @@ function draw2D() {
     ctx.fillText('\u2191 Signal-to-Noise Ratio', colCenters[2], avgY + avgH + Math.min(w * 0.015, h * 0.04));
 }
 
-// ===== 3D Reconstruction (Fourier Slice Theorem) =====
+// ===== 3D Reconstruction (Fourier Slice Theorem) — Animated =====
+let anim3DId = null;
+let anim3DStart = null;
+
 function draw3D() {
+    if (anim3DId) cancelAnimationFrame(anim3DId);
+    anim3DStart = performance.now();
+    animate3DFrame();
+}
+
+function animate3DFrame() {
     const { ctx, w, h } = setupCanvas('cv3d');
     const pad = Math.min(w, h) * 0.03;
+    const elapsed = ((performance.now() - anim3DStart) / 1000) % 8;
+
+    // Animation: slices progressively fill 3D Fourier space
+    const numSlices = 10;
+    const buildEnd = 5;   // 0–5s: slices appear one by one
+    const holdEnd = 7;    // 5–7s: hold complete
+    const fadeEnd = 8;    // 7–8s: fade out & restart
+    let visibleSlices, globalFade, mapGlow;
+    if (elapsed < buildEnd) {
+        visibleSlices = (elapsed / buildEnd) * numSlices;
+        globalFade = 1;
+        mapGlow = 0;
+    } else if (elapsed < holdEnd) {
+        visibleSlices = numSlices;
+        globalFade = 1;
+        mapGlow = Math.min((elapsed - buildEnd) / 0.6, 1);
+    } else {
+        visibleSlices = numSlices;
+        globalFade = 1 - (elapsed - holdEnd) / (fadeEnd - holdEnd);
+        mapGlow = globalFade;
+    }
 
     // Layout: [3D Object] → [2D Projections] → [2D FT slices] → [3D FT] → [Inverse FT] → [3D Map]
     const steps = 5;
@@ -440,32 +470,51 @@ function draw3D() {
                 ctx.beginPath(); ctx.arc(vx, vy, 3, 0, Math.PI * 2); ctx.fill();
             }
         } else if (i === 3) {
-            // 3D Fourier: wireframe sphere with slices
+            // *** ANIMATED: slices progressively fill 3D Fourier volume ***
             drawCube(ctx, cx, cy, iconR * 0.65, stepColors[i]);
-            // Slices through cube
-            ctx.globalAlpha = 0.3;
-            ctx.fillStyle = stepColors[i];
-            for (let sl = 0; sl < 3; sl++) {
+            for (let sl = 0; sl < numSlices; sl++) {
+                if (sl > visibleSlices) break;
+                const sliceFade = Math.min(visibleSlices - sl, 1);
+                const alpha = sliceFade * globalFade;
+                if (alpha <= 0) continue;
+                const angle = (sl / numSlices) * Math.PI;
+                const isLatest = sl === Math.floor(visibleSlices) && elapsed < buildEnd;
                 ctx.save();
                 ctx.translate(cx, cy);
-                ctx.rotate(sl * Math.PI / 3);
-                ctx.fillRect(-iconR * 0.5, -1.5, iconR, 3);
+                ctx.rotate(angle);
+                ctx.globalAlpha = alpha * (isLatest ? 0.7 : 0.35);
+                ctx.fillStyle = isLatest ? '#93c5fd' : stepColors[i];
+                ctx.fillRect(-iconR * 0.55, -2, iconR * 1.1, 4);
                 ctx.restore();
             }
             ctx.globalAlpha = 1;
-            // Center
+            // Center dot
             ctx.fillStyle = stepColors[i];
             ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI * 2); ctx.fill();
+            // Slice counter
+            const cntFS = Math.round(Math.min(stepW * 0.09, h * 0.032));
+            ctx.font = `700 ${cntFS}px Inter,sans-serif`;
+            ctx.textAlign = 'center';
+            const dn = Math.min(Math.floor(visibleSlices) + 1, numSlices);
+            if (elapsed < buildEnd) {
+                ctx.fillStyle = stepColors[i];
+                ctx.fillText(`${dn}/${numSlices} slices`, cx, cy + iconR * 0.85);
+            } else {
+                ctx.fillStyle = '#10b981';
+                ctx.fillText(`${numSlices}/${numSlices} \u2713`, cx, cy + iconR * 0.85);
+            }
         } else {
-            // 3D map: solid blob
+            // 3D map: brightens when Fourier space is fully sampled
+            const mAlpha = 0.3 + mapGlow * 0.7;
+            ctx.globalAlpha = mAlpha;
             ctx.fillStyle = stepColors[i] + '30';
             ctx.beginPath(); ctx.arc(cx, cy, iconR * 0.7, 0, Math.PI * 2); ctx.fill();
             drawBlob(ctx, cx, cy, iconR * 0.55, 0.2, stepColors[i], 0);
-            // Resolution indicator
             ctx.strokeStyle = stepColors[i]; ctx.lineWidth = 2;
             ctx.setLineDash([3, 2]);
             ctx.beginPath(); ctx.arc(cx, cy, iconR * 0.72, 0, Math.PI * 2); ctx.stroke();
             ctx.setLineDash([]);
+            ctx.globalAlpha = 1;
         }
 
         // Arrow
@@ -500,6 +549,8 @@ function draw3D() {
             ctx.fillText(line, cx, cy + iconR * 1.2 + lines.length * lineH + li * lineH * 0.85 + lineH * 0.3);
         });
     }
+
+    anim3DId = requestAnimationFrame(animate3DFrame);
 }
 
 function drawCube(ctx, cx, cy, size, color) {
