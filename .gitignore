@@ -1,2 +1,5 @@
 .DS_Store
 screenshots/
+**/editor.js
+**/slide-editor.html
+**/check-slide-design.js
