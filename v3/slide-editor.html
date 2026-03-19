@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide Editor v2</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { height: 100vh; overflow: hidden; display: flex; flex-direction: column; font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #111; color: #e0e0e0; }
+
+/* ── Header ── */
+.ed-header {
+  display: flex; align-items: center; gap: 10px; padding: 8px 14px;
+  background: #1a1a2e; border-bottom: 2px solid #2a2a4a; flex-shrink: 0;
+}
+.ed-header .ed-title { font-size: 15px; font-weight: 800; color: #a78bfa; }
+.ed-nav { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.ed-nav button {
+  background: #2a2a4a; color: #ccc; border: 1px solid #444; border-radius: 6px;
+  padding: 4px 10px; cursor: pointer; font-size: 14px;
+}
+.ed-nav button:hover { background: #3a3a5a; color: #fff; }
+.ed-nav .ed-page { font-size: 13px; color: #888; min-width: 60px; text-align: center; }
+.ed-copy-menu { position: relative; }
+.ed-copy-btn {
+  background: #1a3a2e; color: #86efac; border: 1px solid #86efac44;
+  border-radius: 6px; padding: 4px 12px; cursor: pointer; font-size: 12px;
+}
+.ed-copy-btn:hover { background: #2a4a3e; }
+.ed-copy-dropdown {
+  display: none; position: absolute; top: 100%; right: 0; margin-top: 4px;
+  background: #1a1a2e; border: 1px solid #444; border-radius: 8px;
+  overflow: hidden; z-index: 100; min-width: 160px;
+}
+.ed-copy-dropdown.open { display: block; }
+.ed-copy-dropdown button {
+  display: block; width: 100%; text-align: left; padding: 8px 14px;
+  background: none; color: #ccc; border: none; cursor: pointer; font-size: 12px;
+}
+.ed-copy-dropdown button:hover { background: #2a2a4a; color: #fff; }
+
+/* ── Main ── */
+.ed-main { display: flex; flex: 1; min-height: 0; }
+
+/* ── Panel ── */
+.ed-panel {
+  width: 300px; flex-shrink: 0; background: #1a1a2e; border-right: 2px solid #2a2a4a;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.ed-panel-body { flex: 1; overflow-y: auto; padding: 10px 14px; }
+.ed-selected-info {
+  padding: 8px 10px; background: #16213e; border-radius: 8px; margin-bottom: 10px;
+  font-size: 11px; word-break: break-all;
+}
+.ed-selected-tag { color: #a78bfa; font-weight: 700; font-size: 13px; }
+.ed-selected-class { color: #888; font-size: 11px; margin-top: 2px; }
+.ed-no-select { color: #666; text-align: center; padding: 40px 10px; font-size: 13px; }
+
+/* ── Sections ── */
+.ed-section { margin-top: 12px; }
+.ed-section:first-child { margin-top: 0; }
+.ed-section-title {
+  font-size: 11px; font-weight: 700; color: #7c3aed; text-transform: uppercase;
+  letter-spacing: 0.5px; margin-bottom: 6px; padding-top: 8px;
+  border-top: 1px solid #333;
+}
+.ed-section:first-child .ed-section-title { border-top: none; padding-top: 0; }
+
+/* ── Controls ── */
+.ed-control { margin-bottom: 8px; }
+.ed-control-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+.ed-label { font-size: 11px; color: #aaa; }
+.ed-value-input {
+  font-size: 11px; color: #86efac; font-family: 'SF Mono', monospace;
+  background: #2a2a4a; border: 1px solid #444; border-radius: 4px;
+  padding: 1px 6px; width: 60px; text-align: right; outline: none;
+}
+.ed-value-input:focus { border-color: #7c3aed; }
+.ed-slider {
+  -webkit-appearance: none; width: 100%; height: 4px;
+  background: #333; border-radius: 2px; outline: none;
+}
+.ed-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 14px; height: 14px;
+  background: #7c3aed; border-radius: 50%; cursor: pointer;
+}
+.ed-slider::-webkit-slider-thumb:hover { background: #a78bfa; }
+.ed-color-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.ed-color-input {
+  width: 32px; height: 24px; border: 1px solid #444; border-radius: 4px;
+  cursor: pointer; background: none; padding: 0;
+}
+.ed-color-hex {
+  font-size: 11px; color: #86efac; font-family: 'SF Mono', monospace;
+  background: #2a2a4a; border: 1px solid #444; border-radius: 4px;
+  padding: 2px 6px; width: 80px; outline: none;
+}
+.ed-text-btn {
+  width: 100%; padding: 6px; background: #2a2a4a; color: #a78bfa;
+  border: 1px dashed #7c3aed44; border-radius: 6px; cursor: pointer;
+  font-size: 12px; margin-top: 6px;
+}
+.ed-text-btn:hover { background: #3a3a5a; }
+
+/* ── Changes Log ── */
+.ed-changes-bar {
+  padding: 6px 14px; background: #16213e; border-top: 1px solid #2a2a4a;
+  font-size: 11px; color: #888; max-height: 60px; overflow-y: auto;
+  flex-shrink: 0;
+}
+.ed-change-item { color: #86efac; }
+
+/* ── Preview ── */
+.ed-preview { flex: 1; min-width: 0; background: #222; position: relative; overflow: hidden; }
+.ed-preview iframe {
+  border: none; background: #fff;
+}
+.ed-viewport-bar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  display: flex; align-items: center; gap: 8px; padding: 6px 12px;
+  background: rgba(0,0,0,0.85); z-index: 10; flex-wrap: wrap;
+}
+.ed-vp-label { font-size: 11px; color: #888; }
+.ed-vp-input {
+  width: 55px; background: #2a2a4a; color: #86efac; border: 1px solid #444;
+  border-radius: 4px; padding: 2px 6px; font-size: 12px; text-align: center;
+  font-family: 'SF Mono', monospace; outline: none;
+}
+.ed-vp-input:focus { border-color: #7c3aed; }
+.ed-vp-x { color: #666; font-size: 12px; }
+.ed-vp-btn {
+  background: #2a2a4a; color: #aaa; border: 1px solid #444; border-radius: 4px;
+  padding: 2px 8px; cursor: pointer; font-size: 10px; white-space: nowrap;
+}
+.ed-vp-btn:hover { background: #3a3a5a; color: #fff; }
+.ed-vp-btn.active { background: #7c3aed33; color: #a78bfa; border-color: #7c3aed; }
+.ed-vp-apply {
+  background: #1a3a2e; color: #86efac; border: 1px solid #86efac44;
+  border-radius: 4px; padding: 2px 10px; cursor: pointer; font-size: 11px;
+}
+.ed-vp-apply:hover { background: #2a4a3e; }
+.ed-vp-scale { font-size: 10px; color: #666; margin-left: auto; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="ed-header">
+  <span class="ed-title">Slide Editor v2</span>
+  <div class="ed-nav">
+    <button id="btn-prev" title="Previous slide">&lsaquo;</button>
+    <span class="ed-page" id="page-info">1 / 19</span>
+    <button id="btn-next" title="Next slide">&rsaquo;</button>
+  </div>
+  <div class="ed-copy-menu">
+    <button class="ed-copy-btn" id="btn-copy">Copy &darr;</button>
+    <div class="ed-copy-dropdown" id="copy-dropdown">
+      <button id="copy-css">Copy CSS (selected)</button>
+      <button id="copy-html">Copy HTML (selected)</button>
+      <button id="copy-all">Copy All Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="ed-main">
+  <!-- Panel -->
+  <div class="ed-panel">
+    <div class="ed-panel-body" id="panel-body">
+      <div class="ed-no-select">Click an element in the slide to inspect and edit it</div>
+    </div>
+    <div class="ed-changes-bar" id="changes-bar">No changes yet</div>
+  </div>
+  <!-- Preview -->
+  <div class="ed-preview">
+    <iframe id="preview" src="overview.html"></iframe>
+    <div class="ed-viewport-bar" id="viewport-bar">
+      <span class="ed-vp-label">Viewport</span>
+      <input class="ed-vp-input" id="vp-w" type="number" min="320" max="3840" value="1920">
+      <span class="ed-vp-x">×</span>
+      <input class="ed-vp-input" id="vp-h" type="number" min="200" max="2160" value="1080">
+      <button class="ed-vp-apply" id="vp-apply">Apply</button>
+      <button class="ed-vp-btn" data-w="1920" data-h="1080">1920×1080</button>
+      <button class="ed-vp-btn" data-w="1280" data-h="720">1280×720</button>
+      <button class="ed-vp-btn" data-w="1024" data-h="768">1024×768</button>
+      <button class="ed-vp-btn" data-w="0" data-h="0">Auto</button>
+      <span class="ed-vp-scale" id="vp-scale"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  const iframe = document.getElementById('preview');
+  const panelBody = document.getElementById('panel-body');
+  const changesBar = document.getElementById('changes-bar');
+  const pageInfo = document.getElementById('page-info');
+  const vpW = document.getElementById('vp-w');
+  const vpH = document.getElementById('vp-h');
+  const vpApply = document.getElementById('vp-apply');
+  const vpScale = document.getElementById('vp-scale');
+  const vpBtns = document.querySelectorAll('.ed-vp-btn');
+
+  let iframeDoc = null;
+  let customViewport = null; // null = auto (fill container)
+  let selectedEl = null;
+  let currentSlide = 1;
+  let totalSlides = 19;
+  let changes = []; // { element, prop, oldVal, newVal }
+
+  /* ── iframe 로드 완료 ── */
+  iframe.addEventListener('load', () => {
+    iframeDoc = iframe.contentDocument;
+    injectClickHandler();
+    injectDoubleClickHandler();
+    updatePageInfo();
+    applyViewport(0, 0); // auto 모드로 초기화
+    // editor.js 비활성화 (충돌 방지)
+    const editorPanel = iframeDoc.getElementById('slide-editor');
+    if (editorPanel) editorPanel.style.display = 'none';
+  });
+
+  /* ── 뷰포트 리사이즈 ── */
+  function applyViewport(w, h) {
+    const container = iframe.parentElement;
+    const barH = document.getElementById('viewport-bar').offsetHeight;
+    const maxW = container.clientWidth;
+    const maxH = container.clientHeight - barH;
+
+    if (!w || !h) {
+      // Auto 모드: 컨테이너에 맞춤
+      customViewport = null;
+      iframe.style.width = '100%';
+      iframe.style.height = `calc(100% - ${barH}px)`;
+      iframe.style.transform = '';
+      iframe.style.transformOrigin = '';
+      vpScale.textContent = `${maxW} × ${maxH}`;
+      updateActiveBtn(0, 0);
+      return;
+    }
+
+    customViewport = { w, h };
+    const scaleX = maxW / w;
+    const scaleY = maxH / h;
+    const scale = Math.min(scaleX, scaleY, 1); // 1 이하로만 축소
+
+    iframe.style.width = w + 'px';
+    iframe.style.height = h + 'px';
+    iframe.style.transformOrigin = 'top left';
+    iframe.style.transform = scale < 1 ? `scale(${scale})` : '';
+    vpScale.textContent = scale < 1 ? `${Math.round(scale * 100)}% scale` : `${w} × ${h}`;
+    updateActiveBtn(w, h);
+  }
+
+  function updateActiveBtn(w, h) {
+    vpBtns.forEach(btn => {
+      const bw = +btn.dataset.w, bh = +btn.dataset.h;
+      btn.classList.toggle('active', bw === w && bh === h);
+    });
+  }
+
+  // Apply 버튼
+  vpApply.onclick = () => applyViewport(+vpW.value, +vpH.value);
+
+  // Enter 키로도 적용
+  vpW.onkeydown = vpH.onkeydown = (e) => { if (e.key === 'Enter') applyViewport(+vpW.value, +vpH.value); };
+
+  // 프리셋 버튼
+  vpBtns.forEach(btn => {
+    btn.onclick = () => {
+      const w = +btn.dataset.w, h = +btn.dataset.h;
+      if (w === 0) {
+        vpW.value = ''; vpH.value = '';
+        applyViewport(0, 0);
+      } else {
+        vpW.value = w; vpH.value = h;
+        applyViewport(w, h);
+      }
+    };
+  });
+
+  // 초기 상태: auto
+  window.addEventListener('resize', () => {
+    if (customViewport) applyViewport(customViewport.w, customViewport.h);
+    else applyViewport(0, 0);
+  });
+
+  /* ── 클릭 핸들러 주입 ── */
+  function injectClickHandler() {
+    iframeDoc.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      // topbar, nav 클릭은 무시
+      if (e.target.closest('.topbar')) return;
+
+      let el = e.target;
+      // 너무 상위 요소 선택 방지
+      if (el.classList.contains('slide') || el.classList.contains('slides-area')) return;
+
+      selectElement(el);
+    }, true);
+  }
+
+  /* ── 더블클릭 → 텍스트 편집 ── */
+  function injectDoubleClickHandler() {
+    iframeDoc.addEventListener('dblclick', (e) => {
+      const el = e.target;
+      // 텍스트 노드를 포함한 요소만
+      if (el.children.length === 0 || el.tagName === 'LI' || el.tagName === 'STRONG' || el.tagName === 'EM') {
+        const textEl = el.closest('li, div, h3, span, p') || el;
+        enableTextEditing(textEl);
+      }
+    }, true);
+  }
+
+  /* ── 요소 선택 ── */
+  function selectElement(el) {
+    // 이전 선택 해제
+    if (selectedEl) {
+      selectedEl.style.outline = selectedEl._origOutline || '';
+      selectedEl.style.outlineOffset = '';
+    }
+
+    selectedEl = el;
+    selectedEl._origOutline = selectedEl.style.outline || '';
+    selectedEl.style.outline = '2px solid #3b82f6';
+    selectedEl.style.outlineOffset = '2px';
+
+    buildPanel(el);
+  }
+
+  /* ── 패널 빌드 ── */
+  function buildPanel(el) {
+    const cs = iframe.contentWindow.getComputedStyle(el);
+    const tag = el.tagName.toLowerCase();
+    const cls = el.className ? '.' + el.className.split(' ').join('.') : '';
+    const id = el.id ? '#' + el.id : '';
+
+    panelBody.innerHTML = '';
+
+    // 선택 정보
+    const info = document.createElement('div');
+    info.className = 'ed-selected-info';
+    info.innerHTML = `
+      <div class="ed-selected-tag">&lt;${tag}${id}&gt;</div>
+      <div class="ed-selected-class">${cls || '(no class)'}</div>
+    `;
+    panelBody.appendChild(info);
+
+    // Layout 섹션
+    addSection('Layout');
+
+    // slide-title인 경우: transform:translateY 기반 Title Y offset 추가
+    const isSlideTitle = el.classList.contains('slide-title');
+    if (isSlideTitle) {
+      addTransformYSlider(el);
+    }
+
+    addSlider('margin-top', el, cs, 0, 120, 'px');
+    addSlider('margin-bottom', el, cs, 0, 120, 'px');
+    addSlider('margin-left', el, cs, 0, 120, 'px');
+    addSlider('margin-right', el, cs, 0, 120, 'px');
+    addSlider('padding-top', el, cs, 0, 60, 'px');
+    addSlider('padding-bottom', el, cs, 0, 60, 'px');
+    addSlider('padding-left', el, cs, 0, 60, 'px');
+    addSlider('padding-right', el, cs, 0, 60, 'px');
+    addSlider('gap', el, cs, 0, 60, 'px');
+
+    // Size 섹션
+    addSection('Size');
+    addSlider('width', el, cs, 0, 1280, 'px');
+    addSlider('max-width', el, cs, 0, 1280, 'px');
+    addSlider('min-height', el, cs, 0, 720, 'px');
+
+    // Typography 섹션
+    addSection('Typography');
+    addSlider('font-size', el, cs, 8, 80, 'px');
+    addSlider('font-weight', el, cs, 100, 900, '', 100);
+    addSlider('line-height', el, cs, 0.8, 3, '', 0.05);
+    addColor('color', el, cs);
+
+    // Background 섹션
+    addSection('Background');
+    addColor('background-color', el, cs);
+
+    // Border 섹션
+    addSection('Border');
+    addSlider('border-radius', el, cs, 0, 30, 'px');
+    addSlider('border-width', el, cs, 0, 10, 'px');
+    addColor('border-color', el, cs);
+
+    // Text edit 버튼
+    if (el.textContent.trim().length > 0 && el.children.length <= 2) {
+      addSection('Text');
+      const btn = document.createElement('button');
+      btn.className = 'ed-text-btn';
+      btn.textContent = 'Edit Text (double-click in slide)';
+      btn.onclick = () => enableTextEditing(el);
+      panelBody.querySelector('.ed-section:last-child').appendChild(btn);
+    }
+  }
+
+  /* ── 섹션 추가 ── */
+  function addSection(title) {
+    const sec = document.createElement('div');
+    sec.className = 'ed-section';
+    sec.innerHTML = `<div class="ed-section-title">${title}</div>`;
+    panelBody.appendChild(sec);
+  }
+
+  /* ── 슬라이더 추가 ── */
+  function addSlider(prop, el, cs, min, max, unit, step) {
+    let rawVal = cs.getPropertyValue(prop);
+    let numVal = parseFloat(rawVal);
+    if (isNaN(numVal)) return; // 해당 속성이 없으면 스킵
+
+    // none/auto 값 처리
+    if (rawVal === 'none' || rawVal === 'auto' || rawVal === 'normal') {
+      if (prop === 'max-width' || prop === 'min-height') numVal = 0;
+      else return;
+    }
+
+    step = step || 1;
+    const ctrl = document.createElement('div');
+    ctrl.className = 'ed-control';
+    ctrl.innerHTML = `
+      <div class="ed-control-header">
+        <span class="ed-label">${prop}</span>
+        <input class="ed-value-input" type="text" value="${numVal % 1 ? numVal.toFixed(2) : Math.round(numVal)}${unit}">
+      </div>
+      <input type="range" class="ed-slider" min="${min}" max="${max}" step="${step}" value="${numVal}">
+    `;
+    const section = panelBody.querySelector('.ed-section:last-child');
+    section.appendChild(ctrl);
+
+    const slider = ctrl.querySelector('.ed-slider');
+    const input = ctrl.querySelector('.ed-value-input');
+    const origVal = Math.round(numVal);
+
+    slider.oninput = () => {
+      const v = parseFloat(slider.value);
+      const display = v % 1 ? v.toFixed(2) : Math.round(v);
+      input.value = display + unit;
+      applyStyle(el, prop, v + (unit || ''));
+      logChange(el, prop, origVal + unit, v + unit);
+    };
+
+    input.onchange = () => {
+      const v = parseFloat(input.value);
+      if (!isNaN(v)) {
+        slider.value = v;
+        applyStyle(el, prop, v + (unit || ''));
+        logChange(el, prop, origVal + unit, v + unit);
+      }
+    };
+  }
+
+  /* ── Title Y offset (transform:translateY) ── */
+  function addTransformYSlider(el) {
+    // computed style의 matrix에서 translateY 추출 (clamp 등 복잡한 값도 처리)
+    let yVal = 0;
+    const computedTransform = iframe.contentWindow.getComputedStyle(el).transform;
+    if (computedTransform && computedTransform !== 'none') {
+      // matrix(a, b, c, d, tx, ty) → ty가 translateY
+      const matrixMatch = computedTransform.match(/matrix\([^,]+,[^,]+,[^,]+,[^,]+,[^,]+,\s*([^)]+)\)/);
+      if (matrixMatch) yVal = parseFloat(matrixMatch[1]) || 0;
+    }
+    // fallback: margin-top이 있으면 그 값 사용 (기존 슬라이드 호환)
+    if (!yVal) {
+      const mt = parseFloat(iframe.contentWindow.getComputedStyle(el).marginTop);
+      if (mt) yVal = mt;
+    }
+
+    const ctrl = document.createElement('div');
+    ctrl.className = 'ed-control';
+    ctrl.innerHTML = `
+      <div class="ed-control-header">
+        <span class="ed-label">Title Y offset</span>
+        <input class="ed-value-input" type="text" value="${Math.round(yVal)}px">
+      </div>
+      <input type="range" class="ed-slider" min="0" max="80" step="1" value="${Math.round(yVal)}">
+    `;
+    const section = panelBody.querySelector('.ed-section:last-child');
+    section.appendChild(ctrl);
+
+    const slider = ctrl.querySelector('.ed-slider');
+    const input = ctrl.querySelector('.ed-value-input');
+    const origVal = Math.round(yVal);
+
+    slider.oninput = () => {
+      const v = parseFloat(slider.value);
+      input.value = Math.round(v) + 'px';
+      // margin-top이 있으면 제거하고 transform으로 전환
+      if (el.style.marginTop) el.style.marginTop = '';
+      el.style.transform = v > 0 ? `translateY(${v}px)` : '';
+      logChange(el, 'transform(Y)', origVal + 'px', Math.round(v) + 'px');
+    };
+
+    input.onchange = () => {
+      const v = parseFloat(input.value);
+      if (!isNaN(v)) {
+        slider.value = v;
+        if (el.style.marginTop) el.style.marginTop = '';
+        el.style.transform = v > 0 ? `translateY(${v}px)` : '';
+        logChange(el, 'transform(Y)', origVal + 'px', Math.round(v) + 'px');
+      }
+    };
+  }
+
+  /* ── 컬러 피커 ── */
+  function addColor(prop, el, cs) {
+    const rawVal = cs.getPropertyValue(prop);
+    const hex = rgbToHex(rawVal);
+    if (!hex) return;
+
+    const row = document.createElement('div');
+    row.className = 'ed-color-row';
+    row.innerHTML = `
+      <span class="ed-label" style="min-width:50px">${prop.replace('background-', 'bg-')}</span>
+      <input type="color" class="ed-color-input" value="${hex}">
+      <input type="text" class="ed-color-hex" value="${hex}">
+    `;
+    const section = panelBody.querySelector('.ed-section:last-child');
+    section.appendChild(row);
+
+    const picker = row.querySelector('.ed-color-input');
+    const hexInput = row.querySelector('.ed-color-hex');
+    const origVal = hex;
+
+    picker.oninput = () => {
+      hexInput.value = picker.value;
+      applyStyle(el, prop, picker.value);
+      logChange(el, prop, origVal, picker.value);
+    };
+    hexInput.onchange = () => {
+      picker.value = hexInput.value;
+      applyStyle(el, prop, hexInput.value);
+      logChange(el, prop, origVal, hexInput.value);
+    };
+  }
+
+  /* ── 스타일 적용 ── */
+  function applyStyle(el, prop, value) {
+    // CSS property를 camelCase로 변환
+    const camel = prop.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+    el.style[camel] = value;
+  }
+
+  /* ── 텍스트 편집 ── */
+  function enableTextEditing(el) {
+    el.contentEditable = 'true';
+    el.focus();
+    el.style.outline = '2px dashed #f59e0b';
+    el.style.outlineOffset = '2px';
+    el.style.minWidth = '20px';
+
+    const handler = () => {
+      el.contentEditable = 'false';
+      el.style.outline = selectedEl === el ? '2px solid #3b82f6' : (el._origOutline || '');
+      el.style.outlineOffset = selectedEl === el ? '2px' : '';
+      el.style.minWidth = '';
+      el.removeEventListener('blur', handler);
+    };
+    el.addEventListener('blur', handler);
+  }
+
+  /* ── 변경 로그 ── */
+  function logChange(el, prop, oldVal, newVal) {
+    if (oldVal === newVal) return;
+    // 기존 변경 업데이트 또는 추가
+    const existing = changes.find(c => c.element === el && c.prop === prop);
+    if (existing) {
+      existing.newVal = newVal;
+    } else {
+      changes.push({ element: el, prop, oldVal, newVal });
+    }
+    updateChangesBar();
+  }
+
+  function updateChangesBar() {
+    if (changes.length === 0) {
+      changesBar.innerHTML = 'No changes yet';
+      return;
+    }
+    changesBar.innerHTML = changes.map(c =>
+      `<span class="ed-change-item">${c.prop}: ${c.oldVal} → ${c.newVal}</span>`
+    ).join(' &nbsp;|&nbsp; ');
+  }
+
+  /* ── 네비게이션 ── */
+  document.getElementById('btn-prev').onclick = () => navigateSlide(-1);
+  document.getElementById('btn-next').onclick = () => navigateSlide(1);
+
+  function navigateSlide(dir) {
+    if (!iframeDoc) return;
+    const goFn = iframe.contentWindow.go;
+    if (goFn) {
+      goFn(dir);
+      setTimeout(updatePageInfo, 100);
+    }
+  }
+
+  function updatePageInfo() {
+    if (!iframeDoc) return;
+    const info = iframeDoc.getElementById('page-info');
+    if (info) pageInfo.textContent = info.textContent;
+  }
+
+  // 키보드 단축키
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowLeft') navigateSlide(-1);
+    if (e.key === 'ArrowRight') navigateSlide(1);
+  });
+
+  /* ── Copy 메뉴 ── */
+  const copyBtn = document.getElementById('btn-copy');
+  const copyDropdown = document.getElementById('copy-dropdown');
+
+  copyBtn.onclick = () => copyDropdown.classList.toggle('open');
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.ed-copy-menu')) copyDropdown.classList.remove('open');
+  });
+
+  document.getElementById('copy-css').onclick = () => {
+    if (!selectedEl) return alert('Select an element first');
+    const styles = selectedEl.style.cssText;
+    copyToClipboard(`/* ${selectedEl.tagName.toLowerCase()}${selectedEl.className ? '.' + selectedEl.className.split(' ')[0] : ''} */\n${styles || '(no inline changes)'}`);
+  };
+
+  document.getElementById('copy-html').onclick = () => {
+    if (!selectedEl) return alert('Select an element first');
+    copyToClipboard(selectedEl.outerHTML);
+  };
+
+  document.getElementById('copy-all').onclick = () => {
+    if (changes.length === 0) return alert('No changes to copy');
+    const lines = changes.map(c => {
+      const tag = c.element.tagName.toLowerCase();
+      const cls = c.element.className ? '.' + c.element.className.split(' ')[0] : '';
+      return `${tag}${cls} { ${c.prop}: ${c.newVal}; }  /* was: ${c.oldVal} */`;
+    });
+    copyToClipboard(`/* Slide Editor Changes */\n${lines.join('\n')}`);
+  };
+
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => { copyBtn.textContent = 'Copy ↓'; }, 1500);
+    });
+    copyDropdown.classList.remove('open');
+  }
+
+  /* ── 유틸 ── */
+  function rgbToHex(rgb) {
+    if (!rgb || rgb === 'transparent' || rgb === 'rgba(0, 0, 0, 0)') return null;
+    if (rgb.startsWith('#')) return rgb;
+    const match = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if (!match) return null;
+    return '#' + [match[1], match[2], match[3]].map(x => parseInt(x).toString(16).padStart(2, '0')).join('');
+  }
+
+})();
+</script>
+</body>
+</html>

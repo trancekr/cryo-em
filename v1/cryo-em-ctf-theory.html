@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTF Theory</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(22px, 2.8vh, 36px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(11px, 1.3vh, 17px); color: #777; margin-top: 2px; font-weight: 500; }
+.content {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: clamp(8px, 1vw, 14px);
+  padding: clamp(4px, 0.5vh, 8px) 0;
+}
+.sec-canvas { min-height: 0; }
+.sec-canvas canvas { display: block; width: 100%; height: 100%; }
+.refs { flex-shrink: 0; font-size: clamp(8px, 0.9vh, 11px); color: #aaa; text-align: center; padding: 2px 8px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="./">&larr; Home</a>
+    <h1>Contrast Transfer Function (CTF)</h1>
+    <p>How the objective lens modulates image contrast in cryo-EM</p>
+  </div>
+  <div class="content">
+    <div class="sec-canvas"><canvas id="cv1"></canvas></div>
+    <div class="sec-canvas"><canvas id="cv2"></canvas></div>
+  </div>
+  <div class="refs">Wade &amp; Frank, Optik (1977) &middot; Penczek, Methods Enzymol (2010) &middot; Williams &amp; Carter, TEM (2009)</div>
+</div>
+
+<script>
+function setupCanvas(id) {
+    const c = document.getElementById(id);
+    const rect = c.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    c.width = Math.round(rect.width * dpr);
+    c.height = Math.round(rect.height * dpr);
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: rect.width, h: rect.height };
+}
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    if (Array.isArray(r)) { ctx.moveTo(x+r[0],y); ctx.arcTo(x+w,y,x+w,y+h,r[1]); ctx.arcTo(x+w,y+h,x,y+h,r[2]); ctx.arcTo(x,y+h,x,y,r[3]); ctx.arcTo(x,y,x+w,y,r[0]); }
+    else { ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+r,r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r); ctx.arcTo(x,y+h,x,y+h-r,r); ctx.arcTo(x,y,x+r,y,r); }
+    ctx.closePath();
+}
+
+const LAMBDA = 0.01969; // Å, 300 kV
+const CS = 2.7e7;       // Å (2.7 mm)
+function ctfValue(s, defocusA) {
+    const s2 = s * s;
+    const chi = Math.PI * (defocusA * LAMBDA * s2 - 0.5 * CS * Math.pow(LAMBDA, 3) * s2 * s2);
+    return -Math.sin(chi);
+}
+function envelope(s, B) { return Math.exp(-B * s * s / 4); }
+
+// === Left: Formula + CTF curve + Explanation ===
+function drawLeft(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 700, h / 700);
+    const pad = 14 * s;
+
+    // Card bg
+    ctx.fillStyle = '#fff';
+    roundRect(ctx, 0, 0, w, h, 10);
+    ctx.fill();
+    ctx.strokeStyle = '#e0e0e8';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, 0, 0, w, h, 10);
+    ctx.stroke();
+
+    // --- Formula box ---
+    const fmY = pad;
+    const fmH = 80 * s;
+    ctx.fillStyle = '#f8f7ff';
+    roundRect(ctx, pad, fmY, w - pad * 2, fmH, 8);
+    ctx.fill();
+    ctx.strokeStyle = '#e0ddf5';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, pad, fmY, w - pad * 2, fmH, 8);
+    ctx.stroke();
+
+    ctx.font = `bold ${Math.round(15 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#7c3aed';
+    ctx.textAlign = 'center';
+    ctx.fillText('CTF(s) = \u2212sin(\u03c7(s))', w / 2, fmY + 22 * s);
+
+    ctx.font = `${Math.round(12 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#555';
+    ctx.fillText('\u03c7(s) = \u03c0\u03bb\u0394f\u00b7s\u00b2 \u2212 \u00bd\u03c0C\u209b\u03bb\u00b3\u00b7s\u2074', w / 2, fmY + 42 * s);
+
+    // Parameter key
+    ctx.font = `${Math.round(9.5 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#888';
+    const params = [
+        '\u03bb = electron wavelength (0.0197 \u212b at 300 kV)',
+        '\u0394f = defocus (underfocus > 0, overfocus < 0)',
+        'C\u209b = spherical aberration (2.7 mm for Krios)',
+        's = spatial frequency (1/\u212b)',
+    ];
+    for (let i = 0; i < params.length; i++) {
+        ctx.fillText(params[i], w / 2, fmY + 56 * s + i * 12 * s);
+    }
+
+    // --- CTF Curve Plot ---
+    const plotTop = fmY + fmH + 16 * s;
+    const gPad = 50 * s;
+    const gx = gPad;
+    const gy = plotTop;
+    const gw = w - gPad * 1.6;
+    const gh = h * 0.32;
+    const cy = gy + gh / 2;
+
+    // Title
+    ctx.font = `bold ${Math.round(12 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#333';
+    ctx.textAlign = 'left';
+    ctx.fillText('CTF curves at different defocus values', pad + 4, gy - 6 * s);
+
+    // Plot background
+    ctx.fillStyle = '#fafbfc';
+    ctx.fillRect(gx, gy, gw, gh);
+    ctx.strokeStyle = '#e8e8f0';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(gx, gy, gw, gh);
+
+    // Zero line
+    ctx.strokeStyle = '#ddd'; ctx.lineWidth = 1;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(gx, cy); ctx.lineTo(gx + gw, cy); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Y-axis labels
+    ctx.font = `${Math.round(9 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#999';
+    ctx.textAlign = 'right';
+    ctx.fillText('+1', gx - 5, gy + 12 * s);
+    ctx.fillText('0', gx - 5, cy + 4);
+    ctx.fillText('\u22121', gx - 5, gy + gh - 4);
+
+    // X-axis labels
+    const sMax = 0.35;
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= 5; i++) {
+        const t = i / 5;
+        const xx = gx + t * gw;
+        ctx.fillText((t * sMax).toFixed(2), xx, gy + gh + 12 * s);
+        if (i > 0) {
+            ctx.strokeStyle = '#f0f0f5'; ctx.lineWidth = 0.5;
+            ctx.beginPath(); ctx.moveTo(xx, gy); ctx.lineTo(xx, gy + gh); ctx.stroke();
+        }
+    }
+    ctx.fillText('Spatial frequency s (1/\u212b)', gx + gw / 2, gy + gh + 24 * s);
+
+    // CTF curves
+    const defoci = [
+        { dA: 5000,  color: '#f59e0b', lw: 1.5, label: '\u0394f = 0.5 \u03bcm' },
+        { dA: 10000, color: '#7c3aed', lw: 2.5, label: '\u0394f = 1.0 \u03bcm' },
+        { dA: 20000, color: '#3b82f6', lw: 1.5, label: '\u0394f = 2.0 \u03bcm' },
+    ];
+    const B = 60;
+
+    for (const df of defoci) {
+        ctx.beginPath();
+        ctx.strokeStyle = df.color;
+        ctx.lineWidth = df.lw * s;
+        for (let i = 0; i <= gw; i++) {
+            const freq = (i / gw) * sMax;
+            const v = ctfValue(freq, df.dA) * envelope(freq, B);
+            const px = gx + i;
+            const py = cy - v * (gh / 2 - 4);
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+    }
+
+    // Envelope
+    ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1; ctx.setLineDash([5, 3]);
+    ctx.beginPath();
+    for (let i = 0; i <= gw; i++) {
+        const freq = (i / gw) * sMax;
+        const v = envelope(freq, B);
+        const px = gx + i, py = cy - v * (gh / 2 - 4);
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.beginPath();
+    for (let i = 0; i <= gw; i++) {
+        const freq = (i / gw) * sMax;
+        const v = -envelope(freq, B);
+        const px = gx + i, py = cy - v * (gh / 2 - 4);
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Legend
+    const legX = gx + gw - 6 * s;
+    const legY = gy + 10 * s;
+    ctx.textAlign = 'right';
+    for (let i = 0; i < defoci.length; i++) {
+        const ly = legY + i * 15 * s;
+        ctx.fillStyle = defoci[i].color;
+        ctx.fillRect(legX - 46 * s, ly - 3 * s, 12 * s, 3 * s);
+        ctx.font = `${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.fillText(defoci[i].label, legX, ly + 1);
+    }
+    ctx.fillStyle = '#ef4444';
+    ctx.setLineDash([3, 2]); ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(legX - 46 * s, legY + 42 * s); ctx.lineTo(legX - 34 * s, legY + 42 * s); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.font = `${Math.round(9 * s)}px Inter,sans-serif`;
+    ctx.fillText('Envelope', legX, legY + 46 * s);
+
+    // --- Key concepts below ---
+    const keyY = gy + gh + 38 * s;
+    ctx.font = `bold ${Math.round(11 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#333';
+    ctx.textAlign = 'left';
+    ctx.fillText('Key Observations', pad + 4, keyY);
+
+    const points = [
+        { color: '#7c3aed', text: 'CTF oscillates between +1 and \u22121 \u2192 contrast reversal at zero crossings' },
+        { color: '#3b82f6', text: 'Higher defocus = more oscillations at low frequency (more phase contrast)' },
+        { color: '#f59e0b', text: 'Lower defocus = first zero at higher frequency (wider first passband)' },
+        { color: '#ef4444', text: 'Envelope damps high-frequency signal \u2192 information limit' },
+        { color: '#666', text: 'Zero crossings = lost information \u2192 collect data at multiple defoci' },
+    ];
+
+    ctx.font = `${Math.round(10 * s)}px Inter,sans-serif`;
+    for (let i = 0; i < points.length; i++) {
+        const py = keyY + 16 * s + i * 15 * s;
+        if (py > h - 8) break;
+        ctx.fillStyle = points[i].color;
+        ctx.fillText('\u2022', pad + 6, py);
+        ctx.fillStyle = '#555';
+        ctx.fillText(points[i].text, pad + 18 * s, py);
+    }
+}
+
+// === Right: Physical Explanation ===
+function drawRight(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 500, h / 700);
+    const pad = 14 * s;
+
+    ctx.fillStyle = '#fff';
+    roundRect(ctx, 0, 0, w, h, 10);
+    ctx.fill();
+    ctx.strokeStyle = '#e0e0e8';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, 0, 0, w, h, 10);
+    ctx.stroke();
+
+    let y = pad;
+
+    // --- Section 1: Why do we need CTF? ---
+    ctx.fillStyle = '#7c3aed10';
+    roundRect(ctx, pad, y, w - pad * 2, 70 * s, 8);
+    ctx.fill();
+    ctx.strokeStyle = '#7c3aed40';
+    ctx.lineWidth = 1;
+    roundRect(ctx, pad, y, w - pad * 2, 70 * s, 8);
+    ctx.stroke();
+
+    ctx.font = `bold ${Math.round(12 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#7c3aed';
+    ctx.textAlign = 'left';
+    ctx.fillText('Why CTF Matters', pad + 10 * s, y + 16 * s);
+
+    ctx.font = `${Math.round(9.5 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#555';
+    const whyLines = [
+        'Biological samples are phase objects (nearly transparent)',
+        'The objective lens converts phase shifts into amplitude contrast',
+        'But this conversion is imperfect and frequency-dependent',
+        'CTF describes how each spatial frequency is transferred',
+    ];
+    for (let i = 0; i < whyLines.length; i++) {
+        ctx.fillText('\u2022 ' + whyLines[i], pad + 10 * s, y + 30 * s + i * 13 * s);
+    }
+
+    y += 80 * s;
+
+    // --- Section 2: Phase vs Amplitude contrast ---
+    ctx.font = `bold ${Math.round(12 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#3b82f6';
+    ctx.fillText('Phase vs Amplitude Contrast', pad + 10 * s, y + 4 * s);
+    y += 16 * s;
+
+    const contrastItems = [
+        { label: 'Phase contrast', pct: '~95%', color: '#3b82f6', desc: 'From electron phase shift through specimen' },
+        { label: 'Amplitude contrast', pct: '~5%', color: '#f59e0b', desc: 'From electron scattering/absorption' },
+    ];
+
+    for (let i = 0; i < contrastItems.length; i++) {
+        const ci = contrastItems[i];
+        const iy = y + i * 42 * s;
+
+        ctx.fillStyle = ci.color + '10';
+        roundRect(ctx, pad + 4, iy, w - pad * 2 - 8, 36 * s, 6);
+        ctx.fill();
+
+        ctx.font = `bold ${Math.round(10 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = ci.color;
+        ctx.textAlign = 'left';
+        ctx.fillText(ci.label, pad + 12 * s, iy + 14 * s);
+
+        // Percentage bar
+        const barX = pad + 12 * s;
+        const barW = (w - pad * 2 - 24 * s) * 0.5;
+        ctx.textAlign = 'right';
+        ctx.fillText(ci.pct, w - pad - 10 * s, iy + 14 * s);
+
+        ctx.font = `${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#888';
+        ctx.textAlign = 'left';
+        ctx.fillText(ci.desc, pad + 12 * s, iy + 28 * s);
+    }
+
+    y += 94 * s;
+
+    // --- Section 3: Effect of defocus ---
+    ctx.font = `bold ${Math.round(12 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#10b981';
+    ctx.fillText('Effect of Defocus on Contrast', pad + 10 * s, y);
+    y += 14 * s;
+
+    const defocusItems = [
+        { label: 'In focus (\u0394f = 0)', desc: 'No phase contrast! Specimen nearly invisible', icon: '\u2717', iconColor: '#ef4444' },
+        { label: 'Underfocus (\u0394f > 0)', desc: 'Standard for cryo-EM (0.5\u20132.5 \u03bcm)', icon: '\u2713', iconColor: '#10b981' },
+        { label: 'More underfocus', desc: 'More contrast but faster oscillation \u2192 lower resolution', icon: '\u26A0', iconColor: '#f59e0b' },
+    ];
+
+    for (let i = 0; i < defocusItems.length; i++) {
+        const di = defocusItems[i];
+        const iy = y + i * 36 * s;
+
+        ctx.fillStyle = di.iconColor;
+        ctx.font = `${Math.round(13 * s)}px Inter,sans-serif`;
+        ctx.textAlign = 'left';
+        ctx.fillText(di.icon, pad + 8 * s, iy + 12 * s);
+
+        ctx.font = `bold ${Math.round(10 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#333';
+        ctx.fillText(di.label, pad + 24 * s, iy + 10 * s);
+
+        ctx.font = `${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#888';
+        ctx.fillText(di.desc, pad + 24 * s, iy + 24 * s);
+    }
+
+    y += 118 * s;
+
+    // --- Section 4: Zero crossings & CTF correction ---
+    ctx.font = `bold ${Math.round(12 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#ef4444';
+    ctx.fillText('Zero Crossings & CTF Correction', pad + 10 * s, y);
+    y += 16 * s;
+
+    ctx.font = `${Math.round(9.5 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#555';
+    const corrLines = [
+        'At zero crossings, CTF = 0 \u2192 no information transferred',
+        'Between crossings, CTF sign flips \u2192 contrast inverts',
+        'CTF correction: divide by CTF (phase-flip or Wiener filter)',
+        'Multiple defoci fill in zero-crossing gaps',
+        'Accurate CTF estimation is critical for high-resolution reconstruction',
+    ];
+    for (let i = 0; i < corrLines.length; i++) {
+        const ly = y + i * 14 * s;
+        if (ly > h - 10) break;
+        ctx.fillStyle = '#ef4444';
+        ctx.fillText('\u2022', pad + 8 * s, ly);
+        ctx.fillStyle = '#555';
+        ctx.fillText(corrLines[i], pad + 20 * s, ly);
+    }
+
+    y += 80 * s;
+
+    // --- Section 5: Practical tip box ---
+    if (y + 46 * s < h) {
+        ctx.fillStyle = '#f0fdf4';
+        roundRect(ctx, pad, y, w - pad * 2, 42 * s, 8);
+        ctx.fill();
+        ctx.strokeStyle = '#86efac';
+        ctx.lineWidth = 1;
+        roundRect(ctx, pad, y, w - pad * 2, 42 * s, 8);
+        ctx.stroke();
+
+        ctx.font = `bold ${Math.round(10 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#059669';
+        ctx.textAlign = 'left';
+        ctx.fillText('Practical Tip', pad + 10 * s, y + 14 * s);
+        ctx.font = `${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#555';
+        ctx.fillText('Typical cryo-EM: collect at 0.5\u20132.5 \u03bcm underfocus,', pad + 10 * s, y + 28 * s);
+        ctx.fillText('then computationally correct CTF during reconstruction', pad + 10 * s, y + 40 * s);
+    }
+}
+
+function renderAll() { drawLeft('cv1'); drawRight('cv2'); }
+window.addEventListener('DOMContentLoaded', renderAll);
+window.addEventListener('resize', () => { clearTimeout(window._rt); window._rt = setTimeout(renderAll, 150); });
+</script>
+</body>
+</html>

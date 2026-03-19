@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Map Refinement &amp; Optimization</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(22px, 2.8vh, 36px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(11px, 1.3vh, 17px); color: #777; margin-top: 2px; font-weight: 500; }
+
+.sec-canvas {
+  flex: 1; min-height: 0;
+  padding: clamp(4px, 0.5vh, 8px) 0;
+}
+.sec-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="./">&larr; Home</a>
+    <h1>Map Refinement &amp; Optimization</h1>
+    <p>From initial reconstruction to publication-quality density map</p>
+  </div>
+
+  <div class="sec-canvas"><canvas id="cvPipeline"></canvas></div>
+  <div style="flex-shrink:0;font-size:clamp(8px,0.9vh,11px);color:#aaa;text-align:center;padding:2px 8px;">Scheres, J Struct Biol (2012) &middot; Punjani et al., Nat Methods (2017)</div>
+</div>
+
+<script>
+function setupCanvas(id) {
+    const c = document.getElementById(id);
+    const rect = c.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    c.width = Math.round(rect.width * dpr);
+    c.height = Math.round(rect.height * dpr);
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: rect.width, h: rect.height };
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    if (Array.isArray(r)) {
+        ctx.moveTo(x + r[0], y);
+        ctx.arcTo(x + w, y, x + w, y + h, r[1]);
+        ctx.arcTo(x + w, y + h, x, y + h, r[2]);
+        ctx.arcTo(x, y + h, x, y, r[3]);
+        ctx.arcTo(x, y, x + w, y, r[0]);
+    } else {
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + r, r);
+        ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+        ctx.arcTo(x, y + h, x, y + h - r, r);
+        ctx.arcTo(x, y, x + r, y, r);
+    }
+    ctx.closePath();
+}
+
+function drawPipeline(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 1050, h / 520);
+    const pad = 20 * s;
+
+    // Main pipeline: 6 steps in 2 rows
+    // Row 1: Ab Initio → Heterogeneous Refinement → Homogeneous Refinement
+    // Row 2: Non-uniform Refinement → CTF Refinement → Post-processing
+    // Plus branches: Local Refinement, 3D Variability
+
+    const nodes = [
+        // Row 1
+        { id: 'abinit', x: 0.12, y: 0.18, title: 'Ab Initio\nReconstruction', desc: 'Generate initial\n3D volume from\n2D class averages', color: '#8b5cf6', res: '~15-20 \u212b', row: 0 },
+        { id: 'hetero', x: 0.38, y: 0.18, title: 'Heterogeneous\nRefinement', desc: 'Sort particles into\nmultiple 3D classes\n(conformations)', color: '#ec4899', res: '~8-12 \u212b', row: 0 },
+        { id: 'homo', x: 0.64, y: 0.18, title: 'Homogeneous\nRefinement', desc: 'Refine single best\nclass with all\nassigned particles', color: '#f59e0b', res: '~4-6 \u212b', row: 0 },
+        // Row 2
+        { id: 'nu', x: 0.12, y: 0.58, title: 'Non-uniform\nRefinement', desc: 'Account for local\nresolution variation\n(flexible regions)', color: '#3b82f6', res: '~3-4 \u212b', row: 1 },
+        { id: 'ctfref', x: 0.38, y: 0.58, title: 'CTF\nRefinement', desc: 'Per-particle defocus\nbeam tilt, trefoil\nastigmatism correction', color: '#7c3aed', res: '+0.2-0.5 \u212b', row: 1 },
+        { id: 'post', x: 0.64, y: 0.58, title: 'Post-\nprocessing', desc: 'Sharpening (B-factor)\nMasking, FSC\nLocal resolution', color: '#10b981', res: 'Final map', row: 1 },
+    ];
+
+    // Branch nodes
+    const branches = [
+        { id: 'local', x: 0.88, y: 0.18, title: 'Local\nRefinement', desc: 'Focus on specific\ndomain/region', color: '#06b6d4', from: 'homo' },
+        { id: 'var', x: 0.88, y: 0.58, title: '3D Variability\nAnalysis', desc: 'Continuous motion\nflexibility analysis', color: '#6366f1', from: 'homo' },
+    ];
+
+    const nodeW = w * 0.2;
+    const nodeH = h * 0.3;
+
+    // Draw connections first (below nodes)
+    // Row 1 arrows
+    drawNodeArrow(ctx, w, h, s, nodes[0], nodes[1], nodeW);
+    drawNodeArrow(ctx, w, h, s, nodes[1], nodes[2], nodeW);
+
+    // Row 1 → Row 2 (from homo to NU: turn corner)
+    const homoNode = nodes[2];
+    const nuNode = nodes[3];
+    const turnX = w * homoNode.x + nodeW / 2;
+    const turnY1 = h * homoNode.y + nodeH;
+    const turnY2 = h * nuNode.y + nodeH / 2;
+    const turnX2 = w * nuNode.x + nodeW;
+
+    ctx.strokeStyle = '#aaa';
+    ctx.lineWidth = 2 * s;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(turnX, turnY1);
+    ctx.lineTo(turnX, h * 0.43);
+    ctx.lineTo(w * 0.06, h * 0.43);
+    ctx.lineTo(w * 0.06, turnY2);
+    ctx.lineTo(turnX2 - nodeW + w * nuNode.x, turnY2);
+    ctx.stroke();
+    // Arrowhead
+    const ahx = w * nuNode.x;
+    ctx.fillStyle = '#aaa';
+    ctx.beginPath();
+    ctx.moveTo(ahx, turnY2 - 5 * s);
+    ctx.lineTo(ahx - 8 * s, turnY2);
+    ctx.lineTo(ahx, turnY2 + 5 * s);
+    ctx.fill();
+
+    // Row 2 arrows
+    drawNodeArrow(ctx, w, h, s, nodes[3], nodes[4], nodeW);
+    drawNodeArrow(ctx, w, h, s, nodes[4], nodes[5], nodeW);
+
+    // Branch arrows (dashed)
+    for (const br of branches) {
+        const fromNode = nodes.find(n => n.id === br.from);
+        ctx.strokeStyle = br.color + '80';
+        ctx.lineWidth = 1.5 * s;
+        ctx.setLineDash([5, 3]);
+        const fx = w * fromNode.x + nodeW;
+        const fy = h * fromNode.y + nodeH / 2;
+        const tx = w * br.x;
+        const ty = h * br.y + nodeH / 2;
+        ctx.beginPath();
+        ctx.moveTo(fx, fy);
+        ctx.lineTo(tx, ty);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        // Arrowhead
+        ctx.fillStyle = br.color + '80';
+        ctx.beginPath();
+        ctx.moveTo(tx, ty - 4 * s);
+        ctx.lineTo(tx - 7 * s, ty);
+        ctx.lineTo(tx, ty + 4 * s);
+        ctx.fill();
+    }
+
+    // Iterative loop: NU → CTF Ref → NU (dashed loop below)
+    const loopY = h * 0.82;
+    ctx.strokeStyle = '#7c3aed50';
+    ctx.lineWidth = 1.5 * s;
+    ctx.setLineDash([4, 3]);
+    const nuCX = w * nodes[3].x + nodeW / 2;
+    const ctfCX = w * nodes[4].x + nodeW / 2;
+    ctx.beginPath();
+    ctx.moveTo(ctfCX, h * nodes[4].y + nodeH);
+    ctx.lineTo(ctfCX, loopY);
+    ctx.lineTo(nuCX, loopY);
+    ctx.lineTo(nuCX, h * nodes[3].y + nodeH);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    // Label
+    ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#7c3aed';
+    ctx.textAlign = 'center';
+    ctx.fillText('Iterate 2-3\u00d7', (nuCX + ctfCX) / 2, loopY + 12 * s);
+    // Arrow on the loop
+    ctx.fillStyle = '#7c3aed50';
+    ctx.beginPath();
+    ctx.moveTo(nuCX - 4 * s, h * nodes[3].y + nodeH + 7 * s);
+    ctx.lineTo(nuCX, h * nodes[3].y + nodeH);
+    ctx.lineTo(nuCX + 4 * s, h * nodes[3].y + nodeH + 7 * s);
+    ctx.fill();
+
+    // Draw main nodes
+    for (const node of nodes) {
+        drawNode(ctx, w, h, s, node, nodeW, nodeH);
+    }
+
+    // Draw branch nodes (smaller)
+    const brNodeW = nodeW * 0.75;
+    const brNodeH = nodeH * 0.8;
+    for (const br of branches) {
+        drawNode(ctx, w, h, s, br, brNodeW, brNodeH, true);
+    }
+
+    // Resolution improvement bar at bottom
+    const barY = h * 0.92;
+    const barX = pad;
+    const barW = w - pad * 2;
+    const barH = 18 * s;
+
+    // Gradient bar
+    const grad = ctx.createLinearGradient(barX, 0, barX + barW * 0.82, 0);
+    grad.addColorStop(0, '#8b5cf6');
+    grad.addColorStop(0.2, '#ec4899');
+    grad.addColorStop(0.4, '#f59e0b');
+    grad.addColorStop(0.6, '#3b82f6');
+    grad.addColorStop(0.8, '#7c3aed');
+    grad.addColorStop(1, '#10b981');
+    ctx.fillStyle = grad;
+    roundRect(ctx, barX, barY, barW * 0.82, barH, 4);
+    ctx.fill();
+
+    // Resolution markers on bar
+    const resMarkers = [
+        { pos: 0, label: '~20 \u212b' },
+        { pos: 0.2, label: '~10 \u212b' },
+        { pos: 0.4, label: '~5 \u212b' },
+        { pos: 0.6, label: '~3.5 \u212b' },
+        { pos: 0.8, label: '~3 \u212b' },
+        { pos: 1.0, label: 'Final' },
+    ];
+    ctx.font = `bold ${Math.round(8 * s)}px Inter, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#fff';
+    for (const m of resMarkers) {
+        const mx = barX + m.pos * barW * 0.82;
+        if (mx < barX + barW * 0.82 - 20 * s) {
+            ctx.fillText(m.label, mx + 10 * s, barY + barH / 2 + 3 * s);
+        }
+    }
+
+    // Label
+    ctx.fillStyle = '#888';
+    ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+    ctx.textAlign = 'left';
+    ctx.fillText('Resolution improves \u2192', barX + barW * 0.84, barY + barH / 2 + 3 * s);
+}
+
+function drawNode(ctx, w, h, s, node, nodeW, nodeH, isBranch) {
+    const nx = w * node.x;
+    const ny = h * node.y;
+
+    // Shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.04)';
+    roundRect(ctx, nx + 2, ny + 2, nodeW, nodeH, 10);
+    ctx.fill();
+
+    // Background
+    ctx.fillStyle = node.color + '0a';
+    roundRect(ctx, nx, ny, nodeW, nodeH, 10);
+    ctx.fill();
+
+    // Border
+    ctx.strokeStyle = node.color;
+    ctx.lineWidth = isBranch ? 1.5 : 2;
+    if (isBranch) ctx.setLineDash([4, 2]);
+    roundRect(ctx, nx, ny, nodeW, nodeH, 10);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Color strip at top
+    ctx.fillStyle = node.color;
+    roundRect(ctx, nx, ny, nodeW, 4, [10, 10, 0, 0]);
+    ctx.fill();
+
+    // Title
+    ctx.font = `bold ${Math.round((isBranch ? 11 : 12) * s)}px Inter, sans-serif`;
+    ctx.fillStyle = node.color;
+    ctx.textAlign = 'center';
+    const titleLines = node.title.split('\n');
+    const titleStartY = ny + 18 * s;
+    titleLines.forEach((l, i) => ctx.fillText(l, nx + nodeW / 2, titleStartY + i * 14 * s));
+
+    // Description
+    ctx.font = `${Math.round((isBranch ? 8 : 9) * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#666';
+    const descLines = node.desc.split('\n');
+    const descStartY = titleStartY + titleLines.length * 14 * s + 8 * s;
+    descLines.forEach((l, i) => {
+        const py = descStartY + i * 12 * s;
+        if (py < ny + nodeH - 18 * s) ctx.fillText(l, nx + nodeW / 2, py);
+    });
+
+    // Resolution badge
+    if (node.res) {
+        const badgeY = ny + nodeH - 16 * s;
+        const badgeW = Math.min(nodeW * 0.6, 80 * s);
+        ctx.fillStyle = node.color + '15';
+        roundRect(ctx, nx + (nodeW - badgeW) / 2, badgeY - 4, badgeW, 16 * s, 8);
+        ctx.fill();
+        ctx.font = `bold ${Math.round(9 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = node.color;
+        ctx.fillText(node.res, nx + nodeW / 2, badgeY + 8 * s);
+    }
+}
+
+function drawNodeArrow(ctx, w, h, s, from, to, nodeW) {
+    const fx = w * from.x + nodeW;
+    const fy = h * from.y + h * 0.15; // midpoint
+    const tx = w * to.x;
+    const ty = fy;
+
+    ctx.strokeStyle = '#aaa';
+    ctx.lineWidth = 2 * s;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(fx, fy);
+    ctx.lineTo(tx, ty);
+    ctx.stroke();
+
+    // Arrowhead
+    ctx.fillStyle = '#aaa';
+    ctx.beginPath();
+    ctx.moveTo(tx, ty - 5 * s);
+    ctx.lineTo(tx - 8 * s, ty);
+    ctx.lineTo(tx, ty + 5 * s);
+    ctx.fill();
+}
+
+// ===== Init =====
+function renderAll() {
+    drawPipeline('cvPipeline');
+}
+
+window.addEventListener('DOMContentLoaded', renderAll);
+window.addEventListener('resize', () => {
+    clearTimeout(window._resizeTimer);
+    window._resizeTimer = setTimeout(renderAll, 150);
+});
+</script>
+</body>
+</html>

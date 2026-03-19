@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Small Protein Challenges in Cryo-EM</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(24px, 3vh, 38px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(12px, 1.4vh, 18px); color: #777; margin-top: 2px; font-weight: 500; }
+
+.content {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-rows: 55fr 45fr;
+  gap: clamp(8px, 1vh, 14px);
+  padding: clamp(4px, 0.5vh, 8px) 0;
+}
+
+.row1 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(8px, 1vh, 14px);
+  min-height: 0;
+}
+.row2 { min-height: 0; }
+
+.panel {
+  background: #fff;
+  border: 2px solid #e0e0e8;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.panel:hover { border-color: #c4b5fd; }
+
+.panel-header {
+  padding: clamp(6px, 0.8vh, 12px) clamp(10px, 1vw, 16px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  border-bottom: 1.5px solid #f0f0f5;
+}
+.panel-dot {
+  width: clamp(8px, 1vh, 12px);
+  height: clamp(8px, 1vh, 12px);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.panel-title {
+  font-size: clamp(13px, 1.5vh, 19px);
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.panel-canvas {
+  flex: 1; min-height: 0;
+}
+.panel-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Strategy cards grid */
+.cards-grid {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(6px, 0.8vh, 10px);
+  padding: clamp(6px, 0.8vh, 10px);
+}
+.card {
+  background: #fafafa;
+  border: 1.5px solid #e8e8f0;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.card-icon {
+  flex: 1; min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-icon canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.card-body {
+  padding: clamp(4px, 0.6vh, 10px) clamp(6px, 0.6vw, 10px);
+  border-top: 1px solid #eee;
+}
+.card-name {
+  font-size: clamp(12px, 1.4vh, 17px);
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+.card-desc {
+  font-size: clamp(10px, 1.2vh, 14px);
+  color: #666;
+  line-height: 1.4;
+}
+.card-mw {
+  display: inline-block;
+  margin-top: 3px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: clamp(10px, 1.1vh, 13px);
+  font-weight: 700;
+}
+
+.footer {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 2px 0;
+  font-size: clamp(9px, 1vh, 12px);
+  color: #aaa;
+}
+
+@media (max-width: 900px) {
+  .row1 { grid-template-columns: 1fr; }
+  .cards-grid { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="./">← Home</a>
+    <h1>Small Protein Challenges in Cryo-EM</h1>
+    <p>Strategies for imaging proteins below 100 kDa</p>
+  </div>
+
+  <div class="content">
+    <!-- Row 1: The Problem -->
+    <div class="row1">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-dot" style="background:#ef4444"></div>
+          <span class="panel-title">UniProtKB vs EMDB Size Distribution</span>
+        </div>
+        <div class="panel-canvas"><canvas id="cvDistrib"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-dot" style="background:#3b82f6"></div>
+          <span class="panel-title">MW vs Resolution — "Are We There Yet?"</span>
+        </div>
+        <div class="panel-canvas"><canvas id="cvScatter"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Row 2: Size-Augmentation Strategies -->
+    <div class="panel row2">
+      <div class="panel-header">
+        <div class="panel-dot" style="background:#10b981"></div>
+        <span class="panel-title">Size-Augmentation Strategies</span>
+      </div>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon"><canvas id="cvNano"></canvas></div>
+          <div class="card-body">
+            <div class="card-name">Nanobody Fusion</div>
+            <div class="card-desc">NabFab / Megabody: Nb fused to large scaffold</div>
+            <div class="card-mw" style="background:#dcfce7; color:#166534">+50–80 kDa</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-icon"><canvas id="cvLego"></canvas></div>
+          <div class="card-body">
+            <div class="card-name">Legobody</div>
+            <div class="card-desc">Chimeric Fab with rigid VHH–CH1 interface</div>
+            <div class="card-mw" style="background:#dbeafe; color:#1e40af">+50 kDa</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-icon"><canvas id="cvScaff"></canvas></div>
+          <div class="card-body">
+            <div class="card-name">Symmetric Scaffold</div>
+            <div class="card-desc">Fuse to oligomeric scaffold (ferritin 24-mer)</div>
+            <div class="card-mw" style="background:#fef3c7; color:#92400e">×N symmetry</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-icon"><canvas id="cvFab"></canvas></div>
+          <div class="card-body">
+            <div class="card-name">Rigid Fab Binding</div>
+            <div class="card-desc">Adds mass &amp; breaks symmetry for alignment</div>
+            <div class="card-mw" style="background:#f3e8ff; color:#6b21a8">+50 kDa / Fab</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-icon"><canvas id="cvPhase"></canvas></div>
+          <div class="card-body">
+            <div class="card-name">Phase Plate</div>
+            <div class="card-desc">Volta / Laser: boosts contrast (limited adoption)</div>
+            <div class="card-mw" style="background:#fce7f3; color:#9d174d">Contrast ↑</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Henderson (1995) Q Rev Biophys · Herzik et al. (2019) Nat Commun · Wu &amp; Bhatt (2023) Curr Opin Struct Biol
+  </div>
+</div>
+
+<script>
+const dpr = window.devicePixelRatio || 1;
+
+function initCanvas(id) {
+  const c = document.getElementById(id);
+  const p = c.parentElement;
+  const w = p.clientWidth, h = p.clientHeight;
+  c.width = w * dpr; c.height = h * dpr;
+  const ctx = c.getContext('2d');
+  ctx.scale(dpr, dpr);
+  return { ctx, w, h };
+}
+
+function F(h, level) {
+  switch(level) {
+    case 'xl': return Math.round(Math.min(Math.max(h * 0.075, 14), 30));
+    case 'lg': return Math.round(Math.min(Math.max(h * 0.06, 12), 24));
+    case 'md': return Math.round(Math.min(Math.max(h * 0.05, 11), 20));
+    case 'sm': return Math.round(Math.min(Math.max(h * 0.04, 10), 16));
+  }
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+/* ============================================================
+   Panel 1: UniProtKB vs EMDB Size Distribution (Bar Chart)
+   ============================================================ */
+function drawDistribution() {
+  const { ctx, w, h } = initCanvas('cvDistrib');
+  const axisFs = F(h, 'sm');
+  const labelFs = F(h, 'md');
+  const pad = { top: 24, bottom: axisFs * 2 + 16, left: axisFs * 4 + 8, right: 16 };
+  const cw = w - pad.left - pad.right;
+  const ch = h - pad.top - pad.bottom;
+
+  const bins = [
+    { label: '<25', uniprot: 28, emdb: 1 },
+    { label: '25-50', uniprot: 30, emdb: 3 },
+    { label: '50-100', uniprot: 24, emdb: 8 },
+    { label: '100-200', uniprot: 12, emdb: 22 },
+    { label: '200-500', uniprot: 4, emdb: 32 },
+    { label: '500-1k', uniprot: 1.5, emdb: 22 },
+    { label: '>1000', uniprot: 0.5, emdb: 12 },
+  ];
+  const maxVal = 35;
+  const barW = cw / bins.length;
+  const barPair = barW * 0.35;
+
+  // Grid
+  ctx.strokeStyle = '#eee'; ctx.lineWidth = 1;
+  for (let v = 0; v <= maxVal; v += 5) {
+    const y = pad.top + ch - (v / maxVal) * ch;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + cw, y); ctx.stroke();
+  }
+
+  // Bars
+  bins.forEach((b, i) => {
+    const x = pad.left + i * barW + barW * 0.1;
+    const h1 = (b.uniprot / maxVal) * ch;
+    ctx.fillStyle = '#3b82f6';
+    roundRect(ctx, x, pad.top + ch - h1, barPair, h1, 3); ctx.fill();
+    const h2 = (b.emdb / maxVal) * ch;
+    ctx.fillStyle = '#ef4444';
+    roundRect(ctx, x + barPair + 2, pad.top + ch - h2, barPair, h2, 3); ctx.fill();
+
+    ctx.fillStyle = '#555';
+    ctx.font = `600 ${axisFs}px Inter`;
+    ctx.textAlign = 'center';
+    ctx.fillText(b.label, x + barPair + 1, pad.top + ch + axisFs + 4);
+  });
+
+  // X axis label
+  ctx.fillStyle = '#888';
+  ctx.font = `600 ${labelFs}px Inter`;
+  ctx.textAlign = 'center';
+  ctx.fillText('Molecular Weight (kDa)', pad.left + cw / 2, h - 4);
+
+  // Y axis label
+  ctx.save();
+  ctx.translate(14, pad.top + ch / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('% of entries', 0, 0);
+  ctx.restore();
+
+  // Y ticks
+  ctx.fillStyle = '#888';
+  ctx.font = `500 ${axisFs}px Inter`;
+  ctx.textAlign = 'right';
+  for (let v = 0; v <= maxVal; v += 10) {
+    const y = pad.top + ch - (v / maxVal) * ch;
+    ctx.fillText(v + '%', pad.left - 6, y + 4);
+  }
+
+  // 100 kDa boundary
+  const bx = pad.left + 3 * barW;
+  ctx.setLineDash([4, 3]); ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(bx, pad.top - 4); ctx.lineTo(bx, pad.top + ch); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#f59e0b';
+  ctx.font = `700 ${labelFs}px Inter`;
+  ctx.textAlign = 'center';
+  ctx.fillText('100 kDa', bx, pad.top - 7);
+
+  // Legend
+  const lx = pad.left + cw - labelFs * 12, ly = pad.top + 8;
+  ctx.fillStyle = '#3b82f6'; ctx.fillRect(lx, ly, 12, 12);
+  ctx.fillStyle = '#333'; ctx.font = `600 ${axisFs}px Inter`; ctx.textAlign = 'left';
+  ctx.fillText('UniProtKB', lx + 16, ly + 11);
+  ctx.fillStyle = '#ef4444'; ctx.fillRect(lx + axisFs * 6, ly, 12, 12);
+  ctx.fillStyle = '#333'; ctx.fillText('EMDB', lx + axisFs * 6 + 16, ly + 11);
+
+  // Shade regions
+  ctx.fillStyle = 'rgba(239,68,68,0.06)';
+  ctx.fillRect(pad.left, pad.top, bx - pad.left, ch);
+  ctx.fillStyle = 'rgba(59,130,246,0.04)';
+  ctx.fillRect(bx, pad.top, pad.left + cw - bx, ch);
+}
+
+/* ============================================================
+   Panel 2: MW vs Resolution Scatter Plot
+   ============================================================ */
+function drawScatter() {
+  const { ctx, w, h } = initCanvas('cvScatter');
+  const axisFs = F(h, 'sm');
+  const labelFs = F(h, 'md');
+  const pad = { top: 20, bottom: axisFs * 2 + 16, left: axisFs * 4 + 8, right: 16 };
+  const cw = w - pad.left - pad.right;
+  const ch = h - pad.top - pad.bottom;
+
+  const mwRange = [10, 5000], resRange = [1.5, 15];
+  function xPos(mw) { return pad.left + (Math.log10(mw) - Math.log10(mwRange[0])) / (Math.log10(mwRange[1]) - Math.log10(mwRange[0])) * cw; }
+  function yPos(res) { return pad.top + (res - resRange[0]) / (resRange[1] - resRange[0]) * ch; }
+
+  // Grid
+  ctx.strokeStyle = '#eee'; ctx.lineWidth = 1;
+  [10, 50, 100, 500, 1000, 5000].forEach(mw => {
+    const x = xPos(mw);
+    ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, pad.top + ch); ctx.stroke();
+  });
+  [2, 4, 6, 8, 10, 12, 14].forEach(r => {
+    const y = yPos(r);
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + cw, y); ctx.stroke();
+  });
+
+  // 100 kDa boundary
+  const bx100 = xPos(100);
+  ctx.setLineDash([5, 3]); ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(bx100, pad.top); ctx.lineTo(bx100, pad.top + ch); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Shade
+  ctx.fillStyle = 'rgba(239,68,68,0.05)';
+  ctx.fillRect(pad.left, pad.top, bx100 - pad.left, ch);
+
+  // Henderson limit
+  const hendersonX = xPos(38);
+  ctx.setLineDash([3, 3]); ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(hendersonX, pad.top); ctx.lineTo(hendersonX, pad.top + ch); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#ef4444';
+  ctx.font = `600 ${axisFs}px Inter`;
+  ctx.textAlign = 'center';
+  ctx.fillText('Henderson', hendersonX, pad.top + ch - axisFs - 6);
+  ctx.fillText('limit ~38 kDa', hendersonX, pad.top + ch - 4);
+
+  // Data points
+  const data = [
+    {mw:800,r:2.5},{mw:700,r:2.8},{mw:600,r:3.0},{mw:500,r:2.9},{mw:900,r:3.2},
+    {mw:1200,r:3.1},{mw:1500,r:3.4},{mw:2000,r:3.5},{mw:400,r:3.0},{mw:350,r:3.3},
+    {mw:450,r:2.7},{mw:550,r:3.5},{mw:650,r:2.6},{mw:750,r:3.8},{mw:850,r:3.1},
+    {mw:1000,r:3.0},{mw:1100,r:3.6},{mw:1300,r:2.9},{mw:1800,r:4.0},{mw:3000,r:3.8},
+    {mw:300,r:3.2},{mw:250,r:3.5},{mw:280,r:3.8},{mw:320,r:4.2},{mw:380,r:3.0},
+    {mw:200,r:3.0},{mw:210,r:3.8},{mw:190,r:4.2},{mw:150,r:3.2},{mw:160,r:3.8},
+    {mw:170,r:4.0},{mw:140,r:4.3},{mw:130,r:3.9},{mw:120,r:4.1},{mw:110,r:4.5},
+    {mw:90,r:3.5},{mw:85,r:4.0},{mw:80,r:4.2},{mw:75,r:4.8},{mw:95,r:3.8},
+    {mw:70,r:5.0},{mw:65,r:4.5},{mw:60,r:5.5},{mw:55,r:6.0},{mw:50,r:5.8},
+    {mw:45,r:7.0},{mw:52,r:4.8},{mw:48,r:8.0},{mw:42,r:9.0},{mw:39,r:6.5},
+    {mw:64,r:3.8},{mw:72,r:4.0},{mw:58,r:5.2},{mw:43,r:10},
+  ];
+  data.forEach(d => {
+    const x = xPos(d.mw), y = yPos(d.r);
+    ctx.fillStyle = d.mw < 100 ? 'rgba(239,68,68,0.6)' : 'rgba(59,130,246,0.4)';
+    ctx.beginPath(); ctx.arc(x, y, d.mw < 100 ? 4.5 : 3.5, 0, Math.PI * 2); ctx.fill();
+  });
+
+  // Axes labels
+  ctx.fillStyle = '#888'; ctx.font = `600 ${labelFs}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Molecular Weight (kDa, log scale)', pad.left + cw / 2, h - 4);
+  ctx.save();
+  ctx.translate(14, pad.top + ch / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Resolution (Å)', 0, 0);
+  ctx.restore();
+
+  // X ticks
+  ctx.font = `500 ${axisFs}px Inter`; ctx.textAlign = 'center'; ctx.fillStyle = '#888';
+  [10, 50, 100, 500, 1000, 5000].forEach(mw => {
+    ctx.fillText(mw >= 1000 ? (mw / 1000) + 'k' : mw, xPos(mw), pad.top + ch + axisFs + 4);
+  });
+  // Y ticks
+  ctx.textAlign = 'right';
+  [2, 4, 6, 8, 10, 12, 14].forEach(r => {
+    ctx.fillText(r + 'Å', pad.left - 6, yPos(r) + 4);
+  });
+
+  // Labels
+  ctx.fillStyle = '#f59e0b'; ctx.font = `700 ${labelFs}px Inter`; ctx.textAlign = 'left';
+  ctx.fillText('100 kDa', bx100 + 4, pad.top + 18);
+  ctx.fillStyle = '#ef4444'; ctx.font = `italic 700 ${F(h, 'lg')}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Challenge Zone', (pad.left + bx100) / 2, pad.top + 20);
+}
+
+/* ============================================================
+   Strategy Card Canvases
+   ============================================================ */
+function drawNanobody() {
+  const { ctx, w, h } = initCanvas('cvNano');
+  const cx = w / 2, cy = h / 2, s = Math.min(w, h) * 0.35;
+  const fs = F(h, 'sm');
+
+  ctx.fillStyle = '#dbeafe'; ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(cx - s * 0.4, cy, s * 0.35, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#3b82f6'; ctx.font = `700 ${fs}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Target', cx - s * 0.4, cy + 4);
+
+  ctx.strokeStyle = '#999'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + s * 0.15, cy); ctx.stroke();
+  ctx.fillStyle = '#999'; ctx.beginPath();
+  ctx.moveTo(cx + s * 0.15, cy - 4); ctx.lineTo(cx + s * 0.22, cy); ctx.lineTo(cx + s * 0.15, cy + 4); ctx.fill();
+
+  ctx.fillStyle = '#dcfce7'; ctx.strokeStyle = '#16a34a'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(cx + s * 0.55, cy, s * 0.55, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#dbeafe'; ctx.strokeStyle = '#3b82f6';
+  ctx.beginPath(); ctx.arc(cx + s * 0.4, cy, s * 0.22, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#16a34a'; ctx.font = `700 ${fs}px Inter`;
+  ctx.fillText('NabFab', cx + s * 0.7, cy + 4);
+}
+
+function drawLegobody() {
+  const { ctx, w, h } = initCanvas('cvLego');
+  const cx = w / 2, cy = h / 2, s = Math.min(w, h) * 0.3;
+  const fs = F(h, 'sm');
+
+  ctx.fillStyle = '#bfdbfe'; ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 1.5;
+  roundRect(ctx, cx - s * 0.9, cy - s * 0.4, s * 0.6, s * 0.8, 4); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#1e40af'; ctx.font = `700 ${fs}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('VHH', cx - s * 0.6, cy + 4);
+
+  ctx.fillStyle = '#ddd'; ctx.fillRect(cx - s * 0.3, cy - s * 0.1, s * 0.2, s * 0.2);
+
+  ctx.fillStyle = '#e9d5ff'; ctx.strokeStyle = '#7c3aed';
+  roundRect(ctx, cx - s * 0.1, cy - s * 0.5, s * 0.5, s * 1, 4); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#6b21a8'; ctx.font = `700 ${fs}px Inter`;
+  ctx.fillText('CH1', cx + s * 0.15, cy - s * 0.1);
+  ctx.fillText('CL', cx + s * 0.15, cy + s * 0.2);
+
+  ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
+  ctx.beginPath(); ctx.moveTo(cx - s * 0.3, cy - s * 0.5); ctx.lineTo(cx - s * 0.3, cy + s * 0.5); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#ef4444'; ctx.font = `italic 600 ${fs}px Inter`;
+  ctx.fillText('rigid', cx - s * 0.3, cy + s * 0.7);
+}
+
+function drawScaffold() {
+  const { ctx, w, h } = initCanvas('cvScaff');
+  const cx = w / 2, cy = h / 2, s = Math.min(w, h) * 0.28;
+  const n = 8;
+  for (let i = 0; i < n; i++) {
+    const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+    const x = cx + Math.cos(angle) * s * 0.7, y = cy + Math.sin(angle) * s * 0.7;
+    ctx.fillStyle = i % 2 === 0 ? '#fef3c7' : '#fde68a';
+    ctx.strokeStyle = '#d97706'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(x, y, s * 0.22, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#dbeafe'; ctx.strokeStyle = '#3b82f6';
+    const tx = cx + Math.cos(angle) * s * 1.05, ty = cy + Math.sin(angle) * s * 1.05;
+    ctx.beginPath(); ctx.arc(tx, ty, s * 0.12, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  }
+  ctx.fillStyle = '#92400e'; ctx.font = `700 ${F(h, 'sm')}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('8-mer', cx, cy + 4);
+}
+
+function drawRigidFab() {
+  const { ctx, w, h } = initCanvas('cvFab');
+  const cx = w / 2, cy = h / 2, s = Math.min(w, h) * 0.32;
+  const fs = F(h, 'sm');
+  const fabW = s * 0.3, fabH = s * 0.55;
+
+  ctx.fillStyle = '#dbeafe'; ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(cx, cy, s * 0.45, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#3b82f6'; ctx.font = `700 ${fs}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Target', cx, cy + 4);
+
+  ctx.fillStyle = '#f3e8ff'; ctx.strokeStyle = '#7c3aed'; ctx.lineWidth = 1.5;
+  roundRect(ctx, cx - s * 0.9, cy - fabH / 2, fabW, fabH, 4); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#6b21a8'; ctx.font = `600 ${fs}px Inter`;
+  ctx.fillText('Fab', cx - s * 0.75, cy + 4);
+
+  ctx.strokeStyle = '#999'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(cx - s * 0.6, cy); ctx.lineTo(cx - s * 0.45, cy); ctx.stroke();
+
+  ctx.fillStyle = '#f3e8ff'; ctx.strokeStyle = '#7c3aed';
+  roundRect(ctx, cx + s * 0.6, cy - fabH / 2, fabW, fabH, 4); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#6b21a8'; ctx.fillText('Fab', cx + s * 0.75, cy + 4);
+
+  ctx.strokeStyle = '#999';
+  ctx.beginPath(); ctx.moveTo(cx + s * 0.45, cy); ctx.lineTo(cx + s * 0.6, cy); ctx.stroke();
+}
+
+function drawPhasePlate() {
+  const { ctx, w, h } = initCanvas('cvPhase');
+  const cx = w / 2, cy = h / 2, s = Math.min(w, h) * 0.3;
+  const fs = F(h, 'sm');
+
+  ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(cx, cy - s * 1.1); ctx.lineTo(cx, cy - s * 0.3); ctx.stroke();
+
+  ctx.fillStyle = '#fde68a'; ctx.strokeStyle = '#d97706'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.ellipse(cx, cy - s * 0.3, s * 0.7, s * 0.15, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#92400e'; ctx.font = `700 ${fs}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Phase Plate', cx, cy - s * 0.22);
+
+  ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  for (let t = 0; t < 30; t++) {
+    const y = cy - s * 0.1 + t * (s * 0.04);
+    const x = cx + Math.sin(t * 0.6) * s * 0.15;
+    t === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  ctx.fillStyle = '#16a34a'; ctx.font = `700 ${fs}px Inter`;
+  ctx.fillText('↑ Contrast', cx, cy + s * 0.9);
+}
+
+function init() {
+  drawDistribution();
+  drawScatter();
+  drawNanobody();
+  drawLegobody();
+  drawScaffold();
+  drawRigidFab();
+  drawPhasePlate();
+}
+
+window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('resize', init);
+</script>
+</body>
+</html>

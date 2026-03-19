@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cryo-EM Workshop v2 - SNU 2025</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Inter',-apple-system,'Malgun Gothic',sans-serif;background:#1a1a2e}
+.sc{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#1a1a2e}
+.sc.active{display:flex}
+.sd{position:relative;width:min(100vw,177.78vh);height:min(100vh,56.25vw);background:#fff;overflow:hidden}
+.sd .e{position:absolute;pointer-events:none}
+.sd .e img{width:100%;height:100%;object-fit:contain;display:block}
+.sd .tf{position:absolute;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;padding:0 2px;line-height:1.2}
+.sd .tf .ln{word-wrap:break-word;overflow-wrap:break-word}
+.nb{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:10px;align-items:center;
+  background:rgba(0,0,0,.75);padding:6px 18px;border-radius:24px;z-index:9999;backdrop-filter:blur(10px);user-select:none}
+.nb button{background:none;border:1.5px solid rgba(255,255,255,.25);color:#fff;padding:5px 14px;border-radius:5px;
+  font:600 13px/1 Inter,sans-serif;cursor:pointer;transition:all .15s}
+.nb button:hover{background:rgba(255,255,255,.12);border-color:#fff}
+.nb input{width:50px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);
+  color:#fff;text-align:center;padding:4px;border-radius:4px;font:600 13px/1 Inter,sans-serif}
+.nb span{color:#aaa;font:600 13px/1 Inter,sans-serif}
+</style>
+</head>
+<body>
+
+<div class="sc active" data-n="1"><div class="sd">
+<div class="e" style="left:0.0%;top:0.0%;width:101.95%;height:104.93%"><img src="cryo-slides-img/s003_2.png" loading="lazy"></div>
+<div class="tf" style="left:2.7%;top:38.53%;width:94.67%;height:22.93%;font-size:clamp(33px, 12.80vh, 115px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Cryo-EM</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">3</div>
+</div></div>
+<div class="sc" data-n="2"><div class="sd">
+<div class="e" style="left:19.28%;top:7.07%;width:61.44%;height:85.87%"><img src="cryo-slides-img/s004_3.png" loading="lazy"></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">4</div>
+</div></div>
+<div class="sc" data-n="3"><div class="sd">
+<div class="e" style="left:0.98%;top:14.53%;width:43.96%;height:80.4%"><img src="cryo-slides-img/s005_4.jpg" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Electron microscope &amp; biological samples</div></div>
+<div class="tf" style="left:44.94%;top:60.27%;width:16.13%;height:7.6%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Electron Beam</div></div>
+<div class="tf" style="left:53.26%;top:28.8%;width:41.41%;height:6.67%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">Evaporation of water from the sample</div></div>
+<div class="tf" style="left:44.94%;top:17.07%;width:12.9%;height:7.6%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Vacuum</div></div>
+<div class="tf" style="left:53.26%;top:36.67%;width:41.41%;height:6.67%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">Chemical fixation &amp; dehydration</div></div>
+<div class="tf" style="left:53.26%;top:44.53%;width:41.41%;height:6.67%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">Structural changes to the sample</div></div>
+<div class="tf" style="left:53.26%;top:71.07%;width:20.63%;height:6.67%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">Sample thickness</div></div>
+<div class="tf" style="left:53.26%;top:78.93%;width:20.63%;height:6.67%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">Low contrast</div></div>
+<div class="tf" style="left:53.26%;top:86.8%;width:20.63%;height:6.67%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">Non-conductive</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">5</div>
+</div></div>
+<div class="sc" data-n="4"><div class="sd">
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Electron microscope &amp; biological samples</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">6</div>
+</div></div>
+<div class="sc" data-n="5"><div class="sd">
+<div class="e" style="left:36.38%;top:33.2%;width:28.88%;height:48.67%"><img src="cryo-slides-img/s007_5.png" loading="lazy"></div>
+<div class="e" style="left:68.34%;top:30.8%;width:28.88%;height:25.47%"><img src="cryo-slides-img/s007_6.png" loading="lazy"></div>
+<div class="e" style="left:69.02%;top:55.47%;width:27.68%;height:34.53%"><img src="cryo-slides-img/s007_7.png" loading="lazy"></div>
+<div class="e" style="left:3.38%;top:30.8%;width:29.26%;height:57.6%"><img src="cryo-slides-img/s007_8.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Cryo-electron microscope</div></div>
+<div class="tf" style="left:5.63%;top:18.13%;width:23.33%;height:10.0%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Cryo holder /</div><div class="ln">Autoloader system</div></div>
+<div class="tf" style="left:38.33%;top:18.13%;width:23.33%;height:10.0%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Energy filter</div></div>
+<div class="tf" style="left:70.37%;top:18.13%;width:23.33%;height:10.0%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Direct electron detector</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">7</div>
+</div></div>
+<div class="sc" data-n="6"><div class="sd">
+<div class="e" style="left:13.88%;top:15.47%;width:72.17%;height:76.0%"><img src="cryo-slides-img/s008_9.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">From blobs to high resolution</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">8</div>
+</div></div>
+<div class="sc" data-n="7"><div class="sd">
+<div class="e" style="left:-1.58%;top:24.93%;width:47.94%;height:59.07%"><img src="cryo-slides-img/s009_10.png" loading="lazy"></div>
+<div class="e" style="left:34.66%;top:26.13%;width:46.14%;height:57.87%"><img src="cryo-slides-img/s009_11.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">From blobs to high resolution</div></div>
+<div class="tf" style="left:54.46%;top:40.8%;width:42.91%;height:41.73%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Contrast in hydrated specimens should be directly interpretable as structure rather than as stain.</div><div class="ln">Fixation and drying artifacts are avoided.</div><div class="ln">Hydrated protein crystals retain a high degree of periodicity</div><div class="ln">Radiation damage is expected to be much more severe in hydrated specimens.</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">9</div>
+</div></div>
+<div class="sc" data-n="8"><div class="sd">
+<div class="e" style="left:3.08%;top:56.27%;width:9.9%;height:35.07%"><img src="cryo-slides-img/s010_12.png" loading="lazy"></div>
+<div class="e" style="left:15.0%;top:14.53%;width:13.73%;height:20.53%"><img src="cryo-slides-img/s010_13.png" loading="lazy"></div>
+<div class="e" style="left:26.93%;top:66.53%;width:17.33%;height:21.87%"><img src="cryo-slides-img/s010_14.png" loading="lazy"></div>
+<div class="e" style="left:45.46%;top:66.0%;width:12.53%;height:26.13%"><img src="cryo-slides-img/s010_15.png" loading="lazy"></div>
+<div class="e" style="left:43.66%;top:16.13%;width:16.58%;height:15.6%"><img src="cryo-slides-img/s010_16.png" loading="lazy"></div>
+<div class="e" style="left:75.24%;top:12.13%;width:22.58%;height:20.53%"><img src="cryo-slides-img/s010_17.png" loading="lazy"></div>
+<div class="e" style="left:61.07%;top:65.33%;width:18.23%;height:21.87%"><img src="cryo-slides-img/s010_18.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">From blobs to high resolution</div></div>
+<div class="tf" style="left:5.1%;top:48.0%;width:4.8%;height:4.53%;font-size:clamp(7px, 1.87vh, 16px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">1968</div></div>
+<div class="tf" style="left:18.08%;top:47.6%;width:4.8%;height:4.53%;font-size:clamp(7px, 1.87vh, 16px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">1974</div></div>
+<div class="tf" style="left:32.86%;top:47.6%;width:4.8%;height:4.53%;font-size:clamp(7px, 1.87vh, 16px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">1982</div></div>
+<div class="tf" style="left:48.61%;top:48.0%;width:4.8%;height:4.53%;font-size:clamp(7px, 1.87vh, 16px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">1987</div></div>
+<div class="tf" style="left:67.74%;top:47.73%;width:4.8%;height:4.53%;font-size:clamp(7px, 1.87vh, 16px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">1990</div></div>
+<div class="tf" style="left:84.1%;top:48.0%;width:4.8%;height:4.53%;font-size:clamp(7px, 1.87vh, 16px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">1994</div></div>
+<div class="tf" style="left:2.18%;top:36.93%;width:11.7%;height:10.53%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">First 3D-reconstruction</div><div class="ln">DeRosier &amp; Klug</div></div>
+<div class="tf" style="left:14.48%;top:52.13%;width:11.7%;height:10.53%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">Birth of cryo-EM</div><div class="ln">Taylor &amp; Glaeser</div></div>
+<div class="tf" style="left:29.71%;top:36.93%;width:11.7%;height:10.53%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">Vitrification</div><div class="ln">Dubochet et al.</div></div>
+<div class="tf" style="left:43.74%;top:36.93%;width:15.83%;height:10.53%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">Single particle:</div><div class="ln">Angular reconstitution</div><div class="ln">van Heel</div></div>
+<div class="tf" style="left:62.27%;top:34.53%;width:15.83%;height:12.93%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">Atomic structure of</div><div class="ln">bacteriorhodopsin by</div><div class="ln">electron crystallography</div><div class="ln">Henderson et al.</div></div>
+<div class="tf" style="left:78.62%;top:52.67%;width:15.83%;height:10.53%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">Projection matching</div><div class="ln">Penczek, Frank et al.</div></div>
+<div class="tf" style="left:43.36%;top:52.53%;width:16.58%;height:10.53%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">Single particle:</div><div class="ln">Random conical tilt</div><div class="ln">Radermacher, Frank et al.</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">10</div>
+</div></div>
+<div class="sc" data-n="9"><div class="sd">
+<div class="e" style="left:-1.5%;top:66.13%;width:22.51%;height:20.27%"><img src="cryo-slides-img/s011_19.png" loading="lazy"></div>
+<div class="e" style="left:16.05%;top:10.67%;width:17.18%;height:25.47%"><img src="cryo-slides-img/s011_20.png" loading="lazy"></div>
+<div class="e" style="left:29.11%;top:67.2%;width:17.03%;height:26.67%"><img src="cryo-slides-img/s011_21.png" loading="lazy"></div>
+<div class="e" style="left:35.56%;top:12.0%;width:28.88%;height:19.47%"><img src="cryo-slides-img/s011_22.png" loading="lazy"></div>
+<div class="e" style="left:63.62%;top:65.87%;width:12.9%;height:28.93%"><img src="cryo-slides-img/s011_23.png" loading="lazy"></div>
+<div class="e" style="left:83.27%;top:12.67%;width:13.95%;height:22.53%"><img src="cryo-slides-img/s011_24.png" loading="lazy"></div>
+<div class="e" style="left:79.07%;top:68.53%;width:13.65%;height:25.6%"><img src="cryo-slides-img/s011_25.png" loading="lazy"></div>
+<div class="e" style="left:61.59%;top:14.27%;width:17.85%;height:18.53%"><img src="cryo-slides-img/s011_26.png" loading="lazy"></div>
+<div class="e" style="left:2.1%;top:17.47%;width:13.65%;height:16.8%"><img src="cryo-slides-img/s011_27.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">From blobs to high resolution</div></div>
+<div class="tf" style="left:7.58%;top:47.6%;width:4.8%;height:4.53%;font-size:clamp(7px, 1.87vh, 16px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">1997</div></div>
+<div class="tf" style="left:21.31%;top:47.73%;width:4.8%;height:4.53%;font-size:clamp(7px, 1.87vh, 16px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">1998</div></div>
+<div class="tf" style="left:37.13%;top:47.6%;width:4.8%;height:4.53%;font-size:clamp(7px, 1.87vh, 16px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">2008</div></div>
+<div class="tf" style="left:52.36%;top:47.73%;width:4.8%;height:4.53%;font-size:clamp(7px, 1.87vh, 16px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">2012</div></div>
+<div class="tf" style="left:67.74%;top:47.73%;width:4.8%;height:4.53%;font-size:clamp(7px, 1.87vh, 16px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">2013</div></div>
+<div class="tf" style="left:46.81%;top:52.67%;width:14.78%;height:10.27%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">DED cameras used</div><div class="ln">For motion correction</div><div class="ln">Grigorieff et al.</div></div>
+<div class="tf" style="left:62.79%;top:52.53%;width:14.78%;height:10.53%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">Near-atomic maps of</div><div class="ln">30,000 ribosomes</div><div class="ln">Scheres et al.</div></div>
+<div class="tf" style="left:84.17%;top:47.6%;width:4.8%;height:4.53%;font-size:clamp(7px, 1.87vh, 16px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">2015</div></div>
+<div class="tf" style="left:2.1%;top:36.93%;width:15.83%;height:10.53%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln"> 10-Å virus structure</div><div class="ln">Böttcher, Crowther et al.</div><div class="ln">Conway, McDowell et al.</div></div>
+<div class="tf" style="left:17.25%;top:52.53%;width:12.3%;height:10.53%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">2D Maximum likelihood</div><div class="ln">Sigworth</div></div>
+<div class="tf" style="left:32.56%;top:37.07%;width:14.78%;height:10.53%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">Virus de novo tracing</div><div class="ln">Zhou et al.</div></div>
+<div class="tf" style="left:80.42%;top:52.53%;width:12.3%;height:10.53%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">De novo tracing &lt;200 kDa</div><div class="ln">Scheres, Shi et al.</div></div>
+<div class="tf" style="left:78.54%;top:37.07%;width:15.83%;height:10.53%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln"> 3-Å structures</div><div class="ln">Carragher, Potter et al.</div><div class="ln">Subramaniam &amp; colleagues</div></div>
+<div class="tf" style="left:62.49%;top:37.07%;width:14.78%;height:10.53%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">TRPV1 structures</div><div class="ln">Cheng  et al.</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">11</div>
+</div></div>
+<div class="sc" data-n="10"><div class="sd">
+<div class="e" style="left:47.49%;top:23.33%;width:45.69%;height:61.73%"><img src="cryo-slides-img/s012_28.png" loading="lazy"></div>
+<div class="e" style="left:5.18%;top:22.4%;width:45.69%;height:63.6%"><img src="cryo-slides-img/s012_29.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">From blobs to high resolution</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">12</div>
+</div></div>
+<div class="sc" data-n="11"><div class="sd">
+<div class="e" style="left:13.88%;top:15.47%;width:72.17%;height:76.0%"><img src="cryo-slides-img/s013_30.png" loading="lazy"></div>
+<div class="e" style="left:28.58%;top:15.47%;width:42.84%;height:82.4%"><img src="cryo-slides-img/s013_31.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">From blobs to high resolution</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">13</div>
+</div></div>
+<div class="sc" data-n="12"><div class="sd">
+<div class="e" style="left:5.33%;top:16.0%;width:88.07%;height:69.87%"><img src="cryo-slides-img/s014_32.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">PDB entries categorized by method (by 2025)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">14</div>
+</div></div>
+<div class="sc" data-n="13"><div class="sd">
+<div class="e" style="left:9.98%;top:16.93%;width:80.05%;height:73.47%"><img src="cryo-slides-img/s015_33.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">PDB entries categorized by method (by 2024)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">15</div>
+</div></div>
+<div class="sc" data-n="14"><div class="sd">
+<div class="e" style="left:18.15%;top:13.87%;width:63.77%;height:80.4%"><img src="cryo-slides-img/s016_34.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">PDB entries categorized by method (by 2025)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">16</div>
+</div></div>
+<div class="sc" data-n="15"><div class="sd">
+<div class="e" style="left:27.16%;top:17.73%;width:45.69%;height:70.8%"><img src="cryo-slides-img/s017_35.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Different structural biology methods in PDB</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">17</div>
+</div></div>
+<div class="sc" data-n="16"><div class="sd">
+<div class="e" style="left:9.3%;top:24.93%;width:83.72%;height:64.8%"><img src="cryo-slides-img/s018_36.png" loading="lazy"></div>
+<div class="tf" style="left:26.33%;top:91.33%;width:7.73%;height:4.93%;font-size:clamp(7px, 2.13vh, 19px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">5 – 10 Å</div></div>
+<div class="tf" style="left:43.36%;top:91.73%;width:7.73%;height:4.93%;font-size:clamp(7px, 2.13vh, 19px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">1.2 Å</div></div>
+<div class="tf" style="left:78.54%;top:91.2%;width:7.73%;height:4.93%;font-size:clamp(7px, 2.13vh, 19px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">0.9 Å</div></div>
+<div class="tf" style="left:34.13%;top:16.4%;width:8.78%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Imaging</div></div>
+<div class="tf" style="left:66.09%;top:16.4%;width:14.03%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Crystal-based</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Cryo-EM methodology</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">18</div>
+</div></div>
+<div class="sc" data-n="17"><div class="sd">
+<div class="e" style="left:53.86%;top:21.2%;width:39.53%;height:70.27%"><img src="cryo-slides-img/s019_37.png" loading="lazy"></div>
+<div class="tf" style="left:63.92%;top:15.87%;width:19.5%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">30 kDa protein (0.9 A)</div></div>
+<div class="tf" style="left:12.83%;top:15.87%;width:27.01%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">Mitochondria respiratory chain</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Recent development......</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">19</div>
+</div></div>
+<div class="sc" data-n="18"><div class="sd">
+<div class="tf" style="left:39.16%;top:92.27%;width:9.6%;height:4.0%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">FEI Company</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Sizing up cryo-EM</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">20</div>
+</div></div>
+<div class="sc" data-n="19"><div class="sd">
+<div class="e" style="left:49.89%;top:12.67%;width:39.98%;height:84.4%"><img src="cryo-slides-img/s021_38.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">A structural biologist’s dream</div></div>
+<div class="tf" style="left:7.13%;top:45.73%;width:38.63%;height:8.53%;font-size:clamp(11px, 4.27vh, 38px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Structural Cell Biology</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">21</div>
+</div></div>
+<div class="sc" data-n="20"><div class="sd">
+<div class="e" style="left:18.75%;top:13.2%;width:62.49%;height:82.93%"><img src="cryo-slides-img/s022_39.jpg" loading="lazy"></div>
+<div class="tf" style="left:0.0%;top:96.53%;width:22.06%;height:3.6%;font-size:clamp(5px,0.7vh,9px);font-weight:400;text-align:left;color:#999"><div class="ln">http://star-protocols.cell.com/protocols/1057</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Single particle analysis workflow</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">22</div>
+</div></div>
+<div class="sc" data-n="21"><div class="sd">
+<div class="e" style="left:24.98%;top:11.07%;width:50.04%;height:83.73%"><img src="cryo-slides-img/s023_40.jpg" loading="lazy"></div>
+<div class="tf" style="left:5.55%;top:18.4%;width:14.1%;height:6.27%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">단백질 정제</div></div>
+<div class="tf" style="left:5.55%;top:42.93%;width:14.1%;height:6.27%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">샘플 스크린</div></div>
+<div class="tf" style="left:5.55%;top:66.93%;width:14.1%;height:6.27%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">초기 데이터</div></div>
+<div class="tf" style="left:5.55%;top:83.07%;width:14.1%;height:6.27%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">고해상도 모델</div></div>
+<div class="tf" style="left:76.29%;top:56.53%;width:18.9%;height:11.6%;font-size:clamp(9px, 3.73vh, 33px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">2-3개월</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Single particle analysis workflow</div></div>
+<div class="tf" style="left:76.29%;top:56.53%;width:18.9%;height:11.6%;font-size:clamp(9px, 3.73vh, 33px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">2주</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">23</div>
+</div></div>
+<div class="sc" data-n="22"><div class="sd">
+<div class="e" style="left:4.95%;top:16.4%;width:90.17%;height:67.07%"><img src="cryo-slides-img/s024_41.png" loading="lazy"></div>
+<div class="tf" style="left:0.0%;top:96.53%;width:22.06%;height:3.6%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">Halfon et al., 2022 Faraday Discuss.</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Single particle analysis workflow</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">24</div>
+</div></div>
+<div class="sc" data-n="23"><div class="sd">
+<div class="tf" style="left:5.93%;top:27.47%;width:39.53%;height:19.07%;font-size:clamp(7px, 2.67vh, 24px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Size-limitation</div><div class="ln">Requires highly purified sample</div><div class="ln">Vitrification process</div></div>
+<div class="tf" style="left:4.2%;top:20.93%;width:21.46%;height:7.33%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Sample</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Problems and limitations</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">25</div>
+</div></div>
+<div class="sc" data-n="24"><div class="sd">
+<div class="e" style="left:50.86%;top:18.8%;width:8.85%;height:15.73%"><img src="cryo-slides-img/s026_42.png" loading="lazy"></div>
+<div class="e" style="left:49.59%;top:22.4%;width:4.5%;height:12.53%"><img src="cryo-slides-img/s026_43.png" loading="lazy"></div>
+<div class="e" style="left:40.44%;top:20.93%;width:5.93%;height:11.87%"><img src="cryo-slides-img/s026_44.png" loading="lazy"></div>
+<div class="e" style="left:57.69%;top:23.47%;width:4.5%;height:9.07%"><img src="cryo-slides-img/s026_45.jpg" loading="lazy"></div>
+<div class="e" style="left:31.36%;top:19.2%;width:4.58%;height:14.8%"><img src="cryo-slides-img/s026_46.jpg" loading="lazy"></div>
+<div class="e" style="left:29.26%;top:68.27%;width:11.18%;height:18.4%"><img src="cryo-slides-img/s026_47.jpg" loading="lazy"></div>
+<div class="e" style="left:42.99%;top:68.4%;width:9.15%;height:18.4%"><img src="cryo-slides-img/s026_48.jpg" loading="lazy"></div>
+<div class="e" style="left:55.06%;top:68.4%;width:9.68%;height:18.4%"><img src="cryo-slides-img/s026_49.jpg" loading="lazy"></div>
+<div class="e" style="left:23.26%;top:38.0%;width:19.2%;height:25.6%"><img src="cryo-slides-img/s026_50.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">The process…</div></div>
+<div class="tf" style="left:5.85%;top:21.2%;width:21.46%;height:9.87%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Sample prep.</div></div>
+<div class="tf" style="left:5.85%;top:45.07%;width:21.46%;height:9.87%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Microscopy</div></div>
+<div class="tf" style="left:5.85%;top:69.73%;width:21.46%;height:15.73%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Data</div><div class="ln">processing</div></div>
+<div class="tf" style="left:67.07%;top:18.8%;width:20.11%;height:14.8%;font-size:clamp(7px, 2.67vh, 24px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Slow</div><div class="ln">Manual</div><div class="ln">Non-reproducible</div></div>
+<div class="tf" style="left:67.07%;top:42.53%;width:21.68%;height:14.8%;font-size:clamp(7px, 2.67vh, 24px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Slow</div><div class="ln">Manual (mostly)</div><div class="ln">The grid dependent</div></div>
+<div class="tf" style="left:67.07%;top:63.47%;width:28.51%;height:28.27%;font-size:clamp(7px, 2.67vh, 24px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Slow</div><div class="ln">Manual (mostly)</div><div class="ln">Multiple steps required</div><div class="ln">Sample heterogeneity</div><div class="ln">Sample flexibility</div><div class="ln">Too many wasted particles</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">26</div>
+</div></div>
+<div class="sc" data-n="25"><div class="sd">
+<div class="e" style="left:60.47%;top:12.53%;width:35.11%;height:82.13%"><img src="cryo-slides-img/s027_51.png" loading="lazy"></div>
+<div class="e" style="left:4.43%;top:12.53%;width:35.11%;height:82.13%"><img src="cryo-slides-img/s027_52.png" loading="lazy"></div>
+<div class="e" style="left:9.3%;top:27.47%;width:31.88%;height:56.8%"><img src="cryo-slides-img/s027_53.x-wmf" loading="lazy"></div>
+<div class="e" style="left:44.94%;top:30.53%;width:51.99%;height:50.8%"><img src="cryo-slides-img/s027_54.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">From blobs to high resolution</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">27</div>
+</div></div>
+<div class="sc" data-n="26"><div class="sd">
+<div class="e" style="left:7.58%;top:33.87%;width:14.85%;height:13.6%"><img src="cryo-slides-img/s028_55.png" loading="lazy"></div>
+<div class="e" style="left:8.03%;top:50.27%;width:13.88%;height:12.4%"><img src="cryo-slides-img/s028_56.png" loading="lazy"></div>
+<div class="e" style="left:6.98%;top:18.0%;width:16.05%;height:11.73%"><img src="cryo-slides-img/s028_57.png" loading="lazy"></div>
+<div class="e" style="left:60.69%;top:16.67%;width:7.73%;height:11.73%"><img src="cryo-slides-img/s028_58.png" loading="lazy"></div>
+<div class="e" style="left:57.31%;top:38.0%;width:14.4%;height:5.6%"><img src="cryo-slides-img/s028_59.png" loading="lazy"></div>
+<div class="e" style="left:56.04%;top:53.2%;width:16.95%;height:7.6%"><img src="cryo-slides-img/s028_60.png" loading="lazy"></div>
+<div class="e" style="left:6.9%;top:72.27%;width:16.5%;height:6.8%"><img src="cryo-slides-img/s028_61.png" loading="lazy"></div>
+<div class="e" style="left:6.9%;top:87.47%;width:16.5%;height:4.8%"><img src="cryo-slides-img/s028_62.png" loading="lazy"></div>
+<div class="e" style="left:55.14%;top:86.93%;width:19.05%;height:6.13%"><img src="cryo-slides-img/s028_63.png" loading="lazy"></div>
+<div class="e" style="left:56.04%;top:70.4%;width:16.88%;height:8.0%"><img src="cryo-slides-img/s028_64.png" loading="lazy"></div>
+<div class="tf" style="left:26.03%;top:36.4%;width:22.66%;height:9.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">First Titan Krios: 2018</div><div class="ln">2 Krios / 1 Glacios</div></div>
+<div class="tf" style="left:26.03%;top:19.73%;width:22.96%;height:9.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">First Titan Krios: 2016</div><div class="ln">Cryo-EM lab</div></div>
+<div class="tf" style="left:26.03%;top:55.6%;width:19.28%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">1 Krios / 2 Glacios</div></div>
+<div class="tf" style="left:75.47%;top:19.87%;width:14.63%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">Cryo-EM lab</div></div>
+<div class="tf" style="left:75.47%;top:38.27%;width:14.63%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">Cryo-EM lab</div></div>
+<div class="tf" style="left:75.54%;top:55.33%;width:11.48%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">2 Glacios</div></div>
+<div class="tf" style="left:26.18%;top:72.93%;width:18.83%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">1 Krios / 2 Glacios</div></div>
+<div class="tf" style="left:75.77%;top:72.27%;width:19.28%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">1 Krios / 2 Glacios</div></div>
+<div class="tf" style="left:26.18%;top:87.47%;width:9.53%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">1 Krios</div></div>
+<div class="tf" style="left:75.62%;top:87.33%;width:11.7%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">1 Glacios</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Cryo-EM in big pharmas</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">28</div>
+</div></div>
+<div class="sc" data-n="27"><div class="sd">
+<div class="e" style="left:4.58%;top:68.53%;width:46.74%;height:28.13%"><img src="cryo-slides-img/s029_65.png" loading="lazy"></div>
+<div class="e" style="left:4.58%;top:22.67%;width:46.74%;height:29.73%"><img src="cryo-slides-img/s029_66.jpg" loading="lazy"></div>
+<div class="e" style="left:55.51%;top:23.2%;width:39.91%;height:70.8%"><img src="cryo-slides-img/s029_67.png" loading="lazy"></div>
+<div class="tf" style="left:0.53%;top:94.0%;width:3.98%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">29</div></div>
+<div class="tf" style="left:21.23%;top:11.33%;width:13.43%;height:9.47%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">GPCR</div></div>
+<div class="tf" style="left:18.83%;top:57.2%;width:18.15%;height:9.47%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Transporter</div></div>
+<div class="tf" style="left:66.39%;top:11.33%;width:18.15%;height:9.47%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Ion channel</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Drug targets - membrane protein</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">29</div>
+</div></div>
+<div class="sc" data-n="28"><div class="sd">
+<div class="e" style="left:3.98%;top:22.13%;width:33.98%;height:55.73%"><img src="cryo-slides-img/s030_68.png" loading="lazy"></div>
+<div class="e" style="left:42.76%;top:28.0%;width:55.06%;height:52.8%"><img src="cryo-slides-img/s030_69.png" loading="lazy"></div>
+<div class="tf" style="left:70.67%;top:92.67%;width:22.51%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:right;color:#555"><div class="ln">30</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Drug targets - E3 ligases / PROTAC etc.</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">30</div>
+</div></div>
+<div class="sc" data-n="29"><div class="sd">
+<div class="e" style="left:9.53%;top:13.2%;width:81.02%;height:80.27%"><img src="cryo-slides-img/s031_70.png" loading="lazy"></div>
+<div class="tf" style="left:70.67%;top:92.67%;width:22.51%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:right;color:#555"><div class="ln">31</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Drug targets – Biologics (de novo protein design)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">31</div>
+</div></div>
+<div class="sc" data-n="30"><div class="sd">
+<div class="e" style="left:4.88%;top:25.2%;width:90.25%;height:68.67%"><img src="cryo-slides-img/s032_71.png" loading="lazy"></div>
+<div class="e" style="left:4.88%;top:11.07%;width:31.66%;height:11.87%"><img src="cryo-slides-img/s032_72.png" loading="lazy"></div>
+<div class="e" style="left:36.53%;top:11.07%;width:19.28%;height:11.87%"><img src="cryo-slides-img/s032_73.png" loading="lazy"></div>
+<div class="e" style="left:4.8%;top:24.93%;width:90.4%;height:59.2%"><img src="cryo-slides-img/s032_74.png" loading="lazy"></div>
+<div class="tf" style="left:70.67%;top:92.67%;width:22.51%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:right;color:#555"><div class="ln">32</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Drug targets – Biologics (de novo protein design)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">32</div>
+</div></div>
+<div class="sc" data-n="31"><div class="sd">
+<div class="tf" style="left:26.48%;top:73.33%;width:48.76%;height:10.27%;font-size:clamp(14px, 5.33vh, 48px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">+ 바이오 벤처 / 스타트업 회사들</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">국내 업계 현황</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">33</div>
+</div></div>
+<div class="sc" data-n="32"><div class="sd">
+<div class="e" style="left:3.53%;top:28.8%;width:44.34%;height:44.93%"><img src="cryo-slides-img/s034_75.png" loading="lazy"></div>
+<div class="e" style="left:52.14%;top:28.8%;width:44.34%;height:44.93%"><img src="cryo-slides-img/s034_76.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Cryo-EM Contact research organization (CRO)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">34</div>
+</div></div>
+<div class="sc" data-n="33"><div class="sd">
+<div class="e" style="left:5.33%;top:27.07%;width:45.69%;height:46.0%"><img src="cryo-slides-img/s035_77.png" loading="lazy"></div>
+<div class="e" style="left:54.91%;top:27.07%;width:40.66%;height:49.6%"><img src="cryo-slides-img/s035_78.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Data processing in ‘Cloud’</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">35</div>
+</div></div>
+<div class="sc" data-n="34"><div class="sd">
+<div class="e" style="left:0.0%;top:0.0%;width:101.95%;height:104.93%"><img src="cryo-slides-img/s036_79.png" loading="lazy"></div>
+<div class="tf" style="left:2.25%;top:41.87%;width:95.42%;height:16.13%;font-size:clamp(23px, 8.80vh, 79px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Sample Preparation</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">36</div>
+</div></div>
+<div class="sc" data-n="35"><div class="sd">
+<div class="e" style="left:4.95%;top:16.4%;width:90.17%;height:67.07%"><img src="cryo-slides-img/s037_80.png" loading="lazy"></div>
+<div class="tf" style="left:70.67%;top:92.67%;width:22.51%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:right;color:#555"><div class="ln">37</div></div>
+<div class="tf" style="left:65.72%;top:96.27%;width:24.98%;height:3.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:right;color:#555"><div class="ln">Halfon et al., 2022 Faraday Discuss.</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Time &amp; Cost of a single particle cryo-EM pipeline</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">37</div>
+</div></div>
+<div class="sc" data-n="36"><div class="sd">
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Goal of sample preparation</div></div>
+<div class="tf" style="left:5.4%;top:18.53%;width:89.27%;height:71.87%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Preserve the biological specimen in a native state such that it will give maximum contrast</div><div class="ln">To obtain a high resolution structure:</div><div class="ln">Best specimen</div><div class="ln">Use optimal magnification</div><div class="ln">Use detector with best DQE possible</div><div class="ln">Obtain best micrographs possible</div><div class="ln">Leading to highest resolution structure with least data</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">38</div>
+</div></div>
+<div class="sc" data-n="37"><div class="sd">
+<div class="e" style="left:13.13%;top:16.8%;width:75.09%;height:80.93%"><img src="cryo-slides-img/s039_81.png" loading="lazy"></div>
+<div class="e" style="left:4.05%;top:11.87%;width:11.18%;height:12.67%"><img src="cryo-slides-img/s039_82.jpg" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Sample and grid preparation</div></div>
+<div class="tf" style="left:1.88%;top:25.47%;width:15.53%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">3년간 데이터 집계</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">39</div>
+</div></div>
+<div class="sc" data-n="38"><div class="sd">
+<div class="e" style="left:18.9%;top:14.8%;width:57.54%;height:78.53%"><img src="cryo-slides-img/s040_83.png" loading="lazy"></div>
+<div class="e" style="left:10.2%;top:45.33%;width:12.38%;height:30.67%"><img src="cryo-slides-img/s040_84.png" loading="lazy"></div>
+<div class="e" style="left:5.55%;top:70.27%;width:8.33%;height:22.53%"><img src="cryo-slides-img/s040_85.png" loading="lazy"></div>
+<div class="tf" style="left:70.67%;top:92.67%;width:22.51%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:right;color:#555"><div class="ln">40</div></div>
+<div class="tf" style="left:-0.68%;top:96.27%;width:24.98%;height:3.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Zhou et al., 2019 Nat. Struct. Mol. Biol.</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">The circle of cryo-EM sample preparation</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">40</div>
+</div></div>
+<div class="sc" data-n="39"><div class="sd">
+<div class="e" style="left:10.35%;top:20.13%;width:34.43%;height:29.2%"><img src="cryo-slides-img/s041_86.png" loading="lazy"></div>
+<div class="e" style="left:59.86%;top:17.73%;width:28.73%;height:34.0%"><img src="cryo-slides-img/s041_87.jpg" loading="lazy"></div>
+<div class="e" style="left:10.05%;top:65.87%;width:35.03%;height:25.07%"><img src="cryo-slides-img/s041_88.png" loading="lazy"></div>
+<div class="e" style="left:64.22%;top:60.0%;width:22.21%;height:39.47%"><img src="cryo-slides-img/s041_89.jpg" loading="lazy"></div>
+<div class="tf" style="left:70.67%;top:92.67%;width:22.51%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:right;color:#555"><div class="ln">41</div></div>
+<div class="tf" style="left:0.0%;top:96.27%;width:12.6%;height:3.73%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">© 2024. Baobab AiBIO</div></div>
+<div class="tf" style="left:13.58%;top:12.53%;width:28.58%;height:5.73%;font-size:clamp(7px, 2.27vh, 20px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Size exclusion chromatography</div></div>
+<div class="tf" style="left:67.52%;top:12.53%;width:15.68%;height:5.73%;font-size:clamp(7px, 2.27vh, 20px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">SEC-MALS</div></div>
+<div class="tf" style="left:15.9%;top:54.8%;width:23.33%;height:5.73%;font-size:clamp(7px, 2.27vh, 20px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Dynamic light scattering</div></div>
+<div class="tf" style="left:65.94%;top:54.27%;width:18.83%;height:5.73%;font-size:clamp(7px, 2.27vh, 20px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Mass photometry</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Homogenous sample</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">41</div>
+</div></div>
+<div class="sc" data-n="40"><div class="sd">
+<div class="e" style="left:15.75%;top:32.0%;width:64.07%;height:46.4%"><img src="cryo-slides-img/s042_90.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Negative staining vs. Vitrification</div></div>
+<div class="tf" style="left:26.03%;top:25.33%;width:13.05%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">Negative stain</div></div>
+<div class="tf" style="left:62.04%;top:24.53%;width:8.7%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">Cryo-EM</div></div>
+<div class="tf" style="left:81.32%;top:42.0%;width:8.63%;height:9.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Vitreous</div><div class="ln">ice</div></div>
+<div class="tf" style="left:15.38%;top:40.0%;width:6.9%;height:13.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Heavy</div><div class="ln">metal</div><div class="ln">stain</div></div>
+<div class="tf" style="left:55.59%;top:77.87%;width:23.63%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Carbon support film (holey)</div></div>
+<div class="tf" style="left:17.55%;top:77.87%;width:28.51%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Carbon support film (continuous)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">42</div>
+</div></div>
+<div class="sc" data-n="41"><div class="sd">
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Negative staining vs. Cryo-EM</div></div>
+<div class="tf" style="left:8.48%;top:24.53%;width:37.43%;height:43.07%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Faster &amp; easier</div><div class="ln">Less expensive</div><div class="ln">Higher contrast / low resolution</div><div class="ln">Artifacts from the staining</div><div class="ln">Can be done at room temp.</div></div>
+<div class="tf" style="left:5.25%;top:18.53%;width:24.53%;height:8.13%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Negative staining</div></div>
+<div class="tf" style="left:55.29%;top:24.53%;width:37.43%;height:43.07%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Slower &amp; difficult</div><div class="ln">Expensive</div><div class="ln">Lower contrast / high resolution</div><div class="ln">Retain almost native state</div></div>
+<div class="tf" style="left:52.06%;top:18.53%;width:24.53%;height:8.13%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Cryo-EM (Vitrification)</div></div>
+<div class="tf" style="left:8.48%;top:74.53%;width:37.43%;height:13.87%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">Useful for QC of the sample</div><div class="ln">(aggregation, dissociation, heterogeneity)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">43</div>
+</div></div>
+<div class="sc" data-n="42"><div class="sd">
+<div class="e" style="left:2.63%;top:14.67%;width:64.52%;height:78.13%"><img src="cryo-slides-img/s044_91.jpg" loading="lazy"></div>
+<div class="tf" style="left:71.72%;top:38.4%;width:22.96%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">Low signal-to-noise ratio</div></div>
+<div class="tf" style="left:73.82%;top:50.8%;width:18.83%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">Radiation sensitivity</div></div>
+<div class="tf" style="left:70.59%;top:62.67%;width:25.21%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">Few morphological features</div></div>
+<div class="tf" style="left:0.0%;top:96.53%;width:24.98%;height:3.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Wentinck et al, 2022 Curr Res Struc Biol.</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Small proteins and cryo-EM</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">44</div>
+</div></div>
+<div class="sc" data-n="43"><div class="sd">
+<div class="e" style="left:13.58%;top:13.33%;width:73.82%;height:81.6%"><img src="cryo-slides-img/s045_92.jpg" loading="lazy"></div>
+<div class="tf" style="left:0.0%;top:96.53%;width:24.98%;height:3.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Wentinck et al, 2022 Curr Res Struc Biol.</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">45</div>
+</div></div>
+<div class="sc" data-n="44"><div class="sd">
+<div class="e" style="left:13.13%;top:14.13%;width:73.82%;height:77.87%"><img src="cryo-slides-img/s046_93.png" loading="lazy"></div>
+<div class="tf" style="left:0.0%;top:96.4%;width:24.98%;height:3.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Wentinck et al, 2022 Curr Res Struc Biol.</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">46</div>
+</div></div>
+<div class="sc" data-n="45"><div class="sd">
+<div class="e" style="left:84.4%;top:12.67%;width:13.8%;height:3.47%"><img src="cryo-slides-img/s047_94.png" loading="lazy"></div>
+<div class="e" style="left:71.34%;top:30.4%;width:27.91%;height:65.33%"><img src="cryo-slides-img/s047_95.png" loading="lazy"></div>
+<div class="e" style="left:38.63%;top:26.27%;width:25.28%;height:69.87%"><img src="cryo-slides-img/s047_96.png" loading="lazy"></div>
+<div class="e" style="left:7.13%;top:22.8%;width:23.41%;height:73.2%"><img src="cryo-slides-img/s047_97.png" loading="lazy"></div>
+<div class="tf" style="left:4.88%;top:29.87%;width:9.23%;height:9.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">SP26</div><div class="ln">(26 kDa)</div></div>
+<div class="tf" style="left:32.26%;top:29.47%;width:10.88%;height:9.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">SP21</div><div class="ln">(21 kDa)</div></div>
+<div class="tf" style="left:65.87%;top:28.27%;width:10.88%;height:9.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">Ligand</div><div class="ln">(6 kDa)</div></div>
+<div class="tf" style="left:12.0%;top:16.27%;width:19.2%;height:7.6%;font-size:clamp(9px, 3.73vh, 33px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Total 74 kDa</div></div>
+<div class="tf" style="left:41.04%;top:16.27%;width:19.2%;height:7.6%;font-size:clamp(9px, 3.73vh, 33px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Total 69 kDa</div></div>
+<div class="tf" style="left:72.09%;top:19.2%;width:19.2%;height:7.6%;font-size:clamp(9px, 3.73vh, 33px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Total 54 kDa</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Rigid Fab (as a structural chaperone)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">47</div>
+</div></div>
+<div class="sc" data-n="46"><div class="sd">
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Ordered mass, not MW</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">48</div>
+</div></div>
+<div class="sc" data-n="47"><div class="sd">
+<div class="e" style="left:55.59%;top:17.07%;width:42.16%;height:49.07%"><img src="cryo-slides-img/s049_98.png" loading="lazy"></div>
+<div class="tf" style="left:65.49%;top:12.13%;width:22.51%;height:4.93%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">hSAGA activator complex</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Ordered mass, not MW</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">49</div>
+</div></div>
+<div class="sc" data-n="48"><div class="sd">
+<div class="e" style="left:57.99%;top:14.4%;width:38.11%;height:81.47%"><img src="cryo-slides-img/s050_99.jpg" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Ordered mass, not MW</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">50</div>
+</div></div>
+<div class="sc" data-n="49"><div class="sd">
+<div class="e" style="left:3.3%;top:12.0%;width:32.86%;height:82.93%"><img src="cryo-slides-img/s051_100.png" loading="lazy"></div>
+<div class="e" style="left:49.14%;top:5.87%;width:36.16%;height:100.13%"><img src="cryo-slides-img/s051_101.png" loading="lazy"></div>
+<div class="tf" style="left:54.91%;top:96.4%;width:36.46%;height:3.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:right;color:#555"><div class="ln">R. Henderson, 1995, Q. Rev. Biophys.</div></div>
+<div class="tf" style="left:60.62%;top:16.93%;width:13.13%;height:7.73%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">38 kDa</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">How low can we go for single particle cryo-EM?</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">51</div>
+</div></div>
+<div class="sc" data-n="50"><div class="sd">
+<div class="e" style="left:4.43%;top:24.13%;width:41.94%;height:47.73%"><img src="cryo-slides-img/s052_102.png" loading="lazy"></div>
+<div class="e" style="left:53.71%;top:27.07%;width:41.94%;height:46.0%"><img src="cryo-slides-img/s052_103.png" loading="lazy"></div>
+<div class="e" style="left:3.45%;top:20.93%;width:47.49%;height:58.13%"><img src="cryo-slides-img/s052_104.png" loading="lazy"></div>
+<div class="tf" style="left:54.91%;top:96.4%;width:36.46%;height:3.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:right;color:#555"><div class="ln">Fred J. Sigworth, 2016, Vol.65, No.1, 57-67 Microscopy</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">How low can we go for single particle cryo-EM?</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">52</div>
+</div></div>
+<div class="sc" data-n="51"><div class="sd">
+<div class="e" style="left:6.0%;top:16.67%;width:67.67%;height:77.87%"><img src="cryo-slides-img/s053_105.gif" loading="lazy"></div>
+<div class="tf" style="left:70.67%;top:92.67%;width:22.51%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:right;color:#555"><div class="ln">53</div></div>
+<div class="tf" style="left:66.39%;top:96.4%;width:24.98%;height:3.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:right;color:#555"><div class="ln">Russo et al., 2022 Faraday Discuss.</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Minimum molecular mass identifiable in situ</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">53</div>
+</div></div>
+<div class="sc" data-n="52"><div class="sd">
+<div class="e" style="left:2.55%;top:21.73%;width:51.91%;height:61.87%"><img src="cryo-slides-img/s054_106.png" loading="lazy"></div>
+<div class="e" style="left:63.92%;top:16.93%;width:30.31%;height:36.8%"><img src="cryo-slides-img/s054_107.png" loading="lazy"></div>
+<div class="e" style="left:70.89%;top:58.4%;width:5.48%;height:9.33%"><img src="cryo-slides-img/s054_108.png" loading="lazy"></div>
+<div class="tf" style="left:65.87%;top:96.53%;width:24.98%;height:3.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:right;color:#555"><div class="ln">Wu et al, 2020 Curr Opin Struc Biol.</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Are we there yet?</div></div>
+<div class="tf" style="left:68.87%;top:68.27%;width:9.38%;height:4.93%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">HSA</div><div class="ln">65 kDa (3.2 Å)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">54</div>
+</div></div>
+<div class="sc" data-n="53"><div class="sd">
+<div class="e" style="left:4.05%;top:14.53%;width:43.74%;height:80.13%"><img src="cryo-slides-img/s055_109.png" loading="lazy"></div>
+<div class="tf" style="left:0.53%;top:95.6%;width:95.42%;height:4.0%;font-size:clamp(5px,0.7vh,9px);font-weight:400;text-align:left;color:#999"><div class="ln">https://www.nanoimagingservices.com/about/blog/a-guide-to-cryo-grid-production-materials-interfaces-and-their-impact-on-sample-prep</div></div>
+<div class="tf" style="left:54.16%;top:19.33%;width:40.89%;height:12.13%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Grid : Cu, Au, Ni, Ti</div><div class="ln">(Mesh : 200, 300, 400, hexagonal)</div></div>
+<div class="tf" style="left:54.16%;top:37.2%;width:40.89%;height:33.6%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Foil : amorphous C, Au, Ni/Ti</div><div class="ln">Continous or holey</div><div class="ln">Hole size/spacing (um)</div><div class="ln">1.2/1.3, 2/1, 1/1, 0.6/1</div><div class="ln">HexAuFoil 0.3/0.3</div><div class="ln">Lacey carbon</div></div>
+<div class="tf" style="left:54.16%;top:76.53%;width:40.89%;height:12.13%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Support film</div><div class="ln">: amorphous carbon, Graphene, GO</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Cryo-EM grid</div></div>
+<div class="tf" style="left:35.41%;top:38.13%;width:8.48%;height:4.0%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">hydrophobic</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">55</div>
+</div></div>
+<div class="sc" data-n="54"><div class="sd">
+<div class="e" style="left:31.06%;top:55.6%;width:37.81%;height:40.0%"><img src="cryo-slides-img/s056_110.png" loading="lazy"></div>
+<div class="e" style="left:31.06%;top:15.47%;width:37.81%;height:40.0%"><img src="cryo-slides-img/s056_111.png" loading="lazy"></div>
+<div class="e" style="left:19.5%;top:14.93%;width:60.99%;height:80.67%"><img src="cryo-slides-img/s056_112.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Grid handing</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">56</div>
+</div></div>
+<div class="sc" data-n="55"><div class="sd">
+<div class="e" style="left:36.23%;top:41.6%;width:17.18%;height:30.53%"><img src="cryo-slides-img/s057_113.png" loading="lazy"></div>
+<div class="e" style="left:51.39%;top:48.67%;width:9.68%;height:16.93%"><img src="cryo-slides-img/s057_114.jpg" loading="lazy"></div>
+<div class="e" style="left:31.58%;top:71.73%;width:13.2%;height:23.47%"><img src="cryo-slides-img/s057_115.png" loading="lazy"></div>
+<div class="e" style="left:30.38%;top:47.2%;width:7.8%;height:21.73%"><img src="cryo-slides-img/s057_116.png" loading="lazy"></div>
+<div class="e" style="left:44.94%;top:72.8%;width:12.0%;height:21.33%"><img src="cryo-slides-img/s057_117.png" loading="lazy"></div>
+<div class="e" style="left:44.79%;top:11.73%;width:21.23%;height:28.27%"><img src="cryo-slides-img/s057_118.png" loading="lazy"></div>
+<div class="e" style="left:33.23%;top:14.13%;width:11.7%;height:23.47%"><img src="cryo-slides-img/s057_119.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Grid preparation (Vitrification)</div></div>
+<div class="tf" style="left:3.45%;top:19.87%;width:24.61%;height:13.2%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Increase hydrophilicity</div></div>
+<div class="tf" style="left:3.45%;top:46.4%;width:24.61%;height:13.2%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Vitrification</div></div>
+<div class="tf" style="left:3.45%;top:72.8%;width:24.61%;height:13.2%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Ice contamination</div></div>
+<div class="tf" style="left:71.79%;top:20.13%;width:18.68%;height:12.53%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Ice thickness</div><div class="ln">Particle behavior</div></div>
+<div class="tf" style="left:67.52%;top:48.4%;width:27.31%;height:16.93%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Blotting vs. Spraying vs. drawing</div><div class="ln">Time to freeze</div><div class="ln">Reproducibility</div><div class="ln">Speed</div></div>
+<div class="tf" style="left:71.79%;top:80.93%;width:18.68%;height:7.33%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Humidity (&lt; 20%)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">57</div>
+</div></div>
+<div class="sc" data-n="56"><div class="sd">
+<div class="e" style="left:3.3%;top:28.53%;width:36.46%;height:64.8%"><img src="cryo-slides-img/s058_120.png" loading="lazy"></div>
+<div class="tf" style="left:12.6%;top:16.53%;width:19.2%;height:7.73%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Chameleon</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Automated grid preparation</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">58</div>
+</div></div>
+<div class="sc" data-n="57"><div class="sd">
+<div class="e" style="left:4.73%;top:28.27%;width:32.78%;height:57.47%"><img src="cryo-slides-img/s059_121.jpg" loading="lazy"></div>
+<div class="tf" style="left:12.6%;top:16.53%;width:19.2%;height:7.73%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Vitrojet</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Automated grid preparation</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">59</div>
+</div></div>
+<div class="sc" data-n="58"><div class="sd">
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Grid preparation and screening time</div></div>
+<div class="tf" style="left:12.68%;top:54.67%;width:17.85%;height:13.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">1 sample x 2 conc. x 2 grid types x 3 =</div><div class="ln">12 grids</div></div>
+<div class="tf" style="left:12.45%;top:13.87%;width:75.09%;height:22.4%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Step 1 : Make 3 x grids for every condition (reproducibility issue)  3 x sample &amp; 3 x time in the lab</div><div class="ln">Step 2 : Need to Screen all the grids  3 x screening time + data collection</div><div class="ln">Step 3 : The samples may have issues  back to step 1 &amp; 2 for repeating (multiple times)</div></div>
+<div class="tf" style="left:41.11%;top:43.33%;width:17.85%;height:49.87%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">1 conc. x 4 grid types x 3 =  12 grids</div><div class="ln">or</div><div class="ln">1 conc. X 1 grid types x 4 additives x 3 = 12 grids</div><div class="ln">or</div><div class="ln">1 conc. X 2 grid types x 3 additives x 2 = 12 grids</div><div class="ln">or</div><div class="ln">……………</div></div>
+<div class="tf" style="left:69.47%;top:52.67%;width:17.85%;height:17.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">1 conc. X 1 grid types x 1 additive = 1 final grid</div><div class="ln">(data collection)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">60</div>
+</div></div>
+<div class="sc" data-n="59"><div class="sd">
+<div class="e" style="left:3.9%;top:13.07%;width:40.29%;height:71.73%"><img src="cryo-slides-img/s061_122.png" loading="lazy"></div>
+<div class="e" style="left:46.36%;top:11.6%;width:50.11%;height:73.73%"><img src="cryo-slides-img/s061_123.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Atlas view</div></div>
+<div class="tf" style="left:24.08%;top:86.93%;width:52.36%;height:7.6%;font-size:clamp(9px, 3.73vh, 33px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">General ice quality of the specimen</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">61</div>
+</div></div>
+<div class="sc" data-n="60"><div class="sd">
+<div class="e" style="left:3.23%;top:20.67%;width:93.55%;height:40.4%"><img src="cryo-slides-img/s062_124.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Square view</div></div>
+<div class="tf" style="left:7.28%;top:63.87%;width:13.95%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">Good looking</div></div>
+<div class="tf" style="left:34.06%;top:63.87%;width:9.15%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">Cracked</div></div>
+<div class="tf" style="left:54.54%;top:63.87%;width:14.93%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">Contaminated</div></div>
+<div class="tf" style="left:76.97%;top:63.87%;width:15.75%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">Small, thick ice</div></div>
+<div class="tf" style="left:25.43%;top:76.27%;width:49.21%;height:7.6%;font-size:clamp(9px, 3.73vh, 33px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Confirming ice quality of the grid</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">62</div>
+</div></div>
+<div class="sc" data-n="61"><div class="sd">
+<div class="e" style="left:1.95%;top:22.0%;width:30.31%;height:55.87%"><img src="cryo-slides-img/s063_125.png" loading="lazy"></div>
+<div class="e" style="left:33.76%;top:22.0%;width:32.48%;height:55.87%"><img src="cryo-slides-img/s063_126.png" loading="lazy"></div>
+<div class="e" style="left:67.74%;top:22.0%;width:30.31%;height:55.87%"><img src="cryo-slides-img/s063_127.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Hole view - Ideal</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">63</div>
+</div></div>
+<div class="sc" data-n="62"><div class="sd">
+<div class="e" style="left:4.5%;top:15.47%;width:28.36%;height:48.8%"><img src="cryo-slides-img/s064_128.png" loading="lazy"></div>
+<div class="e" style="left:34.73%;top:15.47%;width:28.43%;height:48.8%"><img src="cryo-slides-img/s064_129.png" loading="lazy"></div>
+<div class="e" style="left:38.56%;top:60.13%;width:20.78%;height:36.93%"><img src="cryo-slides-img/s064_130.png" loading="lazy"></div>
+<div class="e" style="left:65.12%;top:15.47%;width:28.58%;height:48.8%"><img src="cryo-slides-img/s064_131.png" loading="lazy"></div>
+<div class="e" style="left:68.34%;top:60.13%;width:20.78%;height:36.93%"><img src="cryo-slides-img/s064_132.png" loading="lazy"></div>
+<div class="e" style="left:7.05%;top:60.13%;width:20.78%;height:35.73%"><img src="cryo-slides-img/s064_133.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Hole view - Crystalline ice</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">64</div>
+</div></div>
+<div class="sc" data-n="63"><div class="sd">
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Hole view - Particle aggregation</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">65</div>
+</div></div>
+<div class="sc" data-n="64"><div class="sd">
+<div class="e" style="left:3.38%;top:23.73%;width:32.26%;height:55.2%"><img src="cryo-slides-img/s066_134.png" loading="lazy"></div>
+<div class="e" style="left:36.31%;top:23.73%;width:29.93%;height:55.2%"><img src="cryo-slides-img/s066_135.png" loading="lazy"></div>
+<div class="e" style="left:66.84%;top:23.73%;width:29.93%;height:55.2%"><img src="cryo-slides-img/s066_136.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Hole view – Concentration issue</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">66</div>
+</div></div>
+<div class="sc" data-n="65"><div class="sd">
+<div class="e" style="left:2.93%;top:23.6%;width:29.78%;height:54.8%"><img src="cryo-slides-img/s067_137.png" loading="lazy"></div>
+<div class="e" style="left:34.06%;top:23.6%;width:29.78%;height:54.8%"><img src="cryo-slides-img/s067_138.png" loading="lazy"></div>
+<div class="e" style="left:65.12%;top:23.6%;width:31.88%;height:54.93%"><img src="cryo-slides-img/s067_139.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Hole view - Contamination</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">67</div>
+</div></div>
+<div class="sc" data-n="66"><div class="sd">
+<div class="e" style="left:11.93%;top:22.0%;width:33.53%;height:61.6%"><img src="cryo-slides-img/s068_140.png" loading="lazy"></div>
+<div class="e" style="left:53.86%;top:21.87%;width:33.53%;height:61.73%"><img src="cryo-slides-img/s068_141.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Hole view - Other ice issues</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">68</div>
+</div></div>
+<div class="sc" data-n="67"><div class="sd">
+<div class="tf" style="left:70.67%;top:92.67%;width:22.51%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">69</div></div>
+<div class="tf" style="left:0.53%;top:93.2%;width:3.98%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">69</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Grid screening</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">69</div>
+</div></div>
+<div class="sc" data-n="68"><div class="sd">
+<div class="e" style="left:6.9%;top:15.87%;width:86.27%;height:45.87%"><img src="cryo-slides-img/s070_142.png" loading="lazy"></div>
+<div class="tf" style="left:0.53%;top:95.6%;width:95.42%;height:4.0%;font-size:clamp(5px,0.7vh,9px);font-weight:400;text-align:left;color:#999"><div class="ln">https://www.nanoimagingservices.com/about/blog/a-guide-to-cryo-grid-production-materials-interfaces-and-their-impact-on-sample-prep</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Air-Water interface (AWI)</div></div>
+<div class="tf" style="left:12.6%;top:71.33%;width:71.34%;height:17.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">At the AWI, proteins can undergo denaturation, aggregation or preferred orientation</div><div class="ln">Negatively impacts the final image quality</div></div>
+<div class="tf" style="left:43.81%;top:40.67%;width:12.38%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">100 ~ 150 nm</div></div>
+<div class="tf" style="left:22.13%;top:52.4%;width:10.35%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">10 ~ 15 nm</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">70</div>
+</div></div>
+<div class="sc" data-n="69"><div class="sd">
+<div class="e" style="left:20.56%;top:14.13%;width:58.89%;height:39.73%"><img src="cryo-slides-img/s071_143.png" loading="lazy"></div>
+<div class="e" style="left:21.83%;top:58.8%;width:58.89%;height:37.87%"><img src="cryo-slides-img/s071_144.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Spot-to-plunge time effect (with Chameleon)</div></div>
+<div class="tf" style="left:0.0%;top:95.87%;width:36.46%;height:3.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">Noble, A.J. et al., 2018, Nat. Methods</div></div>
+<div class="tf" style="left:20.56%;top:13.47%;width:18.3%;height:6.67%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">~ 1 s</div></div>
+<div class="tf" style="left:40.89%;top:13.33%;width:18.3%;height:6.67%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">500 ms</div></div>
+<div class="tf" style="left:61.07%;top:13.33%;width:18.3%;height:6.67%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">100 ms</div></div>
+<div class="tf" style="left:20.56%;top:58.4%;width:28.43%;height:6.67%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">600 ms</div></div>
+<div class="tf" style="left:54.99%;top:58.4%;width:18.3%;height:6.67%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:center;color:#555"><div class="ln">200 ms</div></div>
+<div class="tf" style="left:1.35%;top:13.2%;width:18.3%;height:6.67%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Hemagglutinin</div></div>
+<div class="tf" style="left:1.35%;top:57.33%;width:18.3%;height:12.0%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Insulin receptor</div></div>
+<div class="tf" style="left:100.15%;top:51.07%;width:68.79%;height:12.4%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Longer blotting time</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">71</div>
+</div></div>
+<div class="sc" data-n="70"><div class="sd">
+<div class="e" style="left:10.2%;top:15.47%;width:48.69%;height:78.53%"><img src="cryo-slides-img/s072_145.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Spot-to-plunge time effect (with Chameleon)</div></div>
+<div class="tf" style="left:0.0%;top:95.87%;width:36.46%;height:3.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">Noble, A.J. et al., 2018, Nat. Methods</div></div>
+<div class="tf" style="left:61.59%;top:37.6%;width:35.78%;height:34.4%;font-size:clamp(7px, 2.13vh, 19px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Particles can move 100 nm within 1 ms or less.</div><div class="ln">Once adsorbed, denaturation may follow is as little as a few ns.</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">72</div>
+</div></div>
+<div class="sc" data-n="71"><div class="sd">
+<div class="e" style="left:18.15%;top:15.33%;width:63.77%;height:79.07%"><img src="cryo-slides-img/s073_146.png" loading="lazy"></div>
+<div class="tf" style="left:0.53%;top:95.6%;width:95.42%;height:4.0%;font-size:clamp(5px,0.7vh,9px);font-weight:400;text-align:left;color:#999"><div class="ln">https://www.nanoimagingservices.com/about/blog/a-guide-to-cryo-grid-production-materials-interfaces-and-their-impact-on-sample-prep</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Continuous Support Films</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">73</div>
+</div></div>
+<div class="sc" data-n="72"><div class="sd">
+<div class="e" style="left:7.65%;top:13.47%;width:44.26%;height:78.67%"><img src="cryo-slides-img/s074_147.jpg" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Grid optimization and ......</div></div>
+<div class="tf" style="left:0.0%;top:95.87%;width:36.46%;height:3.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">Domen, K. et al., 2021, iScience</div></div>
+<div class="tf" style="left:62.12%;top:37.6%;width:31.73%;height:34.4%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Different vitrification procedures</div><div class="ln">Functionalized grids</div><div class="ln">Longer data collection</div><div class="ln">Tilted data collection</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">74</div>
+</div></div>
+<div class="sc" data-n="73"><div class="sd">
+<div class="e" style="left:4.2%;top:33.33%;width:26.86%;height:31.47%"><img src="cryo-slides-img/s075_148.png" loading="lazy"></div>
+<div class="e" style="left:39.01%;top:32.13%;width:21.91%;height:42.53%"><img src="cryo-slides-img/s075_149.jpg" loading="lazy"></div>
+<div class="e" style="left:68.19%;top:32.13%;width:27.61%;height:39.87%"><img src="cryo-slides-img/s075_150.png" loading="lazy"></div>
+<div class="tf" style="left:70.67%;top:92.67%;width:22.51%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:right;color:#555"><div class="ln">75</div></div>
+<div class="tf" style="left:13.35%;top:20.27%;width:8.18%;height:7.2%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Size</div></div>
+<div class="tf" style="left:37.81%;top:20.27%;width:24.38%;height:7.2%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Quantity (concentration)</div></div>
+<div class="tf" style="left:72.39%;top:20.27%;width:19.28%;height:7.2%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Reagents (Buffer)</div></div>
+<div class="tf" style="left:5.25%;top:76.4%;width:24.53%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">&gt; 80 kDa of ordered mass</div></div>
+<div class="tf" style="left:36.76%;top:77.6%;width:26.41%;height:9.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">0.5~1 mg protein</div><div class="ln">50 nM ~ 5 uM concentration</div></div>
+<div class="tf" style="left:67.37%;top:75.6%;width:30.31%;height:17.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">Most of buffers are fine.</div><div class="ln">But DMSO &gt; 0.5 %, high carbon</div><div class="ln">chemicals, cryoprotectants are</div><div class="ln">exceptions.</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Sample requirements for SPA</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">75</div>
+</div></div>
+<div class="sc" data-n="74"><div class="sd">
+<div class="e" style="left:0.0%;top:0.0%;width:101.95%;height:104.93%"><img src="cryo-slides-img/s076_151.png" loading="lazy"></div>
+<div class="tf" style="left:2.25%;top:44.4%;width:95.42%;height:16.13%;font-size:clamp(23px, 8.80vh, 79px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Imaging…</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">76</div>
+</div></div>
+<div class="sc" data-n="75"><div class="sd">
+<div class="e" style="left:4.95%;top:16.4%;width:90.17%;height:67.07%"><img src="cryo-slides-img/s077_152.png" loading="lazy"></div>
+<div class="tf" style="left:70.67%;top:92.67%;width:22.51%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:right;color:#555"><div class="ln">77</div></div>
+<div class="tf" style="left:65.72%;top:96.27%;width:24.98%;height:3.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:right;color:#555"><div class="ln">Halfon et al., 2022 Faraday Discuss.</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Time &amp; Cost of a single particle cryo-EM pipeline</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">77</div>
+</div></div>
+<div class="sc" data-n="76"><div class="sd">
+<div class="e" style="left:7.13%;top:12.67%;width:38.18%;height:82.13%"><img src="cryo-slides-img/s078_153.png" loading="lazy"></div>
+<div class="e" style="left:54.76%;top:12.93%;width:39.53%;height:81.33%"><img src="cryo-slides-img/s078_154.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Proteins are dynamic molecules</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">78</div>
+</div></div>
+<div class="sc" data-n="77"><div class="sd">
+<div class="e" style="left:9.6%;top:20.8%;width:35.26%;height:62.67%"><img src="cryo-slides-img/s079_155.png" loading="lazy"></div>
+<div class="e" style="left:45.46%;top:32.67%;width:21.98%;height:39.07%"><img src="cryo-slides-img/s079_156.png" loading="lazy"></div>
+<div class="e" style="left:68.04%;top:33.47%;width:21.08%;height:37.47%"><img src="cryo-slides-img/s079_157.png" loading="lazy"></div>
+<div class="tf" style="left:16.5%;top:15.47%;width:21.46%;height:5.87%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">103-104 Micrographs</div></div>
+<div class="tf" style="left:89.8%;top:47.47%;width:7.58%;height:9.47%;font-size:clamp(12px, 4.80vh, 43px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">······</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Single particle analysis</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">79</div>
+</div></div>
+<div class="sc" data-n="78"><div class="sd">
+<div class="e" style="left:4.28%;top:18.67%;width:41.56%;height:73.87%"><img src="cryo-slides-img/s080_158.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Data collection workflow</div></div>
+<div class="tf" style="left:5.78%;top:20.93%;width:8.03%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Atlas</div></div>
+<div class="tf" style="left:53.71%;top:20.93%;width:17.33%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Square selection</div></div>
+<div class="tf" style="left:75.54%;top:20.93%;width:17.33%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Hole selection</div></div>
+<div class="tf" style="left:75.39%;top:58.53%;width:17.33%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Target / focus area</div></div>
+<div class="tf" style="left:53.79%;top:58.53%;width:17.33%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Data collection</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">80</div>
+</div></div>
+<div class="sc" data-n="79"><div class="sd">
+<div class="e" style="left:41.56%;top:37.87%;width:53.86%;height:30.0%"><img src="cryo-slides-img/s081_159.png" loading="lazy"></div>
+<div class="tf" style="left:5.55%;top:23.07%;width:33.01%;height:59.73%;font-size:clamp(7px, 2.13vh, 19px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">The number of particle vs. the achievable resolution</div><div class="ln">High mag</div><div class="ln">fine pixel sizes / low particles</div><div class="ln">Larger box size</div><div class="ln">Need more processing power</div><div class="ln">Low mag</div><div class="ln">Coarse pixel sizes</div><div class="ln">Limit the achievable resolution</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">User decisions – Magnification (pixel size)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">81</div>
+</div></div>
+<div class="sc" data-n="80"><div class="sd">
+<div class="e" style="left:47.79%;top:21.47%;width:49.06%;height:63.73%"><img src="cryo-slides-img/s082_160.png" loading="lazy"></div>
+<div class="tf" style="left:6.68%;top:27.33%;width:36.38%;height:56.4%;font-size:clamp(7px, 2.13vh, 19px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Generating sufficient contrast vs. retain high- resolution information</div><div class="ln">Close to focus – may be invisible</div><div class="ln">Far from focus – loss of high res. info.</div><div class="ln">Smaller particle</div><div class="ln">may require higher defocus setting</div><div class="ln">-0.5 /- 1.0  ~  -2.0</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">User decisions – Defocus range</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">82</div>
+</div></div>
+<div class="sc" data-n="81"><div class="sd">
+<div class="e" style="left:6.53%;top:18.67%;width:39.91%;height:70.93%"><img src="cryo-slides-img/s083_161.png" loading="lazy"></div>
+<div class="e" style="left:53.56%;top:18.67%;width:39.91%;height:70.93%"><img src="cryo-slides-img/s083_162.png" loading="lazy"></div>
+<div class="tf" style="left:54.54%;top:19.87%;width:10.2%;height:6.67%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">-1.5 μm</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Defocus range</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">83</div>
+</div></div>
+<div class="sc" data-n="82"><div class="sd">
+<div class="e" style="left:6.53%;top:18.67%;width:39.91%;height:70.93%"><img src="cryo-slides-img/s084_163.png" loading="lazy"></div>
+<div class="e" style="left:53.79%;top:18.67%;width:39.91%;height:70.93%"><img src="cryo-slides-img/s084_164.png" loading="lazy"></div>
+<div class="tf" style="left:54.54%;top:19.87%;width:11.63%;height:6.67%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">-0.75 μm</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Defocus range</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">84</div>
+</div></div>
+<div class="sc" data-n="83"><div class="sd">
+<div class="e" style="left:53.71%;top:18.67%;width:39.91%;height:70.93%"><img src="cryo-slides-img/s085_165.png" loading="lazy"></div>
+<div class="e" style="left:6.53%;top:18.67%;width:40.14%;height:71.33%"><img src="cryo-slides-img/s085_166.png" loading="lazy"></div>
+<div class="tf" style="left:54.54%;top:19.87%;width:10.58%;height:6.67%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">At focus</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Defocus range</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">85</div>
+</div></div>
+<div class="sc" data-n="84"><div class="sd">
+<div class="e" style="left:53.71%;top:18.67%;width:39.91%;height:70.93%"><img src="cryo-slides-img/s086_167.png" loading="lazy"></div>
+<div class="e" style="left:6.45%;top:18.67%;width:40.29%;height:71.6%"><img src="cryo-slides-img/s086_168.png" loading="lazy"></div>
+<div class="tf" style="left:54.54%;top:19.87%;width:10.2%;height:6.67%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">-3.0 μm</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Defocus range</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">86</div>
+</div></div>
+<div class="sc" data-n="85"><div class="sd">
+<div class="e" style="left:53.71%;top:18.67%;width:39.91%;height:70.93%"><img src="cryo-slides-img/s087_169.png" loading="lazy"></div>
+<div class="e" style="left:6.53%;top:18.67%;width:40.14%;height:71.33%"><img src="cryo-slides-img/s087_170.png" loading="lazy"></div>
+<div class="tf" style="left:54.54%;top:19.87%;width:11.18%;height:6.67%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">+3.0 μm</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Defocus range</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">87</div>
+</div></div>
+<div class="sc" data-n="86"><div class="sd">
+<div class="e" style="left:3.53%;top:27.73%;width:29.71%;height:52.8%"><img src="cryo-slides-img/s088_171.png" loading="lazy"></div>
+<div class="e" style="left:35.11%;top:27.73%;width:29.71%;height:52.8%"><img src="cryo-slides-img/s088_172.png" loading="lazy"></div>
+<div class="e" style="left:66.77%;top:27.73%;width:29.71%;height:52.8%"><img src="cryo-slides-img/s088_173.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">User decisions - Hole targeting strategy</div></div>
+<div class="tf" style="left:6.9%;top:21.33%;width:22.96%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">Conventional targeting</div></div>
+<div class="tf" style="left:38.71%;top:18.4%;width:22.58%;height:9.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:center;color:#555"><div class="ln">Multi-hole targeting</div><div class="ln">With beam-image shift</div></div>
+<div class="tf" style="left:72.02%;top:21.33%;width:19.2%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">Multi-shot per hole</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">88</div>
+</div></div>
+<div class="sc" data-n="87"><div class="sd">
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">User decisions</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">89</div>
+</div></div>
+<div class="sc" data-n="88"><div class="sd">
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Data collection setting</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">90</div>
+</div></div>
+<div class="sc" data-n="89"><div class="sd">
+<div class="e" style="left:6.0%;top:16.67%;width:67.67%;height:77.87%"><img src="cryo-slides-img/s091_174.gif" loading="lazy"></div>
+<div class="tf" style="left:70.67%;top:92.67%;width:22.51%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:right;color:#555"><div class="ln">91</div></div>
+<div class="tf" style="left:66.39%;top:96.4%;width:24.98%;height:3.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:right;color:#555"><div class="ln">Russo et al., 2022 Faraday Discuss.</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Minimum molecular mass identifiable in situ</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">91</div>
+</div></div>
+<div class="sc" data-n="90"><div class="sd">
+<div class="e" style="left:10.28%;top:15.47%;width:79.52%;height:76.93%"><img src="cryo-slides-img/s092_175.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Laser phase plate</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">92</div>
+</div></div>
+<div class="sc" data-n="91"><div class="sd">
+<div class="e" style="left:10.28%;top:14.4%;width:79.52%;height:78.93%"><img src="cryo-slides-img/s093_176.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Laser phase plate</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">93</div>
+</div></div>
+<div class="sc" data-n="92"><div class="sd">
+<div class="e" style="left:0.0%;top:0.0%;width:101.95%;height:104.93%"><img src="cryo-slides-img/s094_177.png" loading="lazy"></div>
+<div class="tf" style="left:3.3%;top:44.4%;width:95.42%;height:16.13%;font-size:clamp(23px, 8.80vh, 79px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Data Processing</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">94</div>
+</div></div>
+<div class="sc" data-n="93"><div class="sd">
+<div class="e" style="left:4.95%;top:16.4%;width:90.17%;height:67.07%"><img src="cryo-slides-img/s095_178.png" loading="lazy"></div>
+<div class="tf" style="left:70.67%;top:92.67%;width:22.51%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:right;color:#555"><div class="ln">95</div></div>
+<div class="tf" style="left:65.72%;top:96.27%;width:24.98%;height:3.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:right;color:#555"><div class="ln">Halfon et al., 2022 Faraday Discuss.</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Time &amp; Cost of a single particle cryo-EM pipeline</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">95</div>
+</div></div>
+<div class="sc" data-n="94"><div class="sd">
+<div class="e" style="left:9.6%;top:18.67%;width:35.26%;height:62.67%"><img src="cryo-slides-img/s096_179.png" loading="lazy"></div>
+<div class="e" style="left:45.46%;top:30.53%;width:21.98%;height:39.07%"><img src="cryo-slides-img/s096_180.png" loading="lazy"></div>
+<div class="e" style="left:68.04%;top:31.2%;width:21.08%;height:37.47%"><img src="cryo-slides-img/s096_181.png" loading="lazy"></div>
+<div class="tf" style="left:16.5%;top:13.2%;width:21.46%;height:5.87%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">103-104 Micrographs</div></div>
+<div class="tf" style="left:89.8%;top:45.33%;width:7.58%;height:9.47%;font-size:clamp(12px, 4.80vh, 43px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">······</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Single particle analysis</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">96</div>
+</div></div>
+<div class="sc" data-n="95"><div class="sd">
+<div class="e" style="left:9.53%;top:18.13%;width:73.89%;height:63.73%"><img src="cryo-slides-img/s097_182.png" loading="lazy"></div>
+<div class="tf" style="left:16.5%;top:13.2%;width:21.46%;height:5.87%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">103-104 Micrographs</div></div>
+<div class="tf" style="left:57.09%;top:19.2%;width:24.08%;height:5.87%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">104-107 particle images</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Single particle analysis</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">97</div>
+</div></div>
+<div class="sc" data-n="96"><div class="sd">
+<div class="e" style="left:54.76%;top:26.27%;width:27.53%;height:69.73%"><img src="cryo-slides-img/s098_183.png" loading="lazy"></div>
+<div class="tf" style="left:22.51%;top:42.4%;width:9.6%;height:14.8%;font-size:clamp(21px, 8.00vh, 72px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">2D</div></div>
+<div class="tf" style="left:64.37%;top:43.2%;width:9.6%;height:14.8%;font-size:clamp(21px, 8.00vh, 72px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">3D</div></div>
+<div class="tf" style="left:60.99%;top:19.6%;width:15.08%;height:5.87%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Cryo-EM map</div></div>
+<div class="tf" style="left:31.58%;top:30.13%;width:36.91%;height:39.73%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Unknown particle poses</div><div class="ln">Low signal to noise ratio (SNR)</div><div class="ln">Imperfect imaging (artifacts)</div><div class="ln">Heterogenous/dynamic nature</div></div>
+<div class="tf" style="left:54.09%;top:14.53%;width:28.88%;height:5.87%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">(Utilizing ~10% of particles)</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Images to 3D maps</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">98</div>
+</div></div>
+<div class="sc" data-n="97"><div class="sd">
+<div class="e" style="left:47.56%;top:30.53%;width:49.51%;height:49.2%"><img src="cryo-slides-img/s099_184.png" loading="lazy"></div>
+<div class="tf" style="left:8.48%;top:20.4%;width:37.43%;height:75.47%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Visual representation of the distribution of spatial frequencies within an image, obtained by calculating the Fourier transform of the image and then squaring magnitude</div><div class="ln">Low frequencies (large features, low resolution) appear near the center</div><div class="ln">High frequencies (small features, high resolution) are towards the edges of the spectrum</div><div class="ln">Other undesirable effects such as the level of astigmatism, or drift associated with an image, as well as crystalline ice contamination, are often more clearly diagnosed in the power spectrum than in the cryo-TEM image itself</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Some terminology - Power spectrum</div></div>
+<div class="tf" style="left:5.25%;top:14.27%;width:24.53%;height:8.13%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Power spectrum</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">99</div>
+</div></div>
+<div class="sc" data-n="98"><div class="sd">
+<div class="e" style="left:49.29%;top:22.4%;width:45.46%;height:66.4%"><img src="cryo-slides-img/s100_185.png" loading="lazy"></div>
+<div class="tf" style="left:8.48%;top:20.4%;width:37.43%;height:75.47%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Visual representation of the distribution of spatial frequencies within an image, obtained by calculating the Fourier transform of the image and then squaring magnitude</div><div class="ln">Low frequencies (large features, low resolution) appear near the center</div><div class="ln">High frequencies (small features, high resolution) are towards the edges of the spectrum</div><div class="ln">Other undesirable effects such as the level of astigmatism, or drift associated with an image, as well as crystalline ice contamination, are often more clearly diagnosed in the power spectrum than in the cryo-TEM image itself</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Some terminology - Power spectrum</div></div>
+<div class="tf" style="left:5.25%;top:14.27%;width:24.53%;height:8.13%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Power spectrum</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">100</div>
+</div></div>
+<div class="sc" data-n="99"><div class="sd">
+<div class="e" style="left:52.96%;top:15.2%;width:37.43%;height:34.8%"><img src="cryo-slides-img/s101_186.png" loading="lazy"></div>
+<div class="e" style="left:54.76%;top:53.73%;width:36.83%;height:40.53%"><img src="cryo-slides-img/s101_187.png" loading="lazy"></div>
+<div class="tf" style="left:8.48%;top:20.4%;width:37.43%;height:75.47%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">The CTF is a measure of how much the phase shift (defocus) and the spatial frequency</div><div class="ln">However, microscope aberrations (envelop function) have corrupted the image</div><div class="ln">Oscillations within the CTF are easily seen by visualizing the power spectrum of cryo-EM images. The pattern of concentric rings (Thon rings) represent the alternation of high and low contrast transfer as a function of spatial frequency</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Some terminology – CTF</div></div>
+<div class="tf" style="left:5.25%;top:14.27%;width:35.56%;height:8.13%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Contrast Transfer Function (CTF)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">101</div>
+</div></div>
+<div class="sc" data-n="100"><div class="sd">
+<div class="e" style="left:7.8%;top:16.13%;width:84.4%;height:64.4%"><img src="cryo-slides-img/s102_188.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Understanding raw cryo-EM data</div></div>
+<div class="tf" style="left:19.73%;top:83.87%;width:60.47%;height:9.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">Raw cryo-EM data corresponds to a stack of movie frames, which each frame is a sparse image consisting zeros and ones</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">102</div>
+</div></div>
+<div class="sc" data-n="101"><div class="sd">
+<div class="e" style="left:58.44%;top:15.73%;width:30.01%;height:79.73%"><img src="cryo-slides-img/s103_189.png" loading="lazy"></div>
+<div class="tf" style="left:8.1%;top:26.8%;width:37.36%;height:57.6%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Long exposure time per ‘image’</div><div class="ln">High total dose improves contrast</div><div class="ln">But particles move due to physical drift and ‘beam-induced motion’</div><div class="ln">Fractionation into frames (‘movie’) allows correction of drift and motion</div><div class="ln">The re-aligned frames are then summed into a single, de-blurred micrograph</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Pre-processing – Motion correction</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">103</div>
+</div></div>
+<div class="sc" data-n="102"><div class="sd">
+<div class="e" style="left:9.98%;top:21.07%;width:80.12%;height:58.0%"><img src="cryo-slides-img/s104_190.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Pre-processing – Motion correction</div></div>
+<div class="tf" style="left:56.19%;top:64.13%;width:4.05%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">0.3</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">104</div>
+</div></div>
+<div class="sc" data-n="103"><div class="sd">
+<div class="e" style="left:50.04%;top:29.2%;width:46.29%;height:41.6%"><img src="cryo-slides-img/s105_191.png" loading="lazy"></div>
+<div class="tf" style="left:9.98%;top:15.73%;width:37.36%;height:61.6%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">To optimize the signal-to-noise ratio across all resolutions in the micrograph to enable high-resolution 3D reconstruction</div><div class="ln">The electron beam damages the sample during the course of exposure</div><div class="ln">Cryo-EM movie frames accumulate an increasing amount of electron dose.</div><div class="ln">The earliest frames</div><div class="ln">most intact information</div><div class="ln">low radiation damage</div><div class="ln">low electrons  limited contrast</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Pre-processing – Dose weighting</div></div>
+<div class="tf" style="left:8.33%;top:79.07%;width:40.74%;height:8.53%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">The early frames – retained high res. info.</div></div>
+<div class="tf" style="left:8.33%;top:88.93%;width:40.74%;height:8.53%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">The later frames – limited to low res. info.</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">105</div>
+</div></div>
+<div class="sc" data-n="104"><div class="sd">
+<div class="e" style="left:56.41%;top:15.73%;width:32.48%;height:80.27%"><img src="cryo-slides-img/s106_192.png" loading="lazy"></div>
+<div class="tf" style="left:9.98%;top:15.73%;width:37.36%;height:61.6%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">To optimize the signal-to-noise ratio across all resolutions in the micrograph to enable high-resolution 3D reconstruction</div><div class="ln">The electron beam damages the sample during the course of exposure</div><div class="ln">Cryo-EM movie frames accumulate an increasing amount of electron dose.</div><div class="ln">The earliest frames</div><div class="ln">most intact information</div><div class="ln">low radiation damage</div><div class="ln">low electrons  limited contrast</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Pre-processing – Dose weighting</div></div>
+<div class="tf" style="left:8.33%;top:79.07%;width:40.74%;height:8.53%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">The early frames – retained high res. info.</div></div>
+<div class="tf" style="left:8.33%;top:88.93%;width:40.74%;height:8.53%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">The later frames – limited to low res. info.</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">106</div>
+</div></div>
+<div class="sc" data-n="105"><div class="sd">
+<div class="e" style="left:42.61%;top:30.53%;width:54.39%;height:39.07%"><img src="cryo-slides-img/s107_193.png" loading="lazy"></div>
+<div class="tf" style="left:7.8%;top:18.8%;width:31.58%;height:69.33%;font-size:clamp(7px, 2.13vh, 19px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Estimation of CTF parameters to enable the computational correction of the CTF for each image</div><div class="ln">The most important task in CTF estimation is to determine the true defocus of each image</div><div class="ln">CTF modeling is also an effective way to assess micrograph.</div><div class="ln">The cross-correlation and resolution limit of CTF fitting are useful metrics to exclude poor micrographs out of the dataset</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Pre-processing – CTF estimation</div></div>
+<div class="tf" style="left:54.31%;top:82.8%;width:33.76%;height:5.33%;font-size:clamp(5px,0.7vh,9px);font-weight:400;text-align:left;color:#999"><div class="ln">https://ctfsimulation.streamlit.app/~/+/</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">107</div>
+</div></div>
+<div class="sc" data-n="106"><div class="sd">
+<div class="e" style="left:46.96%;top:22.4%;width:44.04%;height:62.0%"><img src="cryo-slides-img/s108_194.png" loading="lazy"></div>
+<div class="tf" style="left:7.8%;top:18.8%;width:31.58%;height:69.33%;font-size:clamp(7px, 2.13vh, 19px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Estimation of CTF parameters to enable the computational correction of the CTF for each image</div><div class="ln">The most important task in CTF estimation is to determine the true defocus of each image</div><div class="ln">CTF modeling is also an effective way to assess micrograph.</div><div class="ln">The cross-correlation and resolution limit of CTF fitting are useful metrics to exclude poor micrographs out of the dataset</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Pre-processing – CTF estimation</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">108</div>
+</div></div>
+<div class="sc" data-n="107"><div class="sd">
+<div class="e" style="left:44.56%;top:19.87%;width:50.64%;height:19.73%"><img src="cryo-slides-img/s109_195.png" loading="lazy"></div>
+<div class="e" style="left:45.31%;top:43.73%;width:49.89%;height:25.07%"><img src="cryo-slides-img/s109_196.png" loading="lazy"></div>
+<div class="e" style="left:71.57%;top:67.73%;width:17.55%;height:29.73%"><img src="cryo-slides-img/s109_197.png" loading="lazy"></div>
+<div class="tf" style="left:7.8%;top:18.8%;width:31.58%;height:69.33%;font-size:clamp(7px, 2.13vh, 19px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Estimation of CTF parameters to enable the computational correction of the CTF for each image</div><div class="ln">The most important task in CTF estimation is to determine the true defocus of each image</div><div class="ln">CTF modeling is also an effective way to assess micrograph.</div><div class="ln">The cross-correlation and resolution limit of CTF fitting are useful metrics to exclude poor micrographs out of the dataset</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Pre-processing – CTF estimation</div></div>
+<div class="tf" style="left:46.89%;top:14.4%;width:24.76%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">CTF objective function fitting</div></div>
+<div class="tf" style="left:46.89%;top:39.07%;width:42.24%;height:5.33%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">Comparison of measured CTF vs. power spectrum</div></div>
+<div class="tf" style="left:47.64%;top:77.87%;width:20.26%;height:9.47%;font-size:clamp(7px, 1.60vh, 14px);font-weight:500;text-align:left;color:#555"><div class="ln">2D plot of defocus vs.</div><div class="ln">Position on micrograph</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">109</div>
+</div></div>
+<div class="sc" data-n="108"><div class="sd">
+<div class="e" style="left:45.39%;top:22.13%;width:49.96%;height:30.13%"><img src="cryo-slides-img/s110_198.png" loading="lazy"></div>
+<div class="e" style="left:45.39%;top:58.0%;width:49.96%;height:30.13%"><img src="cryo-slides-img/s110_199.png" loading="lazy"></div>
+<div class="e" style="left:45.39%;top:40.0%;width:49.96%;height:30.13%"><img src="cryo-slides-img/s110_200.png" loading="lazy"></div>
+<div class="tf" style="left:7.8%;top:18.8%;width:31.58%;height:69.33%;font-size:clamp(7px, 2.13vh, 19px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Estimation of CTF parameters to enable the computational correction of the CTF for each image</div><div class="ln">The most important task in CTF estimation is to determine the true defocus of each image</div><div class="ln">CTF modeling is also an effective way to assess micrograph.</div><div class="ln">The cross-correlation and resolution limit of CTF fitting are useful metrics to exclude poor micrographs out of the dataset</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Pre-processing – CTF estimation</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">110</div>
+</div></div>
+<div class="sc" data-n="109"><div class="sd">
+<div class="e" style="left:9.53%;top:30.13%;width:80.87%;height:54.93%"><img src="cryo-slides-img/s111_201.png" loading="lazy"></div>
+<div class="e" style="left:69.77%;top:12.0%;width:20.03%;height:33.07%"><img src="cryo-slides-img/s111_202.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Particle selection and extraction</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">111</div>
+</div></div>
+<div class="sc" data-n="110"><div class="sd">
+<div class="e" style="left:43.21%;top:25.07%;width:53.04%;height:49.87%"><img src="cryo-slides-img/s112_203.png" loading="lazy"></div>
+<div class="tf" style="left:7.5%;top:25.07%;width:30.91%;height:49.87%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Enhance the signal</div><div class="ln">Manual picking</div><div class="ln">Blob picking</div><div class="ln">Template picking</div><div class="ln">ML approach (Topaz, crYOLO, DRPnet, DeepCryoPicker etc.)</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Particle selection and extraction</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">112</div>
+</div></div>
+<div class="sc" data-n="111"><div class="sd">
+<div class="e" style="left:42.39%;top:34.0%;width:53.34%;height:37.33%"><img src="cryo-slides-img/s113_204.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Particle selection and extraction</div></div>
+<div class="tf" style="left:7.5%;top:25.07%;width:30.91%;height:49.87%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Enhance the signal</div><div class="ln">Manual picking</div><div class="ln">Blob picking</div><div class="ln">Template picking</div><div class="ln">ML approach (Topaz, crYOLO, DRPnet, DeepCryoPicker etc.)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">113</div>
+</div></div>
+<div class="sc" data-n="112"><div class="sd">
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Particle selection and extraction</div></div>
+<div class="tf" style="left:43.36%;top:21.2%;width:51.61%;height:62.4%;font-size:clamp(7px, 1.60vh, 14px);font-weight:700;text-align:left;color:#555"><div class="ln">Topaz – No general model; requires training per sample/per dataset. Is free standing or incorporated into RELION and cryoSPARC.</div><div class="ln">Warp – Has a general model but typically requires user re-training with specific sample types. Once trained, the neural network can work across different datasets and similar sample types. (Note: Warp only runs on Windows. Warp also has a junk detector that will automatically avoid junk based on a pre-trained neural network)</div><div class="ln">crYOLO – Has a general model that works well on most samples. Currently, is free standing or a part of the SPHIRE package.</div></div>
+<div class="tf" style="left:7.5%;top:25.07%;width:30.91%;height:49.87%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Enhance the signal</div><div class="ln">Manual picking</div><div class="ln">Blob picking</div><div class="ln">Template picking</div><div class="ln">ML approach (Topaz, crYOLO, DRPnet, DeepCryoPicker etc.)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">114</div>
+</div></div>
+<div class="sc" data-n="113"><div class="sd">
+<div class="e" style="left:8.93%;top:19.2%;width:82.22%;height:66.93%"><img src="cryo-slides-img/s115_205.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">2D classification</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">115</div>
+</div></div>
+<div class="sc" data-n="114"><div class="sd">
+<div class="e" style="left:5.25%;top:17.2%;width:89.57%;height:71.33%"><img src="cryo-slides-img/s116_206.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">2D classification</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">116</div>
+</div></div>
+<div class="sc" data-n="115"><div class="sd">
+<div class="e" style="left:51.46%;top:19.6%;width:43.14%;height:64.93%"><img src="cryo-slides-img/s117_207.png" loading="lazy"></div>
+<div class="e" style="left:6.3%;top:19.6%;width:43.14%;height:64.93%"><img src="cryo-slides-img/s117_208.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">2D classes</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">117</div>
+</div></div>
+<div class="sc" data-n="116"><div class="sd">
+<div class="e" style="left:50.71%;top:14.8%;width:32.11%;height:79.2%"><img src="cryo-slides-img/s118_209.png" loading="lazy"></div>
+<div class="tf" style="left:13.88%;top:35.33%;width:30.91%;height:19.07%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">The Fourier transform of each of the 2D class averages Represent a section of the Fourier transform of the initial object</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">3D reconstruction</div></div>
+<div class="tf" style="left:13.88%;top:72.8%;width:30.91%;height:14.53%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">The inverse TF of the combined sections generates the initial objects</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">118</div>
+</div></div>
+<div class="sc" data-n="117"><div class="sd">
+<div class="e" style="left:9.75%;top:20.13%;width:80.57%;height:66.0%"><img src="cryo-slides-img/s119_210.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">3D reconstruction – Initial map</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">119</div>
+</div></div>
+<div class="sc" data-n="118"><div class="sd">
+<div class="e" style="left:9.75%;top:20.13%;width:80.57%;height:66.0%"><img src="cryo-slides-img/s120_211.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">3D reconstruction – Initial map</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">120</div>
+</div></div>
+<div class="sc" data-n="119"><div class="sd">
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">3D reconstruction – Map optimization</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">121</div>
+</div></div>
+<div class="sc" data-n="120"><div class="sd">
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">3D reconstruction – Map optimization</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">122</div>
+</div></div>
+<div class="sc" data-n="121"><div class="sd">
+<div class="e" style="left:72.54%;top:14.13%;width:24.38%;height:34.0%"><img src="cryo-slides-img/s123_212.png" loading="lazy"></div>
+<div class="e" style="left:50.04%;top:20.93%;width:21.31%;height:23.2%"><img src="cryo-slides-img/s123_213.png" loading="lazy"></div>
+<div class="e" style="left:56.86%;top:53.6%;width:31.43%;height:44.13%"><img src="cryo-slides-img/s123_214.png" loading="lazy"></div>
+<div class="tf" style="left:5.55%;top:22.27%;width:42.69%;height:24.8%;font-size:clamp(7px, 2.13vh, 19px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Resolution is calculated using Bragg’s law, which states that the smallest distance between crystal lattice planes that can be resolved (d) is equal to the wavelength of the X-ray (l) devided by twice the sine of the diffraction angle (q)</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Resolution</div></div>
+<div class="tf" style="left:5.55%;top:58.0%;width:42.69%;height:30.4%;font-size:clamp(7px, 2.13vh, 19px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Resolution is determined by calculating the Fourier Shell Correlation (FSC) between two independently generated ‘half-maps’ of the same data, signifying the point at which the correlation between the maps drops below a set threshold (commonly 0.143) across different resolution shells</div></div>
+<div class="tf" style="left:2.33%;top:16.4%;width:24.53%;height:8.13%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">X-ray crystallography</div></div>
+<div class="tf" style="left:2.33%;top:51.6%;width:24.53%;height:8.13%;font-size:clamp(7px, 2.67vh, 24px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Cryo-EM</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">123</div>
+</div></div>
+<div class="sc" data-n="122"><div class="sd">
+<div class="e" style="left:7.43%;top:17.33%;width:83.87%;height:73.47%"><img src="cryo-slides-img/s124_215.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Resolution</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">124</div>
+</div></div>
+<div class="sc" data-n="123"><div class="sd">
+<div class="e" style="left:7.43%;top:19.87%;width:85.22%;height:67.2%"><img src="cryo-slides-img/s125_216.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Map resolution</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">125</div>
+</div></div>
+<div class="sc" data-n="124"><div class="sd">
+<div class="e" style="left:2.48%;top:16.8%;width:95.05%;height:72.4%"><img src="cryo-slides-img/s126_217.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Conformational variability and variability analysis</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">126</div>
+</div></div>
+<div class="sc" data-n="125"><div class="sd">
+<div class="e" style="left:0.75%;top:16.4%;width:96.02%;height:75.2%"><img src="cryo-slides-img/s127_218.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Conformational variability and variability analysis</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">127</div>
+</div></div>
+<div class="sc" data-n="126"><div class="sd">
+<div class="e" style="left:56.71%;top:17.6%;width:37.36%;height:68.0%"><img src="cryo-slides-img/s128_219.png" loading="lazy"></div>
+<div class="e" style="left:3.75%;top:24.13%;width:50.26%;height:55.2%"><img src="cryo-slides-img/s128_220.png" loading="lazy"></div>
+<div class="e" style="left:2.4%;top:24.13%;width:50.86%;height:58.53%"><img src="cryo-slides-img/s128_221.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Rosenthal Plot (the number of particles vs. resolution)</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">128</div>
+</div></div>
+<div class="sc" data-n="127"><div class="sd">
+<div class="e" style="left:5.03%;top:15.6%;width:90.77%;height:44.13%"><img src="cryo-slides-img/s129_222.png" loading="lazy"></div>
+<div class="e" style="left:4.65%;top:65.73%;width:90.77%;height:28.67%"><img src="cryo-slides-img/s129_223.png" loading="lazy"></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">How much particles do we need???</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">129</div>
+</div></div>
+<div class="sc" data-n="128"><div class="sd">
+<div class="tf" style="left:5.93%;top:27.47%;width:39.53%;height:19.07%;font-size:clamp(7px, 2.67vh, 24px);font-weight:500;text-align:left;color:#1a1a2e"><div class="ln">Size-limitation</div><div class="ln">Requires highly purified sample</div><div class="ln">Vitrification process</div></div>
+<div class="tf" style="left:4.2%;top:20.93%;width:21.46%;height:7.33%;font-size:clamp(8px, 3.20vh, 28px);font-weight:700;text-align:center;color:#1a1a2e"><div class="ln">Sample</div></div>
+<div class="tf" style="left:0.08%;top:2.93%;width:60.99%;height:6.67%;font-size:clamp(9px, 4.09vh, 31px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">Problems and limitations</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">130</div>
+</div></div>
+<div class="sc" data-n="129"><div class="sd">
+<div class="e" style="left:19.28%;top:7.07%;width:61.44%;height:85.87%"><img src="cryo-slides-img/s131_224.png" loading="lazy"></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">131</div>
+</div></div>
+<div class="sc" data-n="130"><div class="sd">
+<div class="tf" style="left:10.28%;top:33.07%;width:79.44%;height:41.47%;font-size:clamp(28px, 10.67vh, 96px);font-weight:700;text-align:left;color:#1a1a2e"><div class="ln">감사합니다</div></div>
+<div style="position:absolute;bottom:2px;right:6px;font:500 9px Inter;color:#ccc">132</div>
+</div></div>
+
+<div class="nb">
+<button onclick="go(-10)">⏪</button>
+<button onclick="go(-1)">◀ Prev</button>
+<input id="pi" value="1" onkeydown="if(event.key==='Enter'){goTo(+this.value);this.blur()}">
+<span>/ 130</span>
+<button onclick="go(1)">Next ▶</button>
+<button onclick="go(10)">⏩</button>
+</div>
+<script>
+const N=130;let c=1;
+function show(n){n=Math.max(1,Math.min(N,n));if(n===c&&document.querySelector('.sc.active'))return;
+document.querySelector('.sc.active')?.classList.remove('active');
+document.querySelector('[data-n="'+n+'"]')?.classList.add('active');c=n;document.getElementById('pi').value=c}
+function go(d){show(c+d)}function goTo(n){show(n)}
+document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;
+if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(1)}
+if(e.key==='ArrowLeft'){e.preventDefault();go(-1)}
+if(e.key==='Home'){e.preventDefault();show(1)}
+if(e.key==='End'){e.preventDefault();show(N)}});
+let tx=0;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX});
+document.addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>50)go(d<0?1:-1)});
+show(1);
+</script></body></html>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Timeline Layout Comparison</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Pretendard', -apple-system, sans-serif; background: #f0f0f5; }
+h1 { text-align: center; padding: 24px 0 8px; font-size: 22px; color: #333; }
+.option-label { text-align: center; font-size: 15px; color: #666; margin-bottom: 16px; }
+.slide-frame {
+  width: 960px; height: 540px; margin: 0 auto 40px; background: #fff;
+  border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  overflow: hidden; display: flex; flex-direction: column;
+  font-family: 'Pretendard', -apple-system, sans-serif;
+}
+.slide-header {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  padding: 6px 16px; text-align: center; font-size: 12px; color: #92400e;
+  flex-shrink: 0;
+}
+.slide-title-area { text-align: center; padding: 16px 20px 4px; flex-shrink: 0; }
+.slide-title-area h2 { font-size: 22px; color: #1a1a2e; }
+.slide-title-area .sub { font-size: 13px; color: #888; margin-top: 2px; }
+.slide-body { flex: 1; min-height: 0; overflow: hidden; padding: 8px 20px; }
+.slide-ref {
+  flex-shrink: 0; padding: 4px 20px 8px; font-size: 9px; color: #aaa;
+  text-align: center; border-top: 1px solid #f0f0f0;
+}
+
+/* ===== OPTION A: 3+3 split ===== */
+.opt-a-grid {
+  display: flex; flex-direction: column; gap: 12px; height: 100%;
+}
+.opt-a-item {
+  display: flex; gap: 14px; align-items: flex-start; flex: 1; min-height: 0;
+}
+.opt-a-text { flex: 1; min-width: 0; }
+.opt-a-text .year { font-size: 20px; font-weight: 900; color: #7c3aed; }
+.opt-a-text .title { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-top: 2px; }
+.opt-a-text .desc { font-size: 13px; color: #555; line-height: 1.4; margin-top: 2px; }
+.opt-a-img {
+  flex-shrink: 0; width: 200px; height: auto; max-height: 120px;
+  object-fit: contain; border-radius: 8px; background: #f5f5f8;
+  padding: 4px; border: 1px solid #e8e8ee;
+}
+
+/* ===== OPTION B: single column ===== */
+.opt-b-timeline {
+  display: flex; flex-direction: column; gap: 2px; height: 100%;
+  padding-left: 30px; position: relative;
+}
+.opt-b-timeline::before {
+  content: ''; position: absolute; left: 8px; top: 0; bottom: 0;
+  width: 2px; background: #e0d5ff;
+}
+.opt-b-item {
+  display: flex; gap: 12px; align-items: flex-start; flex: 1; min-height: 0;
+  position: relative;
+}
+.opt-b-item::before {
+  content: ''; position: absolute; left: -26px; top: 4px;
+  width: 10px; height: 10px; border-radius: 50%; background: #7c3aed;
+}
+.opt-b-text { flex: 1; min-width: 0; }
+.opt-b-text .year { font-size: 15px; font-weight: 900; color: #7c3aed; display: inline; }
+.opt-b-text .title { font-size: 13px; font-weight: 700; color: #1a1a2e; display: inline; margin-left: 6px; }
+.opt-b-text .desc { font-size: 11px; color: #666; margin-top: 1px; }
+.opt-b-img {
+  flex-shrink: 0; height: 60px; max-width: 100px;
+  object-fit: contain; border-radius: 4px; background: #f5f5f8;
+  padding: 2px; border: 1px solid #e8e8ee;
+}
+
+/* ===== OPTION C: text timeline + image slide ===== */
+.opt-c-timeline {
+  display: flex; flex-direction: column; gap: 6px; height: 100%;
+  padding-left: 80px; position: relative;
+}
+.opt-c-item {
+  display: flex; gap: 8px; align-items: baseline; flex: 1; position: relative;
+}
+.opt-c-year {
+  position: absolute; left: -72px; font-size: 16px; font-weight: 900; color: #7c3aed;
+  width: 50px; text-align: right;
+}
+.opt-c-dot {
+  position: absolute; left: -14px; top: 6px;
+  width: 8px; height: 8px; border-radius: 50%; background: #7c3aed;
+}
+.opt-c-line {
+  position: absolute; left: -11px; top: 0; bottom: -8px; width: 2px; background: #e0d5ff;
+}
+.opt-c-text .title { font-size: 15px; font-weight: 700; color: #1a1a2e; }
+.opt-c-text .desc { font-size: 13px; color: #555; line-height: 1.4; }
+
+.opt-c-images {
+  display: flex; gap: 16px; height: 100%; padding: 12px; justify-content: center; align-items: flex-start; flex-wrap: wrap;
+}
+.opt-c-img-card { text-align: center; }
+.opt-c-img-card img {
+  height: 160px; max-width: 280px; object-fit: contain;
+  border-radius: 8px; background: #f5f5f8; padding: 4px; border: 1px solid #e8e8ee;
+}
+.opt-c-img-card .caption { font-size: 12px; color: #555; margin-top: 4px; }
+.opt-c-img-card .caption strong { color: #7c3aed; }
+
+/* ===== OPTION D: hybrid ===== */
+.opt-d-grid {
+  display: flex; flex-direction: column; gap: 4px; height: 100%;
+}
+.opt-d-minor {
+  display: flex; gap: 8px; align-items: center; padding: 2px 0;
+}
+.opt-d-minor .dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #7c3aed; flex-shrink: 0;
+}
+.opt-d-minor .year { font-size: 14px; font-weight: 900; color: #7c3aed; margin-left: 6px; }
+.opt-d-minor .title { font-size: 13px; font-weight: 700; color: #1a1a2e; margin-left: 6px; }
+.opt-d-minor .desc { font-size: 11px; color: #666; margin-left: 4px; }
+.opt-d-minor .mini-img {
+  height: 36px; max-width: 56px; object-fit: contain; border-radius: 4px;
+  background: #f5f5f8; border: 1px solid #e8e8ee; margin-left: auto; flex-shrink: 0;
+}
+.opt-d-highlight {
+  flex: 1; min-height: 0; display: flex; gap: 16px; align-items: center;
+  background: #faf5ff; border: 1.5px solid #d8b4fe; border-radius: 12px;
+  padding: 12px 16px;
+}
+.opt-d-highlight .text { flex: 1; }
+.opt-d-highlight .year { font-size: 22px; font-weight: 900; color: #7c3aed; }
+.opt-d-highlight .title { font-size: 16px; font-weight: 700; color: #1a1a2e; margin-top: 2px; }
+.opt-d-highlight .desc { font-size: 13px; color: #555; line-height: 1.4; margin-top: 4px; }
+.opt-d-highlight img {
+  height: 140px; max-width: 220px; object-fit: contain;
+  border-radius: 8px; background: #f5f5f8; padding: 4px; border: 1px solid #e8e8ee;
+}
+
+/* ===== OPTION E: horizontal timeline ===== */
+.opt-e-top, .opt-e-bottom {
+  display: flex; gap: 0; justify-content: space-around;
+}
+.opt-e-cell {
+  flex: 1; text-align: center; padding: 0 4px;
+}
+.opt-e-cell.empty { visibility: hidden; }
+.opt-e-top .opt-e-cell { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+.opt-e-bottom .opt-e-cell { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
+.opt-e-img {
+  height: 70px; max-width: 110px; object-fit: contain;
+  border-radius: 4px; background: #f5f5f8; padding: 2px; border: 1px solid #e8e8ee;
+}
+.opt-e-title { font-size: 10px; font-weight: 700; color: #1a1a2e; margin-top: 2px; }
+.opt-e-desc { font-size: 9px; color: #666; }
+.opt-e-bar {
+  position: relative; margin: 10px 0; height: 30px;
+}
+.opt-e-line {
+  position: absolute; top: 50%; left: 5%; right: 5%; height: 3px;
+  background: linear-gradient(90deg, #e0d5ff, #7c3aed); border-radius: 2px;
+}
+.opt-e-dot-row {
+  display: flex; justify-content: space-around; position: relative; z-index: 1;
+  height: 100%; align-items: center;
+}
+.opt-e-dot {
+  width: 28px; height: 28px; border-radius: 50%; background: #7c3aed; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px; font-weight: 800;
+}
+.opt-e-dot span { font-size: 8px; }
+
+/* ===== OPTION E+A: horizontal 3-card ===== */
+.opt-e3-row {
+  display: flex; gap: 8px; align-items: stretch; justify-content: center;
+  height: 100%;
+}
+.opt-e3-card {
+  flex: 1; background: #fff; border: 1.5px solid #e0e0e8; border-radius: 12px;
+  padding: 12px; text-align: center; display: flex; flex-direction: column; align-items: center;
+}
+.opt-e3-year { font-size: 22px; font-weight: 900; color: #7c3aed; }
+.opt-e3-img {
+  height: 130px; max-width: 220px; object-fit: contain; margin: 8px 0;
+  border-radius: 6px; background: #f5f5f8; padding: 4px; border: 1px solid #e8e8ee;
+}
+.opt-e3-title { font-size: 14px; font-weight: 700; color: #1a1a2e; }
+.opt-e3-desc { font-size: 12px; color: #555; line-height: 1.3; margin-top: 4px; }
+.opt-e3-arrow {
+  display: flex; align-items: center; font-size: 28px; color: #d0d0d8; flex-shrink: 0;
+}
+
+.divider { height: 2px; background: #e0e0e8; margin: 32px auto; width: 200px; }
+</style>
+</head>
+<body>
+
+<h1>슬라이드 5 타임라인 레이아웃 비교</h1>
+<p class="option-label">슬라이드 5 (1968-1994) 기준 — 실제 이미지 사용</p>
+
+<!-- ===== OPTION A ===== -->
+<h1 style="color:#7c3aed">옵션 A: 3+3 분할</h1>
+<p class="option-label">슬라이드당 3개 사건 — 이미지 크게, 텍스트 여유있게 (슬라이드 5a)</p>
+<div class="slide-frame">
+  <div class="slide-header">Section 1: Cryo-EM Overview</div>
+  <div class="slide-title-area">
+    <h2>From Blobs to High Resolution (1968–1982)</h2>
+    <div class="sub">Foundational milestones — Part 1</div>
+  </div>
+  <div class="slide-body">
+    <div class="opt-a-grid">
+      <div class="opt-a-item">
+        <div class="opt-a-text">
+          <div class="year">1968</div>
+          <div class="title">First 3D reconstruction</div>
+          <div class="desc">DeRosier & Klug reconstruct T4 phage tail from EM images using Fourier methods — proving 3D structures can be computed from 2D projections</div>
+        </div>
+        <img class="opt-a-img" src="../cryo-slides-img/s010_12.png" alt="">
+      </div>
+      <div class="opt-a-item">
+        <div class="opt-a-text">
+          <div class="year">1974</div>
+          <div class="title">Birth of cryo-EM</div>
+          <div class="desc">Taylor & Glaeser image frozen-hydrated catalase crystals, proving native structure can be preserved in the electron beam</div>
+        </div>
+        <img class="opt-a-img" src="../cryo-slides-img/s010_13.png" alt="">
+      </div>
+      <div class="opt-a-item">
+        <div class="opt-a-text">
+          <div class="year">1982</div>
+          <div class="title">Vitrification</div>
+          <div class="desc">Dubochet et al. achieve plunge-freezing in liquid ethane, creating vitreous (amorphous) ice around biological specimens — Nobel Prize 2017</div>
+        </div>
+        <img class="opt-a-img" src="../cryo-slides-img/s010_14.png" alt="">
+      </div>
+    </div>
+  </div>
+  <div class="slide-ref">DeRosier & Klug, Nature (1968) · Taylor & Glaeser, Science (1974) · Dubochet et al., J Mol Biol (1988)</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== OPTION B ===== -->
+<h1 style="color:#2563eb">옵션 B: 단일 컬럼 + 우측 이미지</h1>
+<p class="option-label">지그재그 제거, 왼쪽 타임라인 + 오른쪽 이미지 — 6개 전부 한 슬라이드</p>
+<div class="slide-frame">
+  <div class="slide-header">Section 1: Cryo-EM Overview</div>
+  <div class="slide-title-area">
+    <h2>From Blobs to High Resolution (1968–1994)</h2>
+    <div class="sub">Foundational milestones</div>
+  </div>
+  <div class="slide-body">
+    <div class="opt-b-timeline">
+      <div class="opt-b-item">
+        <div class="opt-b-text">
+          <span class="year">1968</span><span class="title">First 3D reconstruction</span>
+          <div class="desc">DeRosier & Klug reconstruct T4 phage tail using Fourier methods</div>
+        </div>
+        <img class="opt-b-img" src="../cryo-slides-img/s010_12.png" alt="">
+      </div>
+      <div class="opt-b-item">
+        <div class="opt-b-text">
+          <span class="year">1974</span><span class="title">Birth of cryo-EM</span>
+          <div class="desc">Taylor & Glaeser image frozen-hydrated catalase crystals</div>
+        </div>
+        <img class="opt-b-img" src="../cryo-slides-img/s010_13.png" alt="">
+      </div>
+      <div class="opt-b-item">
+        <div class="opt-b-text">
+          <span class="year">1982</span><span class="title">Vitrification</span>
+          <div class="desc">Dubochet et al. plunge-freezing in liquid ethane — vitreous ice</div>
+        </div>
+        <img class="opt-b-img" src="../cryo-slides-img/s010_14.png" alt="">
+      </div>
+      <div class="opt-b-item">
+        <div class="opt-b-text">
+          <span class="year">1987</span><span class="title">Angular reconstitution</span>
+          <div class="desc">van Heel + Frank: methods for random particle orientations</div>
+        </div>
+        <img class="opt-b-img" src="../cryo-slides-img/s010_16.png" alt="">
+      </div>
+      <div class="opt-b-item">
+        <div class="opt-b-text">
+          <span class="year">1990</span><span class="title">First atomic EM structure</span>
+          <div class="desc">Henderson: bacteriorhodopsin at 3.5 Å by electron crystallography</div>
+        </div>
+        <img class="opt-b-img" src="../cryo-slides-img/s010_18.png" alt="">
+      </div>
+      <div class="opt-b-item">
+        <div class="opt-b-text">
+          <span class="year">1994</span><span class="title">Projection matching</span>
+          <div class="desc">Penczek, Frank: iterative projection matching for 3D refinement</div>
+        </div>
+        <img class="opt-b-img" src="../cryo-slides-img/s010_17.png" alt="">
+      </div>
+    </div>
+  </div>
+  <div class="slide-ref">DeRosier & Klug, Nature (1968) · Taylor & Glaeser, Science (1974) · Dubochet et al., J Mol Biol (1988) · Henderson et al., J Mol Biol (1990)</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== OPTION C ===== -->
+<h1 style="color:#059669">옵션 C: 텍스트 타임라인 + 이미지 슬라이드</h1>
+<p class="option-label">타임라인은 텍스트만 깔끔하게 (슬라이드 5)</p>
+<div class="slide-frame">
+  <div class="slide-header">Section 1: Cryo-EM Overview</div>
+  <div class="slide-title-area">
+    <h2>From Blobs to High Resolution (1968–1994)</h2>
+    <div class="sub">Foundational milestones</div>
+  </div>
+  <div class="slide-body">
+    <div class="opt-c-timeline">
+      <div class="opt-c-item">
+        <div class="opt-c-line"></div>
+        <div class="opt-c-dot"></div>
+        <div class="opt-c-year">1968</div>
+        <div class="opt-c-text">
+          <div class="title">First 3D reconstruction</div>
+          <div class="desc">DeRosier & Klug reconstruct T4 phage tail from EM images using Fourier methods — proving 3D structures can be computed from 2D projections</div>
+        </div>
+      </div>
+      <div class="opt-c-item">
+        <div class="opt-c-line"></div>
+        <div class="opt-c-dot"></div>
+        <div class="opt-c-year">1974</div>
+        <div class="opt-c-text">
+          <div class="title">Birth of cryo-EM</div>
+          <div class="desc">Taylor & Glaeser image frozen-hydrated catalase crystals, proving native structure can be preserved in the electron beam</div>
+        </div>
+      </div>
+      <div class="opt-c-item">
+        <div class="opt-c-line"></div>
+        <div class="opt-c-dot"></div>
+        <div class="opt-c-year">1982</div>
+        <div class="opt-c-text">
+          <div class="title">Vitrification — Nobel Prize 2017</div>
+          <div class="desc">Dubochet et al. achieve plunge-freezing in liquid ethane, creating vitreous (amorphous) ice around biological specimens</div>
+        </div>
+      </div>
+      <div class="opt-c-item">
+        <div class="opt-c-line"></div>
+        <div class="opt-c-dot"></div>
+        <div class="opt-c-year">1987</div>
+        <div class="opt-c-text">
+          <div class="title">Angular reconstitution</div>
+          <div class="desc">van Heel develops method for random particle orientations; Frank et al. introduce random conical tilt reconstruction</div>
+        </div>
+      </div>
+      <div class="opt-c-item">
+        <div class="opt-c-line"></div>
+        <div class="opt-c-dot"></div>
+        <div class="opt-c-year">1990</div>
+        <div class="opt-c-text">
+          <div class="title">First atomic EM structure</div>
+          <div class="desc">Henderson et al. solve bacteriorhodopsin at 3.5 Å by electron crystallography — Nobel Prize 2017</div>
+        </div>
+      </div>
+      <div class="opt-c-item">
+        <div class="opt-c-line"></div>
+        <div class="opt-c-dot"></div>
+        <div class="opt-c-year">1994</div>
+        <div class="opt-c-text">
+          <div class="title">Projection matching</div>
+          <div class="desc">Penczek, Frank et al. develop iterative projection matching for 3D refinement of single-particle structures</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-ref">DeRosier & Klug, Nature (1968) · Taylor & Glaeser, Science (1974) · Dubochet et al., J Mol Biol (1988) · Henderson et al., J Mol Biol (1990)</div>
+</div>
+
+<p class="option-label">핵심 이미지는 별도 슬라이드 (슬라이드 5-img)</p>
+<div class="slide-frame">
+  <div class="slide-header">Section 1: Cryo-EM Overview</div>
+  <div class="slide-title-area">
+    <h2>Key Images: Early Cryo-EM (1968–1994)</h2>
+    <div class="sub">Visual milestones from the foundational era</div>
+  </div>
+  <div class="slide-body">
+    <div class="opt-c-images">
+      <div class="opt-c-img-card">
+        <img src="../cryo-slides-img/s010_12.png" alt="">
+        <div class="caption"><strong>1968</strong> Fourier reconstruction</div>
+      </div>
+      <div class="opt-c-img-card">
+        <img src="../cryo-slides-img/s010_14.png" alt="">
+        <div class="caption"><strong>1982</strong> Vitrified virus</div>
+      </div>
+      <div class="opt-c-img-card">
+        <img src="../cryo-slides-img/s010_18.png" alt="">
+        <div class="caption"><strong>1990</strong> Bacteriorhodopsin 3.5 Å</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-ref">Images from original publications</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== OPTION D ===== -->
+<h1 style="color:#dc2626">옵션 D: 하이브리드 (3+3, 주인공 강조)</h1>
+<p class="option-label">슬라이드당 3개 사건, 핵심 1개만 크게 강조 (슬라이드 5a)</p>
+<div class="slide-frame">
+  <div class="slide-header">Section 1: Cryo-EM Overview</div>
+  <div class="slide-title-area">
+    <h2>From Blobs to High Resolution (1968–1982)</h2>
+    <div class="sub">Foundational milestones — Part 1</div>
+  </div>
+  <div class="slide-body">
+    <div class="opt-d-grid">
+      <div class="opt-d-minor">
+        <div class="dot"></div>
+        <span class="year">1968</span>
+        <span class="title">First 3D reconstruction</span>
+        <span class="desc">— DeRosier & Klug: T4 phage tail</span>
+        <img class="mini-img" src="../cryo-slides-img/s010_12.png" alt="">
+      </div>
+      <div class="opt-d-minor">
+        <div class="dot"></div>
+        <span class="year">1974</span>
+        <span class="title">Birth of cryo-EM</span>
+        <span class="desc">— Taylor & Glaeser: frozen catalase</span>
+        <img class="mini-img" src="../cryo-slides-img/s010_13.png" alt="">
+      </div>
+      <div class="opt-d-highlight">
+        <div class="text">
+          <div class="year">1982</div>
+          <div class="title">Vitrification — The Breakthrough</div>
+          <div class="desc">Dubochet et al. achieve plunge-freezing in liquid ethane, creating vitreous (amorphous) ice around biological specimens. This single innovation made it possible to image proteins in their native state — and earned the 2017 Nobel Prize in Chemistry.</div>
+        </div>
+        <img src="../cryo-slides-img/s010_14.png" alt="">
+      </div>
+    </div>
+  </div>
+  <div class="slide-ref">DeRosier & Klug, Nature (1968) · Taylor & Glaeser, Science (1974) · Dubochet et al., J Mol Biol (1988)</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== OPTION E: Horizontal Timeline ===== -->
+<h1 style="color:#0891b2">옵션 E: 가로 타임라인 (원자료 스타일)</h1>
+<p class="option-label">시간 흐름을 좌→우로, 이미지와 설명을 위/아래에 교대 배치 — 6개 한 슬라이드</p>
+<div class="slide-frame">
+  <div class="slide-header">Section 1: Cryo-EM Overview</div>
+  <div class="slide-title-area">
+    <h2>From Blobs to High Resolution (1968–1994)</h2>
+    <div class="sub">Foundational milestones</div>
+  </div>
+  <div class="slide-body" style="display:flex;flex-direction:column;justify-content:center">
+    <!-- top row: odd items (1,3,5) show image+text ABOVE the line -->
+    <div class="opt-e-top">
+      <div class="opt-e-cell">
+        <img class="opt-e-img" src="../cryo-slides-img/s010_12.png" alt="">
+        <div class="opt-e-title">First 3D recon</div>
+        <div class="opt-e-desc">DeRosier & Klug</div>
+      </div>
+      <div class="opt-e-cell empty"></div>
+      <div class="opt-e-cell">
+        <img class="opt-e-img" src="../cryo-slides-img/s010_14.png" alt="">
+        <div class="opt-e-title">Vitrification</div>
+        <div class="opt-e-desc">Dubochet et al.</div>
+      </div>
+      <div class="opt-e-cell empty"></div>
+      <div class="opt-e-cell">
+        <img class="opt-e-img" src="../cryo-slides-img/s010_18.png" alt="">
+        <div class="opt-e-title">Atomic EM</div>
+        <div class="opt-e-desc">Henderson 3.5 Å</div>
+      </div>
+      <div class="opt-e-cell empty"></div>
+    </div>
+    <!-- timeline bar with dots -->
+    <div class="opt-e-bar">
+      <div class="opt-e-line"></div>
+      <div class="opt-e-dot-row">
+        <div class="opt-e-dot"><span>1968</span></div>
+        <div class="opt-e-dot"><span>1974</span></div>
+        <div class="opt-e-dot"><span>1982</span></div>
+        <div class="opt-e-dot"><span>1987</span></div>
+        <div class="opt-e-dot"><span>1990</span></div>
+        <div class="opt-e-dot"><span>1994</span></div>
+      </div>
+    </div>
+    <!-- bottom row: even items (2,4,6) show image+text BELOW the line -->
+    <div class="opt-e-bottom">
+      <div class="opt-e-cell empty"></div>
+      <div class="opt-e-cell">
+        <div class="opt-e-title">Birth of cryo-EM</div>
+        <div class="opt-e-desc">Taylor & Glaeser</div>
+        <img class="opt-e-img" src="../cryo-slides-img/s010_13.png" alt="">
+      </div>
+      <div class="opt-e-cell empty"></div>
+      <div class="opt-e-cell">
+        <div class="opt-e-title">Angular recon</div>
+        <div class="opt-e-desc">van Heel + Frank</div>
+        <img class="opt-e-img" src="../cryo-slides-img/s010_16.png" alt="">
+      </div>
+      <div class="opt-e-cell empty"></div>
+      <div class="opt-e-cell">
+        <div class="opt-e-title">Projection match</div>
+        <div class="opt-e-desc">Penczek, Frank</div>
+        <img class="opt-e-img" src="../cryo-slides-img/s010_17.png" alt="">
+      </div>
+    </div>
+  </div>
+  <div class="slide-ref">DeRosier & Klug, Nature (1968) · Taylor & Glaeser, Science (1974) · Dubochet et al., J Mol Biol (1988) · Henderson et al., J Mol Biol (1990)</div>
+</div>
+
+<p class="option-label" style="margin-top:16px">가로 3+3 분할 버전 (옵션 E + A 결합: 3개씩 나누어 가로 타임라인)</p>
+<div class="slide-frame">
+  <div class="slide-header">Section 1: Cryo-EM Overview</div>
+  <div class="slide-title-area">
+    <h2>From Blobs to High Resolution (1968–1982)</h2>
+    <div class="sub">Foundational milestones — Part 1</div>
+  </div>
+  <div class="slide-body" style="display:flex;flex-direction:column;justify-content:center">
+    <div class="opt-e3-row">
+      <div class="opt-e3-card">
+        <div class="opt-e3-year">1968</div>
+        <img class="opt-e3-img" src="../cryo-slides-img/s010_12.png" alt="">
+        <div class="opt-e3-title">First 3D reconstruction</div>
+        <div class="opt-e3-desc">DeRosier & Klug reconstruct T4 phage tail using Fourier methods</div>
+      </div>
+      <div class="opt-e3-arrow">→</div>
+      <div class="opt-e3-card">
+        <div class="opt-e3-year">1974</div>
+        <img class="opt-e3-img" src="../cryo-slides-img/s010_13.png" alt="">
+        <div class="opt-e3-title">Birth of cryo-EM</div>
+        <div class="opt-e3-desc">Taylor & Glaeser image frozen-hydrated catalase crystals</div>
+      </div>
+      <div class="opt-e3-arrow">→</div>
+      <div class="opt-e3-card">
+        <div class="opt-e3-year">1982</div>
+        <img class="opt-e3-img" src="../cryo-slides-img/s010_14.png" alt="">
+        <div class="opt-e3-title">Vitrification</div>
+        <div class="opt-e3-desc">Dubochet et al. plunge-freezing in liquid ethane — Nobel 2017</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-ref">DeRosier & Klug, Nature (1968) · Taylor & Glaeser, Science (1974) · Dubochet et al., J Mol Biol (1988)</div>
+</div>
+
+<div style="height:60px"></div>
+
+</body>
+</html>

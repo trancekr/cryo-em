@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imaging – Cryo-EM Tutorial</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.topbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 16px;
+  background: #fff;
+  border-bottom: 2px solid #e0e0e8;
+  gap: 8px;
+  min-height: 44px;
+}
+.topbar .home-btn {
+  display: flex; align-items: center; gap: 4px;
+  padding: 4px 12px; border-radius: 20px;
+  border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(11px, 1.3vh, 15px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  white-space: nowrap;
+}
+.topbar .home-btn:hover { background: #f5f3ff; color: #2563eb; border-color: #c4b5fd; }
+.topbar .section-name {
+  font-size: clamp(14px, 1.8vh, 22px);
+  font-weight: 800;
+  color: #2563eb;
+  text-align: center;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.topbar .nav-group {
+  display: flex; align-items: center; gap: 6px;
+  white-space: nowrap;
+}
+.nav-btn {
+  padding: 4px 10px; border-radius: 8px;
+  border: 2px solid #e0e0e8; background: #fff;
+  color: #555; font-size: clamp(13px, 1.5vh, 18px); font-weight: 700;
+  cursor: pointer; transition: all 0.15s;
+  line-height: 1;
+}
+.nav-btn:hover { background: #f5f3ff; border-color: #c4b5fd; color: #2563eb; }
+.nav-btn:disabled { opacity: 0.3; cursor: default; }
+.page-info {
+  font-size: clamp(11px, 1.2vh, 15px);
+  color: #888; font-weight: 600;
+  min-width: 50px; text-align: center;
+}
+
+/* ── Slide container ── */
+.slides-area {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  padding: clamp(8px, 1.2vh, 16px) clamp(12px, 2vw, 32px);
+  overflow: hidden;
+}
+.slide.active {
+  display: flex;
+}
+.slide-title {
+  font-size: clamp(18px, 2.8vh, 34px);
+  font-weight: 800;
+  color: #1a1a2e;
+  text-align: center;
+  padding: 2px 0 clamp(4px, 0.8vh, 10px);
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+.slide-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.6vh, 10px);
+  overflow: hidden;
+}
+/* Text-only slides: center vertically */
+.slide-body:not(:has(.img-single)):not(:has(.img-grid)):not(:has(.layout-split)) {
+  justify-content: center;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+.slide-ref {
+  flex-shrink: 0;
+  font-size: clamp(8px, 0.9vh, 11px);
+  color: #aaa;
+  text-align: center;
+  padding: 2px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.slide-pptx {
+  flex-shrink: 0;
+  font-size: clamp(7px, 0.7vh, 9px);
+  color: #ccc;
+  text-align: right;
+  padding: 0 4px;
+}
+
+/* ── Image layouts ── */
+.img-single {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.img-single img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.img-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  gap: clamp(4px, 0.5vh, 8px);
+  overflow: hidden;
+}
+.img-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+}
+.img-grid.g2 { grid-template-columns: 1fr 1fr; }
+.img-grid.g3 { grid-template-columns: 1fr 1fr 1fr; }
+.img-grid.g4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.img-grid.gm {
+  grid-template-columns: repeat(auto-fill, minmax(min(180px, 28%), 1fr));
+  grid-auto-rows: 1fr;
+  align-items: center;
+}
+.img-grid.gc3 { grid-template-columns: repeat(3, 1fr); }
+.img-grid.gc4 { grid-template-columns: repeat(4, 1fr); }
+
+/* ── Text blocks ── */
+.text-block {
+  flex-shrink: 0;
+  padding: clamp(2px, 0.3vh, 6px) clamp(8px, 1vw, 16px);
+}
+.text-block p {
+  margin-bottom: 1px;
+  line-height: 1.35;
+}
+.text-block.bold p { font-weight: 700; }
+.text-block.text-lg p { font-size: clamp(14px, 2vh, 26px); }
+.text-block.text-md p { font-size: clamp(12px, 1.5vh, 20px); }
+.text-block.text-sm p { font-size: clamp(10px, 1.2vh, 16px); color: #444; }
+
+/* ── Split layout: images left, text right ── */
+.layout-split {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: clamp(8px, 1vw, 16px);
+  overflow: hidden;
+}
+.split-img {
+  flex: 3;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.split-img .img-single,
+.split-img .img-grid {
+  flex: 1;
+  min-height: 0;
+}
+.split-text {
+  flex: 2;
+  min-width: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="home-btn" href="index.html">&larr; Home</a>
+  <div class="section-name">Imaging</div>
+  <div class="nav-group">
+    <button class="nav-btn" id="prev-btn" onclick="go(-1)">&lsaquo;</button>
+    <span class="page-info" id="page-info">1 / 12</span>
+    <button class="nav-btn" id="next-btn" onclick="go(1)">&rsaquo;</button>
+  </div>
+</div>
+
+<div class="slides-area">
+  <div class="slide active" data-n="1">
+    <div class="slide-title">Imaging</div>
+    <div class="slide-body">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s076_151.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s077_152.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Imaging…</p>
+</div>
+<div class="text-block text-sm">
+  <p>77</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Halfon et al., 2022 Faraday Discuss.</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Time &amp; Cost of a single particle cryo-EM pipeline</p>
+</div>
+    </div>
+    <div class="slide-ref">Halfon et al., 2022 Faraday Discuss.</div>
+    <div class="slide-pptx">PPTX: p76, p77</div>
+  </div>
+  <div class="slide" data-n="2">
+    <div class="slide-title">Proteins Are Dynamic Molecules</div>
+    <div class="slide-body">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s078_153.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s078_154.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Proteins are dynamic molecules</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p78</div>
+  </div>
+  <div class="slide" data-n="3">
+    <div class="slide-title">Micrographs</div>
+    <div class="slide-body">
+<div class="img-grid g3">
+<img src="../cryo-slides-img/s079_155.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s079_156.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s079_157.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>103-104 Micrographs</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>······</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Single particle analysis</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p79</div>
+  </div>
+  <div class="slide" data-n="4">
+    <div class="slide-title">Data Collection Workflow</div>
+    <div class="slide-body">
+<div class="img-single"><img src="../cryo-slides-img/s080_158.png" alt="" loading="lazy"></div>
+<div class="text-block bold text-sm">
+  <p>Data collection workflow</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Atlas</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Square selection</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Hole selection</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Target / focus area</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Data collection</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p80</div>
+  </div>
+  <div class="slide" data-n="5">
+    <div class="slide-title">Particles vs. Resolution</div>
+    <div class="slide-body">
+<div class="img-single"><img src="../cryo-slides-img/s081_159.png" alt="" loading="lazy"></div>
+<div class="text-block bold text-sm">
+  <p>The number of particle vs. the achievable resolution</p>
+  <p>High mag</p>
+  <p>fine pixel sizes / low particles</p>
+  <p>Larger box size</p>
+  <p>Need more processing power</p>
+  <p>Low mag</p>
+  <p>Coarse pixel sizes</p>
+  <p>Limit the achievable resolution</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>User decisions – Magnification (pixel size)</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p81</div>
+  </div>
+  <div class="slide" data-n="6">
+    <div class="slide-title">Contrast vs. High-Resolution Information</div>
+    <div class="slide-body">
+<div class="img-single"><img src="../cryo-slides-img/s082_160.png" alt="" loading="lazy"></div>
+<div class="text-block bold text-sm">
+  <p>Generating sufficient contrast vs. retain high- resolution information</p>
+  <p>Close to focus – may be invisible</p>
+  <p>Far from focus – loss of high res. info.</p>
+  <p>Smaller particle</p>
+  <p>may require higher defocus setting</p>
+  <p>-0.5 /- 1.0  ~  -2.0</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>User decisions – Defocus range</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p82</div>
+  </div>
+  <div class="slide" data-n="7">
+    <div class="slide-title">Defocus: −1.5 μm &amp; −0.75 μm</div>
+    <div class="slide-body">
+<div class="img-grid g4">
+<img src="../cryo-slides-img/s083_161.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s083_162.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s084_163.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s084_164.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>-1.5 μm</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Defocus range</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>-0.75 μm</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Defocus range</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p83, p84</div>
+  </div>
+  <div class="slide" data-n="8">
+    <div class="slide-title">At Focus</div>
+    <div class="slide-body">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s085_165.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s085_166.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>At focus</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Defocus range</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p85</div>
+  </div>
+  <div class="slide" data-n="9">
+    <div class="slide-title">Defocus: −3.0 μm &amp; +3.0 μm</div>
+    <div class="slide-body">
+<div class="img-grid g4">
+<img src="../cryo-slides-img/s086_167.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s086_168.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s087_169.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s087_170.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>-3.0 μm</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Defocus range</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>+3.0 μm</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Defocus range</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p86, p87</div>
+  </div>
+  <div class="slide" data-n="10">
+    <div class="slide-title">Hole Targeting Strategy</div>
+    <div class="slide-body">
+<div class="img-grid g3">
+<img src="../cryo-slides-img/s088_171.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s088_172.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s088_173.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>User decisions - Hole targeting strategy</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Conventional targeting</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Multi-hole targeting</p>
+  <p>With beam-image shift</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Multi-shot per hole</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p88</div>
+  </div>
+  <div class="slide" data-n="11">
+    <div class="slide-title">User Decisions &amp; Collection Settings</div>
+    <div class="slide-body">
+<div class="img-single"><img src="../cryo-slides-img/s091_174.gif" alt="" loading="lazy"></div>
+<div class="text-block bold text-sm">
+  <p>User decisions</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Data collection setting</p>
+</div>
+<div class="text-block text-sm">
+  <p>91</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Russo et al., 2022 Faraday Discuss.</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Minimum molecular mass identifiable in situ</p>
+</div>
+    </div>
+    <div class="slide-ref">Russo et al., 2022 Faraday Discuss.</div>
+    <div class="slide-pptx">PPTX: p89, p90, p91</div>
+  </div>
+  <div class="slide" data-n="12">
+    <div class="slide-title">Laser Phase Plate</div>
+    <div class="slide-body">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s092_175.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s093_176.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Laser phase plate</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Laser phase plate</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p92, p93</div>
+  </div>
+</div>
+
+<script>
+const N = 12;
+let cur = 1;
+
+function show(n) {
+  n = Math.max(1, Math.min(N, n));
+  const prev = document.querySelector('.slide.active');
+  if (prev) prev.classList.remove('active');
+  const next = document.querySelector('[data-n="' + n + '"]');
+  if (next) next.classList.add('active');
+  cur = n;
+  document.getElementById('page-info').textContent = cur + ' / ' + N;
+  document.getElementById('prev-btn').disabled = (cur === 1);
+  document.getElementById('next-btn').disabled = (cur === N);
+}
+
+function go(d) { show(cur + d); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') { go(-1); e.preventDefault(); }
+  else if (e.key === 'ArrowRight') { go(1); e.preventDefault(); }
+  else if (e.key === 'Home') { show(1); e.preventDefault(); }
+  else if (e.key === 'End') { show(N); e.preventDefault(); }
+});
+
+// Touch swipe
+let tx = 0;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+});
+
+show(1);
+</script>
+
+</body>
+</html>

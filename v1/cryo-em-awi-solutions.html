@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Air-Water Interface &amp; Solutions</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(24px, 3vh, 38px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(12px, 1.4vh, 18px); color: #777; margin-top: 2px; font-weight: 500; }
+
+.content {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: clamp(8px, 1vh, 14px);
+  padding: clamp(4px, 0.5vh, 8px) 0;
+}
+
+.panel {
+  background: #fff;
+  border: 2px solid #e0e0e8;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.panel:hover { border-color: #c4b5fd; }
+
+.panel-header {
+  padding: clamp(6px, 0.8vh, 12px) clamp(10px, 1vw, 16px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  border-bottom: 1.5px solid #f0f0f5;
+}
+.panel-dot {
+  width: clamp(8px, 1vh, 12px);
+  height: clamp(8px, 1vh, 12px);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.panel-title {
+  font-size: clamp(13px, 1.5vh, 19px);
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.panel-canvas {
+  flex: 1; min-height: 0;
+}
+.panel-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.footer {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 2px 0;
+  font-size: clamp(9px, 1vh, 12px);
+  color: #aaa;
+}
+
+@media (max-width: 900px) {
+  .content { grid-template-columns: 1fr; grid-template-rows: repeat(4, 1fr); }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="./">&larr; Home</a>
+    <h1>Air-Water Interface &amp; Solutions</h1>
+    <p>Understanding and mitigating protein denaturation at the AWI</p>
+  </div>
+
+  <div class="content">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-dot" style="background:#ef4444"></div>
+        <span class="panel-title">AWI Denaturation Mechanism</span>
+      </div>
+      <div class="panel-canvas"><canvas id="cvAWI"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-dot" style="background:#f59e0b"></div>
+        <span class="panel-title">Time-Resolved AWI Effects</span>
+      </div>
+      <div class="panel-canvas"><canvas id="cvTime"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-dot" style="background:#8b5cf6"></div>
+        <span class="panel-title">Automated Grid Preparation Systems</span>
+      </div>
+      <div class="panel-canvas"><canvas id="cvAuto"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-dot" style="background:#10b981"></div>
+        <span class="panel-title">AWI Mitigation Strategies</span>
+      </div>
+      <div class="panel-canvas"><canvas id="cvSolutions"></canvas></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Noble et al. (2018) Nature Methods &middot; Dandey et al. (2020) Acta Cryst D &middot; Glaeser (2018) Curr Opin Struct Biol
+  </div>
+</div>
+
+<script>
+const dpr = window.devicePixelRatio || 1;
+
+function initCanvas(id) {
+  const c = document.getElementById(id);
+  const p = c.parentElement;
+  const w = p.clientWidth, h = p.clientHeight;
+  c.width = w * dpr; c.height = h * dpr;
+  const ctx = c.getContext('2d');
+  ctx.scale(dpr, dpr);
+  return { ctx, w, h };
+}
+
+function F(h, level) {
+  switch(level) {
+    case 'xl': return Math.round(Math.min(Math.max(h * 0.075, 14), 30));
+    case 'lg': return Math.round(Math.min(Math.max(h * 0.06, 12), 24));
+    case 'md': return Math.round(Math.min(Math.max(h * 0.05, 11), 20));
+    case 'sm': return Math.round(Math.min(Math.max(h * 0.04, 10), 16));
+  }
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+/* Panel 1: AWI Denaturation Mechanism */
+function drawAWI() {
+  const { ctx, w, h } = initCanvas('cvAWI');
+  const fs = F(h, 'md');
+  const subFs = F(h, 'sm');
+  const pad = 10;
+
+  // Ice layer cross-section with AWI
+  const iceX = w * 0.06, iceW = w * 0.88;
+  const iceY = h * 0.08, iceH = h * 0.55;
+
+  // AWI surfaces (top & bottom)
+  ctx.fillStyle = 'rgba(239,68,68,0.08)';
+  ctx.fillRect(iceX, iceY, iceW, iceH * 0.15);
+  ctx.fillRect(iceX, iceY + iceH * 0.85, iceW, iceH * 0.15);
+
+  // Ice bulk
+  ctx.fillStyle = 'rgba(147,197,253,0.12)';
+  ctx.fillRect(iceX, iceY + iceH * 0.15, iceW, iceH * 0.7);
+
+  // Boundaries
+  ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 3]);
+  ctx.beginPath(); ctx.moveTo(iceX, iceY + iceH * 0.15); ctx.lineTo(iceX + iceW, iceY + iceH * 0.15); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(iceX, iceY + iceH * 0.85); ctx.lineTo(iceX + iceW, iceY + iceH * 0.85); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Labels
+  ctx.fillStyle = '#ef4444'; ctx.font = `700 ${subFs}px Inter`; ctx.textAlign = 'left';
+  ctx.fillText('Air', iceX + 6, iceY + subFs * 0.8);
+  ctx.fillText('Air', iceX + 6, iceY + iceH + subFs * 0.8);
+  ctx.textAlign = 'right';
+  ctx.fillText('AWI (top)', iceX + iceW - 6, iceY + iceH * 0.15 - 4);
+  ctx.fillText('AWI (bottom)', iceX + iceW - 6, iceY + iceH * 0.85 + subFs + 2);
+
+  // Denatured proteins at surfaces (flat, unfolded)
+  ctx.fillStyle = '#ef4444';
+  [0.12, 0.28, 0.45, 0.62, 0.78, 0.92].forEach(rx => {
+    ctx.beginPath(); ctx.ellipse(iceX + iceW * rx, iceY + iceH * 0.07, 14, 4, Math.random() * 0.3, 0, Math.PI * 2); ctx.fill();
+  });
+  [0.18, 0.38, 0.58, 0.78].forEach(rx => {
+    ctx.beginPath(); ctx.ellipse(iceX + iceW * rx, iceY + iceH * 0.93, 14, 4, Math.random() * 0.3, 0, Math.PI * 2); ctx.fill();
+  });
+
+  // Native proteins in bulk (globular)
+  ctx.fillStyle = '#3b82f6';
+  [[0.15,0.35],[0.25,0.55],[0.38,0.42],[0.48,0.62],[0.58,0.38],[0.68,0.55],[0.78,0.48],[0.88,0.42],[0.35,0.65],[0.55,0.5]].forEach(([rx,ry]) => {
+    ctx.beginPath(); ctx.arc(iceX + iceW * rx, iceY + iceH * (0.15 + ry * 0.7), 5, 0, Math.PI * 2); ctx.fill();
+  });
+
+  // Legend
+  const legY = iceY + iceH * 0.25;
+  ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.ellipse(iceX + iceW * 0.04 + 10, legY, 10, 3, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#555'; ctx.font = `500 ${subFs}px Inter`; ctx.textAlign = 'left';
+  ctx.fillText('Denatured (unfolded)', iceX + iceW * 0.04 + 24, legY + 4);
+  ctx.fillStyle = '#3b82f6'; ctx.beginPath(); ctx.arc(iceX + iceW * 0.04 + 10, legY + subFs + 6, 5, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#555'; ctx.fillText('Native (folded)', iceX + iceW * 0.04 + 24, legY + subFs + 10);
+
+  // Bottom: key points
+  const botY = iceY + iceH + pad + subFs;
+  const keyFs = Math.max(subFs - 1, 9);
+  const points = [
+    'Proteins adsorb to AWI within milliseconds of grid preparation',
+    'Hydrophobic core exposed → partial or full unfolding at interface',
+    'Thin ice (~30 nm): up to 90% of particles contact AWI',
+    'Preferred orientation: molecules align at AWI → missing views',
+  ];
+
+  ctx.textAlign = 'left';
+  points.forEach((pt, pi) => {
+    const py = botY + pi * (keyFs + 5);
+    ctx.fillStyle = '#ef4444'; ctx.font = `700 ${keyFs}px Inter`;
+    ctx.fillText('•', pad + 4, py + keyFs);
+    ctx.fillStyle = '#333'; ctx.font = `500 ${keyFs}px Inter`;
+    ctx.fillText(pt, pad + 4 + keyFs, py + keyFs);
+  });
+}
+
+/* Panel 2: Time-Resolved AWI Effects (Noble 2018) */
+function drawTimeResolved() {
+  const { ctx, w, h } = initCanvas('cvTime');
+  const fs = F(h, 'md');
+  const subFs = F(h, 'sm');
+  const pad = 10;
+
+  // Chart area
+  const chartX = pad + 40, chartY = pad + 6;
+  const chartW = w - chartX - pad - 10;
+  const chartH = h * 0.48;
+
+  // Title
+  ctx.fillStyle = '#92400e'; ctx.font = `700 ${fs}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Spot-to-Plunge Time vs. Particle Quality', w / 2, chartY + fs);
+
+  // Axes
+  const axY = chartY + fs + 8;
+  const axH = chartH - fs - 12;
+  ctx.strokeStyle = '#ccc'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(chartX, axY); ctx.lineTo(chartX, axY + axH); ctx.lineTo(chartX + chartW, axY + axH); ctx.stroke();
+
+  // Y-axis: % intact particles
+  const axFs = Math.max(subFs - 2, 8);
+  ctx.save();
+  ctx.fillStyle = '#666'; ctx.font = `500 ${axFs}px Inter`;
+  ctx.translate(chartX - 28, axY + axH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center';
+  ctx.fillText('% Intact Particles', 0, 0);
+  ctx.restore();
+
+  // Y ticks
+  ctx.fillStyle = '#999'; ctx.font = `500 ${axFs}px Inter`; ctx.textAlign = 'right';
+  [100, 75, 50, 25, 0].forEach((v, i) => {
+    const y = axY + (i / 4) * axH;
+    ctx.fillText(v + '%', chartX - 4, y + 3);
+    if (v > 0 && v < 100) {
+      ctx.strokeStyle = '#eee'; ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(chartX, y); ctx.lineTo(chartX + chartW, y); ctx.stroke();
+    }
+  });
+
+  // X-axis: time (log scale)
+  ctx.fillStyle = '#666'; ctx.font = `500 ${axFs}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Spot-to-plunge time', chartX + chartW / 2, axY + axH + axFs + 10);
+  const xLabels = ['0.1s', '0.5s', '1s', '5s', '10s', '30s'];
+  const xPos = [0, 0.14, 0.2, 0.34, 0.4, 0.6];
+  xLabels.forEach((lbl, i) => {
+    const x = chartX + xPos[i] * chartW;
+    ctx.fillStyle = '#999'; ctx.fillText(lbl, x, axY + axH + axFs + 2);
+  });
+
+  // Decay curve (intact particles decrease with time)
+  ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 3;
+  ctx.beginPath();
+  for (let t = 0; t <= 1; t += 0.005) {
+    const px = chartX + t * chartW;
+    // Exponential decay: starts ~95% at t=0, drops to ~15% at t=1
+    const pct = 15 + 80 * Math.exp(-t * 4);
+    const py = axY + (1 - pct / 100) * axH;
+    t === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  // Highlight zones
+  // Fast (<200ms) = green zone
+  const fastW = chartW * 0.08;
+  ctx.fillStyle = 'rgba(16,185,129,0.12)';
+  ctx.fillRect(chartX, axY, fastW, axH);
+  ctx.fillStyle = '#10b981'; ctx.font = `600 ${axFs}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Fast', chartX + fastW / 2, axY + axFs + 2);
+
+  // Slow (>5s) = red zone
+  const slowX = chartX + chartW * 0.34;
+  ctx.fillStyle = 'rgba(239,68,68,0.08)';
+  ctx.fillRect(slowX, axY, chartW - chartW * 0.34, axH);
+  ctx.fillStyle = '#ef4444'; ctx.font = `600 ${axFs}px Inter`;
+  ctx.fillText('Slow (traditional)', slowX + (chartW - chartW * 0.34) / 2, axY + axFs + 2);
+
+  // Bottom: Noble 2018 key findings
+  const botY = h * 0.55;
+  ctx.fillStyle = '#fef3c7';
+  roundRect(ctx, pad, botY, w - pad * 2, h - botY - pad, 8); ctx.fill();
+  ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 1;
+  roundRect(ctx, pad, botY, w - pad * 2, h - botY - pad, 8); ctx.stroke();
+
+  ctx.fillStyle = '#92400e'; ctx.font = `700 ${fs}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Noble et al. (2018) Key Findings', w / 2, botY + fs + 4);
+
+  const findings = [
+    ['Traditional blotting:', '5–30 sec exposure to AWI → major denaturation'],
+    ['Sub-second plunging:', '<200 ms reduces AWI damage dramatically'],
+    ['Particle behavior:', 'Adsorption begins within 10 ms of air exposure'],
+    ['Preferred orientation:', 'Increases with longer AWI exposure time'],
+    ['Practical impact:', '~90% particles at AWI in thin ice (<50 nm)'],
+  ];
+
+  const fFs = Math.max(subFs - 1, 9);
+  const fLineH = fFs + 5;
+  findings.forEach((f, fi) => {
+    const fy = botY + fs + 10 + fi * fLineH;
+    ctx.fillStyle = '#92400e'; ctx.font = `700 ${fFs}px Inter`; ctx.textAlign = 'left';
+    ctx.fillText(f[0], pad + 10, fy + fFs);
+    const lw = ctx.measureText(f[0]).width;
+    ctx.fillStyle = '#333'; ctx.font = `500 ${fFs}px Inter`;
+    ctx.fillText(f[1], pad + 14 + lw, fy + fFs);
+  });
+}
+
+/* Panel 3: Automated Grid Preparation Systems */
+function drawAutomated() {
+  const { ctx, w, h } = initCanvas('cvAuto');
+  const fs = F(h, 'md');
+  const subFs = F(h, 'sm');
+  const pad = 8;
+
+  // Comparison table
+  const cols = ['Feature', 'Vitrobot', 'Chameleon', 'VitroJet'];
+  const colColors = ['#334155', '#78350f', '#5b21b6', '#0369a1'];
+  const rows = [
+    ['Blotting', 'Filter paper', 'Self-wicking grid', 'Pin/jet printing'],
+    ['Sample vol.', '3–4 μL', '~3–50 nL', '~1 nL'],
+    ['Spot→plunge', '5–30 sec', '<200 ms', '<100 ms'],
+    ['AWI exposure', 'Seconds', 'Milliseconds', 'Milliseconds'],
+    ['Ice control', 'Variable', 'Highly uniform', 'Highly uniform'],
+    ['Reproducibility', 'Operator dep.', 'High', 'High'],
+    ['Availability', 'Widespread', 'Limited (SPT)', 'Research phase'],
+    ['Cost', '~$100K', '~$500K+', 'N/A'],
+  ];
+
+  const tableW = w - pad * 2;
+  const colWidths = [tableW * 0.19, tableW * 0.27, tableW * 0.27, tableW * 0.27];
+  const headerH = fs * 2;
+  const rowH = (h - pad * 2 - headerH) / rows.length;
+
+  // Header bg
+  ctx.fillStyle = '#f1f5f9';
+  roundRect(ctx, pad, pad, tableW, headerH, 6); ctx.fill();
+
+  // Column headers
+  ctx.font = `700 ${fs}px Inter`; ctx.textAlign = 'center';
+  let cx_t = pad;
+  cols.forEach((col, ci) => {
+    ctx.fillStyle = colColors[ci];
+    ctx.fillText(col, cx_t + colWidths[ci] / 2, pad + headerH * 0.65);
+    cx_t += colWidths[ci];
+  });
+
+  // Data rows
+  rows.forEach((row, ri) => {
+    const ry = pad + headerH + ri * rowH;
+    if (ri % 2 === 0) { ctx.fillStyle = '#fafafa'; ctx.fillRect(pad, ry, tableW, rowH); }
+    // Highlight Chameleon & VitroJet columns
+    ctx.fillStyle = 'rgba(139,92,246,0.03)';
+    ctx.fillRect(pad + colWidths[0] + colWidths[1], ry, colWidths[2], rowH);
+    ctx.fillStyle = 'rgba(3,105,161,0.03)';
+    ctx.fillRect(pad + colWidths[0] + colWidths[1] + colWidths[2], ry, colWidths[3], rowH);
+
+    cx_t = pad;
+    row.forEach((cell, ci) => {
+      ctx.fillStyle = colColors[ci];
+      ctx.font = ci === 0 ? `600 ${subFs}px Inter` : `500 ${subFs}px Inter`;
+      ctx.textAlign = 'center';
+      ctx.fillText(cell, cx_t + colWidths[ci] / 2, ry + rowH * 0.62);
+      cx_t += colWidths[ci];
+    });
+  });
+
+  // Table border + dividers
+  ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 1;
+  roundRect(ctx, pad, pad, tableW, headerH + rowH * rows.length, 6); ctx.stroke();
+  ctx.lineWidth = 0.5;
+  let divX = pad;
+  for (let i = 0; i < 3; i++) {
+    divX += colWidths[i];
+    ctx.beginPath(); ctx.moveTo(divX, pad); ctx.lineTo(divX, pad + headerH + rowH * rows.length); ctx.stroke();
+  }
+}
+
+/* Panel 4: AWI Mitigation Strategies */
+function drawSolutions() {
+  const { ctx, w, h } = initCanvas('cvSolutions');
+  const fs = F(h, 'md');
+  const subFs = F(h, 'sm');
+  const pad = 8;
+
+  const strategies = [
+    { title: 'Fast Plunging', color: '#3b82f6', bg: '#dbeafe',
+      items: [
+        'Spot-to-plunge <200 ms',
+        'Chameleon / VitroJet',
+        'Most effective method',
+        'No blotting artifacts',
+        'Reduces preferred orient.',
+      ] },
+    { title: 'Support Films', color: '#8b5cf6', bg: '#ede9fe',
+      items: [
+        'Graphene oxide (GO)',
+        'Thin carbon (~2 nm)',
+        'Particles off AWI',
+        'Adds background noise',
+        'GO requires treatment',
+      ] },
+    { title: 'Surfactants', color: '#10b981', bg: '#dcfce7',
+      items: [
+        'Detergent ≤2× CMC',
+        'Blocks AWI interaction',
+        'Risk: conformational Δ',
+        'Test stability first',
+        'DDM, CHAPS common',
+      ] },
+    { title: 'Other Methods', color: '#f59e0b', bg: '#fef3c7',
+      items: [
+        'Affinity grids (NiNTA)',
+        'GraFix crosslinking',
+        'Grid tilting (30–40°)',
+        'Freeze-thaw screening',
+        'Conc. optimization',
+      ] },
+  ];
+
+  const cardGap = 8;
+  const cardW = (w - pad * 2 - cardGap * 3) / 4;
+  const itemFs = Math.max(subFs - 1, 9);
+
+  strategies.forEach((strat, si) => {
+    const x0 = pad + si * (cardW + cardGap);
+
+    ctx.fillStyle = strat.bg;
+    roundRect(ctx, x0, pad, cardW, h - pad * 2, 8); ctx.fill();
+    ctx.strokeStyle = strat.color + '60'; ctx.lineWidth = 1.5;
+    roundRect(ctx, x0, pad, cardW, h - pad * 2, 8); ctx.stroke();
+
+    // Header badge
+    ctx.fillStyle = strat.color + '20';
+    roundRect(ctx, x0, pad, cardW, fs + 10, [8, 8, 0, 0]); ctx.fill();
+    ctx.fillStyle = strat.color; ctx.font = `800 ${fs}px Inter`; ctx.textAlign = 'center';
+    ctx.fillText(strat.title, x0 + cardW / 2, pad + fs + 3);
+
+    // Effectiveness indicator
+    const effY = pad + fs + 16;
+    const effColors = ['#10b981', '#8b5cf6', '#f59e0b', '#64748b'];
+    const effLabels = ['Most effective', 'Very effective', 'Moderate', 'Supplementary'];
+    ctx.fillStyle = effColors[si] + '20';
+    roundRect(ctx, x0 + 6, effY, cardW - 12, subFs + 6, 4); ctx.fill();
+    ctx.fillStyle = effColors[si]; ctx.font = `600 ${Math.max(itemFs - 1, 8)}px Inter`;
+    ctx.fillText(effLabels[si], x0 + cardW / 2, effY + subFs + 1);
+
+    // Items — no word wrap, short text
+    ctx.textAlign = 'left';
+    const itemY = effY + subFs + 14;
+    const itemLineH = (h - pad * 2 - itemY + pad) / strat.items.length;
+    strat.items.forEach((item, ii) => {
+      const iy = itemY + ii * itemLineH;
+      ctx.fillStyle = strat.color; ctx.font = `700 ${itemFs}px Inter`;
+      ctx.fillText('•', x0 + 8, iy + itemFs);
+      ctx.fillStyle = '#333'; ctx.font = `500 ${itemFs}px Inter`;
+      ctx.fillText(item, x0 + 8 + itemFs * 0.7, iy + itemFs);
+    });
+  });
+}
+
+function init() {
+  drawAWI();
+  drawTimeResolved();
+  drawAutomated();
+  drawSolutions();
+}
+
+window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('resize', () => {
+  clearTimeout(window._rt);
+  window._rt = setTimeout(init, 150);
+});
+</script>
+</body>
+</html>

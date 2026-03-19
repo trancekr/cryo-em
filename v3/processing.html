@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Processing – Cryo-EM Tutorial</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.topbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 16px;
+  background: #fff;
+  border-bottom: 2px solid #e0e0e8;
+  gap: 8px;
+  min-height: 44px;
+}
+.topbar .home-btn {
+  display: flex; align-items: center; gap: 4px;
+  padding: 4px 12px; border-radius: 20px;
+  border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(11px, 1.3vh, 15px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  white-space: nowrap;
+}
+.topbar .home-btn:hover { background: #f5f3ff; color: #dc2626; border-color: #c4b5fd; }
+.topbar .section-name {
+  font-size: clamp(14px, 1.8vh, 22px);
+  font-weight: 800;
+  color: #dc2626;
+  text-align: center;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.topbar .nav-group {
+  display: flex; align-items: center; gap: 6px;
+  white-space: nowrap;
+}
+.nav-btn {
+  padding: 4px 10px; border-radius: 8px;
+  border: 2px solid #e0e0e8; background: #fff;
+  color: #555; font-size: clamp(13px, 1.5vh, 18px); font-weight: 700;
+  cursor: pointer; transition: all 0.15s;
+  line-height: 1;
+}
+.nav-btn:hover { background: #f5f3ff; border-color: #c4b5fd; color: #dc2626; }
+.nav-btn:disabled { opacity: 0.3; cursor: default; }
+.page-info {
+  font-size: clamp(11px, 1.2vh, 15px);
+  color: #888; font-weight: 600;
+  min-width: 50px; text-align: center;
+}
+
+/* ── Slide container ── */
+.slides-area {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  padding: clamp(8px, 1.2vh, 16px) clamp(12px, 2vw, 32px);
+  overflow: hidden;
+}
+.slide.active {
+  display: flex;
+}
+.slide-title {
+  font-size: clamp(18px, 2.8vh, 34px);
+  font-weight: 800;
+  color: #1a1a2e;
+  text-align: center;
+  padding: 2px 0 clamp(4px, 0.8vh, 10px);
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+.slide-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.6vh, 10px);
+  overflow: hidden;
+}
+/* Text-only slides: center vertically */
+.slide-body:not(:has(.img-single)):not(:has(.img-grid)):not(:has(.layout-split)) {
+  justify-content: center;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+.slide-ref {
+  flex-shrink: 0;
+  font-size: clamp(8px, 0.9vh, 11px);
+  color: #aaa;
+  text-align: center;
+  padding: 2px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.slide-pptx {
+  flex-shrink: 0;
+  font-size: clamp(7px, 0.7vh, 9px);
+  color: #ccc;
+  text-align: right;
+  padding: 0 4px;
+}
+
+/* ── Image layouts ── */
+.img-single {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.img-single img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.img-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  gap: clamp(4px, 0.5vh, 8px);
+  overflow: hidden;
+}
+.img-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+}
+.img-grid.g2 { grid-template-columns: 1fr 1fr; }
+.img-grid.g3 { grid-template-columns: 1fr 1fr 1fr; }
+.img-grid.g4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.img-grid.gm {
+  grid-template-columns: repeat(auto-fill, minmax(min(180px, 28%), 1fr));
+  grid-auto-rows: 1fr;
+  align-items: center;
+}
+.img-grid.gc3 { grid-template-columns: repeat(3, 1fr); }
+.img-grid.gc4 { grid-template-columns: repeat(4, 1fr); }
+
+/* ── Text blocks ── */
+.text-block {
+  flex-shrink: 0;
+  padding: clamp(2px, 0.3vh, 6px) clamp(8px, 1vw, 16px);
+}
+.text-block p {
+  margin-bottom: 1px;
+  line-height: 1.35;
+}
+.text-block.bold p { font-weight: 700; }
+.text-block.text-lg p { font-size: clamp(14px, 2vh, 26px); }
+.text-block.text-md p { font-size: clamp(12px, 1.5vh, 20px); }
+.text-block.text-sm p { font-size: clamp(10px, 1.2vh, 16px); color: #444; }
+
+/* ── Split layout: images left, text right ── */
+.layout-split {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: clamp(8px, 1vw, 16px);
+  overflow: hidden;
+}
+.split-img {
+  flex: 3;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.split-img .img-single,
+.split-img .img-grid {
+  flex: 1;
+  min-height: 0;
+}
+.split-text {
+  flex: 2;
+  min-width: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="home-btn" href="index.html">&larr; Home</a>
+  <div class="section-name">Data Processing</div>
+  <div class="nav-group">
+    <button class="nav-btn" id="prev-btn" onclick="go(-1)">&lsaquo;</button>
+    <span class="page-info" id="page-info">1 / 23</span>
+    <button class="nav-btn" id="next-btn" onclick="go(1)">&rsaquo;</button>
+  </div>
+</div>
+
+<div class="slides-area">
+  <div class="slide active" data-n="1">
+    <div class="slide-title">Data Processing</div>
+    <div class="slide-body">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s094_177.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s095_178.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Data Processing</p>
+</div>
+<div class="text-block text-sm">
+  <p>95</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Halfon et al., 2022 Faraday Discuss.</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Time &amp; Cost of a single particle cryo-EM pipeline</p>
+</div>
+    </div>
+    <div class="slide-ref">Halfon et al., 2022 Faraday Discuss.</div>
+    <div class="slide-pptx">PPTX: p94, p95</div>
+  </div>
+  <div class="slide" data-n="2">
+    <div class="slide-title">Micrograph Quality Assessment</div>
+    <div class="slide-body">
+<div class="img-grid g4">
+<img src="../cryo-slides-img/s096_179.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s096_180.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s096_181.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s097_182.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>103-104 Micrographs</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>······</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Single particle analysis</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>103-104 Micrographs</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>104-107 particle images</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Single particle analysis</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p96, p97</div>
+  </div>
+  <div class="slide" data-n="3">
+    <div class="slide-title">Cryo-EM Map – 2D</div>
+    <div class="slide-body">
+<div class="img-single"><img src="../cryo-slides-img/s098_183.png" alt="" loading="lazy"></div>
+<div class="text-block bold text-sm">
+  <p>2D</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>3D</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Cryo-EM map</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Unknown particle poses</p>
+  <p>Low signal to noise ratio (SNR)</p>
+  <p>Imperfect imaging (artifacts)</p>
+  <p>Heterogenous/dynamic nature</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>(Utilizing ~10% of particles)</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Images to 3D maps</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p98</div>
+  </div>
+  <div class="slide" data-n="4">
+    <div class="slide-title">Fourier Transform &amp; Spatial Frequencies</div>
+    <div class="slide-body">
+<div class="layout-split">
+  <div class="split-img">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s099_184.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s100_185.png" alt="" loading="lazy">
+</div>
+  </div>
+  <div class="split-text">
+<div class="text-block text-sm">
+  <p>Visual representation of the distribution of spatial frequencies within an image, obtained by calculating the Fourier transform of the image and then squaring magnitude</p>
+  <p>Low frequencies (large features, low resolution) appear near the center</p>
+  <p>High frequencies (small features, high resolution) are towards the edges of the spectrum</p>
+  <p>Other undesirable effects such as the level of astigmatism, or drift associated with an image, as well as crystalline ice contamination, are often more clearly diagnosed in the power spectrum than in the cryo-TEM image itself</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Some terminology - Power spectrum</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Power spectrum</p>
+</div>
+<div class="text-block text-sm">
+  <p>Visual representation of the distribution of spatial frequencies within an image, obtained by calculating the Fourier transform of the image and then squaring magnitude</p>
+  <p>Low frequencies (large features, low resolution) appear near the center</p>
+  <p>High frequencies (small features, high resolution) are towards the edges of the spectrum</p>
+  <p>Other undesirable effects such as the level of astigmatism, or drift associated with an image, as well as crystalline ice contamination, are often more clearly diagnosed in the power spectrum than in the cryo-TEM image itself</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Some terminology - Power spectrum</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Power spectrum</p>
+</div>
+  </div>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p99, p100</div>
+  </div>
+  <div class="slide" data-n="5">
+    <div class="slide-title">Contrast Transfer Function (CTF)</div>
+    <div class="slide-body">
+<div class="layout-split">
+  <div class="split-img">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s101_186.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s101_187.png" alt="" loading="lazy">
+</div>
+  </div>
+  <div class="split-text">
+<div class="text-block text-sm">
+  <p>The CTF is a measure of how much the phase shift (defocus) and the spatial frequency</p>
+  <p>However, microscope aberrations (envelop function) have corrupted the image</p>
+  <p>Oscillations within the CTF are easily seen by visualizing the power spectrum of cryo-EM images. The pattern of concentric rings (Thon rings) represent the alternation of high and low contrast transfer as a function of spatial frequency</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Some terminology – CTF</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Contrast Transfer Function (CTF)</p>
+</div>
+  </div>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p101</div>
+  </div>
+  <div class="slide" data-n="6">
+    <div class="slide-title">Understanding Raw Cryo-EM Data</div>
+    <div class="slide-body">
+<div class="img-single"><img src="../cryo-slides-img/s102_188.png" alt="" loading="lazy"></div>
+<div class="text-block bold text-sm">
+  <p>Understanding raw cryo-EM data</p>
+</div>
+<div class="text-block text-sm">
+  <p>Raw cryo-EM data corresponds to a stack of movie frames, which each frame is a sparse image consisting zeros and ones</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p102</div>
+  </div>
+  <div class="slide" data-n="7">
+    <div class="slide-title">Beam Damage &amp; Long Exposure</div>
+    <div class="slide-body">
+<div class="layout-split">
+  <div class="split-img">
+<div class="img-single"><img src="../cryo-slides-img/s103_189.png" alt="" loading="lazy"></div>
+  </div>
+  <div class="split-text">
+<div class="text-block text-sm">
+  <p>Long exposure time per ‘image’</p>
+  <p>High total dose improves contrast</p>
+  <p>But particles move due to physical drift and ‘beam-induced motion’</p>
+  <p>Fractionation into frames (‘movie’) allows correction of drift and motion</p>
+  <p>The re-aligned frames are then summed into a single, de-blurred micrograph</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Pre-processing – Motion correction</p>
+</div>
+  </div>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p103</div>
+  </div>
+  <div class="slide" data-n="8">
+    <div class="slide-title">Motion Correction</div>
+    <div class="slide-body">
+<div class="img-single"><img src="../cryo-slides-img/s104_190.png" alt="" loading="lazy"></div>
+<div class="text-block bold text-sm">
+  <p>Pre-processing – Motion correction</p>
+</div>
+<div class="text-block text-sm">
+  <p>0.3</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p104</div>
+  </div>
+  <div class="slide" data-n="9">
+    <div class="slide-title">CTF Correction – SNR Optimization</div>
+    <div class="slide-body">
+<div class="layout-split">
+  <div class="split-img">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s105_191.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s106_192.png" alt="" loading="lazy">
+</div>
+  </div>
+  <div class="split-text">
+<div class="text-block text-sm">
+  <p>To optimize the signal-to-noise ratio across all resolutions in the micrograph to enable high-resolution 3D reconstruction</p>
+  <p>The electron beam damages the sample during the course of exposure</p>
+  <p>Cryo-EM movie frames accumulate an increasing amount of electron dose.</p>
+  <p>The earliest frames</p>
+  <p>most intact information</p>
+  <p>low radiation damage</p>
+  <p>low electrons  limited contrast</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Pre-processing – Dose weighting</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>The early frames – retained high res. info.</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>The later frames – limited to low res. info.</p>
+</div>
+<div class="text-block text-sm">
+  <p>To optimize the signal-to-noise ratio across all resolutions in the micrograph to enable high-resolution 3D reconstruction</p>
+  <p>The electron beam damages the sample during the course of exposure</p>
+  <p>Cryo-EM movie frames accumulate an increasing amount of electron dose.</p>
+  <p>The earliest frames</p>
+  <p>most intact information</p>
+  <p>low radiation damage</p>
+  <p>low electrons  limited contrast</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Pre-processing – Dose weighting</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>The early frames – retained high res. info.</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>The later frames – limited to low res. info.</p>
+</div>
+  </div>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p105, p106</div>
+  </div>
+  <div class="slide" data-n="10">
+    <div class="slide-title">CTF Parameter Estimation (1)</div>
+    <div class="slide-body">
+<div class="layout-split">
+  <div class="split-img">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s107_193.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s108_194.png" alt="" loading="lazy">
+</div>
+  </div>
+  <div class="split-text">
+<div class="text-block bold text-sm">
+  <p>Estimation of CTF parameters to enable the computational correction of the CTF for each image</p>
+  <p>The most important task in CTF estimation is to determine the true defocus of each image</p>
+  <p>CTF modeling is also an effective way to assess micrograph.</p>
+  <p>The cross-correlation and resolution limit of CTF fitting are useful metrics to exclude poor micrographs out of the dataset</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Pre-processing – CTF estimation</p>
+</div>
+<div class="text-block text-sm">
+  <p>https://ctfsimulation.streamlit.app/~/+/</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Estimation of CTF parameters to enable the computational correction of the CTF for each image</p>
+  <p>The most important task in CTF estimation is to determine the true defocus of each image</p>
+  <p>CTF modeling is also an effective way to assess micrograph.</p>
+  <p>The cross-correlation and resolution limit of CTF fitting are useful metrics to exclude poor micrographs out of the dataset</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Pre-processing – CTF estimation</p>
+</div>
+  </div>
+</div>
+    </div>
+    <div class="slide-ref">https://ctfsimulation.streamlit.app/~/+/</div>
+    <div class="slide-pptx">PPTX: p107, p108</div>
+  </div>
+  <div class="slide" data-n="11">
+    <div class="slide-title">CTF Parameter Estimation (2)</div>
+    <div class="slide-body">
+<div class="layout-split">
+  <div class="split-img">
+<div class="img-grid gm gc3">
+<img src="../cryo-slides-img/s109_195.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s109_196.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s109_197.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s110_198.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s110_199.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s110_200.png" alt="" loading="lazy">
+</div>
+  </div>
+  <div class="split-text">
+<div class="text-block bold text-sm">
+  <p>Estimation of CTF parameters to enable the computational correction of the CTF for each image</p>
+  <p>The most important task in CTF estimation is to determine the true defocus of each image</p>
+  <p>CTF modeling is also an effective way to assess micrograph.</p>
+  <p>The cross-correlation and resolution limit of CTF fitting are useful metrics to exclude poor micrographs out of the dataset</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Pre-processing – CTF estimation</p>
+</div>
+<div class="text-block text-sm">
+  <p>CTF objective function fitting</p>
+</div>
+<div class="text-block text-sm">
+  <p>Comparison of measured CTF vs. power spectrum</p>
+</div>
+<div class="text-block text-sm">
+  <p>2D plot of defocus vs.</p>
+  <p>Position on micrograph</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Estimation of CTF parameters to enable the computational correction of the CTF for each image</p>
+  <p>The most important task in CTF estimation is to determine the true defocus of each image</p>
+  <p>CTF modeling is also an effective way to assess micrograph.</p>
+  <p>The cross-correlation and resolution limit of CTF fitting are useful metrics to exclude poor micrographs out of the dataset</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Pre-processing – CTF estimation</p>
+</div>
+  </div>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p109, p110</div>
+  </div>
+  <div class="slide" data-n="12">
+    <div class="slide-title">Particle Selection &amp; Signal Enhancement</div>
+    <div class="slide-body">
+<div class="img-grid g3">
+<img src="../cryo-slides-img/s111_201.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s111_202.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s112_203.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Particle selection and extraction</p>
+</div>
+<div class="text-block text-sm">
+  <p>Enhance the signal</p>
+  <p>Manual picking</p>
+  <p>Blob picking</p>
+  <p>Template picking</p>
+  <p>ML approach (Topaz, crYOLO, DRPnet, DeepCryoPicker etc.)</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Particle selection and extraction</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p111, p112</div>
+  </div>
+  <div class="slide" data-n="13">
+    <div class="slide-title">Particle Picking Methods</div>
+    <div class="slide-body">
+<div class="layout-split">
+  <div class="split-img">
+<div class="img-single"><img src="../cryo-slides-img/s113_204.png" alt="" loading="lazy"></div>
+  </div>
+  <div class="split-text">
+<div class="text-block bold text-sm">
+  <p>Particle selection and extraction</p>
+</div>
+<div class="text-block text-sm">
+  <p>Enhance the signal</p>
+  <p>Manual picking</p>
+  <p>Blob picking</p>
+  <p>Template picking</p>
+  <p>ML approach (Topaz, crYOLO, DRPnet, DeepCryoPicker etc.)</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Particle selection and extraction</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Topaz – No general model; requires training per sample/per dataset. Is free standing or incorporated into RELION and cryoSPARC.</p>
+  <p>Warp – Has a general model but typically requires user re-training with specific sample types. Once trained, the neural network can work across different datasets and similar sample types. (Note: Warp only runs on Windows. Warp also has a junk detector that will automatically avoid junk based on a pre-trained neural network)</p>
+  <p>crYOLO – Has a general model that works well on most samples. Currently, is free standing or a part of the SPHIRE package.</p>
+</div>
+<div class="text-block text-sm">
+  <p>Enhance the signal</p>
+  <p>Manual picking</p>
+  <p>Blob picking</p>
+  <p>Template picking</p>
+  <p>ML approach (Topaz, crYOLO, DRPnet, DeepCryoPicker etc.)</p>
+</div>
+  </div>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p113, p114</div>
+  </div>
+  <div class="slide" data-n="14">
+    <div class="slide-title">2D Classification</div>
+    <div class="slide-body">
+<div class="img-grid g4">
+<img src="../cryo-slides-img/s115_205.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s116_206.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s117_207.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s117_208.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>2D classification</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>2D classification</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>2D classes</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p115, p116, p117</div>
+  </div>
+  <div class="slide" data-n="15">
+    <div class="slide-title">Fourier Slice Theorem</div>
+    <div class="slide-body">
+<div class="img-single"><img src="../cryo-slides-img/s118_209.png" alt="" loading="lazy"></div>
+<div class="text-block text-sm">
+  <p>The Fourier transform of each of the 2D class averages Represent a section of the Fourier transform of the initial object</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>3D reconstruction</p>
+</div>
+<div class="text-block text-sm">
+  <p>The inverse TF of the combined sections generates the initial objects</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p118</div>
+  </div>
+  <div class="slide" data-n="16">
+    <div class="slide-title">3D Reconstruction – Initial Map</div>
+    <div class="slide-body">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s119_210.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s120_211.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>3D reconstruction – Initial map</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>3D reconstruction – Initial map</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p119, p120</div>
+  </div>
+  <div class="slide" data-n="17">
+    <div class="slide-title">3D Reconstruction – Map Optimization</div>
+    <div class="slide-body">
+<div class="text-block bold text-lg">
+  <p>3D reconstruction – Map optimization</p>
+</div>
+<div class="text-block bold text-lg">
+  <p>3D reconstruction – Map optimization</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p121, p122</div>
+  </div>
+  <div class="slide" data-n="18">
+    <div class="slide-title">Resolution – Bragg's Law</div>
+    <div class="slide-body">
+<div class="layout-split">
+  <div class="split-img">
+<div class="img-grid g3">
+<img src="../cryo-slides-img/s123_212.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s123_213.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s123_214.png" alt="" loading="lazy">
+</div>
+  </div>
+  <div class="split-text">
+<div class="text-block text-sm">
+  <p>Resolution is calculated using Bragg’s law, which states that the smallest distance between crystal lattice planes that can be resolved (d) is equal to the wavelength of the X-ray (l) devided by twice the sine of the diffraction angle (q)</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Resolution</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Resolution is determined by calculating the Fourier Shell Correlation (FSC) between two independently generated ‘half-maps’ of the same data, signifying the point at which the correlation between the maps drops below a set threshold (commonly 0.143) across different resolution shells</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>X-ray crystallography</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Cryo-EM</p>
+</div>
+  </div>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p123</div>
+  </div>
+  <div class="slide" data-n="19">
+    <div class="slide-title">Map Resolution</div>
+    <div class="slide-body">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s124_215.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s125_216.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Resolution</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Map resolution</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p124, p125</div>
+  </div>
+  <div class="slide" data-n="20">
+    <div class="slide-title">Conformational Variability</div>
+    <div class="slide-body">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s126_217.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s127_218.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Conformational variability and variability analysis</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Conformational variability and variability analysis</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p126, p127</div>
+  </div>
+  <div class="slide" data-n="21">
+    <div class="slide-title">Rosenthal Plot – Particles vs. Resolution</div>
+    <div class="slide-body">
+<div class="img-grid gm gc3">
+<img src="../cryo-slides-img/s128_219.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s128_220.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s128_221.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s129_222.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s129_223.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Rosenthal Plot (the number of particles vs. resolution)</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>How much particles do we need???</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p128, p129</div>
+  </div>
+  <div class="slide" data-n="22">
+    <div class="slide-title">Size Limitation Revisited</div>
+    <div class="slide-body">
+<div class="text-block text-md">
+  <p>Size-limitation</p>
+  <p>Requires highly purified sample</p>
+  <p>Vitrification process</p>
+</div>
+<div class="text-block bold text-lg">
+  <p>Sample</p>
+</div>
+<div class="text-block bold text-lg">
+  <p>Problems and limitations</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p130</div>
+  </div>
+  <div class="slide" data-n="23">
+    <div class="slide-title">감사합니다</div>
+    <div class="slide-body">
+<div class="img-single"><img src="../cryo-slides-img/s131_224.png" alt="" loading="lazy"></div>
+<div class="text-block bold text-sm">
+  <p>감사합니다</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p131, p132</div>
+  </div>
+</div>
+
+<script>
+const N = 23;
+let cur = 1;
+
+function show(n) {
+  n = Math.max(1, Math.min(N, n));
+  const prev = document.querySelector('.slide.active');
+  if (prev) prev.classList.remove('active');
+  const next = document.querySelector('[data-n="' + n + '"]');
+  if (next) next.classList.add('active');
+  cur = n;
+  document.getElementById('page-info').textContent = cur + ' / ' + N;
+  document.getElementById('prev-btn').disabled = (cur === 1);
+  document.getElementById('next-btn').disabled = (cur === N);
+}
+
+function go(d) { show(cur + d); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') { go(-1); e.preventDefault(); }
+  else if (e.key === 'ArrowRight') { go(1); e.preventDefault(); }
+  else if (e.key === 'Home') { show(1); e.preventDefault(); }
+  else if (e.key === 'End') { show(N); e.preventDefault(); }
+});
+
+// Touch swipe
+let tx = 0;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+});
+
+show(1);
+</script>
+
+</body>
+</html>

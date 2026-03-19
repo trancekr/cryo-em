@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cryo-EM Tutorial v3</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.container {
+  max-width: 900px;
+  width: 100%;
+}
+.title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.title h1 {
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+}
+.title p {
+  font-size: clamp(14px, 2vw, 20px);
+  color: #888;
+  margin-top: 8px;
+  font-weight: 500;
+}
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 600px) {
+  .cards { grid-template-columns: 1fr; }
+}
+.card {
+  background: #fff;
+  border: 2px solid #e0e0e8;
+  border-radius: 16px;
+  padding: clamp(20px, 3vw, 32px);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+.card .num {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 900;
+  line-height: 1;
+}
+.card .name {
+  font-size: clamp(18px, 2.5vw, 26px);
+  font-weight: 800;
+}
+.card .desc {
+  font-size: clamp(12px, 1.5vw, 16px);
+  color: #888;
+  font-weight: 500;
+}
+.card .count {
+  font-size: clamp(11px, 1.2vw, 14px);
+  color: #aaa;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.card.c1 { border-color: #c4b5fd; }
+.card.c1:hover { border-color: #7c3aed; }
+.card.c1 .num { color: #7c3aed; }
+
+.card.c2 { border-color: #a7f3d0; }
+.card.c2:hover { border-color: #059669; }
+.card.c2 .num { color: #059669; }
+
+.card.c3 { border-color: #bfdbfe; }
+.card.c3:hover { border-color: #2563eb; }
+.card.c3 .num { color: #2563eb; }
+
+.card.c4 { border-color: #fecaca; }
+.card.c4:hover { border-color: #dc2626; }
+.card.c4 .num { color: #dc2626; }
+
+.footer {
+  text-align: center;
+  margin-top: 40px;
+  font-size: clamp(11px, 1.2vw, 14px);
+  color: #bbb;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="title">
+    <h1>Cryo-EM Guide</h1>
+    <p>Single Particle Analysis — From Sample to Structure</p>
+  </div>
+  <div class="cards">
+    <a class="card c1" href="overview.html">
+      <div class="num">01</div>
+      <div class="name">Cryo-EM Overview</div>
+      <div class="desc">Introduction, history, PDB statistics, Korean facilities</div>
+      <div class="count">19 slides</div>
+    </a>
+    <a class="card c2" href="sample-prep.html">
+      <div class="num">02</div>
+      <div class="name">Sample Preparation</div>
+      <div class="desc">Grid preparation, vitrification, screening, ice quality</div>
+      <div class="count">29 slides</div>
+    </a>
+    <a class="card c3" href="imaging.html">
+      <div class="num">03</div>
+      <div class="name">Imaging</div>
+      <div class="desc">Data collection, defocus, contrast, phase plate</div>
+      <div class="count">12 slides</div>
+    </a>
+    <a class="card c4" href="processing.html">
+      <div class="num">04</div>
+      <div class="name">Data Processing</div>
+      <div class="desc">CTF, motion correction, 2D/3D classification, resolution</div>
+      <div class="count">23 slides</div>
+    </a>
+  </div>
+  <div class="footer">v3 &middot; Based on 130 PPTX slides</div>
+</div>
+</body>
+</html>

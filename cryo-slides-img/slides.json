@@ -1,0 +1,6611 @@
+[
+ {
+  "num": 1,
+  "texts": [
+   {
+    "text": "일시 : 2025. 4.28 ~ 4.30",
+    "left": 0.92,
+    "top": 4.45,
+    "width": 10.3,
+    "height": 2.61
+   },
+   {
+    "text": "주최 : 서울대학교 기초과학공동기기원 / NEXUS 컨소시엄",
+    "left": 0.92,
+    "top": 4.45,
+    "width": 10.3,
+    "height": 2.61
+   },
+   {
+    "text": "바이오 이미징 기술 개발 사업단",
+    "left": 0.92,
+    "top": 4.45,
+    "width": 10.3,
+    "height": 2.61
+   },
+   {
+    "text": "세포 및 거대분자 이미징 핵심 지원 센터",
+    "left": 0.92,
+    "top": 4.45,
+    "width": 10.3,
+    "height": 2.61
+   },
+   {
+    "text": "서울대학교",
+    "left": 0.92,
+    "top": 0.46,
+    "width": 8.14,
+    "height": 3.3
+   },
+   {
+    "text": "기초과학공동기기원",
+    "left": 0.92,
+    "top": 0.46,
+    "width": 8.14,
+    "height": 3.3
+   },
+   {
+    "text": "Cryo-EM 워크샵",
+    "left": 0.92,
+    "top": 0.46,
+    "width": 8.14,
+    "height": 3.3
+   }
+  ],
+  "images": [
+   {
+    "file": "s001_0.png",
+    "size_kb": 4957,
+    "left": 5.52,
+    "top": -0.03,
+    "width": 7.82,
+    "height": 3.91
+   },
+   {
+    "file": "s001_1.png",
+    "size_kb": 4733,
+    "left": 5.3,
+    "top": 3.91,
+    "width": 8.03,
+    "height": 3.91
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 2,
+  "texts": [
+   {
+    "text": "이론 교육",
+    "left": 2.68,
+    "top": 1.27,
+    "width": 1.87,
+    "height": 0.55
+   },
+   {
+    "text": "장비 교육",
+    "left": 9.18,
+    "top": 1.27,
+    "width": 1.87,
+    "height": 0.55
+   },
+   {
+    "text": "Cryo-EM 워크샵 프로그램",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 3,
+  "texts": [
+   {
+    "text": "Cryo-EM",
+    "left": 0.36,
+    "top": 2.89,
+    "width": 12.62,
+    "height": 1.72
+   }
+  ],
+  "images": [
+   {
+    "file": "s003_2.png",
+    "size_kb": 1254,
+    "left": 0.0,
+    "top": 0.0,
+    "width": 13.59,
+    "height": 7.87
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 4,
+  "texts": [],
+  "images": [
+   {
+    "file": "s004_3.png",
+    "size_kb": 924,
+    "left": 2.57,
+    "top": 0.53,
+    "width": 8.19,
+    "height": 6.44
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 5,
+  "texts": [
+   {
+    "text": "Electron microscope & biological samples",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Electron Beam",
+    "left": 5.99,
+    "top": 4.52,
+    "width": 2.15,
+    "height": 0.57
+   },
+   {
+    "text": "Evaporation of water from the sample",
+    "left": 7.1,
+    "top": 2.16,
+    "width": 5.52,
+    "height": 0.5
+   },
+   {
+    "text": "Vacuum",
+    "left": 5.99,
+    "top": 1.28,
+    "width": 1.72,
+    "height": 0.57
+   },
+   {
+    "text": "Chemical fixation & dehydration",
+    "left": 7.1,
+    "top": 2.75,
+    "width": 5.52,
+    "height": 0.5
+   },
+   {
+    "text": "Structural changes to the sample",
+    "left": 7.1,
+    "top": 3.34,
+    "width": 5.52,
+    "height": 0.5
+   },
+   {
+    "text": "Sample thickness",
+    "left": 7.1,
+    "top": 5.33,
+    "width": 2.75,
+    "height": 0.5
+   },
+   {
+    "text": "Low contrast",
+    "left": 7.1,
+    "top": 5.92,
+    "width": 2.75,
+    "height": 0.5
+   },
+   {
+    "text": "Non-conductive",
+    "left": 7.1,
+    "top": 6.51,
+    "width": 2.75,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s005_4.jpg",
+    "size_kb": 234,
+    "left": 0.13,
+    "top": 1.09,
+    "width": 5.86,
+    "height": 6.03
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 6,
+  "texts": [
+   {
+    "text": "Electron microscope & biological samples",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 7,
+  "texts": [
+   {
+    "text": "Cryo-electron microscope",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Cryo holder /",
+    "left": 0.75,
+    "top": 1.36,
+    "width": 3.11,
+    "height": 0.75
+   },
+   {
+    "text": "Autoloader system",
+    "left": 0.75,
+    "top": 1.36,
+    "width": 3.11,
+    "height": 0.75
+   },
+   {
+    "text": "Energy filter",
+    "left": 5.11,
+    "top": 1.36,
+    "width": 3.11,
+    "height": 0.75
+   },
+   {
+    "text": "Direct electron detector",
+    "left": 9.38,
+    "top": 1.36,
+    "width": 3.11,
+    "height": 0.75
+   }
+  ],
+  "images": [
+   {
+    "file": "s007_5.png",
+    "size_kb": 432,
+    "left": 4.85,
+    "top": 2.49,
+    "width": 3.85,
+    "height": 3.65
+   },
+   {
+    "file": "s007_6.png",
+    "size_kb": 86,
+    "left": 9.11,
+    "top": 2.31,
+    "width": 3.85,
+    "height": 1.91
+   },
+   {
+    "file": "s007_7.png",
+    "size_kb": 270,
+    "left": 9.2,
+    "top": 4.16,
+    "width": 3.69,
+    "height": 2.59
+   },
+   {
+    "file": "s007_8.png",
+    "size_kb": 2602,
+    "left": 0.45,
+    "top": 2.31,
+    "width": 3.9,
+    "height": 4.32
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 8,
+  "texts": [
+   {
+    "text": "From blobs to high resolution",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s008_9.png",
+    "size_kb": 675,
+    "left": 1.85,
+    "top": 1.16,
+    "width": 9.62,
+    "height": 5.7
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 9,
+  "texts": [
+   {
+    "text": "From blobs to high resolution",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Contrast in hydrated specimens should be directly interpretable as structure rather than as stain.",
+    "left": 7.26,
+    "top": 3.06,
+    "width": 5.72,
+    "height": 3.13
+   },
+   {
+    "text": "Fixation and drying artifacts are avoided.",
+    "left": 7.26,
+    "top": 3.06,
+    "width": 5.72,
+    "height": 3.13
+   },
+   {
+    "text": "Hydrated protein crystals retain a high degree of periodicity",
+    "left": 7.26,
+    "top": 3.06,
+    "width": 5.72,
+    "height": 3.13
+   },
+   {
+    "text": "Radiation damage is expected to be much more severe in hydrated specimens.",
+    "left": 7.26,
+    "top": 3.06,
+    "width": 5.72,
+    "height": 3.13
+   }
+  ],
+  "images": [
+   {
+    "file": "s009_10.png",
+    "size_kb": 1723,
+    "left": -0.21,
+    "top": 1.87,
+    "width": 6.39,
+    "height": 4.43
+   },
+   {
+    "file": "s009_11.png",
+    "size_kb": 1388,
+    "left": 4.62,
+    "top": 1.96,
+    "width": 6.15,
+    "height": 4.34
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 10,
+  "texts": [
+   {
+    "text": "From blobs to high resolution",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "1968",
+    "left": 0.68,
+    "top": 3.6,
+    "width": 0.64,
+    "height": 0.34
+   },
+   {
+    "text": "1974",
+    "left": 2.41,
+    "top": 3.57,
+    "width": 0.64,
+    "height": 0.34
+   },
+   {
+    "text": "1982",
+    "left": 4.38,
+    "top": 3.57,
+    "width": 0.64,
+    "height": 0.34
+   },
+   {
+    "text": "1987",
+    "left": 6.48,
+    "top": 3.6,
+    "width": 0.64,
+    "height": 0.34
+   },
+   {
+    "text": "1990",
+    "left": 9.03,
+    "top": 3.58,
+    "width": 0.64,
+    "height": 0.34
+   },
+   {
+    "text": "1994",
+    "left": 11.21,
+    "top": 3.6,
+    "width": 0.64,
+    "height": 0.34
+   },
+   {
+    "text": "First 3D-reconstruction",
+    "left": 0.29,
+    "top": 2.77,
+    "width": 1.56,
+    "height": 0.79
+   },
+   {
+    "text": "DeRosier & Klug",
+    "left": 0.29,
+    "top": 2.77,
+    "width": 1.56,
+    "height": 0.79
+   },
+   {
+    "text": "Birth of cryo-EM",
+    "left": 1.93,
+    "top": 3.91,
+    "width": 1.56,
+    "height": 0.79
+   },
+   {
+    "text": "Taylor & Glaeser",
+    "left": 1.93,
+    "top": 3.91,
+    "width": 1.56,
+    "height": 0.79
+   },
+   {
+    "text": "Vitrification",
+    "left": 3.96,
+    "top": 2.77,
+    "width": 1.56,
+    "height": 0.79
+   },
+   {
+    "text": "Dubochet et al.",
+    "left": 3.96,
+    "top": 2.77,
+    "width": 1.56,
+    "height": 0.79
+   },
+   {
+    "text": "Single particle:",
+    "left": 5.83,
+    "top": 2.77,
+    "width": 2.11,
+    "height": 0.79
+   },
+   {
+    "text": "Angular reconstitution",
+    "left": 5.83,
+    "top": 2.77,
+    "width": 2.11,
+    "height": 0.79
+   },
+   {
+    "text": "van Heel",
+    "left": 5.83,
+    "top": 2.77,
+    "width": 2.11,
+    "height": 0.79
+   },
+   {
+    "text": "Atomic structure of",
+    "left": 8.3,
+    "top": 2.59,
+    "width": 2.11,
+    "height": 0.97
+   },
+   {
+    "text": "bacteriorhodopsin by",
+    "left": 8.3,
+    "top": 2.59,
+    "width": 2.11,
+    "height": 0.97
+   },
+   {
+    "text": "electron crystallography",
+    "left": 8.3,
+    "top": 2.59,
+    "width": 2.11,
+    "height": 0.97
+   },
+   {
+    "text": "Henderson et al.",
+    "left": 8.3,
+    "top": 2.59,
+    "width": 2.11,
+    "height": 0.97
+   },
+   {
+    "text": "Projection matching",
+    "left": 10.48,
+    "top": 3.95,
+    "width": 2.11,
+    "height": 0.79
+   },
+   {
+    "text": "Penczek, Frank et al.",
+    "left": 10.48,
+    "top": 3.95,
+    "width": 2.11,
+    "height": 0.79
+   },
+   {
+    "text": "Single particle:",
+    "left": 5.78,
+    "top": 3.94,
+    "width": 2.21,
+    "height": 0.79
+   },
+   {
+    "text": "Random conical tilt",
+    "left": 5.78,
+    "top": 3.94,
+    "width": 2.21,
+    "height": 0.79
+   },
+   {
+    "text": "Radermacher, Frank et al.",
+    "left": 5.78,
+    "top": 3.94,
+    "width": 2.21,
+    "height": 0.79
+   }
+  ],
+  "images": [
+   {
+    "file": "s010_12.png",
+    "size_kb": 260,
+    "left": 0.41,
+    "top": 4.22,
+    "width": 1.32,
+    "height": 2.63
+   },
+   {
+    "file": "s010_13.png",
+    "size_kb": 2133,
+    "left": 2.0,
+    "top": 1.09,
+    "width": 1.83,
+    "height": 1.54
+   },
+   {
+    "file": "s010_14.png",
+    "size_kb": 1355,
+    "left": 3.59,
+    "top": 4.99,
+    "width": 2.31,
+    "height": 1.64
+   },
+   {
+    "file": "s010_15.png",
+    "size_kb": 358,
+    "left": 6.06,
+    "top": 4.95,
+    "width": 1.67,
+    "height": 1.96
+   },
+   {
+    "file": "s010_16.png",
+    "size_kb": 470,
+    "left": 5.82,
+    "top": 1.21,
+    "width": 2.21,
+    "height": 1.17
+   },
+   {
+    "file": "s010_17.png",
+    "size_kb": 165,
+    "left": 10.03,
+    "top": 0.91,
+    "width": 3.01,
+    "height": 1.54
+   },
+   {
+    "file": "s010_18.png",
+    "size_kb": 1334,
+    "left": 8.14,
+    "top": 4.9,
+    "width": 2.43,
+    "height": 1.64
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 11,
+  "texts": [
+   {
+    "text": "From blobs to high resolution",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "1997",
+    "left": 1.01,
+    "top": 3.57,
+    "width": 0.64,
+    "height": 0.34
+   },
+   {
+    "text": "1998",
+    "left": 2.84,
+    "top": 3.58,
+    "width": 0.64,
+    "height": 0.34
+   },
+   {
+    "text": "2008",
+    "left": 4.95,
+    "top": 3.57,
+    "width": 0.64,
+    "height": 0.34
+   },
+   {
+    "text": "2012",
+    "left": 6.98,
+    "top": 3.58,
+    "width": 0.64,
+    "height": 0.34
+   },
+   {
+    "text": "2013",
+    "left": 9.03,
+    "top": 3.58,
+    "width": 0.64,
+    "height": 0.34
+   },
+   {
+    "text": "DED cameras used",
+    "left": 6.24,
+    "top": 3.95,
+    "width": 1.97,
+    "height": 0.77
+   },
+   {
+    "text": "For motion correction",
+    "left": 6.24,
+    "top": 3.95,
+    "width": 1.97,
+    "height": 0.77
+   },
+   {
+    "text": "Grigorieff et al.",
+    "left": 6.24,
+    "top": 3.95,
+    "width": 1.97,
+    "height": 0.77
+   },
+   {
+    "text": "Near-atomic maps of",
+    "left": 8.37,
+    "top": 3.94,
+    "width": 1.97,
+    "height": 0.79
+   },
+   {
+    "text": "30,000 ribosomes",
+    "left": 8.37,
+    "top": 3.94,
+    "width": 1.97,
+    "height": 0.79
+   },
+   {
+    "text": "Scheres et al.",
+    "left": 8.37,
+    "top": 3.94,
+    "width": 1.97,
+    "height": 0.79
+   },
+   {
+    "text": "2015",
+    "left": 11.22,
+    "top": 3.57,
+    "width": 0.64,
+    "height": 0.34
+   },
+   {
+    "text": " 10-Å virus structure",
+    "left": 0.28,
+    "top": 2.77,
+    "width": 2.11,
+    "height": 0.79
+   },
+   {
+    "text": "Böttcher, Crowther et al.",
+    "left": 0.28,
+    "top": 2.77,
+    "width": 2.11,
+    "height": 0.79
+   },
+   {
+    "text": "Conway, McDowell et al.",
+    "left": 0.28,
+    "top": 2.77,
+    "width": 2.11,
+    "height": 0.79
+   },
+   {
+    "text": "2D Maximum likelihood",
+    "left": 2.3,
+    "top": 3.94,
+    "width": 1.64,
+    "height": 0.79
+   },
+   {
+    "text": "Sigworth",
+    "left": 2.3,
+    "top": 3.94,
+    "width": 1.64,
+    "height": 0.79
+   },
+   {
+    "text": "Virus de novo tracing",
+    "left": 4.34,
+    "top": 2.78,
+    "width": 1.97,
+    "height": 0.79
+   },
+   {
+    "text": "Zhou et al.",
+    "left": 4.34,
+    "top": 2.78,
+    "width": 1.97,
+    "height": 0.79
+   },
+   {
+    "text": "De novo tracing <200 kDa",
+    "left": 10.72,
+    "top": 3.94,
+    "width": 1.64,
+    "height": 0.79
+   },
+   {
+    "text": "Scheres, Shi et al.",
+    "left": 10.72,
+    "top": 3.94,
+    "width": 1.64,
+    "height": 0.79
+   },
+   {
+    "text": " 3-Å structures",
+    "left": 10.47,
+    "top": 2.78,
+    "width": 2.11,
+    "height": 0.79
+   },
+   {
+    "text": "Carragher, Potter et al.",
+    "left": 10.47,
+    "top": 2.78,
+    "width": 2.11,
+    "height": 0.79
+   },
+   {
+    "text": "Subramaniam & colleagues",
+    "left": 10.47,
+    "top": 2.78,
+    "width": 2.11,
+    "height": 0.79
+   },
+   {
+    "text": "TRPV1 structures",
+    "left": 8.33,
+    "top": 2.78,
+    "width": 1.97,
+    "height": 0.79
+   },
+   {
+    "text": "Cheng  et al.",
+    "left": 8.33,
+    "top": 2.78,
+    "width": 1.97,
+    "height": 0.79
+   }
+  ],
+  "images": [
+   {
+    "file": "s011_19.png",
+    "size_kb": 1653,
+    "left": -0.2,
+    "top": 4.96,
+    "width": 3.0,
+    "height": 1.52
+   },
+   {
+    "file": "s011_20.png",
+    "size_kb": 616,
+    "left": 2.14,
+    "top": 0.8,
+    "width": 2.29,
+    "height": 1.91
+   },
+   {
+    "file": "s011_21.png",
+    "size_kb": 722,
+    "left": 3.88,
+    "top": 5.04,
+    "width": 2.27,
+    "height": 2.0
+   },
+   {
+    "file": "s011_22.png",
+    "size_kb": 662,
+    "left": 4.74,
+    "top": 0.9,
+    "width": 3.85,
+    "height": 1.46
+   },
+   {
+    "file": "s011_23.png",
+    "size_kb": 708,
+    "left": 8.48,
+    "top": 4.94,
+    "width": 1.72,
+    "height": 2.17
+   },
+   {
+    "file": "s011_24.png",
+    "size_kb": 1413,
+    "left": 11.1,
+    "top": 0.95,
+    "width": 1.86,
+    "height": 1.69
+   },
+   {
+    "file": "s011_25.png",
+    "size_kb": 1124,
+    "left": 10.54,
+    "top": 5.14,
+    "width": 1.82,
+    "height": 1.92
+   },
+   {
+    "file": "s011_26.png",
+    "size_kb": 1129,
+    "left": 8.21,
+    "top": 1.07,
+    "width": 2.38,
+    "height": 1.39
+   },
+   {
+    "file": "s011_27.png",
+    "size_kb": 1941,
+    "left": 0.28,
+    "top": 1.31,
+    "width": 1.82,
+    "height": 1.26
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 12,
+  "texts": [
+   {
+    "text": "From blobs to high resolution",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s012_28.png",
+    "size_kb": 2615,
+    "left": 6.33,
+    "top": 1.75,
+    "width": 6.09,
+    "height": 4.63
+   },
+   {
+    "file": "s012_29.png",
+    "size_kb": 1293,
+    "left": 0.69,
+    "top": 1.68,
+    "width": 6.09,
+    "height": 4.77
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 13,
+  "texts": [
+   {
+    "text": "From blobs to high resolution",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s013_30.png",
+    "size_kb": 675,
+    "left": 1.85,
+    "top": 1.16,
+    "width": 9.62,
+    "height": 5.7
+   },
+   {
+    "file": "s013_31.png",
+    "size_kb": 526,
+    "left": 3.81,
+    "top": 1.16,
+    "width": 5.71,
+    "height": 6.18
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 14,
+  "texts": [
+   {
+    "text": "PDB entries categorized by method (by 2025)",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s014_32.png",
+    "size_kb": 199,
+    "left": 0.71,
+    "top": 1.2,
+    "width": 11.74,
+    "height": 5.24
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 15,
+  "texts": [
+   {
+    "text": "PDB entries categorized by method (by 2024)",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s015_33.png",
+    "size_kb": 506,
+    "left": 1.33,
+    "top": 1.27,
+    "width": 10.67,
+    "height": 5.51
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 16,
+  "texts": [
+   {
+    "text": "PDB entries categorized by method (by 2025)",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s016_34.png",
+    "size_kb": 144,
+    "left": 2.42,
+    "top": 1.04,
+    "width": 8.5,
+    "height": 6.03
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 17,
+  "texts": [
+   {
+    "text": "Different structural biology methods in PDB",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s017_35.png",
+    "size_kb": 405,
+    "left": 3.62,
+    "top": 1.33,
+    "width": 6.09,
+    "height": 5.31
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 18,
+  "texts": [
+   {
+    "text": "5 – 10 Å",
+    "left": 3.51,
+    "top": 6.85,
+    "width": 1.03,
+    "height": 0.37
+   },
+   {
+    "text": "1.2 Å",
+    "left": 5.78,
+    "top": 6.88,
+    "width": 1.03,
+    "height": 0.37
+   },
+   {
+    "text": "0.9 Å",
+    "left": 10.47,
+    "top": 6.84,
+    "width": 1.03,
+    "height": 0.37
+   },
+   {
+    "text": "Imaging",
+    "left": 4.55,
+    "top": 1.23,
+    "width": 1.17,
+    "height": 0.4
+   },
+   {
+    "text": "Crystal-based",
+    "left": 8.81,
+    "top": 1.23,
+    "width": 1.87,
+    "height": 0.4
+   },
+   {
+    "text": "Cryo-EM methodology",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s018_36.png",
+    "size_kb": 272,
+    "left": 1.24,
+    "top": 1.87,
+    "width": 11.16,
+    "height": 4.86
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 19,
+  "texts": [
+   {
+    "text": "30 kDa protein (0.9 A)",
+    "left": 8.52,
+    "top": 1.19,
+    "width": 2.6,
+    "height": 0.4
+   },
+   {
+    "text": "Mitochondria respiratory chain",
+    "left": 1.71,
+    "top": 1.19,
+    "width": 3.6,
+    "height": 0.4
+   },
+   {
+    "text": "Recent development......",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s019_37.png",
+    "size_kb": 2466,
+    "left": 7.18,
+    "top": 1.59,
+    "width": 5.27,
+    "height": 5.27
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 20,
+  "texts": [
+   {
+    "text": "FEI Company",
+    "left": 5.22,
+    "top": 6.92,
+    "width": 1.28,
+    "height": 0.3
+   },
+   {
+    "text": "Sizing up cryo-EM",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 21,
+  "texts": [
+   {
+    "text": "A structural biologist’s dream",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Structural Cell Biology",
+    "left": 0.95,
+    "top": 3.43,
+    "width": 5.15,
+    "height": 0.64
+   }
+  ],
+  "images": [
+   {
+    "file": "s021_38.png",
+    "size_kb": 3485,
+    "left": 6.65,
+    "top": 0.95,
+    "width": 5.33,
+    "height": 6.33
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 22,
+  "texts": [
+   {
+    "text": "http://star-protocols.cell.com/protocols/1057",
+    "left": 0.0,
+    "top": 7.24,
+    "width": 2.94,
+    "height": 0.27
+   },
+   {
+    "text": "Single particle analysis workflow",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s022_39.jpg",
+    "size_kb": 1941,
+    "left": 2.5,
+    "top": 0.99,
+    "width": 8.33,
+    "height": 6.22
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 23,
+  "texts": [
+   {
+    "text": "단백질 정제",
+    "left": 0.74,
+    "top": 1.38,
+    "width": 1.88,
+    "height": 0.47
+   },
+   {
+    "text": "샘플 스크린",
+    "left": 0.74,
+    "top": 3.22,
+    "width": 1.88,
+    "height": 0.47
+   },
+   {
+    "text": "초기 데이터",
+    "left": 0.74,
+    "top": 5.02,
+    "width": 1.88,
+    "height": 0.47
+   },
+   {
+    "text": "고해상도 모델",
+    "left": 0.74,
+    "top": 6.23,
+    "width": 1.88,
+    "height": 0.47
+   },
+   {
+    "text": "2-3개월",
+    "left": 10.17,
+    "top": 4.24,
+    "width": 2.52,
+    "height": 0.87
+   },
+   {
+    "text": "Single particle analysis workflow",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "2주",
+    "left": 10.17,
+    "top": 4.24,
+    "width": 2.52,
+    "height": 0.87
+   }
+  ],
+  "images": [
+   {
+    "file": "s023_40.jpg",
+    "size_kb": 359,
+    "left": 3.33,
+    "top": 0.83,
+    "width": 6.67,
+    "height": 6.28
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 24,
+  "texts": [
+   {
+    "text": "Halfon et al., 2022 Faraday Discuss.",
+    "left": 0.0,
+    "top": 7.24,
+    "width": 2.94,
+    "height": 0.27
+   },
+   {
+    "text": "Single particle analysis workflow",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s024_41.png",
+    "size_kb": 266,
+    "left": 0.66,
+    "top": 1.23,
+    "width": 12.02,
+    "height": 5.03
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 25,
+  "texts": [
+   {
+    "text": "Size-limitation",
+    "left": 0.79,
+    "top": 2.06,
+    "width": 5.27,
+    "height": 1.43
+   },
+   {
+    "text": "Requires highly purified sample",
+    "left": 0.79,
+    "top": 2.06,
+    "width": 5.27,
+    "height": 1.43
+   },
+   {
+    "text": "Vitrification process",
+    "left": 0.79,
+    "top": 2.06,
+    "width": 5.27,
+    "height": 1.43
+   },
+   {
+    "text": "Sample",
+    "left": 0.56,
+    "top": 1.57,
+    "width": 2.86,
+    "height": 0.55
+   },
+   {
+    "text": "Problems and limitations",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 26,
+  "texts": [
+   {
+    "text": "The process…",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Sample prep.",
+    "left": 0.78,
+    "top": 1.59,
+    "width": 2.86,
+    "height": 0.74
+   },
+   {
+    "text": "Microscopy",
+    "left": 0.78,
+    "top": 3.38,
+    "width": 2.86,
+    "height": 0.74
+   },
+   {
+    "text": "Data",
+    "left": 0.78,
+    "top": 5.23,
+    "width": 2.86,
+    "height": 1.18
+   },
+   {
+    "text": "processing",
+    "left": 0.78,
+    "top": 5.23,
+    "width": 2.86,
+    "height": 1.18
+   },
+   {
+    "text": "Slow",
+    "left": 8.94,
+    "top": 1.41,
+    "width": 2.68,
+    "height": 1.11
+   },
+   {
+    "text": "Manual",
+    "left": 8.94,
+    "top": 1.41,
+    "width": 2.68,
+    "height": 1.11
+   },
+   {
+    "text": "Non-reproducible",
+    "left": 8.94,
+    "top": 1.41,
+    "width": 2.68,
+    "height": 1.11
+   },
+   {
+    "text": "Slow",
+    "left": 8.94,
+    "top": 3.19,
+    "width": 2.89,
+    "height": 1.11
+   },
+   {
+    "text": "Manual (mostly)",
+    "left": 8.94,
+    "top": 3.19,
+    "width": 2.89,
+    "height": 1.11
+   },
+   {
+    "text": "The grid dependent",
+    "left": 8.94,
+    "top": 3.19,
+    "width": 2.89,
+    "height": 1.11
+   },
+   {
+    "text": "Slow",
+    "left": 8.94,
+    "top": 4.76,
+    "width": 3.8,
+    "height": 2.12
+   },
+   {
+    "text": "Manual (mostly)",
+    "left": 8.94,
+    "top": 4.76,
+    "width": 3.8,
+    "height": 2.12
+   },
+   {
+    "text": "Multiple steps required",
+    "left": 8.94,
+    "top": 4.76,
+    "width": 3.8,
+    "height": 2.12
+   },
+   {
+    "text": "Sample heterogeneity",
+    "left": 8.94,
+    "top": 4.76,
+    "width": 3.8,
+    "height": 2.12
+   },
+   {
+    "text": "Sample flexibility",
+    "left": 8.94,
+    "top": 4.76,
+    "width": 3.8,
+    "height": 2.12
+   },
+   {
+    "text": "Too many wasted particles",
+    "left": 8.94,
+    "top": 4.76,
+    "width": 3.8,
+    "height": 2.12
+   }
+  ],
+  "images": [
+   {
+    "file": "s026_42.png",
+    "size_kb": 71,
+    "left": 6.78,
+    "top": 1.41,
+    "width": 1.18,
+    "height": 1.18
+   },
+   {
+    "file": "s026_43.png",
+    "size_kb": 166,
+    "left": 6.61,
+    "top": 1.68,
+    "width": 0.6,
+    "height": 0.94
+   },
+   {
+    "file": "s026_44.png",
+    "size_kb": 221,
+    "left": 5.39,
+    "top": 1.57,
+    "width": 0.79,
+    "height": 0.89
+   },
+   {
+    "file": "s026_45.jpg",
+    "size_kb": 30,
+    "left": 7.69,
+    "top": 1.76,
+    "width": 0.6,
+    "height": 0.68
+   },
+   {
+    "file": "s026_46.jpg",
+    "size_kb": 1941,
+    "left": 4.18,
+    "top": 1.44,
+    "width": 0.61,
+    "height": 1.11
+   },
+   {
+    "file": "s026_47.jpg",
+    "size_kb": 1941,
+    "left": 3.9,
+    "top": 5.12,
+    "width": 1.49,
+    "height": 1.38
+   },
+   {
+    "file": "s026_48.jpg",
+    "size_kb": 1941,
+    "left": 5.73,
+    "top": 5.13,
+    "width": 1.22,
+    "height": 1.38
+   },
+   {
+    "file": "s026_49.jpg",
+    "size_kb": 1941,
+    "left": 7.34,
+    "top": 5.13,
+    "width": 1.29,
+    "height": 1.38
+   },
+   {
+    "file": "s026_50.png",
+    "size_kb": 125,
+    "left": 3.1,
+    "top": 2.85,
+    "width": 2.56,
+    "height": 1.92
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 27,
+  "texts": [
+   {
+    "text": "From blobs to high resolution",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s027_51.png",
+    "size_kb": 805,
+    "left": 8.06,
+    "top": 0.94,
+    "width": 4.68,
+    "height": 6.16
+   },
+   {
+    "file": "s027_52.png",
+    "size_kb": 805,
+    "left": 0.59,
+    "top": 0.94,
+    "width": 4.68,
+    "height": 6.16
+   },
+   {
+    "file": "s027_53.x-wmf",
+    "size_kb": 2369,
+    "left": 1.24,
+    "top": 2.06,
+    "width": 4.25,
+    "height": 4.26
+   },
+   {
+    "file": "s027_54.png",
+    "size_kb": 1585,
+    "left": 5.99,
+    "top": 2.29,
+    "width": 6.93,
+    "height": 3.81
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 28,
+  "texts": [
+   {
+    "text": "First Titan Krios: 2018",
+    "left": 3.47,
+    "top": 2.73,
+    "width": 3.02,
+    "height": 0.71
+   },
+   {
+    "text": "2 Krios / 1 Glacios",
+    "left": 3.47,
+    "top": 2.73,
+    "width": 3.02,
+    "height": 0.71
+   },
+   {
+    "text": "First Titan Krios: 2016",
+    "left": 3.47,
+    "top": 1.48,
+    "width": 3.06,
+    "height": 0.71
+   },
+   {
+    "text": "Cryo-EM lab",
+    "left": 3.47,
+    "top": 1.48,
+    "width": 3.06,
+    "height": 0.71
+   },
+   {
+    "text": "1 Krios / 2 Glacios",
+    "left": 3.47,
+    "top": 4.17,
+    "width": 2.57,
+    "height": 0.4
+   },
+   {
+    "text": "Cryo-EM lab",
+    "left": 10.06,
+    "top": 1.49,
+    "width": 1.95,
+    "height": 0.4
+   },
+   {
+    "text": "Cryo-EM lab",
+    "left": 10.06,
+    "top": 2.87,
+    "width": 1.95,
+    "height": 0.4
+   },
+   {
+    "text": "2 Glacios",
+    "left": 10.07,
+    "top": 4.15,
+    "width": 1.53,
+    "height": 0.4
+   },
+   {
+    "text": "1 Krios / 2 Glacios",
+    "left": 3.49,
+    "top": 5.47,
+    "width": 2.51,
+    "height": 0.4
+   },
+   {
+    "text": "1 Krios / 2 Glacios",
+    "left": 10.1,
+    "top": 5.42,
+    "width": 2.57,
+    "height": 0.4
+   },
+   {
+    "text": "1 Krios",
+    "left": 3.49,
+    "top": 6.56,
+    "width": 1.27,
+    "height": 0.4
+   },
+   {
+    "text": "1 Glacios",
+    "left": 10.08,
+    "top": 6.55,
+    "width": 1.56,
+    "height": 0.4
+   },
+   {
+    "text": "Cryo-EM in big pharmas",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s028_55.png",
+    "size_kb": 31,
+    "left": 1.01,
+    "top": 2.54,
+    "width": 1.98,
+    "height": 1.02
+   },
+   {
+    "file": "s028_56.png",
+    "size_kb": 5,
+    "left": 1.07,
+    "top": 3.77,
+    "width": 1.85,
+    "height": 0.93
+   },
+   {
+    "file": "s028_57.png",
+    "size_kb": 39,
+    "left": 0.93,
+    "top": 1.35,
+    "width": 2.14,
+    "height": 0.88
+   },
+   {
+    "file": "s028_58.png",
+    "size_kb": 169,
+    "left": 8.09,
+    "top": 1.25,
+    "width": 1.03,
+    "height": 0.88
+   },
+   {
+    "file": "s028_59.png",
+    "size_kb": 157,
+    "left": 7.64,
+    "top": 2.85,
+    "width": 1.92,
+    "height": 0.42
+   },
+   {
+    "file": "s028_60.png",
+    "size_kb": 29,
+    "left": 7.47,
+    "top": 3.99,
+    "width": 2.26,
+    "height": 0.57
+   },
+   {
+    "file": "s028_61.png",
+    "size_kb": 114,
+    "left": 0.92,
+    "top": 5.42,
+    "width": 2.2,
+    "height": 0.51
+   },
+   {
+    "file": "s028_62.png",
+    "size_kb": 24,
+    "left": 0.92,
+    "top": 6.56,
+    "width": 2.2,
+    "height": 0.36
+   },
+   {
+    "file": "s028_63.png",
+    "size_kb": 91,
+    "left": 7.35,
+    "top": 6.52,
+    "width": 2.54,
+    "height": 0.46
+   },
+   {
+    "file": "s028_64.png",
+    "size_kb": 19,
+    "left": 7.47,
+    "top": 5.28,
+    "width": 2.25,
+    "height": 0.6
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 29,
+  "texts": [
+   {
+    "text": "29",
+    "left": 0.07,
+    "top": 7.05,
+    "width": 0.53,
+    "height": 0.4
+   },
+   {
+    "text": "GPCR",
+    "left": 2.83,
+    "top": 0.85,
+    "width": 1.79,
+    "height": 0.71
+   },
+   {
+    "text": "Transporter",
+    "left": 2.51,
+    "top": 4.29,
+    "width": 2.42,
+    "height": 0.71
+   },
+   {
+    "text": "Ion channel",
+    "left": 8.85,
+    "top": 0.85,
+    "width": 2.42,
+    "height": 0.71
+   },
+   {
+    "text": "Drug targets - membrane protein",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s029_65.png",
+    "size_kb": 539,
+    "left": 0.61,
+    "top": 5.14,
+    "width": 6.23,
+    "height": 2.11
+   },
+   {
+    "file": "s029_66.jpg",
+    "size_kb": 375,
+    "left": 0.61,
+    "top": 1.7,
+    "width": 6.23,
+    "height": 2.23
+   },
+   {
+    "file": "s029_67.png",
+    "size_kb": 723,
+    "left": 7.4,
+    "top": 1.74,
+    "width": 5.32,
+    "height": 5.31
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 30,
+  "texts": [
+   {
+    "text": "30",
+    "left": 9.42,
+    "top": 6.95,
+    "width": 3.0,
+    "height": 0.4
+   },
+   {
+    "text": "Drug targets - E3 ligases / PROTAC etc.",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s030_68.png",
+    "size_kb": 1521,
+    "left": 0.53,
+    "top": 1.66,
+    "width": 4.53,
+    "height": 4.18
+   },
+   {
+    "file": "s030_69.png",
+    "size_kb": 6952,
+    "left": 5.7,
+    "top": 2.1,
+    "width": 7.34,
+    "height": 3.96
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 31,
+  "texts": [
+   {
+    "text": "31",
+    "left": 9.42,
+    "top": 6.95,
+    "width": 3.0,
+    "height": 0.4
+   },
+   {
+    "text": "Drug targets – Biologics (de novo protein design)",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s031_70.png",
+    "size_kb": 771,
+    "left": 1.27,
+    "top": 0.99,
+    "width": 10.8,
+    "height": 6.02
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 32,
+  "texts": [
+   {
+    "text": "32",
+    "left": 9.42,
+    "top": 6.95,
+    "width": 3.0,
+    "height": 0.4
+   },
+   {
+    "text": "Drug targets – Biologics (de novo protein design)",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s032_71.png",
+    "size_kb": 482,
+    "left": 0.65,
+    "top": 1.89,
+    "width": 12.03,
+    "height": 5.15
+   },
+   {
+    "file": "s032_72.png",
+    "size_kb": 498,
+    "left": 0.65,
+    "top": 0.83,
+    "width": 4.22,
+    "height": 0.89
+   },
+   {
+    "file": "s032_73.png",
+    "size_kb": 477,
+    "left": 4.87,
+    "top": 0.83,
+    "width": 2.57,
+    "height": 0.89
+   },
+   {
+    "file": "s032_74.png",
+    "size_kb": 526,
+    "left": 0.64,
+    "top": 1.87,
+    "width": 12.05,
+    "height": 4.44
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 33,
+  "texts": [
+   {
+    "text": "+ 바이오 벤처 / 스타트업 회사들",
+    "left": 3.53,
+    "top": 5.5,
+    "width": 6.5,
+    "height": 0.77
+   },
+   {
+    "text": "국내 업계 현황",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 34,
+  "texts": [
+   {
+    "text": "Cryo-EM Contact research organization (CRO)",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s034_75.png",
+    "size_kb": 2238,
+    "left": 0.47,
+    "top": 2.16,
+    "width": 5.91,
+    "height": 3.37
+   },
+   {
+    "file": "s034_76.png",
+    "size_kb": 2893,
+    "left": 6.95,
+    "top": 2.16,
+    "width": 5.91,
+    "height": 3.37
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 35,
+  "texts": [
+   {
+    "text": "Data processing in ‘Cloud’",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s035_77.png",
+    "size_kb": 2204,
+    "left": 0.71,
+    "top": 2.03,
+    "width": 6.09,
+    "height": 3.45
+   },
+   {
+    "file": "s035_78.png",
+    "size_kb": 1325,
+    "left": 7.32,
+    "top": 2.03,
+    "width": 5.42,
+    "height": 3.72
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 36,
+  "texts": [
+   {
+    "text": "Sample Preparation",
+    "left": 0.3,
+    "top": 3.14,
+    "width": 12.72,
+    "height": 1.21
+   }
+  ],
+  "images": [
+   {
+    "file": "s036_79.png",
+    "size_kb": 1254,
+    "left": 0.0,
+    "top": 0.0,
+    "width": 13.59,
+    "height": 7.87
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 37,
+  "texts": [
+   {
+    "text": "37",
+    "left": 9.42,
+    "top": 6.95,
+    "width": 3.0,
+    "height": 0.4
+   },
+   {
+    "text": "Halfon et al., 2022 Faraday Discuss.",
+    "left": 8.76,
+    "top": 7.22,
+    "width": 3.33,
+    "height": 0.26
+   },
+   {
+    "text": "Time & Cost of a single particle cryo-EM pipeline",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s037_80.png",
+    "size_kb": 266,
+    "left": 0.66,
+    "top": 1.23,
+    "width": 12.02,
+    "height": 5.03
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 38,
+  "texts": [
+   {
+    "text": "Goal of sample preparation",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Preserve the biological specimen in a native state such that it will give maximum contrast",
+    "left": 0.72,
+    "top": 1.39,
+    "width": 11.9,
+    "height": 5.39
+   },
+   {
+    "text": "To obtain a high resolution structure:",
+    "left": 0.72,
+    "top": 1.39,
+    "width": 11.9,
+    "height": 5.39
+   },
+   {
+    "text": "Best specimen",
+    "left": 0.72,
+    "top": 1.39,
+    "width": 11.9,
+    "height": 5.39
+   },
+   {
+    "text": "Use optimal magnification",
+    "left": 0.72,
+    "top": 1.39,
+    "width": 11.9,
+    "height": 5.39
+   },
+   {
+    "text": "Use detector with best DQE possible",
+    "left": 0.72,
+    "top": 1.39,
+    "width": 11.9,
+    "height": 5.39
+   },
+   {
+    "text": "Obtain best micrographs possible",
+    "left": 0.72,
+    "top": 1.39,
+    "width": 11.9,
+    "height": 5.39
+   },
+   {
+    "text": "Leading to highest resolution structure with least data",
+    "left": 0.72,
+    "top": 1.39,
+    "width": 11.9,
+    "height": 5.39
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 39,
+  "texts": [
+   {
+    "text": "Sample and grid preparation",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "3년간 데이터 집계",
+    "left": 0.25,
+    "top": 1.91,
+    "width": 2.07,
+    "height": 0.4
+   }
+  ],
+  "images": [
+   {
+    "file": "s039_81.png",
+    "size_kb": 584,
+    "left": 1.75,
+    "top": 1.26,
+    "width": 10.01,
+    "height": 6.07
+   },
+   {
+    "file": "s039_82.jpg",
+    "size_kb": 9,
+    "left": 0.54,
+    "top": 0.89,
+    "width": 1.49,
+    "height": 0.95
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 40,
+  "texts": [
+   {
+    "text": "40",
+    "left": 9.42,
+    "top": 6.95,
+    "width": 3.0,
+    "height": 0.4
+   },
+   {
+    "text": "Zhou et al., 2019 Nat. Struct. Mol. Biol.",
+    "left": -0.09,
+    "top": 7.22,
+    "width": 3.33,
+    "height": 0.26
+   },
+   {
+    "text": "The circle of cryo-EM sample preparation",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s040_83.png",
+    "size_kb": 127,
+    "left": 2.52,
+    "top": 1.11,
+    "width": 7.67,
+    "height": 5.89
+   },
+   {
+    "file": "s040_84.png",
+    "size_kb": 8,
+    "left": 1.36,
+    "top": 3.4,
+    "width": 1.65,
+    "height": 2.3
+   },
+   {
+    "file": "s040_85.png",
+    "size_kb": 43,
+    "left": 0.74,
+    "top": 5.27,
+    "width": 1.11,
+    "height": 1.69
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 41,
+  "texts": [
+   {
+    "text": "41",
+    "left": 9.42,
+    "top": 6.95,
+    "width": 3.0,
+    "height": 0.4
+   },
+   {
+    "text": "© 2024. Baobab AiBIO",
+    "left": 0.0,
+    "top": 7.22,
+    "width": 1.68,
+    "height": 0.28
+   },
+   {
+    "text": "Size exclusion chromatography",
+    "left": 1.81,
+    "top": 0.94,
+    "width": 3.81,
+    "height": 0.43
+   },
+   {
+    "text": "SEC-MALS",
+    "left": 9.0,
+    "top": 0.94,
+    "width": 2.09,
+    "height": 0.43
+   },
+   {
+    "text": "Dynamic light scattering",
+    "left": 2.12,
+    "top": 4.11,
+    "width": 3.11,
+    "height": 0.43
+   },
+   {
+    "text": "Mass photometry",
+    "left": 8.79,
+    "top": 4.07,
+    "width": 2.51,
+    "height": 0.43
+   },
+   {
+    "text": "Homogenous sample",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s041_86.png",
+    "size_kb": 116,
+    "left": 1.38,
+    "top": 1.51,
+    "width": 4.59,
+    "height": 2.19
+   },
+   {
+    "file": "s041_87.jpg",
+    "size_kb": 35,
+    "left": 7.98,
+    "top": 1.33,
+    "width": 3.83,
+    "height": 2.55
+   },
+   {
+    "file": "s041_88.png",
+    "size_kb": 519,
+    "left": 1.34,
+    "top": 4.94,
+    "width": 4.67,
+    "height": 1.88
+   },
+   {
+    "file": "s041_89.jpg",
+    "size_kb": 66,
+    "left": 8.56,
+    "top": 4.5,
+    "width": 2.96,
+    "height": 2.96
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 42,
+  "texts": [
+   {
+    "text": "Negative staining vs. Vitrification",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Negative stain",
+    "left": 3.47,
+    "top": 1.9,
+    "width": 1.74,
+    "height": 0.4
+   },
+   {
+    "text": "Cryo-EM",
+    "left": 8.27,
+    "top": 1.84,
+    "width": 1.16,
+    "height": 0.4
+   },
+   {
+    "text": "Vitreous",
+    "left": 10.84,
+    "top": 3.15,
+    "width": 1.15,
+    "height": 0.71
+   },
+   {
+    "text": "ice",
+    "left": 10.84,
+    "top": 3.15,
+    "width": 1.15,
+    "height": 0.71
+   },
+   {
+    "text": "Heavy",
+    "left": 2.05,
+    "top": 3.0,
+    "width": 0.92,
+    "height": 1.01
+   },
+   {
+    "text": "metal",
+    "left": 2.05,
+    "top": 3.0,
+    "width": 0.92,
+    "height": 1.01
+   },
+   {
+    "text": "stain",
+    "left": 2.05,
+    "top": 3.0,
+    "width": 0.92,
+    "height": 1.01
+   },
+   {
+    "text": "Carbon support film (holey)",
+    "left": 7.41,
+    "top": 5.84,
+    "width": 3.15,
+    "height": 0.4
+   },
+   {
+    "text": "Carbon support film (continuous)",
+    "left": 2.34,
+    "top": 5.84,
+    "width": 3.8,
+    "height": 0.4
+   }
+  ],
+  "images": [
+   {
+    "file": "s042_90.png",
+    "size_kb": 346,
+    "left": 2.1,
+    "top": 2.4,
+    "width": 8.54,
+    "height": 3.48
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 43,
+  "texts": [
+   {
+    "text": "Negative staining vs. Cryo-EM",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Faster & easier",
+    "left": 1.13,
+    "top": 1.84,
+    "width": 4.99,
+    "height": 3.23
+   },
+   {
+    "text": "Less expensive",
+    "left": 1.13,
+    "top": 1.84,
+    "width": 4.99,
+    "height": 3.23
+   },
+   {
+    "text": "Higher contrast / low resolution",
+    "left": 1.13,
+    "top": 1.84,
+    "width": 4.99,
+    "height": 3.23
+   },
+   {
+    "text": "Artifacts from the staining",
+    "left": 1.13,
+    "top": 1.84,
+    "width": 4.99,
+    "height": 3.23
+   },
+   {
+    "text": "Can be done at room temp.",
+    "left": 1.13,
+    "top": 1.84,
+    "width": 4.99,
+    "height": 3.23
+   },
+   {
+    "text": "Negative staining",
+    "left": 0.7,
+    "top": 1.39,
+    "width": 3.27,
+    "height": 0.61
+   },
+   {
+    "text": "Slower & difficult",
+    "left": 7.37,
+    "top": 1.84,
+    "width": 4.99,
+    "height": 3.23
+   },
+   {
+    "text": "Expensive",
+    "left": 7.37,
+    "top": 1.84,
+    "width": 4.99,
+    "height": 3.23
+   },
+   {
+    "text": "Lower contrast / high resolution",
+    "left": 7.37,
+    "top": 1.84,
+    "width": 4.99,
+    "height": 3.23
+   },
+   {
+    "text": "Retain almost native state",
+    "left": 7.37,
+    "top": 1.84,
+    "width": 4.99,
+    "height": 3.23
+   },
+   {
+    "text": "Cryo-EM (Vitrification)",
+    "left": 6.94,
+    "top": 1.39,
+    "width": 3.27,
+    "height": 0.61
+   },
+   {
+    "text": "Useful for QC of the sample",
+    "left": 1.13,
+    "top": 5.59,
+    "width": 4.99,
+    "height": 1.04
+   },
+   {
+    "text": "(aggregation, dissociation, heterogeneity)",
+    "left": 1.13,
+    "top": 5.59,
+    "width": 4.99,
+    "height": 1.04
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 44,
+  "texts": [
+   {
+    "text": "Low signal-to-noise ratio",
+    "left": 9.56,
+    "top": 2.88,
+    "width": 3.06,
+    "height": 0.4
+   },
+   {
+    "text": "Radiation sensitivity",
+    "left": 9.84,
+    "top": 3.81,
+    "width": 2.51,
+    "height": 0.4
+   },
+   {
+    "text": "Few morphological features",
+    "left": 9.41,
+    "top": 4.7,
+    "width": 3.36,
+    "height": 0.4
+   },
+   {
+    "text": "Wentinck et al, 2022 Curr Res Struc Biol.",
+    "left": 0.0,
+    "top": 7.24,
+    "width": 3.33,
+    "height": 0.26
+   },
+   {
+    "text": "Small proteins and cryo-EM",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s044_91.jpg",
+    "size_kb": 534,
+    "left": 0.35,
+    "top": 1.1,
+    "width": 8.6,
+    "height": 5.86
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 45,
+  "texts": [
+   {
+    "text": "Wentinck et al, 2022 Curr Res Struc Biol.",
+    "left": 0.0,
+    "top": 7.24,
+    "width": 3.33,
+    "height": 0.26
+   }
+  ],
+  "images": [
+   {
+    "file": "s045_92.jpg",
+    "size_kb": 1376,
+    "left": 1.81,
+    "top": 1.0,
+    "width": 9.84,
+    "height": 6.12
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 46,
+  "texts": [
+   {
+    "text": "Wentinck et al, 2022 Curr Res Struc Biol.",
+    "left": 0.0,
+    "top": 7.23,
+    "width": 3.33,
+    "height": 0.26
+   }
+  ],
+  "images": [
+   {
+    "file": "s046_93.png",
+    "size_kb": 1578,
+    "left": 1.75,
+    "top": 1.06,
+    "width": 9.84,
+    "height": 5.84
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 47,
+  "texts": [
+   {
+    "text": "SP26",
+    "left": 0.65,
+    "top": 2.24,
+    "width": 1.23,
+    "height": 0.71
+   },
+   {
+    "text": "(26 kDa)",
+    "left": 0.65,
+    "top": 2.24,
+    "width": 1.23,
+    "height": 0.71
+   },
+   {
+    "text": "SP21",
+    "left": 4.3,
+    "top": 2.21,
+    "width": 1.45,
+    "height": 0.71
+   },
+   {
+    "text": "(21 kDa)",
+    "left": 4.3,
+    "top": 2.21,
+    "width": 1.45,
+    "height": 0.71
+   },
+   {
+    "text": "Ligand",
+    "left": 8.78,
+    "top": 2.12,
+    "width": 1.45,
+    "height": 0.71
+   },
+   {
+    "text": "(6 kDa)",
+    "left": 8.78,
+    "top": 2.12,
+    "width": 1.45,
+    "height": 0.71
+   },
+   {
+    "text": "Total 74 kDa",
+    "left": 1.6,
+    "top": 1.22,
+    "width": 2.56,
+    "height": 0.57
+   },
+   {
+    "text": "Total 69 kDa",
+    "left": 5.47,
+    "top": 1.22,
+    "width": 2.56,
+    "height": 0.57
+   },
+   {
+    "text": "Total 54 kDa",
+    "left": 9.61,
+    "top": 1.44,
+    "width": 2.56,
+    "height": 0.57
+   },
+   {
+    "text": "Rigid Fab (as a structural chaperone)",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s047_94.png",
+    "size_kb": 14,
+    "left": 11.25,
+    "top": 0.95,
+    "width": 1.84,
+    "height": 0.26
+   },
+   {
+    "file": "s047_95.png",
+    "size_kb": 747,
+    "left": 9.51,
+    "top": 2.28,
+    "width": 3.72,
+    "height": 4.9
+   },
+   {
+    "file": "s047_96.png",
+    "size_kb": 1195,
+    "left": 5.15,
+    "top": 1.97,
+    "width": 3.37,
+    "height": 5.24
+   },
+   {
+    "file": "s047_97.png",
+    "size_kb": 1154,
+    "left": 0.95,
+    "top": 1.71,
+    "width": 3.12,
+    "height": 5.49
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 48,
+  "texts": [
+   {
+    "text": "Ordered mass, not MW",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 49,
+  "texts": [
+   {
+    "text": "hSAGA activator complex",
+    "left": 8.73,
+    "top": 0.91,
+    "width": 3.0,
+    "height": 0.37
+   },
+   {
+    "text": "Ordered mass, not MW",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s049_98.png",
+    "size_kb": 1826,
+    "left": 7.41,
+    "top": 1.28,
+    "width": 5.62,
+    "height": 3.68
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 50,
+  "texts": [
+   {
+    "text": "Ordered mass, not MW",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s050_99.jpg",
+    "size_kb": 58,
+    "left": 7.73,
+    "top": 1.08,
+    "width": 5.08,
+    "height": 6.11
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 51,
+  "texts": [
+   {
+    "text": "R. Henderson, 1995, Q. Rev. Biophys.",
+    "left": 7.32,
+    "top": 7.23,
+    "width": 4.86,
+    "height": 0.26
+   },
+   {
+    "text": "38 kDa",
+    "left": 8.08,
+    "top": 1.27,
+    "width": 1.75,
+    "height": 0.58
+   },
+   {
+    "text": "How low can we go for single particle cryo-EM?",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s051_100.png",
+    "size_kb": 103,
+    "left": 0.44,
+    "top": 0.9,
+    "width": 4.38,
+    "height": 6.22
+   },
+   {
+    "file": "s051_101.png",
+    "size_kb": 76,
+    "left": 6.55,
+    "top": 0.44,
+    "width": 4.82,
+    "height": 7.51
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 52,
+  "texts": [
+   {
+    "text": "Fred J. Sigworth, 2016, Vol.65, No.1, 57-67 Microscopy",
+    "left": 7.32,
+    "top": 7.23,
+    "width": 4.86,
+    "height": 0.26
+   },
+   {
+    "text": "How low can we go for single particle cryo-EM?",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s052_102.png",
+    "size_kb": 169,
+    "left": 0.59,
+    "top": 1.81,
+    "width": 5.59,
+    "height": 3.58
+   },
+   {
+    "file": "s052_103.png",
+    "size_kb": 169,
+    "left": 7.16,
+    "top": 2.03,
+    "width": 5.59,
+    "height": 3.45
+   },
+   {
+    "file": "s052_104.png",
+    "size_kb": 106,
+    "left": 0.46,
+    "top": 1.57,
+    "width": 6.33,
+    "height": 4.36
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 53,
+  "texts": [
+   {
+    "text": "53",
+    "left": 9.42,
+    "top": 6.95,
+    "width": 3.0,
+    "height": 0.4
+   },
+   {
+    "text": "Russo et al., 2022 Faraday Discuss.",
+    "left": 8.85,
+    "top": 7.23,
+    "width": 3.33,
+    "height": 0.26
+   },
+   {
+    "text": "Minimum molecular mass identifiable in situ",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s053_105.gif",
+    "size_kb": 71,
+    "left": 0.8,
+    "top": 1.25,
+    "width": 9.02,
+    "height": 5.84
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 54,
+  "texts": [
+   {
+    "text": "Wu et al, 2020 Curr Opin Struc Biol.",
+    "left": 8.78,
+    "top": 7.24,
+    "width": 3.33,
+    "height": 0.26
+   },
+   {
+    "text": "Are we there yet?",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "HSA",
+    "left": 9.18,
+    "top": 5.12,
+    "width": 1.25,
+    "height": 0.37
+   },
+   {
+    "text": "65 kDa (3.2 Å)",
+    "left": 9.18,
+    "top": 5.12,
+    "width": 1.25,
+    "height": 0.37
+   }
+  ],
+  "images": [
+   {
+    "file": "s054_106.png",
+    "size_kb": 118,
+    "left": 0.34,
+    "top": 1.63,
+    "width": 6.92,
+    "height": 4.64
+   },
+   {
+    "file": "s054_107.png",
+    "size_kb": 242,
+    "left": 8.52,
+    "top": 1.27,
+    "width": 4.04,
+    "height": 2.76
+   },
+   {
+    "file": "s054_108.png",
+    "size_kb": 1209,
+    "left": 9.45,
+    "top": 4.38,
+    "width": 0.73,
+    "height": 0.7
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 55,
+  "texts": [
+   {
+    "text": "https://www.nanoimagingservices.com/about/blog/a-guide-to-cryo-grid-production-materials-interfaces-and-their-impact-on-sample-prep",
+    "left": 0.07,
+    "top": 7.17,
+    "width": 12.72,
+    "height": 0.3
+   },
+   {
+    "text": "Grid : Cu, Au, Ni, Ti",
+    "left": 7.22,
+    "top": 1.45,
+    "width": 5.45,
+    "height": 0.91
+   },
+   {
+    "text": "(Mesh : 200, 300, 400, hexagonal)",
+    "left": 7.22,
+    "top": 1.45,
+    "width": 5.45,
+    "height": 0.91
+   },
+   {
+    "text": "Foil : amorphous C, Au, Ni/Ti",
+    "left": 7.22,
+    "top": 2.79,
+    "width": 5.45,
+    "height": 2.52
+   },
+   {
+    "text": "Continous or holey",
+    "left": 7.22,
+    "top": 2.79,
+    "width": 5.45,
+    "height": 2.52
+   },
+   {
+    "text": "Hole size/spacing (um)",
+    "left": 7.22,
+    "top": 2.79,
+    "width": 5.45,
+    "height": 2.52
+   },
+   {
+    "text": "1.2/1.3, 2/1, 1/1, 0.6/1",
+    "left": 7.22,
+    "top": 2.79,
+    "width": 5.45,
+    "height": 2.52
+   },
+   {
+    "text": "HexAuFoil 0.3/0.3",
+    "left": 7.22,
+    "top": 2.79,
+    "width": 5.45,
+    "height": 2.52
+   },
+   {
+    "text": "Lacey carbon",
+    "left": 7.22,
+    "top": 2.79,
+    "width": 5.45,
+    "height": 2.52
+   },
+   {
+    "text": "Support film",
+    "left": 7.22,
+    "top": 5.74,
+    "width": 5.45,
+    "height": 0.91
+   },
+   {
+    "text": ": amorphous carbon, Graphene, GO",
+    "left": 7.22,
+    "top": 5.74,
+    "width": 5.45,
+    "height": 0.91
+   },
+   {
+    "text": "Cryo-EM grid",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "hydrophobic",
+    "left": 4.72,
+    "top": 2.86,
+    "width": 1.13,
+    "height": 0.3
+   }
+  ],
+  "images": [
+   {
+    "file": "s055_109.png",
+    "size_kb": 1100,
+    "left": 0.54,
+    "top": 1.09,
+    "width": 5.83,
+    "height": 6.01
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 56,
+  "texts": [
+   {
+    "text": "Grid handing",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s056_110.png",
+    "size_kb": 3451,
+    "left": 4.14,
+    "top": 4.17,
+    "width": 5.04,
+    "height": 3.0
+   },
+   {
+    "file": "s056_111.png",
+    "size_kb": 3451,
+    "left": 4.14,
+    "top": 1.16,
+    "width": 5.04,
+    "height": 3.0
+   },
+   {
+    "file": "s056_112.png",
+    "size_kb": 11339,
+    "left": 2.6,
+    "top": 1.12,
+    "width": 8.13,
+    "height": 6.05
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 57,
+  "texts": [
+   {
+    "text": "Grid preparation (Vitrification)",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Increase hydrophilicity",
+    "left": 0.46,
+    "top": 1.49,
+    "width": 3.28,
+    "height": 0.99
+   },
+   {
+    "text": "Vitrification",
+    "left": 0.46,
+    "top": 3.48,
+    "width": 3.28,
+    "height": 0.99
+   },
+   {
+    "text": "Ice contamination",
+    "left": 0.46,
+    "top": 5.46,
+    "width": 3.28,
+    "height": 0.99
+   },
+   {
+    "text": "Ice thickness",
+    "left": 9.57,
+    "top": 1.51,
+    "width": 2.49,
+    "height": 0.94
+   },
+   {
+    "text": "Particle behavior",
+    "left": 9.57,
+    "top": 1.51,
+    "width": 2.49,
+    "height": 0.94
+   },
+   {
+    "text": "Blotting vs. Spraying vs. drawing",
+    "left": 9.0,
+    "top": 3.63,
+    "width": 3.64,
+    "height": 1.27
+   },
+   {
+    "text": "Time to freeze",
+    "left": 9.0,
+    "top": 3.63,
+    "width": 3.64,
+    "height": 1.27
+   },
+   {
+    "text": "Reproducibility",
+    "left": 9.0,
+    "top": 3.63,
+    "width": 3.64,
+    "height": 1.27
+   },
+   {
+    "text": "Speed",
+    "left": 9.0,
+    "top": 3.63,
+    "width": 3.64,
+    "height": 1.27
+   },
+   {
+    "text": "Humidity (< 20%)",
+    "left": 9.57,
+    "top": 6.07,
+    "width": 2.49,
+    "height": 0.55
+   }
+  ],
+  "images": [
+   {
+    "file": "s057_113.png",
+    "size_kb": 71,
+    "left": 4.83,
+    "top": 3.12,
+    "width": 2.29,
+    "height": 2.29
+   },
+   {
+    "file": "s057_114.jpg",
+    "size_kb": 30,
+    "left": 6.85,
+    "top": 3.65,
+    "width": 1.29,
+    "height": 1.27
+   },
+   {
+    "file": "s057_115.png",
+    "size_kb": 17,
+    "left": 4.21,
+    "top": 5.38,
+    "width": 1.76,
+    "height": 1.76
+   },
+   {
+    "file": "s057_116.png",
+    "size_kb": 166,
+    "left": 4.05,
+    "top": 3.54,
+    "width": 1.04,
+    "height": 1.63
+   },
+   {
+    "file": "s057_117.png",
+    "size_kb": 402,
+    "left": 5.99,
+    "top": 5.46,
+    "width": 1.6,
+    "height": 1.6
+   },
+   {
+    "file": "s057_118.png",
+    "size_kb": 370,
+    "left": 5.97,
+    "top": 0.88,
+    "width": 2.83,
+    "height": 2.12
+   },
+   {
+    "file": "s057_119.png",
+    "size_kb": 120,
+    "left": 4.43,
+    "top": 1.06,
+    "width": 1.56,
+    "height": 1.76
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 58,
+  "texts": [
+   {
+    "text": "Chameleon",
+    "left": 1.68,
+    "top": 1.24,
+    "width": 2.56,
+    "height": 0.58
+   },
+   {
+    "text": "Automated grid preparation",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s058_120.png",
+    "size_kb": 71,
+    "left": 0.44,
+    "top": 2.14,
+    "width": 4.86,
+    "height": 4.86
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 59,
+  "texts": [
+   {
+    "text": "Vitrojet",
+    "left": 1.68,
+    "top": 1.24,
+    "width": 2.56,
+    "height": 0.58
+   },
+   {
+    "text": "Automated grid preparation",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s059_121.jpg",
+    "size_kb": 30,
+    "left": 0.63,
+    "top": 2.12,
+    "width": 4.37,
+    "height": 4.31
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 60,
+  "texts": [
+   {
+    "text": "Grid preparation and screening time",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "1 sample x 2 conc. x 2 grid types x 3 =",
+    "left": 1.69,
+    "top": 4.1,
+    "width": 2.38,
+    "height": 1.01
+   },
+   {
+    "text": "12 grids",
+    "left": 1.69,
+    "top": 4.1,
+    "width": 2.38,
+    "height": 1.01
+   },
+   {
+    "text": "Step 1 : Make 3 x grids for every condition (reproducibility issue)  3 x sample & 3 x time in the lab",
+    "left": 1.66,
+    "top": 1.04,
+    "width": 10.01,
+    "height": 1.68
+   },
+   {
+    "text": "Step 2 : Need to Screen all the grids  3 x screening time + data collection",
+    "left": 1.66,
+    "top": 1.04,
+    "width": 10.01,
+    "height": 1.68
+   },
+   {
+    "text": "Step 3 : The samples may have issues  back to step 1 & 2 for repeating (multiple times)",
+    "left": 1.66,
+    "top": 1.04,
+    "width": 10.01,
+    "height": 1.68
+   },
+   {
+    "text": "1 conc. x 4 grid types x 3 =  12 grids",
+    "left": 5.48,
+    "top": 3.25,
+    "width": 2.38,
+    "height": 3.74
+   },
+   {
+    "text": "or",
+    "left": 5.48,
+    "top": 3.25,
+    "width": 2.38,
+    "height": 3.74
+   },
+   {
+    "text": "1 conc. X 1 grid types x 4 additives x 3 = 12 grids",
+    "left": 5.48,
+    "top": 3.25,
+    "width": 2.38,
+    "height": 3.74
+   },
+   {
+    "text": "or",
+    "left": 5.48,
+    "top": 3.25,
+    "width": 2.38,
+    "height": 3.74
+   },
+   {
+    "text": "1 conc. X 2 grid types x 3 additives x 2 = 12 grids",
+    "left": 5.48,
+    "top": 3.25,
+    "width": 2.38,
+    "height": 3.74
+   },
+   {
+    "text": "or",
+    "left": 5.48,
+    "top": 3.25,
+    "width": 2.38,
+    "height": 3.74
+   },
+   {
+    "text": "……………",
+    "left": 5.48,
+    "top": 3.25,
+    "width": 2.38,
+    "height": 3.74
+   },
+   {
+    "text": "1 conc. X 1 grid types x 1 additive = 1 final grid",
+    "left": 9.26,
+    "top": 3.95,
+    "width": 2.38,
+    "height": 1.31
+   },
+   {
+    "text": "(data collection)",
+    "left": 9.26,
+    "top": 3.95,
+    "width": 2.38,
+    "height": 1.31
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 61,
+  "texts": [
+   {
+    "text": "Atlas view",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "General ice quality of the specimen",
+    "left": 3.21,
+    "top": 6.52,
+    "width": 6.98,
+    "height": 0.57
+   }
+  ],
+  "images": [
+   {
+    "file": "s061_122.png",
+    "size_kb": 845,
+    "left": 0.52,
+    "top": 0.98,
+    "width": 5.37,
+    "height": 5.38
+   },
+   {
+    "file": "s061_123.png",
+    "size_kb": 2200,
+    "left": 6.18,
+    "top": 0.87,
+    "width": 6.68,
+    "height": 5.53
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 62,
+  "texts": [
+   {
+    "text": "Square view",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Good looking",
+    "left": 0.97,
+    "top": 4.79,
+    "width": 1.86,
+    "height": 0.4
+   },
+   {
+    "text": "Cracked",
+    "left": 4.54,
+    "top": 4.79,
+    "width": 1.22,
+    "height": 0.4
+   },
+   {
+    "text": "Contaminated",
+    "left": 7.27,
+    "top": 4.79,
+    "width": 1.99,
+    "height": 0.4
+   },
+   {
+    "text": "Small, thick ice",
+    "left": 10.26,
+    "top": 4.79,
+    "width": 2.1,
+    "height": 0.4
+   },
+   {
+    "text": "Confirming ice quality of the grid",
+    "left": 3.39,
+    "top": 5.72,
+    "width": 6.56,
+    "height": 0.57
+   }
+  ],
+  "images": [
+   {
+    "file": "s062_124.png",
+    "size_kb": 1199,
+    "left": 0.43,
+    "top": 1.55,
+    "width": 12.47,
+    "height": 3.03
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 63,
+  "texts": [
+   {
+    "text": "Hole view - Ideal",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s063_125.png",
+    "size_kb": 1399,
+    "left": 0.26,
+    "top": 1.65,
+    "width": 4.04,
+    "height": 4.19
+   },
+   {
+    "file": "s063_126.png",
+    "size_kb": 1332,
+    "left": 4.5,
+    "top": 1.65,
+    "width": 4.33,
+    "height": 4.19
+   },
+   {
+    "file": "s063_127.png",
+    "size_kb": 1382,
+    "left": 9.03,
+    "top": 1.65,
+    "width": 4.04,
+    "height": 4.19
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 64,
+  "texts": [
+   {
+    "text": "Hole view - Crystalline ice",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s064_128.png",
+    "size_kb": 1267,
+    "left": 0.6,
+    "top": 1.16,
+    "width": 3.78,
+    "height": 3.66
+   },
+   {
+    "file": "s064_129.png",
+    "size_kb": 1130,
+    "left": 4.63,
+    "top": 1.16,
+    "width": 3.79,
+    "height": 3.66
+   },
+   {
+    "file": "s064_130.png",
+    "size_kb": 1450,
+    "left": 5.14,
+    "top": 4.51,
+    "width": 2.77,
+    "height": 2.77
+   },
+   {
+    "file": "s064_131.png",
+    "size_kb": 1455,
+    "left": 8.68,
+    "top": 1.16,
+    "width": 3.81,
+    "height": 3.66
+   },
+   {
+    "file": "s064_132.png",
+    "size_kb": 1174,
+    "left": 9.11,
+    "top": 4.51,
+    "width": 2.77,
+    "height": 2.77
+   },
+   {
+    "file": "s064_133.png",
+    "size_kb": 1255,
+    "left": 0.94,
+    "top": 4.51,
+    "width": 2.77,
+    "height": 2.68
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 65,
+  "texts": [
+   {
+    "text": "Hole view - Particle aggregation",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 66,
+  "texts": [
+   {
+    "text": "Hole view – Concentration issue",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s066_134.png",
+    "size_kb": 1408,
+    "left": 0.45,
+    "top": 1.78,
+    "width": 4.3,
+    "height": 4.14
+   },
+   {
+    "file": "s066_135.png",
+    "size_kb": 1382,
+    "left": 4.84,
+    "top": 1.78,
+    "width": 3.99,
+    "height": 4.14
+   },
+   {
+    "file": "s066_136.png",
+    "size_kb": 1390,
+    "left": 8.91,
+    "top": 1.78,
+    "width": 3.99,
+    "height": 4.14
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 67,
+  "texts": [
+   {
+    "text": "Hole view - Contamination",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s067_137.png",
+    "size_kb": 1345,
+    "left": 0.39,
+    "top": 1.77,
+    "width": 3.97,
+    "height": 4.11
+   },
+   {
+    "file": "s067_138.png",
+    "size_kb": 1243,
+    "left": 4.54,
+    "top": 1.77,
+    "width": 3.97,
+    "height": 4.11
+   },
+   {
+    "file": "s067_139.png",
+    "size_kb": 1422,
+    "left": 8.68,
+    "top": 1.77,
+    "width": 4.25,
+    "height": 4.12
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 68,
+  "texts": [
+   {
+    "text": "Hole view - Other ice issues",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s068_140.png",
+    "size_kb": 1124,
+    "left": 1.59,
+    "top": 1.65,
+    "width": 4.47,
+    "height": 4.62
+   },
+   {
+    "file": "s068_141.png",
+    "size_kb": 1392,
+    "left": 7.18,
+    "top": 1.64,
+    "width": 4.47,
+    "height": 4.63
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 69,
+  "texts": [
+   {
+    "text": "69",
+    "left": 9.42,
+    "top": 6.95,
+    "width": 3.0,
+    "height": 0.4
+   },
+   {
+    "text": "69",
+    "left": 0.07,
+    "top": 6.99,
+    "width": 0.53,
+    "height": 0.4
+   },
+   {
+    "text": "Grid screening",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 70,
+  "texts": [
+   {
+    "text": "https://www.nanoimagingservices.com/about/blog/a-guide-to-cryo-grid-production-materials-interfaces-and-their-impact-on-sample-prep",
+    "left": 0.07,
+    "top": 7.17,
+    "width": 12.72,
+    "height": 0.3
+   },
+   {
+    "text": "Air-Water interface (AWI)",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "At the AWI, proteins can undergo denaturation, aggregation or preferred orientation",
+    "left": 1.68,
+    "top": 5.35,
+    "width": 9.51,
+    "height": 1.31
+   },
+   {
+    "text": "Negatively impacts the final image quality",
+    "left": 1.68,
+    "top": 5.35,
+    "width": 9.51,
+    "height": 1.31
+   },
+   {
+    "text": "100 ~ 150 nm",
+    "left": 5.84,
+    "top": 3.05,
+    "width": 1.65,
+    "height": 0.4
+   },
+   {
+    "text": "10 ~ 15 nm",
+    "left": 2.95,
+    "top": 3.93,
+    "width": 1.38,
+    "height": 0.4
+   }
+  ],
+  "images": [
+   {
+    "file": "s070_142.png",
+    "size_kb": 491,
+    "left": 0.92,
+    "top": 1.19,
+    "width": 11.5,
+    "height": 3.44
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 71,
+  "texts": [
+   {
+    "text": "Spot-to-plunge time effect (with Chameleon)",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Noble, A.J. et al., 2018, Nat. Methods",
+    "left": 0.0,
+    "top": 7.19,
+    "width": 4.86,
+    "height": 0.26
+   },
+   {
+    "text": "~ 1 s",
+    "left": 2.74,
+    "top": 1.01,
+    "width": 2.44,
+    "height": 0.5
+   },
+   {
+    "text": "500 ms",
+    "left": 5.45,
+    "top": 1.0,
+    "width": 2.44,
+    "height": 0.5
+   },
+   {
+    "text": "100 ms",
+    "left": 8.14,
+    "top": 1.0,
+    "width": 2.44,
+    "height": 0.5
+   },
+   {
+    "text": "600 ms",
+    "left": 2.74,
+    "top": 4.38,
+    "width": 3.79,
+    "height": 0.5
+   },
+   {
+    "text": "200 ms",
+    "left": 7.33,
+    "top": 4.38,
+    "width": 2.44,
+    "height": 0.5
+   },
+   {
+    "text": "Hemagglutinin",
+    "left": 0.18,
+    "top": 0.99,
+    "width": 2.44,
+    "height": 0.5
+   },
+   {
+    "text": "Insulin receptor",
+    "left": 0.18,
+    "top": 4.3,
+    "width": 2.44,
+    "height": 0.9
+   },
+   {
+    "text": "Longer blotting time",
+    "left": 13.35,
+    "top": 3.83,
+    "width": 9.17,
+    "height": 0.93
+   }
+  ],
+  "images": [
+   {
+    "file": "s071_143.png",
+    "size_kb": 1386,
+    "left": 2.74,
+    "top": 1.06,
+    "width": 7.85,
+    "height": 2.98
+   },
+   {
+    "file": "s071_144.png",
+    "size_kb": 1386,
+    "left": 2.91,
+    "top": 4.41,
+    "width": 7.85,
+    "height": 2.84
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 72,
+  "texts": [
+   {
+    "text": "Spot-to-plunge time effect (with Chameleon)",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Noble, A.J. et al., 2018, Nat. Methods",
+    "left": 0.0,
+    "top": 7.19,
+    "width": 4.86,
+    "height": 0.26
+   },
+   {
+    "text": "Particles can move 100 nm within 1 ms or less.",
+    "left": 8.21,
+    "top": 2.82,
+    "width": 4.77,
+    "height": 2.58
+   },
+   {
+    "text": "Once adsorbed, denaturation may follow is as little as a few ns.",
+    "left": 8.21,
+    "top": 2.82,
+    "width": 4.77,
+    "height": 2.58
+   }
+  ],
+  "images": [
+   {
+    "file": "s072_145.png",
+    "size_kb": 241,
+    "left": 1.36,
+    "top": 1.16,
+    "width": 6.49,
+    "height": 5.89
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 73,
+  "texts": [
+   {
+    "text": "https://www.nanoimagingservices.com/about/blog/a-guide-to-cryo-grid-production-materials-interfaces-and-their-impact-on-sample-prep",
+    "left": 0.07,
+    "top": 7.17,
+    "width": 12.72,
+    "height": 0.3
+   },
+   {
+    "text": "Continuous Support Films",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s073_146.png",
+    "size_kb": 1149,
+    "left": 2.42,
+    "top": 1.15,
+    "width": 8.5,
+    "height": 5.93
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 74,
+  "texts": [
+   {
+    "text": "Grid optimization and ......",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Domen, K. et al., 2021, iScience",
+    "left": 0.0,
+    "top": 7.19,
+    "width": 4.86,
+    "height": 0.26
+   },
+   {
+    "text": "Different vitrification procedures",
+    "left": 8.28,
+    "top": 2.82,
+    "width": 4.23,
+    "height": 2.58
+   },
+   {
+    "text": "Functionalized grids",
+    "left": 8.28,
+    "top": 2.82,
+    "width": 4.23,
+    "height": 2.58
+   },
+   {
+    "text": "Longer data collection",
+    "left": 8.28,
+    "top": 2.82,
+    "width": 4.23,
+    "height": 2.58
+   },
+   {
+    "text": "Tilted data collection",
+    "left": 8.28,
+    "top": 2.82,
+    "width": 4.23,
+    "height": 2.58
+   }
+  ],
+  "images": [
+   {
+    "file": "s074_147.jpg",
+    "size_kb": 169,
+    "left": 1.02,
+    "top": 1.01,
+    "width": 5.9,
+    "height": 5.9
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 75,
+  "texts": [
+   {
+    "text": "75",
+    "left": 9.42,
+    "top": 6.95,
+    "width": 3.0,
+    "height": 0.4
+   },
+   {
+    "text": "Size",
+    "left": 1.78,
+    "top": 1.52,
+    "width": 1.09,
+    "height": 0.54
+   },
+   {
+    "text": "Quantity (concentration)",
+    "left": 5.04,
+    "top": 1.52,
+    "width": 3.25,
+    "height": 0.54
+   },
+   {
+    "text": "Reagents (Buffer)",
+    "left": 9.65,
+    "top": 1.52,
+    "width": 2.57,
+    "height": 0.54
+   },
+   {
+    "text": "> 80 kDa of ordered mass",
+    "left": 0.7,
+    "top": 5.73,
+    "width": 3.27,
+    "height": 0.4
+   },
+   {
+    "text": "0.5~1 mg protein",
+    "left": 4.9,
+    "top": 5.82,
+    "width": 3.52,
+    "height": 0.71
+   },
+   {
+    "text": "50 nM ~ 5 uM concentration",
+    "left": 4.9,
+    "top": 5.82,
+    "width": 3.52,
+    "height": 0.71
+   },
+   {
+    "text": "Most of buffers are fine.",
+    "left": 8.98,
+    "top": 5.67,
+    "width": 4.04,
+    "height": 1.31
+   },
+   {
+    "text": "But DMSO > 0.5 %, high carbon",
+    "left": 8.98,
+    "top": 5.67,
+    "width": 4.04,
+    "height": 1.31
+   },
+   {
+    "text": "chemicals, cryoprotectants are",
+    "left": 8.98,
+    "top": 5.67,
+    "width": 4.04,
+    "height": 1.31
+   },
+   {
+    "text": "exceptions.",
+    "left": 8.98,
+    "top": 5.67,
+    "width": 4.04,
+    "height": 1.31
+   },
+   {
+    "text": "Sample requirements for SPA",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s075_148.png",
+    "size_kb": 1296,
+    "left": 0.56,
+    "top": 2.5,
+    "width": 3.58,
+    "height": 2.36
+   },
+   {
+    "file": "s075_149.jpg",
+    "size_kb": 136,
+    "left": 5.2,
+    "top": 2.41,
+    "width": 2.92,
+    "height": 3.19
+   },
+   {
+    "file": "s075_150.png",
+    "size_kb": 1003,
+    "left": 9.09,
+    "top": 2.41,
+    "width": 3.68,
+    "height": 2.99
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 76,
+  "texts": [
+   {
+    "text": "Imaging…",
+    "left": 0.3,
+    "top": 3.33,
+    "width": 12.72,
+    "height": 1.21
+   }
+  ],
+  "images": [
+   {
+    "file": "s076_151.png",
+    "size_kb": 1254,
+    "left": 0.0,
+    "top": 0.0,
+    "width": 13.59,
+    "height": 7.87
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 77,
+  "texts": [
+   {
+    "text": "77",
+    "left": 9.42,
+    "top": 6.95,
+    "width": 3.0,
+    "height": 0.4
+   },
+   {
+    "text": "Halfon et al., 2022 Faraday Discuss.",
+    "left": 8.76,
+    "top": 7.22,
+    "width": 3.33,
+    "height": 0.26
+   },
+   {
+    "text": "Time & Cost of a single particle cryo-EM pipeline",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s077_152.png",
+    "size_kb": 266,
+    "left": 0.66,
+    "top": 1.23,
+    "width": 12.02,
+    "height": 5.03
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 78,
+  "texts": [
+   {
+    "text": "Proteins are dynamic molecules",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s078_153.png",
+    "size_kb": 516,
+    "left": 0.95,
+    "top": 0.95,
+    "width": 5.09,
+    "height": 6.16
+   },
+   {
+    "file": "s078_154.png",
+    "size_kb": 265,
+    "left": 7.3,
+    "top": 0.97,
+    "width": 5.27,
+    "height": 6.1
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 79,
+  "texts": [
+   {
+    "text": "103-104 Micrographs",
+    "left": 2.2,
+    "top": 1.16,
+    "width": 2.86,
+    "height": 0.44
+   },
+   {
+    "text": "······",
+    "left": 11.97,
+    "top": 3.56,
+    "width": 1.01,
+    "height": 0.71
+   },
+   {
+    "text": "Single particle analysis",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s079_155.png",
+    "size_kb": 781,
+    "left": 1.28,
+    "top": 1.56,
+    "width": 4.7,
+    "height": 4.7
+   },
+   {
+    "file": "s079_156.png",
+    "size_kb": 180,
+    "left": 6.06,
+    "top": 2.45,
+    "width": 2.93,
+    "height": 2.93
+   },
+   {
+    "file": "s079_157.png",
+    "size_kb": 142,
+    "left": 9.07,
+    "top": 2.51,
+    "width": 2.81,
+    "height": 2.81
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 80,
+  "texts": [
+   {
+    "text": "Data collection workflow",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Atlas",
+    "left": 0.77,
+    "top": 1.57,
+    "width": 1.07,
+    "height": 0.4
+   },
+   {
+    "text": "Square selection",
+    "left": 7.16,
+    "top": 1.57,
+    "width": 2.31,
+    "height": 0.4
+   },
+   {
+    "text": "Hole selection",
+    "left": 10.07,
+    "top": 1.57,
+    "width": 2.31,
+    "height": 0.4
+   },
+   {
+    "text": "Target / focus area",
+    "left": 10.05,
+    "top": 4.39,
+    "width": 2.31,
+    "height": 0.4
+   },
+   {
+    "text": "Data collection",
+    "left": 7.17,
+    "top": 4.39,
+    "width": 2.31,
+    "height": 0.4
+   }
+  ],
+  "images": [
+   {
+    "file": "s080_158.png",
+    "size_kb": 453,
+    "left": 0.57,
+    "top": 1.4,
+    "width": 5.54,
+    "height": 5.54
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 81,
+  "texts": [
+   {
+    "text": "The number of particle vs. the achievable resolution",
+    "left": 0.74,
+    "top": 1.73,
+    "width": 4.4,
+    "height": 4.48
+   },
+   {
+    "text": "High mag",
+    "left": 0.74,
+    "top": 1.73,
+    "width": 4.4,
+    "height": 4.48
+   },
+   {
+    "text": "fine pixel sizes / low particles",
+    "left": 0.74,
+    "top": 1.73,
+    "width": 4.4,
+    "height": 4.48
+   },
+   {
+    "text": "Larger box size",
+    "left": 0.74,
+    "top": 1.73,
+    "width": 4.4,
+    "height": 4.48
+   },
+   {
+    "text": "Need more processing power",
+    "left": 0.74,
+    "top": 1.73,
+    "width": 4.4,
+    "height": 4.48
+   },
+   {
+    "text": "Low mag",
+    "left": 0.74,
+    "top": 1.73,
+    "width": 4.4,
+    "height": 4.48
+   },
+   {
+    "text": "Coarse pixel sizes",
+    "left": 0.74,
+    "top": 1.73,
+    "width": 4.4,
+    "height": 4.48
+   },
+   {
+    "text": "Limit the achievable resolution",
+    "left": 0.74,
+    "top": 1.73,
+    "width": 4.4,
+    "height": 4.48
+   },
+   {
+    "text": "User decisions – Magnification (pixel size)",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s081_159.png",
+    "size_kb": 476,
+    "left": 5.54,
+    "top": 2.84,
+    "width": 7.18,
+    "height": 2.25
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 82,
+  "texts": [
+   {
+    "text": "Generating sufficient contrast vs. retain high- resolution information",
+    "left": 0.89,
+    "top": 2.05,
+    "width": 4.85,
+    "height": 4.23
+   },
+   {
+    "text": "Close to focus – may be invisible",
+    "left": 0.89,
+    "top": 2.05,
+    "width": 4.85,
+    "height": 4.23
+   },
+   {
+    "text": "Far from focus – loss of high res. info.",
+    "left": 0.89,
+    "top": 2.05,
+    "width": 4.85,
+    "height": 4.23
+   },
+   {
+    "text": "Smaller particle",
+    "left": 0.89,
+    "top": 2.05,
+    "width": 4.85,
+    "height": 4.23
+   },
+   {
+    "text": "may require higher defocus setting",
+    "left": 0.89,
+    "top": 2.05,
+    "width": 4.85,
+    "height": 4.23
+   },
+   {
+    "text": "-0.5 /- 1.0  ~  -2.0",
+    "left": 0.89,
+    "top": 2.05,
+    "width": 4.85,
+    "height": 4.23
+   },
+   {
+    "text": "User decisions – Defocus range",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s082_160.png",
+    "size_kb": 2080,
+    "left": 6.37,
+    "top": 1.61,
+    "width": 6.54,
+    "height": 4.78
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 83,
+  "texts": [
+   {
+    "text": "-1.5 μm",
+    "left": 7.27,
+    "top": 1.49,
+    "width": 1.36,
+    "height": 0.5
+   },
+   {
+    "text": "Defocus range",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s083_161.png",
+    "size_kb": 1242,
+    "left": 0.87,
+    "top": 1.4,
+    "width": 5.32,
+    "height": 5.32
+   },
+   {
+    "file": "s083_162.png",
+    "size_kb": 1358,
+    "left": 7.14,
+    "top": 1.4,
+    "width": 5.32,
+    "height": 5.32
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 84,
+  "texts": [
+   {
+    "text": "-0.75 μm",
+    "left": 7.27,
+    "top": 1.49,
+    "width": 1.55,
+    "height": 0.5
+   },
+   {
+    "text": "Defocus range",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s084_163.png",
+    "size_kb": 1236,
+    "left": 0.87,
+    "top": 1.4,
+    "width": 5.32,
+    "height": 5.32
+   },
+   {
+    "file": "s084_164.png",
+    "size_kb": 2037,
+    "left": 7.17,
+    "top": 1.4,
+    "width": 5.32,
+    "height": 5.32
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 85,
+  "texts": [
+   {
+    "text": "At focus",
+    "left": 7.27,
+    "top": 1.49,
+    "width": 1.41,
+    "height": 0.5
+   },
+   {
+    "text": "Defocus range",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s085_165.png",
+    "size_kb": 1404,
+    "left": 7.16,
+    "top": 1.4,
+    "width": 5.32,
+    "height": 5.32
+   },
+   {
+    "file": "s085_166.png",
+    "size_kb": 1150,
+    "left": 0.87,
+    "top": 1.4,
+    "width": 5.35,
+    "height": 5.35
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 86,
+  "texts": [
+   {
+    "text": "-3.0 μm",
+    "left": 7.27,
+    "top": 1.49,
+    "width": 1.36,
+    "height": 0.5
+   },
+   {
+    "text": "Defocus range",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s086_167.png",
+    "size_kb": 1677,
+    "left": 7.16,
+    "top": 1.4,
+    "width": 5.32,
+    "height": 5.32
+   },
+   {
+    "file": "s086_168.png",
+    "size_kb": 1080,
+    "left": 0.86,
+    "top": 1.4,
+    "width": 5.37,
+    "height": 5.37
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 87,
+  "texts": [
+   {
+    "text": "+3.0 μm",
+    "left": 7.27,
+    "top": 1.49,
+    "width": 1.49,
+    "height": 0.5
+   },
+   {
+    "text": "Defocus range",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s087_169.png",
+    "size_kb": 1731,
+    "left": 7.16,
+    "top": 1.4,
+    "width": 5.32,
+    "height": 5.32
+   },
+   {
+    "file": "s087_170.png",
+    "size_kb": 1213,
+    "left": 0.87,
+    "top": 1.4,
+    "width": 5.35,
+    "height": 5.35
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 88,
+  "texts": [
+   {
+    "text": "User decisions - Hole targeting strategy",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Conventional targeting",
+    "left": 0.92,
+    "top": 1.6,
+    "width": 3.06,
+    "height": 0.4
+   },
+   {
+    "text": "Multi-hole targeting",
+    "left": 5.16,
+    "top": 1.38,
+    "width": 3.01,
+    "height": 0.71
+   },
+   {
+    "text": "With beam-image shift",
+    "left": 5.16,
+    "top": 1.38,
+    "width": 3.01,
+    "height": 0.71
+   },
+   {
+    "text": "Multi-shot per hole",
+    "left": 9.6,
+    "top": 1.6,
+    "width": 2.56,
+    "height": 0.4
+   }
+  ],
+  "images": [
+   {
+    "file": "s088_171.png",
+    "size_kb": 975,
+    "left": 0.47,
+    "top": 2.08,
+    "width": 3.96,
+    "height": 3.96
+   },
+   {
+    "file": "s088_172.png",
+    "size_kb": 967,
+    "left": 4.68,
+    "top": 2.08,
+    "width": 3.96,
+    "height": 3.96
+   },
+   {
+    "file": "s088_173.png",
+    "size_kb": 1003,
+    "left": 8.9,
+    "top": 2.08,
+    "width": 3.96,
+    "height": 3.96
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 89,
+  "texts": [
+   {
+    "text": "User decisions",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 90,
+  "texts": [
+   {
+    "text": "Data collection setting",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 91,
+  "texts": [
+   {
+    "text": "91",
+    "left": 9.42,
+    "top": 6.95,
+    "width": 3.0,
+    "height": 0.4
+   },
+   {
+    "text": "Russo et al., 2022 Faraday Discuss.",
+    "left": 8.85,
+    "top": 7.23,
+    "width": 3.33,
+    "height": 0.26
+   },
+   {
+    "text": "Minimum molecular mass identifiable in situ",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s091_174.gif",
+    "size_kb": 71,
+    "left": 0.8,
+    "top": 1.25,
+    "width": 9.02,
+    "height": 5.84
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 92,
+  "texts": [
+   {
+    "text": "Laser phase plate",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s092_175.png",
+    "size_kb": 2789,
+    "left": 1.37,
+    "top": 1.16,
+    "width": 10.6,
+    "height": 5.77
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 93,
+  "texts": [
+   {
+    "text": "Laser phase plate",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s093_176.png",
+    "size_kb": 1985,
+    "left": 1.37,
+    "top": 1.08,
+    "width": 10.6,
+    "height": 5.92
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 94,
+  "texts": [
+   {
+    "text": "Data Processing",
+    "left": 0.44,
+    "top": 3.33,
+    "width": 12.72,
+    "height": 1.21
+   }
+  ],
+  "images": [
+   {
+    "file": "s094_177.png",
+    "size_kb": 1254,
+    "left": 0.0,
+    "top": 0.0,
+    "width": 13.59,
+    "height": 7.87
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 95,
+  "texts": [
+   {
+    "text": "95",
+    "left": 9.42,
+    "top": 6.95,
+    "width": 3.0,
+    "height": 0.4
+   },
+   {
+    "text": "Halfon et al., 2022 Faraday Discuss.",
+    "left": 8.76,
+    "top": 7.22,
+    "width": 3.33,
+    "height": 0.26
+   },
+   {
+    "text": "Time & Cost of a single particle cryo-EM pipeline",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s095_178.png",
+    "size_kb": 266,
+    "left": 0.66,
+    "top": 1.23,
+    "width": 12.02,
+    "height": 5.03
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 96,
+  "texts": [
+   {
+    "text": "103-104 Micrographs",
+    "left": 2.2,
+    "top": 0.99,
+    "width": 2.86,
+    "height": 0.44
+   },
+   {
+    "text": "······",
+    "left": 11.97,
+    "top": 3.4,
+    "width": 1.01,
+    "height": 0.71
+   },
+   {
+    "text": "Single particle analysis",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s096_179.png",
+    "size_kb": 781,
+    "left": 1.28,
+    "top": 1.4,
+    "width": 4.7,
+    "height": 4.7
+   },
+   {
+    "file": "s096_180.png",
+    "size_kb": 180,
+    "left": 6.06,
+    "top": 2.29,
+    "width": 2.93,
+    "height": 2.93
+   },
+   {
+    "file": "s096_181.png",
+    "size_kb": 142,
+    "left": 9.07,
+    "top": 2.34,
+    "width": 2.81,
+    "height": 2.81
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 97,
+  "texts": [
+   {
+    "text": "103-104 Micrographs",
+    "left": 2.2,
+    "top": 0.99,
+    "width": 2.86,
+    "height": 0.44
+   },
+   {
+    "text": "104-107 particle images",
+    "left": 7.61,
+    "top": 1.44,
+    "width": 3.21,
+    "height": 0.44
+   },
+   {
+    "text": "Single particle analysis",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s097_182.png",
+    "size_kb": 1473,
+    "left": 1.27,
+    "top": 1.36,
+    "width": 9.85,
+    "height": 4.78
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 98,
+  "texts": [
+   {
+    "text": "2D",
+    "left": 3.0,
+    "top": 3.18,
+    "width": 1.28,
+    "height": 1.11
+   },
+   {
+    "text": "3D",
+    "left": 8.58,
+    "top": 3.24,
+    "width": 1.28,
+    "height": 1.11
+   },
+   {
+    "text": "Cryo-EM map",
+    "left": 8.13,
+    "top": 1.47,
+    "width": 2.01,
+    "height": 0.44
+   },
+   {
+    "text": "Unknown particle poses",
+    "left": 4.21,
+    "top": 2.26,
+    "width": 4.92,
+    "height": 2.98
+   },
+   {
+    "text": "Low signal to noise ratio (SNR)",
+    "left": 4.21,
+    "top": 2.26,
+    "width": 4.92,
+    "height": 2.98
+   },
+   {
+    "text": "Imperfect imaging (artifacts)",
+    "left": 4.21,
+    "top": 2.26,
+    "width": 4.92,
+    "height": 2.98
+   },
+   {
+    "text": "Heterogenous/dynamic nature",
+    "left": 4.21,
+    "top": 2.26,
+    "width": 4.92,
+    "height": 2.98
+   },
+   {
+    "text": "(Utilizing ~10% of particles)",
+    "left": 7.21,
+    "top": 1.09,
+    "width": 3.85,
+    "height": 0.44
+   },
+   {
+    "text": "Images to 3D maps",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s098_183.png",
+    "size_kb": 1233,
+    "left": 7.3,
+    "top": 1.97,
+    "width": 3.67,
+    "height": 5.23
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 99,
+  "texts": [
+   {
+    "text": "Visual representation of the distribution of spatial frequencies within an image, obtained by calculating the Fourier transform of the image and then squaring magnitude",
+    "left": 1.13,
+    "top": 1.53,
+    "width": 4.99,
+    "height": 5.66
+   },
+   {
+    "text": "Low frequencies (large features, low resolution) appear near the center",
+    "left": 1.13,
+    "top": 1.53,
+    "width": 4.99,
+    "height": 5.66
+   },
+   {
+    "text": "High frequencies (small features, high resolution) are towards the edges of the spectrum",
+    "left": 1.13,
+    "top": 1.53,
+    "width": 4.99,
+    "height": 5.66
+   },
+   {
+    "text": "Other undesirable effects such as the level of astigmatism, or drift associated with an image, as well as crystalline ice contamination, are often more clearly diagnosed in the power spectrum than in the cryo-TEM image itself",
+    "left": 1.13,
+    "top": 1.53,
+    "width": 4.99,
+    "height": 5.66
+   },
+   {
+    "text": "Some terminology - Power spectrum",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Power spectrum",
+    "left": 0.7,
+    "top": 1.07,
+    "width": 3.27,
+    "height": 0.61
+   }
+  ],
+  "images": [
+   {
+    "file": "s099_184.png",
+    "size_kb": 542,
+    "left": 6.34,
+    "top": 2.29,
+    "width": 6.6,
+    "height": 3.69
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 100,
+  "texts": [
+   {
+    "text": "Visual representation of the distribution of spatial frequencies within an image, obtained by calculating the Fourier transform of the image and then squaring magnitude",
+    "left": 1.13,
+    "top": 1.53,
+    "width": 4.99,
+    "height": 5.66
+   },
+   {
+    "text": "Low frequencies (large features, low resolution) appear near the center",
+    "left": 1.13,
+    "top": 1.53,
+    "width": 4.99,
+    "height": 5.66
+   },
+   {
+    "text": "High frequencies (small features, high resolution) are towards the edges of the spectrum",
+    "left": 1.13,
+    "top": 1.53,
+    "width": 4.99,
+    "height": 5.66
+   },
+   {
+    "text": "Other undesirable effects such as the level of astigmatism, or drift associated with an image, as well as crystalline ice contamination, are often more clearly diagnosed in the power spectrum than in the cryo-TEM image itself",
+    "left": 1.13,
+    "top": 1.53,
+    "width": 4.99,
+    "height": 5.66
+   },
+   {
+    "text": "Some terminology - Power spectrum",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Power spectrum",
+    "left": 0.7,
+    "top": 1.07,
+    "width": 3.27,
+    "height": 0.61
+   }
+  ],
+  "images": [
+   {
+    "file": "s100_185.png",
+    "size_kb": 1865,
+    "left": 6.57,
+    "top": 1.68,
+    "width": 6.06,
+    "height": 4.98
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 101,
+  "texts": [
+   {
+    "text": "The CTF is a measure of how much the phase shift (defocus) and the spatial frequency",
+    "left": 1.13,
+    "top": 1.53,
+    "width": 4.99,
+    "height": 5.66
+   },
+   {
+    "text": "However, microscope aberrations (envelop function) have corrupted the image",
+    "left": 1.13,
+    "top": 1.53,
+    "width": 4.99,
+    "height": 5.66
+   },
+   {
+    "text": "Oscillations within the CTF are easily seen by visualizing the power spectrum of cryo-EM images. The pattern of concentric rings (Thon rings) represent the alternation of high and low contrast transfer as a function of spatial frequency",
+    "left": 1.13,
+    "top": 1.53,
+    "width": 4.99,
+    "height": 5.66
+   },
+   {
+    "text": "Some terminology – CTF",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Contrast Transfer Function (CTF)",
+    "left": 0.7,
+    "top": 1.07,
+    "width": 4.74,
+    "height": 0.61
+   }
+  ],
+  "images": [
+   {
+    "file": "s101_186.png",
+    "size_kb": 78,
+    "left": 7.06,
+    "top": 1.14,
+    "width": 4.99,
+    "height": 2.61
+   },
+   {
+    "file": "s101_187.png",
+    "size_kb": 52,
+    "left": 7.3,
+    "top": 4.03,
+    "width": 4.91,
+    "height": 3.04
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 102,
+  "texts": [
+   {
+    "text": "Understanding raw cryo-EM data",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Raw cryo-EM data corresponds to a stack of movie frames, which each frame is a sparse image consisting zeros and ones",
+    "left": 2.63,
+    "top": 6.29,
+    "width": 8.06,
+    "height": 0.71
+   }
+  ],
+  "images": [
+   {
+    "file": "s102_188.png",
+    "size_kb": 1162,
+    "left": 1.04,
+    "top": 1.21,
+    "width": 11.25,
+    "height": 4.83
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 103,
+  "texts": [
+   {
+    "text": "Long exposure time per ‘image’",
+    "left": 1.08,
+    "top": 2.01,
+    "width": 4.98,
+    "height": 4.32
+   },
+   {
+    "text": "High total dose improves contrast",
+    "left": 1.08,
+    "top": 2.01,
+    "width": 4.98,
+    "height": 4.32
+   },
+   {
+    "text": "But particles move due to physical drift and ‘beam-induced motion’",
+    "left": 1.08,
+    "top": 2.01,
+    "width": 4.98,
+    "height": 4.32
+   },
+   {
+    "text": "Fractionation into frames (‘movie’) allows correction of drift and motion",
+    "left": 1.08,
+    "top": 2.01,
+    "width": 4.98,
+    "height": 4.32
+   },
+   {
+    "text": "The re-aligned frames are then summed into a single, de-blurred micrograph",
+    "left": 1.08,
+    "top": 2.01,
+    "width": 4.98,
+    "height": 4.32
+   },
+   {
+    "text": "Pre-processing – Motion correction",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s103_189.png",
+    "size_kb": 2235,
+    "left": 7.79,
+    "top": 1.18,
+    "width": 4.0,
+    "height": 5.98
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 104,
+  "texts": [
+   {
+    "text": "Pre-processing – Motion correction",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "0.3",
+    "left": 7.49,
+    "top": 4.81,
+    "width": 0.54,
+    "height": 0.4
+   }
+  ],
+  "images": [
+   {
+    "file": "s104_190.png",
+    "size_kb": 75,
+    "left": 1.33,
+    "top": 1.58,
+    "width": 10.68,
+    "height": 4.35
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 105,
+  "texts": [
+   {
+    "text": "To optimize the signal-to-noise ratio across all resolutions in the micrograph to enable high-resolution 3D reconstruction",
+    "left": 1.33,
+    "top": 1.18,
+    "width": 4.98,
+    "height": 4.62
+   },
+   {
+    "text": "The electron beam damages the sample during the course of exposure",
+    "left": 1.33,
+    "top": 1.18,
+    "width": 4.98,
+    "height": 4.62
+   },
+   {
+    "text": "Cryo-EM movie frames accumulate an increasing amount of electron dose.",
+    "left": 1.33,
+    "top": 1.18,
+    "width": 4.98,
+    "height": 4.62
+   },
+   {
+    "text": "The earliest frames",
+    "left": 1.33,
+    "top": 1.18,
+    "width": 4.98,
+    "height": 4.62
+   },
+   {
+    "text": "most intact information",
+    "left": 1.33,
+    "top": 1.18,
+    "width": 4.98,
+    "height": 4.62
+   },
+   {
+    "text": "low radiation damage",
+    "left": 1.33,
+    "top": 1.18,
+    "width": 4.98,
+    "height": 4.62
+   },
+   {
+    "text": "low electrons  limited contrast",
+    "left": 1.33,
+    "top": 1.18,
+    "width": 4.98,
+    "height": 4.62
+   },
+   {
+    "text": "Pre-processing – Dose weighting",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "The early frames – retained high res. info.",
+    "left": 1.11,
+    "top": 5.93,
+    "width": 5.43,
+    "height": 0.64
+   },
+   {
+    "text": "The later frames – limited to low res. info.",
+    "left": 1.11,
+    "top": 6.67,
+    "width": 5.43,
+    "height": 0.64
+   }
+  ],
+  "images": [
+   {
+    "file": "s105_191.png",
+    "size_kb": 1182,
+    "left": 6.67,
+    "top": 2.19,
+    "width": 6.17,
+    "height": 3.12
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 106,
+  "texts": [
+   {
+    "text": "To optimize the signal-to-noise ratio across all resolutions in the micrograph to enable high-resolution 3D reconstruction",
+    "left": 1.33,
+    "top": 1.18,
+    "width": 4.98,
+    "height": 4.62
+   },
+   {
+    "text": "The electron beam damages the sample during the course of exposure",
+    "left": 1.33,
+    "top": 1.18,
+    "width": 4.98,
+    "height": 4.62
+   },
+   {
+    "text": "Cryo-EM movie frames accumulate an increasing amount of electron dose.",
+    "left": 1.33,
+    "top": 1.18,
+    "width": 4.98,
+    "height": 4.62
+   },
+   {
+    "text": "The earliest frames",
+    "left": 1.33,
+    "top": 1.18,
+    "width": 4.98,
+    "height": 4.62
+   },
+   {
+    "text": "most intact information",
+    "left": 1.33,
+    "top": 1.18,
+    "width": 4.98,
+    "height": 4.62
+   },
+   {
+    "text": "low radiation damage",
+    "left": 1.33,
+    "top": 1.18,
+    "width": 4.98,
+    "height": 4.62
+   },
+   {
+    "text": "low electrons  limited contrast",
+    "left": 1.33,
+    "top": 1.18,
+    "width": 4.98,
+    "height": 4.62
+   },
+   {
+    "text": "Pre-processing – Dose weighting",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "The early frames – retained high res. info.",
+    "left": 1.11,
+    "top": 5.93,
+    "width": 5.43,
+    "height": 0.64
+   },
+   {
+    "text": "The later frames – limited to low res. info.",
+    "left": 1.11,
+    "top": 6.67,
+    "width": 5.43,
+    "height": 0.64
+   }
+  ],
+  "images": [
+   {
+    "file": "s106_192.png",
+    "size_kb": 575,
+    "left": 7.52,
+    "top": 1.18,
+    "width": 4.33,
+    "height": 6.02
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 107,
+  "texts": [
+   {
+    "text": "Estimation of CTF parameters to enable the computational correction of the CTF for each image",
+    "left": 1.04,
+    "top": 1.41,
+    "width": 4.21,
+    "height": 5.2
+   },
+   {
+    "text": "The most important task in CTF estimation is to determine the true defocus of each image",
+    "left": 1.04,
+    "top": 1.41,
+    "width": 4.21,
+    "height": 5.2
+   },
+   {
+    "text": "CTF modeling is also an effective way to assess micrograph.",
+    "left": 1.04,
+    "top": 1.41,
+    "width": 4.21,
+    "height": 5.2
+   },
+   {
+    "text": "The cross-correlation and resolution limit of CTF fitting are useful metrics to exclude poor micrographs out of the dataset",
+    "left": 1.04,
+    "top": 1.41,
+    "width": 4.21,
+    "height": 5.2
+   },
+   {
+    "text": "Pre-processing – CTF estimation",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "https://ctfsimulation.streamlit.app/~/+/",
+    "left": 7.24,
+    "top": 6.21,
+    "width": 4.5,
+    "height": 0.4
+   }
+  ],
+  "images": [
+   {
+    "file": "s107_193.png",
+    "size_kb": 62,
+    "left": 5.68,
+    "top": 2.29,
+    "width": 7.25,
+    "height": 2.93
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 108,
+  "texts": [
+   {
+    "text": "Estimation of CTF parameters to enable the computational correction of the CTF for each image",
+    "left": 1.04,
+    "top": 1.41,
+    "width": 4.21,
+    "height": 5.2
+   },
+   {
+    "text": "The most important task in CTF estimation is to determine the true defocus of each image",
+    "left": 1.04,
+    "top": 1.41,
+    "width": 4.21,
+    "height": 5.2
+   },
+   {
+    "text": "CTF modeling is also an effective way to assess micrograph.",
+    "left": 1.04,
+    "top": 1.41,
+    "width": 4.21,
+    "height": 5.2
+   },
+   {
+    "text": "The cross-correlation and resolution limit of CTF fitting are useful metrics to exclude poor micrographs out of the dataset",
+    "left": 1.04,
+    "top": 1.41,
+    "width": 4.21,
+    "height": 5.2
+   },
+   {
+    "text": "Pre-processing – CTF estimation",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s108_194.png",
+    "size_kb": 1162,
+    "left": 6.26,
+    "top": 1.68,
+    "width": 5.87,
+    "height": 4.65
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 109,
+  "texts": [
+   {
+    "text": "Estimation of CTF parameters to enable the computational correction of the CTF for each image",
+    "left": 1.04,
+    "top": 1.41,
+    "width": 4.21,
+    "height": 5.2
+   },
+   {
+    "text": "The most important task in CTF estimation is to determine the true defocus of each image",
+    "left": 1.04,
+    "top": 1.41,
+    "width": 4.21,
+    "height": 5.2
+   },
+   {
+    "text": "CTF modeling is also an effective way to assess micrograph.",
+    "left": 1.04,
+    "top": 1.41,
+    "width": 4.21,
+    "height": 5.2
+   },
+   {
+    "text": "The cross-correlation and resolution limit of CTF fitting are useful metrics to exclude poor micrographs out of the dataset",
+    "left": 1.04,
+    "top": 1.41,
+    "width": 4.21,
+    "height": 5.2
+   },
+   {
+    "text": "Pre-processing – CTF estimation",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "CTF objective function fitting",
+    "left": 6.25,
+    "top": 1.08,
+    "width": 3.3,
+    "height": 0.4
+   },
+   {
+    "text": "Comparison of measured CTF vs. power spectrum",
+    "left": 6.25,
+    "top": 2.93,
+    "width": 5.63,
+    "height": 0.4
+   },
+   {
+    "text": "2D plot of defocus vs.",
+    "left": 6.35,
+    "top": 5.84,
+    "width": 2.7,
+    "height": 0.71
+   },
+   {
+    "text": "Position on micrograph",
+    "left": 6.35,
+    "top": 5.84,
+    "width": 2.7,
+    "height": 0.71
+   }
+  ],
+  "images": [
+   {
+    "file": "s109_195.png",
+    "size_kb": 26,
+    "left": 5.94,
+    "top": 1.49,
+    "width": 6.75,
+    "height": 1.48
+   },
+   {
+    "file": "s109_196.png",
+    "size_kb": 55,
+    "left": 6.04,
+    "top": 3.28,
+    "width": 6.65,
+    "height": 1.88
+   },
+   {
+    "file": "s109_197.png",
+    "size_kb": 100,
+    "left": 9.54,
+    "top": 5.08,
+    "width": 2.34,
+    "height": 2.23
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 110,
+  "texts": [
+   {
+    "text": "Estimation of CTF parameters to enable the computational correction of the CTF for each image",
+    "left": 1.04,
+    "top": 1.41,
+    "width": 4.21,
+    "height": 5.2
+   },
+   {
+    "text": "The most important task in CTF estimation is to determine the true defocus of each image",
+    "left": 1.04,
+    "top": 1.41,
+    "width": 4.21,
+    "height": 5.2
+   },
+   {
+    "text": "CTF modeling is also an effective way to assess micrograph.",
+    "left": 1.04,
+    "top": 1.41,
+    "width": 4.21,
+    "height": 5.2
+   },
+   {
+    "text": "The cross-correlation and resolution limit of CTF fitting are useful metrics to exclude poor micrographs out of the dataset",
+    "left": 1.04,
+    "top": 1.41,
+    "width": 4.21,
+    "height": 5.2
+   },
+   {
+    "text": "Pre-processing – CTF estimation",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s110_198.png",
+    "size_kb": 146,
+    "left": 6.05,
+    "top": 1.66,
+    "width": 6.66,
+    "height": 2.26
+   },
+   {
+    "file": "s110_199.png",
+    "size_kb": 122,
+    "left": 6.05,
+    "top": 4.35,
+    "width": 6.66,
+    "height": 2.26
+   },
+   {
+    "file": "s110_200.png",
+    "size_kb": 320,
+    "left": 6.05,
+    "top": 3.0,
+    "width": 6.66,
+    "height": 2.26
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 111,
+  "texts": [
+   {
+    "text": "Particle selection and extraction",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s111_201.png",
+    "size_kb": 2715,
+    "left": 1.27,
+    "top": 2.26,
+    "width": 10.78,
+    "height": 4.12
+   },
+   {
+    "file": "s111_202.png",
+    "size_kb": 321,
+    "left": 9.3,
+    "top": 0.9,
+    "width": 2.67,
+    "height": 2.48
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 112,
+  "texts": [
+   {
+    "text": "Enhance the signal",
+    "left": 1.0,
+    "top": 1.88,
+    "width": 4.12,
+    "height": 3.74
+   },
+   {
+    "text": "Manual picking",
+    "left": 1.0,
+    "top": 1.88,
+    "width": 4.12,
+    "height": 3.74
+   },
+   {
+    "text": "Blob picking",
+    "left": 1.0,
+    "top": 1.88,
+    "width": 4.12,
+    "height": 3.74
+   },
+   {
+    "text": "Template picking",
+    "left": 1.0,
+    "top": 1.88,
+    "width": 4.12,
+    "height": 3.74
+   },
+   {
+    "text": "ML approach (Topaz, crYOLO, DRPnet, DeepCryoPicker etc.)",
+    "left": 1.0,
+    "top": 1.88,
+    "width": 4.12,
+    "height": 3.74
+   },
+   {
+    "text": "Particle selection and extraction",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s112_203.png",
+    "size_kb": 445,
+    "left": 5.76,
+    "top": 1.88,
+    "width": 7.07,
+    "height": 3.74
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 113,
+  "texts": [
+   {
+    "text": "Particle selection and extraction",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Enhance the signal",
+    "left": 1.0,
+    "top": 1.88,
+    "width": 4.12,
+    "height": 3.74
+   },
+   {
+    "text": "Manual picking",
+    "left": 1.0,
+    "top": 1.88,
+    "width": 4.12,
+    "height": 3.74
+   },
+   {
+    "text": "Blob picking",
+    "left": 1.0,
+    "top": 1.88,
+    "width": 4.12,
+    "height": 3.74
+   },
+   {
+    "text": "Template picking",
+    "left": 1.0,
+    "top": 1.88,
+    "width": 4.12,
+    "height": 3.74
+   },
+   {
+    "text": "ML approach (Topaz, crYOLO, DRPnet, DeepCryoPicker etc.)",
+    "left": 1.0,
+    "top": 1.88,
+    "width": 4.12,
+    "height": 3.74
+   }
+  ],
+  "images": [
+   {
+    "file": "s113_204.png",
+    "size_kb": 449,
+    "left": 5.65,
+    "top": 2.55,
+    "width": 7.11,
+    "height": 2.8
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 114,
+  "texts": [
+   {
+    "text": "Particle selection and extraction",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Topaz – No general model; requires training per sample/per dataset. Is free standing or incorporated into RELION and cryoSPARC.",
+    "left": 5.78,
+    "top": 1.59,
+    "width": 6.88,
+    "height": 4.68
+   },
+   {
+    "text": "Warp – Has a general model but typically requires user re-training with specific sample types. Once trained, the neural network can work across different datasets and similar sample types. (Note: Warp only runs on Windows. Warp also has a junk detector that will automatically avoid junk based on a pre-trained neural network)",
+    "left": 5.78,
+    "top": 1.59,
+    "width": 6.88,
+    "height": 4.68
+   },
+   {
+    "text": "crYOLO – Has a general model that works well on most samples. Currently, is free standing or a part of the SPHIRE package.",
+    "left": 5.78,
+    "top": 1.59,
+    "width": 6.88,
+    "height": 4.68
+   },
+   {
+    "text": "Enhance the signal",
+    "left": 1.0,
+    "top": 1.88,
+    "width": 4.12,
+    "height": 3.74
+   },
+   {
+    "text": "Manual picking",
+    "left": 1.0,
+    "top": 1.88,
+    "width": 4.12,
+    "height": 3.74
+   },
+   {
+    "text": "Blob picking",
+    "left": 1.0,
+    "top": 1.88,
+    "width": 4.12,
+    "height": 3.74
+   },
+   {
+    "text": "Template picking",
+    "left": 1.0,
+    "top": 1.88,
+    "width": 4.12,
+    "height": 3.74
+   },
+   {
+    "text": "ML approach (Topaz, crYOLO, DRPnet, DeepCryoPicker etc.)",
+    "left": 1.0,
+    "top": 1.88,
+    "width": 4.12,
+    "height": 3.74
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 115,
+  "texts": [
+   {
+    "text": "2D classification",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s115_205.png",
+    "size_kb": 463,
+    "left": 1.19,
+    "top": 1.44,
+    "width": 10.96,
+    "height": 5.02
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 116,
+  "texts": [
+   {
+    "text": "2D classification",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s116_206.png",
+    "size_kb": 1716,
+    "left": 0.7,
+    "top": 1.29,
+    "width": 11.94,
+    "height": 5.35
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 117,
+  "texts": [
+   {
+    "text": "2D classes",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s117_207.png",
+    "size_kb": 1585,
+    "left": 6.86,
+    "top": 1.47,
+    "width": 5.75,
+    "height": 4.87
+   },
+   {
+    "file": "s117_208.png",
+    "size_kb": 1585,
+    "left": 0.84,
+    "top": 1.47,
+    "width": 5.75,
+    "height": 4.87
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 118,
+  "texts": [
+   {
+    "text": "The Fourier transform of each of the 2D class averages Represent a section of the Fourier transform of the initial object",
+    "left": 1.85,
+    "top": 2.65,
+    "width": 4.12,
+    "height": 1.43
+   },
+   {
+    "text": "3D reconstruction",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "The inverse TF of the combined sections generates the initial objects",
+    "left": 1.85,
+    "top": 5.46,
+    "width": 4.12,
+    "height": 1.09
+   }
+  ],
+  "images": [
+   {
+    "file": "s118_209.png",
+    "size_kb": 321,
+    "left": 6.76,
+    "top": 1.11,
+    "width": 4.28,
+    "height": 5.94
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 119,
+  "texts": [
+   {
+    "text": "3D reconstruction – Initial map",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s119_210.png",
+    "size_kb": 1733,
+    "left": 1.3,
+    "top": 1.51,
+    "width": 10.74,
+    "height": 4.95
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 120,
+  "texts": [
+   {
+    "text": "3D reconstruction – Initial map",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s120_211.png",
+    "size_kb": 1733,
+    "left": 1.3,
+    "top": 1.51,
+    "width": 10.74,
+    "height": 4.95
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 121,
+  "texts": [
+   {
+    "text": "3D reconstruction – Map optimization",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 122,
+  "texts": [
+   {
+    "text": "3D reconstruction – Map optimization",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 123,
+  "texts": [
+   {
+    "text": "Resolution is calculated using Bragg’s law, which states that the smallest distance between crystal lattice planes that can be resolved (d) is equal to the wavelength of the X-ray (l) devided by twice the sine of the diffraction angle (q)",
+    "left": 0.74,
+    "top": 1.67,
+    "width": 5.69,
+    "height": 1.86
+   },
+   {
+    "text": "Resolution",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   },
+   {
+    "text": "Resolution is determined by calculating the Fourier Shell Correlation (FSC) between two independently generated ‘half-maps’ of the same data, signifying the point at which the correlation between the maps drops below a set threshold (commonly 0.143) across different resolution shells",
+    "left": 0.74,
+    "top": 4.35,
+    "width": 5.69,
+    "height": 2.28
+   },
+   {
+    "text": "X-ray crystallography",
+    "left": 0.31,
+    "top": 1.23,
+    "width": 3.27,
+    "height": 0.61
+   },
+   {
+    "text": "Cryo-EM",
+    "left": 0.31,
+    "top": 3.87,
+    "width": 3.27,
+    "height": 0.61
+   }
+  ],
+  "images": [
+   {
+    "file": "s123_212.png",
+    "size_kb": 719,
+    "left": 9.67,
+    "top": 1.06,
+    "width": 3.25,
+    "height": 2.55
+   },
+   {
+    "file": "s123_213.png",
+    "size_kb": 101,
+    "left": 6.67,
+    "top": 1.57,
+    "width": 2.84,
+    "height": 1.74
+   },
+   {
+    "file": "s123_214.png",
+    "size_kb": 438,
+    "left": 7.58,
+    "top": 4.02,
+    "width": 4.19,
+    "height": 3.31
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 124,
+  "texts": [
+   {
+    "text": "Resolution",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s124_215.png",
+    "size_kb": 1956,
+    "left": 0.99,
+    "top": 1.3,
+    "width": 11.18,
+    "height": 5.51
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 125,
+  "texts": [
+   {
+    "text": "Map resolution",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s125_216.png",
+    "size_kb": 1464,
+    "left": 0.99,
+    "top": 1.49,
+    "width": 11.36,
+    "height": 5.04
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 126,
+  "texts": [
+   {
+    "text": "Conformational variability and variability analysis",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s126_217.png",
+    "size_kb": 1544,
+    "left": 0.33,
+    "top": 1.26,
+    "width": 12.67,
+    "height": 5.43
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 127,
+  "texts": [
+   {
+    "text": "Conformational variability and variability analysis",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s127_218.png",
+    "size_kb": 1529,
+    "left": 0.1,
+    "top": 1.23,
+    "width": 12.8,
+    "height": 5.64
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 128,
+  "texts": [
+   {
+    "text": "Rosenthal Plot (the number of particles vs. resolution)",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s128_219.png",
+    "size_kb": 518,
+    "left": 7.56,
+    "top": 1.32,
+    "width": 4.98,
+    "height": 5.1
+   },
+   {
+    "file": "s128_220.png",
+    "size_kb": 103,
+    "left": 0.5,
+    "top": 1.81,
+    "width": 6.7,
+    "height": 4.14
+   },
+   {
+    "file": "s128_221.png",
+    "size_kb": 93,
+    "left": 0.32,
+    "top": 1.81,
+    "width": 6.78,
+    "height": 4.39
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 129,
+  "texts": [
+   {
+    "text": "How much particles do we need???",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [
+   {
+    "file": "s129_222.png",
+    "size_kb": 1219,
+    "left": 0.67,
+    "top": 1.17,
+    "width": 12.1,
+    "height": 3.31
+   },
+   {
+    "file": "s129_223.png",
+    "size_kb": 1219,
+    "left": 0.62,
+    "top": 4.93,
+    "width": 12.1,
+    "height": 2.15
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 130,
+  "texts": [
+   {
+    "text": "Size-limitation",
+    "left": 0.79,
+    "top": 2.06,
+    "width": 5.27,
+    "height": 1.43
+   },
+   {
+    "text": "Requires highly purified sample",
+    "left": 0.79,
+    "top": 2.06,
+    "width": 5.27,
+    "height": 1.43
+   },
+   {
+    "text": "Vitrification process",
+    "left": 0.79,
+    "top": 2.06,
+    "width": 5.27,
+    "height": 1.43
+   },
+   {
+    "text": "Sample",
+    "left": 0.56,
+    "top": 1.57,
+    "width": 2.86,
+    "height": 0.55
+   },
+   {
+    "text": "Problems and limitations",
+    "left": 0.01,
+    "top": 0.22,
+    "width": 8.13,
+    "height": 0.5
+   }
+  ],
+  "images": [],
+  "shapes": []
+ },
+ {
+  "num": 131,
+  "texts": [],
+  "images": [
+   {
+    "file": "s131_224.png",
+    "size_kb": 924,
+    "left": 2.57,
+    "top": 0.53,
+    "width": 8.19,
+    "height": 6.44
+   }
+  ],
+  "shapes": []
+ },
+ {
+  "num": 132,
+  "texts": [
+   {
+    "text": "감사합니다",
+    "left": 1.37,
+    "top": 2.48,
+    "width": 10.59,
+    "height": 3.11
+   }
+  ],
+  "images": [],
+  "shapes": []
+ }
+]

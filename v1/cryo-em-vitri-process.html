@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vitrification Process</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(24px, 3vh, 38px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(12px, 1.4vh, 18px); color: #777; margin-top: 2px; font-weight: 500; }
+
+.canvas-wrap {
+  flex: 1; min-height: 0;
+  background: #fff;
+  border: 2px solid #e0e0e8;
+  border-radius: 14px;
+  overflow: hidden;
+  margin: clamp(4px, 0.5vh, 8px) 0;
+}
+.canvas-wrap canvas { display: block; width: 100%; height: 100%; }
+
+.footer {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 2px 0;
+  font-size: clamp(9px, 1vh, 12px);
+  color: #aaa;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="./">&larr; Home</a>
+    <h1>Vitrification Process</h1>
+    <p>Four steps from liquid sample to vitrified cryo-EM grid</p>
+  </div>
+  <div class="canvas-wrap"><canvas id="cv"></canvas></div>
+  <div class="footer">
+    Dubochet et al. (1988) Q Rev Biophys &middot; Grassucci et al. (2007) Nat Protoc
+  </div>
+</div>
+
+<script>
+const dpr = window.devicePixelRatio || 1;
+
+function initCanvas(id) {
+  const c = document.getElementById(id);
+  const p = c.parentElement;
+  const w = p.clientWidth, h = p.clientHeight;
+  c.width = w * dpr; c.height = h * dpr;
+  const ctx = c.getContext('2d');
+  ctx.scale(dpr, dpr);
+  return { ctx, w, h };
+}
+
+function F(h, level) {
+  switch(level) {
+    case 'xl': return Math.round(Math.min(Math.max(h * 0.055, 20), 40));
+    case 'lg': return Math.round(Math.min(Math.max(h * 0.042, 17), 32));
+    case 'md': return Math.round(Math.min(Math.max(h * 0.034, 15), 26));
+    case 'sm': return Math.round(Math.min(Math.max(h * 0.028, 13), 22));
+    case 'xs': return Math.round(Math.min(Math.max(h * 0.024, 12), 18));
+  }
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  if (Array.isArray(r)) {
+    ctx.beginPath();
+    ctx.moveTo(x + r[0], y); ctx.lineTo(x + w - r[1], y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r[1]);
+    ctx.lineTo(x + w, y + h - r[2]);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r[2], y + h);
+    ctx.lineTo(x + r[3], y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r[3]);
+    ctx.lineTo(x, y + r[0]);
+    ctx.quadraticCurveTo(x, y, x + r[0], y);
+    ctx.closePath();
+  } else {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+}
+
+function draw() {
+  const { ctx, w, h } = initCanvas('cv');
+  const xl = F(h, 'xl'), lg = F(h, 'lg'), md = F(h, 'md'), sm = F(h, 'sm'), xs = F(h, 'xs');
+  const pad = Math.max(w * 0.02, 14);
+
+  // ── Top: 4 Step Circles with arrows ──
+  const stepRowH = h * 0.16;
+  const stepW = (w - pad * 2) / 4;
+  const circR = Math.min(stepW * 0.16, stepRowH * 0.36);
+  const circY = stepRowH * 0.5;
+
+  const steps = [
+    { num: '1', label: 'Glow Discharge', color: '#f59e0b' },
+    { num: '2', label: 'Apply Sample', color: '#3b82f6' },
+    { num: '3', label: 'Blot Excess', color: '#8b5cf6' },
+    { num: '4', label: 'Plunge Freeze', color: '#ef4444' },
+  ];
+
+  steps.forEach((s, i) => {
+    const cx = pad + stepW * (i + 0.5);
+
+    // Circle
+    ctx.fillStyle = s.color + '15'; ctx.strokeStyle = s.color; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(cx, circY, circR, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+    // Number
+    ctx.fillStyle = s.color; ctx.font = `900 ${Math.round(circR * 0.7)}px Inter`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(s.num, cx, circY); ctx.textBaseline = 'alphabetic';
+
+    // Label below
+    ctx.fillStyle = '#1a1a2e'; ctx.font = `800 ${md}px Inter`;
+    ctx.fillText(s.label, cx, circY + circR + md + 4);
+
+    // Arrow to next
+    if (i < 3) {
+      const ax1 = cx + circR + 10, ax2 = cx + stepW - circR - 10;
+      ctx.strokeStyle = '#ccc'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(ax1, circY); ctx.lineTo(ax2, circY); ctx.stroke();
+      ctx.fillStyle = '#ccc';
+      ctx.beginPath(); ctx.moveTo(ax2, circY); ctx.lineTo(ax2 - 7, circY - 4); ctx.lineTo(ax2 - 7, circY + 4); ctx.closePath(); ctx.fill();
+    }
+  });
+
+  // ── Middle: 4 detail cards ──
+  const cardY = stepRowH + 8;
+  const cardH = h * 0.52;
+  const cardGap = 12;
+  const cardW = (w - pad * 2 - cardGap * 3) / 4;
+
+  const details = [
+    {
+      color: '#f59e0b', bg: '#fffbeb', border: '#fbbf24',
+      title: 'Glow Discharge',
+      points: [
+        'Makes hydrophobic carbon surface hydrophilic',
+        'Air or H₂/O₂ plasma in vacuum chamber',
+        'Duration: 15–45 seconds',
+        'Current: 15–25 mA',
+        'Must apply sample within minutes',
+        'Over-treatment → too hydrophilic → too thin ice'
+      ],
+      diagram: 'glow'
+    },
+    {
+      color: '#3b82f6', bg: '#eff6ff', border: '#60a5fa',
+      title: 'Apply Sample',
+      points: [
+        'Pipette 3–4 μL onto grid',
+        'Apply at grid center',
+        'Concentration: 0.5–5 mg/mL',
+        'Hold grid with forceps at rim',
+        'Temperature: RT or 4°C',
+        'Can back-blot for thin ice'
+      ],
+      diagram: 'apply'
+    },
+    {
+      color: '#8b5cf6', bg: '#f5f3ff', border: '#a78bfa',
+      title: 'Blot Excess',
+      points: [
+        'Filter paper touches grid surface',
+        'Blot time: 1–6 seconds',
+        'Blot force: 0–20 (device units)',
+        'Target: ~30–80 nm ice layer',
+        'Humidity 80–100% in chamber',
+        'Single-side or double-side blot'
+      ],
+      diagram: 'blot'
+    },
+    {
+      color: '#ef4444', bg: '#fef2f2', border: '#f87171',
+      title: 'Plunge Freeze',
+      points: [
+        'Plunge into liquid ethane at −183°C',
+        'Cooling rate >10⁴ K/s',
+        'Water → vitreous (amorphous) ice',
+        'No crystallization = structure preserved',
+        'Transfer to liquid nitrogen storage',
+        'Avoid frost contamination'
+      ],
+      diagram: 'plunge'
+    }
+  ];
+
+  details.forEach((d, i) => {
+    const x0 = pad + i * (cardW + cardGap);
+
+    // Card background
+    ctx.fillStyle = d.bg;
+    roundRect(ctx, x0, cardY, cardW, cardH, 10); ctx.fill();
+    ctx.strokeStyle = d.border + '50'; ctx.lineWidth = 1.5;
+    roundRect(ctx, x0, cardY, cardW, cardH, 10); ctx.stroke();
+
+    // Color top bar
+    ctx.fillStyle = d.color;
+    roundRect(ctx, x0, cardY, cardW, 5, [10, 10, 0, 0]); ctx.fill();
+
+    // Mini diagram area
+    const diagY = cardY + 12;
+    const diagH = cardH * 0.32;
+    drawMiniDiagram(ctx, d.diagram, x0 + 8, diagY, cardW - 16, diagH, d.color);
+
+    // Points
+    const ptY = diagY + diagH + 8;
+    const ptH = cardH - (ptY - cardY) - 10;
+    const ptLineH = ptH / d.points.length;
+
+    d.points.forEach((pt, pi) => {
+      const y = ptY + pi * ptLineH;
+      ctx.fillStyle = d.color; ctx.font = `700 ${xs}px Inter`; ctx.textAlign = 'left';
+      ctx.fillText('•', x0 + 10, y + xs + 1);
+      ctx.fillStyle = '#333'; ctx.font = `500 ${xs}px Inter`;
+      // Wrap long text
+      const maxTxtW = cardW - 28;
+      const txt = pt;
+      if (ctx.measureText(txt).width > maxTxtW) {
+        // Simple line break
+        const words = txt.split(' ');
+        let line = '', lineNum = 0;
+        for (const word of words) {
+          const test = line ? line + ' ' + word : word;
+          if (ctx.measureText(test).width > maxTxtW && line) {
+            ctx.fillText(line, x0 + 10 + xs * 0.7, y + xs + 1 + lineNum * (xs + 1));
+            line = word; lineNum++;
+          } else { line = test; }
+        }
+        if (line) ctx.fillText(line, x0 + 10 + xs * 0.7, y + xs + 1 + lineNum * (xs + 1));
+      } else {
+        ctx.fillText(txt, x0 + 10 + xs * 0.7, y + xs + 1);
+      }
+    });
+  });
+
+  // ── Bottom: Result summary banner ──
+  const bannerY = cardY + cardH + 10;
+  const bannerH = h - bannerY - 4;
+
+  ctx.fillStyle = '#f0f9ff';
+  roundRect(ctx, pad, bannerY, w - pad * 2, bannerH, 10); ctx.fill();
+  ctx.strokeStyle = '#bae6fd'; ctx.lineWidth = 1.5;
+  roundRect(ctx, pad, bannerY, w - pad * 2, bannerH, 10); ctx.stroke();
+
+  // 4-column key facts
+  const facts = [
+    { label: 'Cooling rate', value: '>10⁴ K/s', color: '#dc2626' },
+    { label: 'Ice thickness', value: '30–80 nm', color: '#f59e0b' },
+    { label: 'Cryogen', value: 'Liquid ethane −183°C', color: '#2563eb' },
+    { label: 'Result', value: 'Vitreous (amorphous) ice', color: '#059669' },
+  ];
+
+  const fColW = (w - pad * 2) / facts.length;
+  facts.forEach((f, fi) => {
+    const fx = pad + fColW * (fi + 0.5);
+    ctx.fillStyle = '#475569'; ctx.font = `600 ${sm}px Inter`; ctx.textAlign = 'center';
+    ctx.fillText(f.label, fx, bannerY + bannerH * 0.38);
+    ctx.fillStyle = f.color; ctx.font = `800 ${md}px Inter`;
+    ctx.fillText(f.value, fx, bannerY + bannerH * 0.75);
+  });
+}
+
+function drawMiniDiagram(ctx, type, x, y, w, h, color) {
+  const cx = x + w / 2, cy = y + h / 2;
+
+  if (type === 'glow') {
+    // Grid with plasma arrows
+    ctx.fillStyle = '#e0e7ff'; ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 1.5;
+    const gridR = Math.min(w * 0.18, h * 0.35);
+    ctx.beginPath(); ctx.arc(cx, cy, gridR, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    // Plasma arrows pointing at grid
+    ctx.strokeStyle = color; ctx.lineWidth = 1.5;
+    for (let a = 0; a < 6; a++) {
+      const ang = (a / 6) * Math.PI * 2;
+      const r1 = gridR + 8, r2 = gridR + 20;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(ang) * r2, cy + Math.sin(ang) * r2);
+      ctx.lineTo(cx + Math.cos(ang) * r1, cy + Math.sin(ang) * r1);
+      ctx.stroke();
+      // Arrowhead
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(cx + Math.cos(ang) * r1, cy + Math.sin(ang) * r1, 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.fillStyle = '#64748b'; ctx.font = `600 ${F(h, 'xs')}px Inter`; ctx.textAlign = 'center';
+    ctx.fillText('Plasma', cx, y + h - 3);
+  } else if (type === 'apply') {
+    // Pipette dropping onto grid
+    const gridR = Math.min(w * 0.18, h * 0.28);
+    const gridY = cy + h * 0.15;
+    ctx.fillStyle = '#e0e7ff'; ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(cx, gridY, gridR, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    // Pipette
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillRect(cx - 3, y + 2, 6, h * 0.35);
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(cx, y + h * 0.35 + 6, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#64748b'; ctx.font = `600 ${F(h, 'xs')}px Inter`; ctx.textAlign = 'center';
+    ctx.fillText('3–4 μL', cx, y + h - 3);
+  } else if (type === 'blot') {
+    // Filter paper pressing grid
+    const gridR = Math.min(w * 0.18, h * 0.2);
+    const gridY = cy;
+    ctx.fillStyle = '#e0e7ff'; ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(cx, gridY, gridR, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    // Filter papers
+    ctx.fillStyle = '#fde68a'; ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 1;
+    roundRect(ctx, cx - w * 0.38, gridY - gridR * 0.6, w * 0.2, gridR * 1.2, 3); ctx.fill(); ctx.stroke();
+    roundRect(ctx, cx + w * 0.18, gridY - gridR * 0.6, w * 0.2, gridR * 1.2, 3); ctx.fill(); ctx.stroke();
+    // Arrows
+    ctx.strokeStyle = color; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(cx - w * 0.18, gridY); ctx.lineTo(cx - gridR - 4, gridY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx + w * 0.18, gridY); ctx.lineTo(cx + gridR + 4, gridY); ctx.stroke();
+    ctx.fillStyle = '#64748b'; ctx.font = `600 ${F(h, 'xs')}px Inter`; ctx.textAlign = 'center';
+    ctx.fillText('Filter paper', cx, y + h - 3);
+  } else if (type === 'plunge') {
+    // Downward arrow into liquid
+    const liqY = cy + h * 0.1;
+    // Liquid ethane
+    ctx.fillStyle = '#fee2e2';
+    roundRect(ctx, x + w * 0.1, liqY, w * 0.8, h * 0.35, 4); ctx.fill();
+    ctx.strokeStyle = '#fca5a5'; ctx.lineWidth = 1;
+    roundRect(ctx, x + w * 0.1, liqY, w * 0.8, h * 0.35, 4); ctx.stroke();
+    // Grid going down
+    ctx.fillStyle = '#e0e7ff'; ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 1;
+    const gR = Math.min(w * 0.08, h * 0.12);
+    ctx.beginPath(); ctx.arc(cx, liqY + h * 0.17, gR, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    // Arrow
+    ctx.strokeStyle = color; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(cx, y + 4); ctx.lineTo(cx, liqY - 2); ctx.stroke();
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.moveTo(cx, liqY - 2); ctx.lineTo(cx - 4, liqY - 9); ctx.lineTo(cx + 4, liqY - 9); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#64748b'; ctx.font = `600 ${F(h, 'xs')}px Inter`; ctx.textAlign = 'center';
+    ctx.fillText('Liquid ethane', cx, y + h - 3);
+  }
+}
+
+window.addEventListener('DOMContentLoaded', draw);
+window.addEventListener('resize', () => {
+  clearTimeout(window._rt);
+  window._rt = setTimeout(draw, 150);
+});
+</script>
+</body>
+</html>

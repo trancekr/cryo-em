@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conformational Variability</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(22px, 2.8vh, 36px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(11px, 1.3vh, 17px); color: #777; margin-top: 2px; font-weight: 500; }
+.sec-canvas { flex: 1; min-height: 0; padding: clamp(4px, 0.5vh, 8px) 0; }
+.sec-canvas canvas { display: block; width: 100%; height: 100%; }
+.refs { flex-shrink: 0; font-size: clamp(8px, 0.9vh, 11px); color: #aaa; text-align: center; padding: 2px 8px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="./">&larr; Home</a>
+    <h1>Conformational Variability</h1>
+    <p>Resolving multiple structural states from heterogeneous cryo-EM datasets</p>
+  </div>
+  <div class="sec-canvas"><canvas id="cv"></canvas></div>
+  <div class="refs">Scheres, Methods Enzymol (2016) &middot; Punjani et al., Nat Methods (2017) &middot; Frank, Three-Dimensional Electron Microscopy (2006)</div>
+</div>
+
+<script>
+function setupCanvas(id) {
+    const c = document.getElementById(id);
+    const rect = c.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    c.width = Math.round(rect.width * dpr);
+    c.height = Math.round(rect.height * dpr);
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: rect.width, h: rect.height };
+}
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    if (Array.isArray(r)) { ctx.moveTo(x+r[0],y); ctx.arcTo(x+w,y,x+w,y+h,r[1]); ctx.arcTo(x+w,y+h,x,y+h,r[2]); ctx.arcTo(x,y+h,x,y,r[3]); ctx.arcTo(x,y,x+w,y,r[0]); }
+    else { ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+r,r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r); ctx.arcTo(x,y+h,x,y+h-r,r); ctx.arcTo(x,y,x+r,y,r); }
+    ctx.closePath();
+}
+function mulberry32(a) {
+    return function() { a |= 0; a = a + 0x6D2B79F5 | 0;
+    var t = Math.imul(a ^ a >>> 15, 1 | a); t ^= t + Math.imul(t ^ t >>> 7, 61 | t);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+}
+
+// === Heterogeneity Problem & Classification — Animated ===
+let confAnimId = null;
+let confStart = null;
+function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+function draw(id) {
+    if (confAnimId) cancelAnimationFrame(confAnimId);
+    confStart = performance.now();
+    animateConf(id);
+}
+
+function animateConf(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 1050, h / 490);
+    const pad = 12 * s;
+    const elapsed = ((performance.now() - confStart) / 1000) % 7;
+
+    // Animation interpolation: 0 = mixed, 1 = sorted by class
+    let t;
+    if (elapsed < 1.5) t = 0;                                        // hold mixed
+    else if (elapsed < 3.5) t = easeOutCubic((elapsed - 1.5) / 2);   // sort
+    else if (elapsed < 5.5) t = 1;                                    // hold sorted
+    else t = 1 - easeOutCubic((elapsed - 5.5) / 1.5);                // unsort
+
+    // Three zones: Mixed Particles | Classification | Separated Classes
+    const zoneW = (w - pad * 4) / 3;
+    const zones = [
+        { x: pad, title: 'Mixed Dataset', color: '#ef4444', sub: 'Heterogeneous particles' },
+        { x: pad * 2 + zoneW, title: '3D Classification', color: '#8b5cf6', sub: 'Separate conformational states' },
+        { x: pad * 3 + zoneW * 2, title: 'Resolved Classes', color: '#10b981', sub: 'Homogeneous subsets' },
+    ];
+
+    for (const z of zones) {
+        ctx.fillStyle = '#fff';
+        roundRect(ctx, z.x, pad, zoneW, h - pad * 2, 10);
+        ctx.fill();
+        ctx.strokeStyle = z.color + '40';
+        ctx.lineWidth = 1.5;
+        roundRect(ctx, z.x, pad, zoneW, h - pad * 2, 10);
+        ctx.stroke();
+        ctx.fillStyle = z.color;
+        roundRect(ctx, z.x, pad, zoneW, 4, [10, 10, 0, 0]);
+        ctx.fill();
+
+        ctx.font = `bold ${Math.round(13 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = z.color;
+        ctx.textAlign = 'center';
+        ctx.fillText(z.title, z.x + zoneW / 2, pad + 22 * s);
+        ctx.font = `${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#999';
+        ctx.fillText(z.sub, z.x + zoneW / 2, pad + 36 * s);
+    }
+
+    // Zone 1: Animated particles — sort from mixed → grouped by class
+    const z1 = zones[0];
+    const rng = mulberry32(42);
+    const pInset = 16 * s;
+    const particleArea = { x: z1.x + pInset, y: pad + 48 * s, w: zoneW - pInset * 2, h: h - pad * 2 - 68 * s };
+    const pColors = ['#ef4444', '#3b82f6', '#10b981'];
+    const shapes = ['circle', 'square', 'triangle'];
+
+    // Generate deterministic particle data
+    const ptcls = [];
+    for (let i = 0; i < 45; i++) {
+        const rx = rng(), ry = rng();
+        const ci = Math.floor(rng() * 3);
+        const sz = (5 + rng() * 4) * s;
+        ptcls.push({ ci, sz, rx, ry, sx: 0, sy: 0 });
+    }
+
+    // Compute sorted target positions (3 vertical columns by class)
+    const grps = [[], [], []];
+    ptcls.forEach((p, idx) => grps[p.ci].push(idx));
+    for (let g = 0; g < 3; g++) {
+        const ids = grps[g];
+        const cols = Math.min(4, Math.ceil(Math.sqrt(ids.length)));
+        const rows = Math.ceil(ids.length / cols);
+        ids.forEach((idx, j) => {
+            ptcls[idx].sx = (g + (j % cols + 0.5) / cols) / 3;
+            ptcls[idx].sy = (Math.floor(j / cols) + 0.5) / rows;
+        });
+    }
+
+    // Draw particles with interpolated positions
+    for (const p of ptcls) {
+        const nx = p.rx + (p.sx - p.rx) * t;
+        const ny = p.ry + (p.sy - p.ry) * t;
+        const px = particleArea.x + pInset / 2 + nx * (particleArea.w - pInset);
+        const py = particleArea.y + pInset / 2 + ny * (particleArea.h - pInset);
+        ctx.fillStyle = pColors[p.ci] + '70';
+        ctx.strokeStyle = pColors[p.ci] + 'bb';
+        ctx.lineWidth = 1.2;
+        if (shapes[p.ci] === 'circle') {
+            ctx.beginPath(); ctx.arc(px, py, p.sz, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        } else if (shapes[p.ci] === 'square') {
+            ctx.fillRect(px - p.sz, py - p.sz, p.sz * 2, p.sz * 2);
+            ctx.strokeRect(px - p.sz, py - p.sz, p.sz * 2, p.sz * 2);
+        } else {
+            ctx.beginPath(); ctx.moveTo(px, py - p.sz); ctx.lineTo(px + p.sz, py + p.sz); ctx.lineTo(px - p.sz, py + p.sz); ctx.closePath(); ctx.fill(); ctx.stroke();
+        }
+    }
+
+    // Show colored group backgrounds + dividers when sorted
+    if (t > 0.3) {
+        const sortAlpha = Math.min((t - 0.3) / 0.4, 1);
+        const groupW = particleArea.w / 3;
+        // Colored backgrounds for each group
+        ctx.globalAlpha = sortAlpha * 0.12;
+        for (let g = 0; g < 3; g++) {
+            ctx.fillStyle = pColors[g];
+            roundRect(ctx, particleArea.x + g * groupW + 2, particleArea.y + 2, groupW - 4, particleArea.h - 4, 6);
+            ctx.fill();
+        }
+        // Divider lines
+        ctx.globalAlpha = sortAlpha * 0.5;
+        ctx.setLineDash([4, 3]);
+        ctx.strokeStyle = '#aaa';
+        ctx.lineWidth = 1;
+        for (let g = 1; g < 3; g++) {
+            const dx = particleArea.x + groupW * g;
+            ctx.beginPath(); ctx.moveTo(dx, particleArea.y); ctx.lineTo(dx, particleArea.y + particleArea.h); ctx.stroke();
+        }
+        ctx.setLineDash([]);
+        // Group labels
+        ctx.globalAlpha = sortAlpha;
+        ctx.font = `bold ${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.textAlign = 'center';
+        const gLabels = ['Class 1', 'Class 2', 'Class 3'];
+        for (let g = 0; g < 3; g++) {
+            ctx.fillStyle = pColors[g];
+            ctx.fillText(gLabels[g], particleArea.x + groupW * (g + 0.5), particleArea.y + particleArea.h - 6 * s);
+        }
+        ctx.globalAlpha = 1;
+    }
+
+    // Zone 2: Classification process
+    const z2 = zones[1];
+    const classY = pad + 50 * s;
+    const classH = h - pad * 2 - 60 * s;
+
+    // Algorithm box
+    const algoH = classH * 0.3;
+    ctx.fillStyle = '#8b5cf6' + '10';
+    roundRect(ctx, z2.x + 15 * s, classY, zoneW - 30 * s, algoH, 8);
+    ctx.fill();
+    ctx.strokeStyle = '#8b5cf6' + '60';
+    ctx.lineWidth = 1;
+    roundRect(ctx, z2.x + 15 * s, classY, zoneW - 30 * s, algoH, 8);
+    ctx.stroke();
+
+    ctx.font = `bold ${Math.round(11 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#8b5cf6';
+    ctx.textAlign = 'center';
+    ctx.fillText('Maximum Likelihood', z2.x + zoneW / 2, classY + algoH * 0.35);
+    ctx.font = `${Math.round(9 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#666';
+    ctx.fillText('Expectation-Maximization', z2.x + zoneW / 2, classY + algoH * 0.6);
+    ctx.fillText('RELION / cryoSPARC', z2.x + zoneW / 2, classY + algoH * 0.82);
+
+    // Arrow down
+    const arrowY1 = classY + algoH + 8 * s;
+    const arrowY2 = arrowY1 + 20 * s;
+    ctx.strokeStyle = '#8b5cf6';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(z2.x + zoneW / 2, arrowY1); ctx.lineTo(z2.x + zoneW / 2, arrowY2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(z2.x + zoneW / 2 - 5 * s, arrowY2 - 6 * s); ctx.lineTo(z2.x + zoneW / 2, arrowY2); ctx.lineTo(z2.x + zoneW / 2 + 5 * s, arrowY2 - 6 * s); ctx.stroke();
+
+    // Sorting illustration: particles going into 3 bins
+    const binY = arrowY2 + 10 * s;
+    const binH = classH - (binY - classY) - 10 * s;
+    const binW = (zoneW - 50 * s) / 3;
+    const binColors = ['#ef4444', '#3b82f6', '#10b981'];
+    const binLabels = ['Class 1', 'Class 2', 'Class 3'];
+
+    for (let i = 0; i < 3; i++) {
+        const bx = z2.x + 15 * s + i * (binW + 10 * s);
+        ctx.fillStyle = binColors[i] + '15';
+        roundRect(ctx, bx, binY, binW, binH, 6);
+        ctx.fill();
+        ctx.strokeStyle = binColors[i] + '60';
+        ctx.lineWidth = 1;
+        roundRect(ctx, bx, binY, binW, binH, 6);
+        ctx.stroke();
+
+        ctx.font = `bold ${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = binColors[i];
+        ctx.textAlign = 'center';
+        ctx.fillText(binLabels[i], bx + binW / 2, binY + 14 * s);
+
+        // Mini particles in each bin
+        const rng2 = mulberry32(100 + i);
+        for (let j = 0; j < 8; j++) {
+            const ppx = bx + 8 * s + rng2() * (binW - 16 * s);
+            const ppy = binY + 22 * s + rng2() * (binH - 32 * s);
+            const psz = 4 * s;
+            ctx.fillStyle = binColors[i] + '50';
+            if (i === 0) { ctx.beginPath(); ctx.arc(ppx, ppy, psz, 0, Math.PI * 2); ctx.fill(); }
+            else if (i === 1) { ctx.fillRect(ppx - psz, ppy - psz, psz * 2, psz * 2); }
+            else { ctx.beginPath(); ctx.moveTo(ppx, ppy - psz); ctx.lineTo(ppx + psz, ppy + psz); ctx.lineTo(ppx - psz, ppy + psz); ctx.closePath(); ctx.fill(); }
+        }
+    }
+
+    // Zone 3: Resolved classes — 3 protein-like blobs
+    const z3 = zones[2];
+    const resY = pad + 50 * s;
+    const resH = (h - pad * 2 - 60 * s) / 3;
+    const classNames = ['Open State', 'Intermediate', 'Closed State'];
+    const classPcts = ['35%', '40%', '25%'];
+    const classColors = ['#ef4444', '#3b82f6', '#10b981'];
+
+    for (let i = 0; i < 3; i++) {
+        const ry = resY + i * (resH + 4 * s);
+        const rx = z3.x + 15 * s;
+        const rw = zoneW - 30 * s;
+        const rh = resH - 4 * s;
+
+        ctx.fillStyle = classColors[i] + '08';
+        roundRect(ctx, rx, ry, rw, rh, 8);
+        ctx.fill();
+        ctx.strokeStyle = classColors[i] + '30';
+        ctx.lineWidth = 1;
+        roundRect(ctx, rx, ry, rw, rh, 8);
+        ctx.stroke();
+
+        // Draw simplified protein shape
+        const pcx = rx + rh * 0.5;
+        const pcy = ry + rh * 0.5;
+        const pr = rh * 0.32;
+
+        ctx.fillStyle = classColors[i] + '25';
+        ctx.strokeStyle = classColors[i] + '70';
+        ctx.lineWidth = 2;
+
+        ctx.beginPath();
+        if (i === 0) {
+            // Open state - wide shape
+            ctx.ellipse(pcx, pcy, pr * 1.4, pr * 0.7, 0, 0, Math.PI * 2);
+            // Gap in middle
+        } else if (i === 1) {
+            // Intermediate
+            ctx.ellipse(pcx, pcy, pr * 1.1, pr * 0.9, Math.PI / 6, 0, Math.PI * 2);
+        } else {
+            // Closed - compact
+            ctx.arc(pcx, pcy, pr, 0, Math.PI * 2);
+        }
+        ctx.fill();
+        ctx.stroke();
+
+        // Domain lobes
+        if (i === 0) {
+            ctx.fillStyle = classColors[i] + '30';
+            ctx.beginPath(); ctx.arc(pcx - pr * 0.9, pcy, pr * 0.45, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(pcx + pr * 0.9, pcy, pr * 0.45, 0, Math.PI * 2); ctx.fill();
+        } else if (i === 1) {
+            ctx.fillStyle = classColors[i] + '30';
+            ctx.beginPath(); ctx.arc(pcx - pr * 0.5, pcy - pr * 0.2, pr * 0.4, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(pcx + pr * 0.5, pcy + pr * 0.2, pr * 0.4, 0, Math.PI * 2); ctx.fill();
+        } else {
+            ctx.fillStyle = classColors[i] + '30';
+            ctx.beginPath(); ctx.arc(pcx, pcy - pr * 0.3, pr * 0.4, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(pcx, pcy + pr * 0.3, pr * 0.4, 0, Math.PI * 2); ctx.fill();
+        }
+
+        // Labels
+        const lx = pcx + rh * 0.5;
+        ctx.font = `bold ${Math.round(11 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = classColors[i];
+        ctx.textAlign = 'left';
+        ctx.fillText(classNames[i], lx, pcy - 6 * s);
+        ctx.font = `${Math.round(9.5 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#888';
+        ctx.fillText(classPcts[i] + ' of particles', lx, pcy + 8 * s);
+    }
+
+    // Arrows between zones
+    const arrowZones = [
+        { x1: z1.x + zoneW + 4 * s, x2: z2.x - 4 * s },
+        { x1: z2.x + zoneW + 4 * s, x2: z3.x - 4 * s },
+    ];
+    for (const az of arrowZones) {
+        const ay = h / 2;
+        ctx.strokeStyle = '#bbb';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(az.x1, ay); ctx.lineTo(az.x2, ay); ctx.stroke();
+        ctx.fillStyle = '#bbb';
+        ctx.beginPath(); ctx.moveTo(az.x2, ay); ctx.lineTo(az.x2 - 8 * s, ay - 5 * s); ctx.lineTo(az.x2 - 8 * s, ay + 5 * s); ctx.closePath(); ctx.fill();
+    }
+
+    confAnimId = requestAnimationFrame(() => animateConf(id));
+}
+
+function renderAll() { draw('cv'); }
+window.addEventListener('DOMContentLoaded', renderAll);
+window.addEventListener('resize', () => { clearTimeout(window._rt); window._rt = setTimeout(renderAll, 150); });
+</script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blotting & Environmental Parameters</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(24px, 3vh, 38px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(12px, 1.4vh, 18px); color: #777; margin-top: 2px; font-weight: 500; }
+
+.canvas-wrap {
+  flex: 1; min-height: 0;
+  background: #fff;
+  border: 2px solid #e0e0e8;
+  border-radius: 14px;
+  overflow: hidden;
+  margin: clamp(4px, 0.5vh, 8px) 0;
+}
+.canvas-wrap canvas { display: block; width: 100%; height: 100%; }
+
+.footer {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 2px 0;
+  font-size: clamp(9px, 1vh, 12px);
+  color: #aaa;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="./">&larr; Home</a>
+    <h1>Blotting &amp; Environmental Parameters</h1>
+    <p>Controlling ice thickness through blotting conditions and chamber environment</p>
+  </div>
+  <div class="canvas-wrap"><canvas id="cv"></canvas></div>
+  <div class="footer">
+    Grassucci et al. (2007) Nat Protoc &middot; Passmore &amp; Russo (2016) Methods Enzymol
+  </div>
+</div>
+
+<script>
+const dpr = window.devicePixelRatio || 1;
+
+function initCanvas(id) {
+  const c = document.getElementById(id);
+  const p = c.parentElement;
+  const w = p.clientWidth, h = p.clientHeight;
+  c.width = w * dpr; c.height = h * dpr;
+  const ctx = c.getContext('2d');
+  ctx.scale(dpr, dpr);
+  return { ctx, w, h };
+}
+
+function F(h, level) {
+  switch(level) {
+    case 'xl': return Math.round(Math.min(Math.max(h * 0.055, 20), 40));
+    case 'lg': return Math.round(Math.min(Math.max(h * 0.042, 17), 32));
+    case 'md': return Math.round(Math.min(Math.max(h * 0.034, 15), 26));
+    case 'sm': return Math.round(Math.min(Math.max(h * 0.028, 13), 22));
+    case 'xs': return Math.round(Math.min(Math.max(h * 0.024, 12), 18));
+  }
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  if (Array.isArray(r)) {
+    ctx.beginPath();
+    ctx.moveTo(x + r[0], y); ctx.lineTo(x + w - r[1], y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r[1]);
+    ctx.lineTo(x + w, y + h - r[2]);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r[2], y + h);
+    ctx.lineTo(x + r[3], y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r[3]);
+    ctx.lineTo(x, y + r[0]);
+    ctx.quadraticCurveTo(x, y, x + r[0], y);
+    ctx.closePath();
+  } else {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+}
+
+function draw() {
+  const { ctx, w, h } = initCanvas('cv');
+  const xl = F(h, 'xl'), lg = F(h, 'lg'), md = F(h, 'md'), sm = F(h, 'sm'), xs = F(h, 'xs');
+  const pad = Math.max(w * 0.025, 16);
+  const colGap = 20;
+  const colW = (w - pad * 2 - colGap) / 2;
+
+  // ── Left Column: Blotting Parameters ──
+  const leftX = pad;
+
+  ctx.fillStyle = '#10b981'; ctx.font = `800 ${lg}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Blotting Parameters', leftX + colW / 2, pad + lg);
+
+  const blotParams = [
+    { param: 'Blot Force', range: '0–20', color: '#10b981',
+      desc: 'Higher force = thinner ice. Start at ~10.',
+      tip: 'Too high → particles excluded' },
+    { param: 'Blot Time', range: '1–6 sec', color: '#059669',
+      desc: 'Longer = more liquid removed.',
+      tip: 'Too long → dry grid, no ice' },
+    { param: 'Wait Time', range: '0–30 sec', color: '#047857',
+      desc: 'Delay before blot. Sample spreads.',
+      tip: 'Useful for slow-binding samples' },
+    { param: 'Drain Time', range: '0–2 sec', color: '#065f46',
+      desc: 'Pause after blot, before plunge.',
+      tip: 'Too long → sample dries out' },
+    { param: 'Blot Mode', range: '1-side / 2-side', color: '#064e3b',
+      desc: '1-side preserves sample layer.',
+      tip: 'Back-blotting popular for GO grids' },
+  ];
+
+  const paramY = pad + lg + 14;
+  const paramH = h * 0.62;
+  const pItemH = paramH / blotParams.length;
+
+  blotParams.forEach((bp, bi) => {
+    const y = paramY + bi * pItemH;
+    const cardH = pItemH - 6;
+
+    ctx.fillStyle = bp.color + '08';
+    roundRect(ctx, leftX, y, colW, cardH, 8); ctx.fill();
+    ctx.strokeStyle = bp.color + '30'; ctx.lineWidth = 1.5;
+    roundRect(ctx, leftX, y, colW, cardH, 8); ctx.stroke();
+
+    // Left color bar
+    ctx.fillStyle = bp.color;
+    roundRect(ctx, leftX, y, 5, cardH, [8, 0, 0, 8]); ctx.fill();
+
+    // Parameter name + range (same line)
+    ctx.fillStyle = bp.color; ctx.font = `800 ${sm}px Inter`; ctx.textAlign = 'left';
+    ctx.fillText(bp.param, leftX + 14, y + sm + 4);
+    ctx.fillStyle = '#333'; ctx.font = `600 ${sm}px Inter`; ctx.textAlign = 'right';
+    ctx.fillText(bp.range, leftX + colW - 10, y + sm + 4);
+
+    // Description
+    ctx.fillStyle = '#555'; ctx.font = `500 ${xs}px Inter`; ctx.textAlign = 'left';
+    ctx.fillText(bp.desc, leftX + 14, y + sm + xs + 8);
+
+    // Tip
+    ctx.fillStyle = '#888'; ctx.font = `italic 500 ${xs}px Inter`;
+    ctx.fillText(bp.tip, leftX + 14, y + sm + xs * 2 + 12);
+  });
+
+  // ── Right Column: Environmental Conditions ──
+  const rightX = leftX + colW + colGap;
+
+  ctx.fillStyle = '#3b82f6'; ctx.font = `800 ${lg}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Environmental Conditions', rightX + colW / 2, pad + lg);
+
+  const envParams = [
+    { param: 'Humidity', range: '80–100%', color: '#3b82f6',
+      desc: 'Prevents pre-evaporation of sample.',
+      tip: '100% recommended for most uses' },
+    { param: 'Temperature', range: '4°C or 22°C', color: '#2563eb',
+      desc: '4°C for thermolabile samples.',
+      tip: 'Check sample stability at temp' },
+    { param: 'Chamber', range: 'Enclosed', color: '#1d4ed8',
+      desc: 'Vitrobot, GP2, or manual plunger.',
+      tip: 'Manual: harder to reproduce' },
+    { param: 'Liquid Ethane', range: '−183 to −170°C', color: '#1e40af',
+      desc: 'Cryogen, highest cooling rate.',
+      tip: 'Keep topped up with LN₂' },
+    { param: 'Post-Plunge', range: 'Transfer in LN₂', color: '#1e3a8a',
+      desc: 'Keep below −140°C (devitrification).',
+      tip: 'Never let grid warm above −140°C' },
+  ];
+
+  envParams.forEach((ep, ei) => {
+    const y = paramY + ei * pItemH;
+    const cardH = pItemH - 6;
+
+    ctx.fillStyle = ep.color + '06';
+    roundRect(ctx, rightX, y, colW, cardH, 8); ctx.fill();
+    ctx.strokeStyle = ep.color + '30'; ctx.lineWidth = 1.5;
+    roundRect(ctx, rightX, y, colW, cardH, 8); ctx.stroke();
+
+    ctx.fillStyle = ep.color;
+    roundRect(ctx, rightX, y, 5, cardH, [8, 0, 0, 8]); ctx.fill();
+
+    ctx.fillStyle = ep.color; ctx.font = `800 ${sm}px Inter`; ctx.textAlign = 'left';
+    ctx.fillText(ep.param, rightX + 14, y + sm + 4);
+    ctx.fillStyle = '#333'; ctx.font = `600 ${sm}px Inter`; ctx.textAlign = 'right';
+    ctx.fillText(ep.range, rightX + colW - 10, y + sm + 4);
+
+    ctx.fillStyle = '#555'; ctx.font = `500 ${xs}px Inter`; ctx.textAlign = 'left';
+    ctx.fillText(ep.desc, rightX + 14, y + sm + xs + 8);
+
+    ctx.fillStyle = '#888'; ctx.font = `italic 500 ${xs}px Inter`;
+    ctx.fillText(ep.tip, rightX + 14, y + sm + xs * 2 + 12);
+  });
+
+  // ── Bottom: Optimization Tips ──
+  const tipY = paramY + paramH + 10;
+  const tipH = h - tipY - 4;
+
+  ctx.fillStyle = '#f0fdf4';
+  roundRect(ctx, pad, tipY, w - pad * 2, tipH, 10); ctx.fill();
+  ctx.strokeStyle = '#bbf7d0'; ctx.lineWidth = 1.5;
+  roundRect(ctx, pad, tipY, w - pad * 2, tipH, 10); ctx.stroke();
+
+  ctx.fillStyle = '#166534'; ctx.font = `800 ${md}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Optimization Troubleshooting', w / 2, tipY + md + 4);
+
+  const tips = [
+    { problem: 'Start with:', solution: 'Force 10, time 3 s, humidity 100%, 4°C' },
+    { problem: 'Ice too thick?', solution: '↑ Force or ↑ blot time' },
+    { problem: 'Ice too thin?', solution: '↓ Force, ↓ time, ↑ concentration' },
+    { problem: 'Preferred orientation?', solution: 'Tilt grid, add surfactant, support film' },
+  ];
+
+  const tipItemY = tipY + md + 10;
+  const tipLineH = (tipH - md - 14) / 2;
+
+  tips.forEach((tip, ti) => {
+    const col = ti % 2;
+    const row = Math.floor(ti / 2);
+    const tipColW = (w - pad * 2 - 20) / 2;
+    const tx = pad + 14 + col * (tipColW + 20);
+    const ty = tipItemY + row * tipLineH;
+
+    ctx.fillStyle = '#166534'; ctx.font = `700 ${sm}px Inter`; ctx.textAlign = 'left';
+    ctx.fillText(tip.problem, tx, ty + sm);
+    const labelW = ctx.measureText(tip.problem).width;
+    ctx.fillStyle = '#333'; ctx.font = `500 ${sm}px Inter`;
+    ctx.fillText(tip.solution, tx + labelW + 8, ty + sm);
+  });
+}
+
+window.addEventListener('DOMContentLoaded', draw);
+window.addEventListener('resize', () => {
+  clearTimeout(window._rt);
+  window._rt = setTimeout(draw, 150);
+});
+</script>
+</body>
+</html>

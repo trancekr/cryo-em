@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Effect of Objective Lens Strength on TEM Image Formation</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 6px 0 8px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(28px, 3.2vh, 42px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(14px, 1.6vh, 20px); color: #777; margin-top: 2px; font-weight: 500; }
+
+.columns {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+}
+
+.col {
+  background: #fff;
+  border: 2px solid #e0e0e8;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: flex; flex-direction: column;
+  min-height: 0; overflow: hidden;
+}
+
+.col-title {
+  flex-shrink: 0; text-align: center;
+  padding: clamp(8px, 1vh, 14px) 12px;
+  font-size: clamp(20px, 2.4vh, 30px); font-weight: 900; letter-spacing: 2px;
+  border-bottom: 3px solid;
+  display: flex; justify-content: center; align-items: baseline; gap: 14px;
+}
+.col-title.over  { color: #dc2626; background: #fef2f2; border-color: #fca5a5; }
+.col-title.focus { color: #059669; background: #ecfdf5; border-color: #6ee7b7; }
+.col-title.under { color: #2563eb; background: #eff6ff; border-color: #93c5fd; }
+
+.ray-wrap { flex: 1; min-height: 0; padding: 4px; }
+.ray-wrap canvas { display: block; width: 100%; height: 100%; }
+
+/* Fresnel + key points in a bottom bar */
+.bottom-bar {
+  flex-shrink: 0;
+  display: flex; align-items: flex-start; gap: clamp(10px, 1.5vw, 20px);
+  padding: clamp(8px, 1.2vh, 16px) clamp(10px, 1.5vw, 20px);
+  border-top: 2px solid #eee;
+  background: #fafafe;
+  /* min-height set by JS to equalize across columns */
+}
+.bottom-bar canvas {
+  width: clamp(120px, 16vh, 200px); height: clamp(120px, 16vh, 200px);
+  border-radius: 8px; border: 2px solid #ddd;
+  flex-shrink: 0;
+}
+.bottom-info { flex: 1; min-width: 0; }
+.bottom-info .fresnel-label { font-size: clamp(15px, 1.8vh, 22px); font-weight: 700; color: #222; margin-bottom: 4px; }
+.bottom-info ul { padding-left: 18px; margin: 0; }
+.bottom-info li { font-size: clamp(14px, 1.6vh, 20px); color: #444; line-height: 1.55; font-weight: 500; }
+.bottom-info .key { font-weight: 800; color: #1a1a2e; }
+
+/* Mobile / narrow screens: preserve full layout, allow scroll + zoom */
+@media (max-width: 960px) {
+  body { height: auto; min-height: 100vh; overflow: auto; }
+  #app { min-width: 960px; height: auto; min-height: 100vh; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="./">&larr; Home</a>
+    <h1>Effect of Objective Lens Strength on TEM Image Formation</h1>
+    <p>&Delta;f = defocus (image plane &harr; detector distance) &middot; BFP = Back Focal Plane</p>
+  </div>
+  <div class="columns">
+    <!-- Overfocus -->
+    <div class="col">
+      <div class="col-title over"><span>OVERFOCUS</span></div>
+      <div class="ray-wrap"><canvas id="ray-over"></canvas></div>
+      <div class="bottom-bar">
+        <canvas id="fresnel-over" width="300" height="300"></canvas>
+        <div class="bottom-info">
+          <div class="fresnel-label">Lens too strong (f&darr;)</div>
+          <ul>
+            <li>Image plane forms <span class="key">above</span> detector</li>
+            <li>Electrons cross over, then diverge at detector</li>
+            <li>Fresnel fringe on <span class="key">outside</span> of edges (bright halo)</li>
+            <li>CTF sign reversal &rarr; contrast inversion</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- In Focus -->
+    <div class="col">
+      <div class="col-title focus"><span>IN FOCUS</span></div>
+      <div class="ray-wrap"><canvas id="ray-focus"></canvas></div>
+      <div class="bottom-bar">
+        <canvas id="fresnel-focus" width="300" height="300"></canvas>
+        <div class="bottom-info">
+          <div class="fresnel-label">Exact focus</div>
+          <ul>
+            <li>Image plane <span class="key">=</span> detector plane</li>
+            <li>Phase objects produce <span class="key">no amplitude contrast</span></li>
+            <li>No Fresnel fringes visible</li>
+            <li>Highest resolution but specimen invisible</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Underfocus -->
+    <div class="col">
+      <div class="col-title under"><span>UNDERFOCUS</span></div>
+      <div class="ray-wrap"><canvas id="ray-under"></canvas></div>
+      <div class="bottom-bar">
+        <canvas id="fresnel-under" width="300" height="300"></canvas>
+        <div class="bottom-info">
+          <div class="fresnel-label">Lens too weak (f&uarr;)</div>
+          <ul>
+            <li>Image plane forms <span class="key">below</span> detector</li>
+            <li>Electrons not yet converged at detector</li>
+            <li>Fresnel fringe on <span class="key">inside</span> of edges (dark halo)</li>
+            <li><span class="key">Standard cryo-EM</span>: 0.5&ndash;2.5 &mu;m underfocus</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="flex-shrink:0;font-size:clamp(8px,0.9vh,11px);color:#aaa;text-align:center;padding:2px 8px;">Williams &amp; Carter, Transmission Electron Microscopy (2009) &middot; Reimer &amp; Kohl, TEM (2008)</div>
+</div>
+
+<script>
+// ====== RESPONSIVE CANVAS SIZING ======
+function initCanvases() {
+    ['ray-over', 'ray-focus', 'ray-under'].forEach(id => {
+        const c = document.getElementById(id);
+        const rect = c.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        c.width = Math.round(rect.width * dpr);
+        c.height = Math.round(rect.height * dpr);
+        c.getContext('2d').scale(dpr, dpr);
+    });
+}
+
+// ====== RAY DIAGRAM ======
+function drawRay(canvasId, state) {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+    const rect = canvas.getBoundingClientRect();
+    const w = rect.width, h = rect.height;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const cx = w / 2;
+
+    const nmMap = { over: -500, focus: 0, under: 1000 };
+    const nm = nmMap[state];
+    const um = nm / 1000;
+
+    // Layout
+    const specY   = h * 0.06;
+    const lensY   = h * 0.30;
+    const bfpBase = h * 0.40;
+    const detY    = h * 0.68;
+    const planeW  = w * 0.42;
+    const lensW   = w * 0.40;
+    const labelX  = cx + planeW / 2 + 10;
+
+    // Image plane positions
+    const imgPlaneMap = { over: detY - h * 0.20, focus: detY, under: detY + h * 0.28 };
+    const imgPlaneY = imgPlaneMap[state];
+
+    const isInFocus = state === 'focus';
+    const isUnder = state === 'under';
+    const isOver = state === 'over';
+    const stateColor = isOver ? '#dc2626' : isUnder ? '#2563eb' : '#059669';
+
+    // Responsive font sizes — scale with canvas width
+    const scale = w / 400;
+    const fLG = Math.round(20 * scale);
+    const fMD = Math.round(17 * scale);
+    const fSM = Math.round(15 * scale);
+    const fXS = Math.round(13 * scale);
+
+    function labelBg(text, x, y, font, color, align) {
+        ctx.font = font;
+        ctx.textAlign = align || 'left';
+        const m = ctx.measureText(text);
+        const pad = 4;
+        const sz = parseInt((font.match(/(\d+)px/) || [])[1]) || fSM;
+        let lx = x;
+        if (align === 'center') lx = x - m.width / 2;
+        else if (align === 'right') lx = x - m.width;
+        ctx.fillStyle = 'rgba(255,255,255,0.92)';
+        ctx.fillRect(lx - pad, y - sz * 0.82, m.width + pad * 2, sz * 1.15);
+        ctx.fillStyle = color;
+        ctx.fillText(text, x, y);
+    }
+
+    // Background
+    ctx.fillStyle = '#fafafa';
+    ctx.fillRect(0, 0, w, h);
+
+    // Zone shading
+    if (isOver) {
+        const g = ctx.createLinearGradient(0, lensY, 0, detY);
+        g.addColorStop(0, 'rgba(220,38,38,0)');
+        g.addColorStop(1, 'rgba(220,38,38,0.04)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, lensY, w, detY - lensY);
+    } else if (isUnder) {
+        const g = ctx.createLinearGradient(0, detY, 0, h);
+        g.addColorStop(0, 'rgba(37,99,235,0.04)');
+        g.addColorStop(1, 'rgba(37,99,235,0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, detY, w, h - detY);
+    }
+
+    // Specimen points & colors
+    const rayColors = ['#dc2626', '#059669', '#2563eb'];
+    const specPts = [-0.18, 0, 0.18];
+
+    // --- Electron Beam (covers full specimen width, 5 arrows) ---
+    const beamTop = 1;
+    const beamHalfW = planeW / 2;
+    const beamGrad = ctx.createLinearGradient(0, beamTop, 0, specY);
+    beamGrad.addColorStop(0, 'rgba(80,110,170,0.15)');
+    beamGrad.addColorStop(1, 'rgba(80,110,170,0.03)');
+    ctx.fillStyle = beamGrad;
+    ctx.fillRect(cx - beamHalfW, beamTop, beamHalfW * 2, specY - beamTop);
+    ctx.strokeStyle = '#999'; ctx.lineWidth = 1.5;
+    for (const frac of [-0.4, -0.2, 0, 0.2, 0.4]) {
+        const bx = cx + frac * beamHalfW;
+        ctx.beginPath(); ctx.moveTo(bx, beamTop + 1); ctx.lineTo(bx, specY - 6); ctx.stroke();
+        ctx.fillStyle = '#888';
+        ctx.beginPath();
+        ctx.moveTo(bx - 3, specY - 9); ctx.lineTo(bx, specY - 1); ctx.lineTo(bx + 3, specY - 9);
+        ctx.fill();
+    }
+    ctx.fillStyle = '#555'; ctx.font = `700 ${fMD}px Inter,sans-serif`; ctx.textAlign = 'left';
+    ctx.fillText('e\u207B', cx + beamHalfW + 6, specY * 0.55);
+
+    // --- Specimen ---
+    ctx.strokeStyle = '#222'; ctx.lineWidth = 3.5;
+    ctx.beginPath(); ctx.moveTo(cx - planeW / 2, specY); ctx.lineTo(cx + planeW / 2, specY); ctx.stroke();
+    for (let i = 0; i < specPts.length; i++) {
+        ctx.fillStyle = rayColors[i];
+        ctx.beginPath(); ctx.arc(cx + specPts[i] * planeW, specY, 6, 0, Math.PI * 2); ctx.fill();
+    }
+    labelBg('Specimen', labelX, specY + fSM * 0.35, `700 ${fSM}px Inter,sans-serif`, '#333');
+
+    // --- Objective Lens ---
+    const lensBodyW = lensW * 0.55;
+    const lensBodyH = h * 0.035;
+    const lensGrad = ctx.createRadialGradient(cx, lensY, 0, cx, lensY, lensBodyW * 0.6);
+    lensGrad.addColorStop(0, 'rgba(160,200,255,0.50)');
+    lensGrad.addColorStop(1, 'rgba(100,150,220,0.30)');
+    ctx.fillStyle = lensGrad;
+    ctx.beginPath();
+    ctx.moveTo(cx - lensBodyW / 2, lensY);
+    ctx.quadraticCurveTo(cx, lensY - lensBodyH, cx + lensBodyW / 2, lensY);
+    ctx.quadraticCurveTo(cx, lensY + lensBodyH, cx - lensBodyW / 2, lensY);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#333'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(cx - lensBodyW / 2, lensY);
+    ctx.quadraticCurveTo(cx, lensY - lensBodyH, cx + lensBodyW / 2, lensY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx + lensBodyW / 2, lensY);
+    ctx.quadraticCurveTo(cx, lensY + lensBodyH, cx - lensBodyW / 2, lensY); ctx.stroke();
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - lensBodyW / 2, lensY); ctx.lineTo(cx - lensW / 2, lensY);
+    ctx.moveTo(cx + lensBodyW / 2, lensY); ctx.lineTo(cx + lensW / 2, lensY);
+    ctx.stroke();
+    ctx.fillStyle = '#333';
+    ctx.beginPath(); ctx.moveTo(cx - 6, lensY - lensBodyH - 8); ctx.lineTo(cx, lensY - lensBodyH); ctx.lineTo(cx + 6, lensY - lensBodyH - 8); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx - 6, lensY + lensBodyH + 8); ctx.lineTo(cx, lensY + lensBodyH); ctx.lineTo(cx + 6, lensY + lensBodyH + 8); ctx.closePath(); ctx.fill();
+    labelBg('Obj. Lens', labelX, lensY + fSM * 0.35, `800 ${fSM}px Inter,sans-serif`, '#333');
+
+    // --- Colored rays with clear refraction ---
+    for (let i = 0; i < specPts.length; i++) {
+        const sx = cx + specPts[i] * planeW;
+        const color = rayColors[i];
+        const targetY = isInFocus ? detY : imgPlaneY;
+        const mag = (targetY - lensY) / (lensY - specY);
+        const ix = cx - specPts[i] * planeW * mag;
+
+        const lensHitFracs = [-0.46, 0.46];
+        const detCrossXs = [];
+
+        for (const frac of lensHitFracs) {
+            const lensHitX = cx + frac * lensW * 0.50;
+
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2.5;
+            ctx.globalAlpha = 0.65;
+            ctx.beginPath();
+            ctx.moveTo(sx, specY + 3);
+            ctx.lineTo(lensHitX, lensY);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(lensHitX, lensY);
+            ctx.lineTo(ix, targetY);
+            ctx.stroke();
+
+            if (!isInFocus && Math.abs(targetY - detY) > 8) {
+                const t = (detY - lensY) / (targetY - lensY);
+                const detCrossX = lensHitX + (ix - lensHitX) * t;
+                detCrossXs.push(detCrossX);
+                ctx.globalAlpha = 0.18;
+                ctx.setLineDash([5, 4]);
+                ctx.beginPath();
+                if (isUnder) { ctx.moveTo(detCrossX, detY); ctx.lineTo(ix, targetY); }
+                else { ctx.moveTo(ix, targetY); ctx.lineTo(detCrossX, detY); }
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.globalAlpha = 0.65;
+            }
+        }
+
+        // Chief ray
+        ctx.strokeStyle = color; ctx.lineWidth = 1.8; ctx.globalAlpha = 0.35;
+        ctx.beginPath(); ctx.moveTo(sx, specY + 3); ctx.lineTo(cx, lensY); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx, lensY); ctx.lineTo(ix, targetY); ctx.stroke();
+        if (!isInFocus && Math.abs(targetY - detY) > 8) {
+            const chiefT = (detY - lensY) / (targetY - lensY);
+            const chiefDetX = cx + (ix - cx) * chiefT;
+            ctx.globalAlpha = 0.12; ctx.setLineDash([5, 4]);
+            ctx.beginPath();
+            if (isUnder) { ctx.moveTo(chiefDetX, detY); ctx.lineTo(ix, targetY); }
+            else { ctx.moveTo(ix, targetY); ctx.lineTo(chiefDetX, detY); }
+            ctx.stroke(); ctx.setLineDash([]);
+        }
+        ctx.globalAlpha = 1.0;
+
+        // Blur disc on detector
+        if (!isInFocus && detCrossXs.length === 2) {
+            const barL = Math.min(detCrossXs[0], detCrossXs[1]);
+            const barR = Math.max(detCrossXs[0], detCrossXs[1]);
+            ctx.fillStyle = color; ctx.globalAlpha = 0.12;
+            ctx.fillRect(barL, detY - 6, barR - barL, 12);
+            ctx.globalAlpha = 0.35; ctx.strokeStyle = color; ctx.lineWidth = 1;
+            ctx.strokeRect(barL, detY - 6, barR - barL, 12);
+            ctx.globalAlpha = 1.0;
+        }
+
+        // Convergence dot
+        if (isInFocus) {
+            ctx.fillStyle = color; ctx.globalAlpha = 0.9;
+            ctx.beginPath(); ctx.arc(ix, detY, 6, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.globalAlpha = 0.25;
+            ctx.beginPath(); ctx.arc(ix, detY, 12, 0, Math.PI * 2); ctx.stroke();
+            ctx.globalAlpha = 1.0;
+        } else {
+            ctx.fillStyle = color; ctx.globalAlpha = 0.85;
+            ctx.beginPath(); ctx.arc(ix, targetY, 5, 0, Math.PI * 2); ctx.fill();
+            ctx.globalAlpha = 1.0;
+        }
+    }
+
+    // --- BFP ---
+    ctx.strokeStyle = '#bbb'; ctx.lineWidth = 1.5; ctx.setLineDash([6, 4]);
+    ctx.beginPath(); ctx.moveTo(cx - planeW * 0.36, bfpBase); ctx.lineTo(cx + planeW * 0.36, bfpBase); ctx.stroke();
+    ctx.setLineDash([]);
+    labelBg('BFP', labelX, bfpBase + fXS * 0.35, `700 ${fXS}px Inter,sans-serif`, '#999');
+
+    // --- Image Plane (defocused) ---
+    if (!isInFocus) {
+        ctx.strokeStyle = stateColor; ctx.lineWidth = 3; ctx.setLineDash([10, 5]);
+        ctx.beginPath();
+        ctx.moveTo(cx - planeW / 2, imgPlaneY);
+        ctx.lineTo(cx + planeW / 2, imgPlaneY);
+        ctx.stroke(); ctx.setLineDash([]);
+        labelBg('Image Plane', labelX, imgPlaneY + fSM * 0.35,
+            `800 ${fSM}px Inter,sans-serif`, stateColor);
+    }
+
+    // --- Detector ---
+    ctx.strokeStyle = '#222'; ctx.lineWidth = 3.5;
+    ctx.beginPath(); ctx.moveTo(cx - planeW / 2, detY); ctx.lineTo(cx + planeW / 2, detY); ctx.stroke();
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(cx - planeW / 2, detY - 8); ctx.lineTo(cx - planeW / 2, detY + 8);
+    ctx.moveTo(cx + planeW / 2, detY - 8); ctx.lineTo(cx + planeW / 2, detY + 8);
+    ctx.stroke();
+
+    if (isInFocus) {
+        labelBg('Detector', labelX, detY + fSM * 0.35, `700 ${fSM}px Inter,sans-serif`, '#333');
+        ctx.fillStyle = '#059669'; ctx.font = `700 ${fXS}px Inter,sans-serif`; ctx.textAlign = 'left';
+        ctx.fillText('= Image Plane', labelX, detY + fSM * 0.35 + fXS * 1.4);
+    } else {
+        labelBg('Detector', labelX, detY + fSM * 0.35, `700 ${fSM}px Inter,sans-serif`, '#333');
+    }
+
+    // --- Δf dimension line (bracket on left, label separated) ---
+    if (!isInFocus) {
+        const topY = Math.min(detY, imgPlaneY);
+        const botY = Math.max(detY, imgPlaneY);
+        const bracketX = cx - planeW / 2 - 14;  // bracket line
+        const midY = (topY + botY) / 2;
+
+        // Vertical bracket line with end caps
+        ctx.strokeStyle = stateColor; ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.moveTo(bracketX, topY); ctx.lineTo(bracketX, botY); ctx.stroke();
+        // Top & bottom horizontal caps
+        ctx.beginPath();
+        ctx.moveTo(bracketX, topY); ctx.lineTo(bracketX + 10, topY);
+        ctx.moveTo(bracketX, botY); ctx.lineTo(bracketX + 10, botY);
+        ctx.stroke();
+
+        // "Δf" label — clearly to the LEFT of the bracket, never overlapping
+        const labelX2 = bracketX - 8;
+        ctx.fillStyle = stateColor;
+        ctx.font = `900 ${fMD}px Inter,sans-serif`;
+        ctx.textAlign = 'right';
+        // White background behind text for clarity
+        const tm = ctx.measureText('\u0394f');
+        ctx.fillStyle = 'rgba(255,255,255,0.92)';
+        ctx.fillRect(labelX2 - tm.width - 4, midY - fMD * 0.5, tm.width + 8, fMD * 1.1);
+        ctx.fillStyle = stateColor;
+        ctx.fillText('\u0394f', labelX2, midY + fMD * 0.35);
+    }
+}
+
+// ====== FRESNEL FRINGE SIMULATION ======
+function drawFresnel(canvasId, state) {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    const cx = w / 2, cy = h / 2;
+    const R = w * 0.30;
+
+    ctx.fillStyle = '#e0e0e0';
+    ctx.fillRect(0, 0, w, h);
+
+    if (state === 'focus') {
+        ctx.fillStyle = '#dcdcdc';
+        ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(180,180,180,0.3)'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+    } else if (state === 'under') {
+        ctx.fillStyle = '#d0d0d0';
+        ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(25,25,25,0.6)'; ctx.lineWidth = 8;
+        ctx.beginPath(); ctx.arc(cx, cy, R - 4, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = 'rgba(40,40,40,0.25)'; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.arc(cx, cy, R - 12, 0, Math.PI * 2); ctx.stroke();
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.55);
+        grad.addColorStop(0, 'rgba(255,255,255,0.25)');
+        grad.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath(); ctx.arc(cx, cy, R * 0.55, 0, Math.PI * 2); ctx.fill();
+    } else {
+        ctx.fillStyle = '#b5b5b5';
+        ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 8;
+        ctx.beginPath(); ctx.arc(cx, cy, R + 6, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.arc(cx, cy, R + 16, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = 'rgba(50,50,50,0.35)'; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(cx, cy, R - 1, 0, Math.PI * 2); ctx.stroke();
+    }
+
+    // No text inside canvas — descriptions are in HTML below
+}
+
+// ====== EQUALIZE BOTTOM BARS ======
+function equalizeBottomBars() {
+    const bars = document.querySelectorAll('.bottom-bar');
+    bars.forEach(b => b.style.minHeight = '');
+    let maxH = 0;
+    bars.forEach(b => { if (b.scrollHeight > maxH) maxH = b.scrollHeight; });
+    bars.forEach(b => b.style.minHeight = maxH + 'px');
+}
+
+// ====== INIT ======
+function renderAll() {
+    initCanvases();
+    drawRay('ray-over', 'over');
+    drawRay('ray-focus', 'focus');
+    drawRay('ray-under', 'under');
+    drawFresnel('fresnel-over', 'over');
+    drawFresnel('fresnel-focus', 'focus');
+    drawFresnel('fresnel-under', 'under');
+    equalizeBottomBars();
+}
+renderAll();
+window.addEventListener('resize', () => { clearTimeout(window._resizeTimer); window._resizeTimer = setTimeout(renderAll, 150); });
+</script>
+</body>
+</html>

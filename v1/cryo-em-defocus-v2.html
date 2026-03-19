@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cryo-EM Defocus Contrast</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background: #0c0c16;
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: #e0e0e8; min-height: 100vh;
+    display: flex; justify-content: center; padding: 20px;
+}
+#app { max-width: 1060px; width: 100%; }
+
+.header { text-align: center; margin-bottom: 24px; }
+.header h1 {
+    font-size: 21px; font-weight: 600; letter-spacing: -0.3px;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.header p { font-size: 12px; color: #555; margin-top: 3px; }
+
+.card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+}
+.card-label {
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 1.2px; color: #666; padding: 10px 14px 4px;
+}
+
+/* === Main layout: 3 columns, images + profiles aligned === */
+.main-grid {
+    display: grid;
+    grid-template-columns: 280px 280px 1fr;
+    grid-template-rows: auto auto;
+    gap: 10px; margin-bottom: 10px;
+}
+.col-obj { grid-column: 1; grid-row: 1 / 3; display: flex; flex-direction: column; gap: 10px; }
+.col-img { grid-column: 2; grid-row: 1 / 3; display: flex; flex-direction: column; gap: 10px; }
+.col-info { grid-column: 3; grid-row: 1 / 3; }
+
+.canvas-wrap canvas { display: block; width: 280px; height: 280px; }
+.profile-wrap canvas { display: block; width: 280px; height: 100px; }
+.profile-wrap .axis { text-align: center; font-size: 9px; color: #444; padding: 2px 0 6px; }
+#defocus-badge {
+    text-align: center; padding: 7px;
+    font-size: 13px; font-weight: 500; color: #a78bfa;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    font-variant-numeric: tabular-nums;
+}
+
+/* === Info panel structured === */
+.info-card { padding: 18px; display: flex; flex-direction: column; height: 100%; }
+.info-stage {
+    display: inline-block; padding: 3px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+    margin-bottom: 12px; width: fit-content;
+}
+.stage-focus { background: rgba(52,211,153,0.15); color: #34d399; }
+.stage-scherzer { background: rgba(251,191,36,0.15); color: #fbbf24; }
+.stage-low { background: rgba(96,165,250,0.15); color: #60a5fa; }
+.stage-mid { background: rgba(167,139,250,0.15); color: #a78bfa; }
+.stage-high { background: rgba(248,113,113,0.15); color: #f87171; }
+.stage-extreme { background: rgba(244,63,94,0.15); color: #f43f5e; }
+.stage-over { background: rgba(148,163,184,0.15); color: #94a3b8; }
+
+.info-title { font-size: 15px; font-weight: 600; color: #ddd; margin-bottom: 10px; line-height: 1.3; }
+.info-observe { font-size: 12px; color: #888; margin-bottom: 12px; line-height: 1.6; }
+.info-observe span { color: #aaa; }
+.info-physics {
+    font-size: 12px; color: #666; line-height: 1.6;
+    border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; margin-top: auto;
+}
+.info-physics b { color: #818cf8; font-weight: 500; }
+.info-stat {
+    display: flex; gap: 12px; margin-top: 12px;
+}
+.info-stat div {
+    flex: 1; background: rgba(255,255,255,0.03);
+    border-radius: 8px; padding: 8px 10px; text-align: center;
+}
+.info-stat .val { font-size: 16px; font-weight: 700; color: #a78bfa; }
+.info-stat .lbl { font-size: 9px; color: #555; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* === CTF === */
+.ctf-row { margin-bottom: 10px; }
+.ctf-row canvas { display: block; width: 100%; height: 75px; }
+.ctf-row .axis { text-align: center; font-size: 9px; color: #444; padding: 2px 0 6px; }
+
+/* === Controls === */
+.controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 14px 18px; }
+.play-btn {
+    width: 40px; height: 40px; border-radius: 50%; border: none;
+    background: linear-gradient(135deg, #60a5fa, #818cf8);
+    color: #fff; font-size: 15px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.15s; box-shadow: 0 2px 12px rgba(96,165,250,0.25);
+}
+.play-btn:hover { transform: scale(1.08); }
+.slider-wrap { flex: 1; min-width: 160px; }
+input[type=range] {
+    -webkit-appearance: none; width: 100%; height: 5px;
+    background: rgba(255,255,255,0.08); border-radius: 3px; outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px;
+    border-radius: 50%; background: #818cf8; cursor: pointer;
+    box-shadow: 0 0 6px rgba(129,140,248,0.4);
+}
+.slider-val {
+    font-size: 13px; font-weight: 600; color: #a78bfa;
+    min-width: 80px; text-align: right; font-variant-numeric: tabular-nums;
+}
+.presets { display: flex; gap: 5px; flex-wrap: wrap; }
+.pill {
+    padding: 5px 12px; border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.03);
+    color: #777; font-size: 11px; font-weight: 500; cursor: pointer;
+    transition: all 0.2s;
+}
+.pill:hover { background: rgba(129,140,248,0.12); color: #c4b5fd; border-color: rgba(129,140,248,0.25); }
+.pill.active { background: rgba(129,140,248,0.18); color: #a78bfa; border-color: #818cf8; }
+</style>
+</head>
+<body>
+<div id="app">
+    <div class="header">
+        <h1>Cryo-EM Defocus Contrast Simulation</h1>
+        <p>300 kV · Cs = 2.7 mm · Weak phase object CTF model</p>
+    </div>
+
+    <div class="main-grid">
+        <div class="col-obj">
+            <div class="card canvas-wrap">
+                <div class="card-label">Object</div>
+                <canvas id="objCanvas" width="256" height="256"></canvas>
+            </div>
+            <div class="card profile-wrap">
+                <canvas id="objProfile" width="280" height="100"></canvas>
+                <div class="axis">X coordinate, Å</div>
+            </div>
+        </div>
+        <div class="col-img">
+            <div class="card canvas-wrap">
+                <div class="card-label">Image</div>
+                <canvas id="imgCanvas" width="256" height="256"></canvas>
+                <div id="defocus-badge">defocus: 0.000 μm</div>
+            </div>
+            <div class="card profile-wrap">
+                <canvas id="imgProfile" width="280" height="100"></canvas>
+                <div class="axis">X coordinate, Å</div>
+            </div>
+        </div>
+        <div class="col-info">
+            <div class="card info-card" id="info-card"></div>
+        </div>
+    </div>
+
+    <div class="ctf-row">
+        <div class="card">
+            <div class="card-label">Contrast Transfer Function</div>
+            <canvas id="ctfCanvas" width="900" height="75"></canvas>
+            <div class="axis">Spatial frequency (Å⁻¹)</div>
+        </div>
+    </div>
+
+    <div class="card controls">
+        <button class="play-btn" id="play-btn" onclick="togglePlay()">▶</button>
+        <div class="slider-wrap">
+            <input type="range" id="defocus-slider" min="-200" max="3000" step="1" value="0" oninput="onSlider()">
+        </div>
+        <span class="slider-val" id="slider-label">0.000 μm</span>
+        <div class="presets">
+            <button class="pill active" onclick="setDefocus(0)">In focus</button>
+            <button class="pill" onclick="setDefocus(88)">Scherzer</button>
+            <button class="pill" onclick="setDefocus(500)">0.5 μm</button>
+            <button class="pill" onclick="setDefocus(1000)">1.0 μm</button>
+            <button class="pill" onclick="setDefocus(2000)">2.0 μm</button>
+            <button class="pill" onclick="setDefocus(3000)">3.0 μm</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const N=256,pixelSize=1.0,lambda=0.01969,Cs=2.7e7,Bfactor=60,displayGain=500;
+
+function fft1d(re,im,inv){const n=re.length;for(let i=1,j=0;i<n;i++){let b=n>>1;for(;j&b;b>>=1)j^=b;j^=b;if(i<j){let t=re[i];re[i]=re[j];re[j]=t;t=im[i];im[i]=im[j];im[j]=t;}}for(let len=2;len<=n;len<<=1){const a=2*Math.PI/len*(inv?-1:1),wR=Math.cos(a),wI=Math.sin(a);for(let i=0;i<n;i+=len){let cR=1,cI=0;for(let j=0;j<len/2;j++){const x=i+j,y=x+len/2;const tR=re[y]*cR-im[y]*cI,tI=re[y]*cI+im[y]*cR;re[y]=re[x]-tR;im[y]=im[x]-tI;re[x]+=tR;im[x]+=tI;const nc=cR*wR-cI*wI;cI=cR*wI+cI*wR;cR=nc;}}}if(inv){for(let i=0;i<n;i++){re[i]/=n;im[i]/=n;}}}
+function fft2d(re,im,inv){const rR=new Float64Array(N),rI=new Float64Array(N);for(let y=0;y<N;y++){const o=y*N;for(let x=0;x<N;x++){rR[x]=re[o+x];rI[x]=im[o+x];}fft1d(rR,rI,inv);for(let x=0;x<N;x++){re[o+x]=rR[x];im[o+x]=rI[x];}}const cR=new Float64Array(N),cI=new Float64Array(N);for(let x=0;x<N;x++){for(let y=0;y<N;y++){cR[y]=re[y*N+x];cI[y]=im[y*N+x];}fft1d(cR,cI,inv);for(let y=0;y<N;y++){re[y*N+x]=cR[y];im[y*N+x]=cI[y];}}}
+
+function createObject(){const V=new Float64Array(N*N),cx=N/2,cy=N/2;function g(x0,y0,sx,sy,a,ang){const ca=Math.cos(ang),sa=Math.sin(ang),r=Math.ceil(Math.max(sx,sy)*4);for(let dy=-r;dy<=r;dy++)for(let dx=-r;dx<=r;dx++){const px=Math.round(x0)+dx,py=Math.round(y0)+dy;if(px<0||px>=N||py<0||py>=N)continue;const rx=dx*ca+dy*sa,ry=-dx*sa+dy*ca;V[py*N+px]+=a*Math.exp(-0.5*(rx*rx/(sx*sx)+ry*ry/(sy*sy)));}}g(cx,cy,18,24,0.22,0);g(cx-9,cy-8,5,5,0.45,0);g(cx+9,cy-8,5,5,0.45,0);g(cx,cy+6,6,5,0.38,0);g(cx-14,cy+2,3,10,0.40,0.35);g(cx+14,cy+2,3,10,0.40,-0.35);g(cx,cy-18,9,3,0.30,0);g(cx-6,cy+18,8,3,0.25,0.1);g(cx+6,cy+18,8,3,0.25,-0.1);g(cx-4,cy-16,2,2,0.30,0);g(cx+4,cy-16,2,2,0.30,0);g(cx-7,cy+12,2.5,2,0.28,0);g(cx+7,cy+12,2.5,2,0.28,0);g(cx,cy-4,3,3,0.32,0);g(cx,cy-1,4,4,-0.12,0);return V;}
+
+function freqAt(k){return(k<=N/2?k:k-N)/(N*pixelSize);}
+function ctfValue(s2,dA){const chi=Math.PI*(dA*lambda*s2-0.5*Cs*lambda*lambda*lambda*s2*s2);return -Math.sin(chi)*Math.exp(-Bfactor*s2/4);}
+
+const objV=createObject();
+const objRe=new Float64Array(N*N),objIm=new Float64Array(N*N);
+objRe.set(objV);objIm.fill(0);fft2d(objRe,objIm,false);
+const objFTRe=new Float64Array(objRe),objFTIm=new Float64Array(objIm);
+const imgRe=new Float64Array(N*N),imgIm=new Float64Array(N*N);
+
+function computeImage(nm){const dA=nm*10;for(let ky=0;ky<N;ky++){const sy=freqAt(ky);for(let kx=0;kx<N;kx++){const sx=freqAt(kx),s2=sx*sx+sy*sy,c=ctfValue(s2,dA),i=ky*N+kx;imgRe[i]=objFTRe[i]*c;imgIm[i]=objFTIm[i]*c;}}fft2d(imgRe,imgIm,true);}
+
+const objCtx=document.getElementById('objCanvas').getContext('2d');
+const imgCtx=document.getElementById('imgCanvas').getContext('2d');
+const oPCtx=document.getElementById('objProfile').getContext('2d');
+const iPCtx=document.getElementById('imgProfile').getContext('2d');
+const ctfCtx=document.getElementById('ctfCanvas').getContext('2d');
+
+function drawObject(){const id=objCtx.createImageData(N,N);let mx=0;for(let i=0;i<N*N;i++)mx=Math.max(mx,Math.abs(objV[i]));for(let i=0;i<N*N;i++){const v=Math.max(0,Math.min(255,(objV[i]/mx)*255)),p=i*4;id.data[p]=v*0.7;id.data[p+1]=v*0.85;id.data[p+2]=v;id.data[p+3]=255;}objCtx.putImageData(id,0,0);objCtx.strokeStyle='rgba(129,140,248,0.35)';objCtx.lineWidth=1;objCtx.beginPath();objCtx.moveTo(0,N/2);objCtx.lineTo(N,N/2);objCtx.stroke();}
+
+function drawImage(nm){const id=imgCtx.createImageData(N,N);for(let i=0;i<N*N;i++){const c=imgRe[i]*displayGain,v=Math.max(0,Math.min(255,150+c)),p=i*4;id.data[p]=v;id.data[p+1]=v;id.data[p+2]=v;id.data[p+3]=255;}imgCtx.putImageData(id,0,0);imgCtx.strokeStyle='rgba(129,140,248,0.35)';imgCtx.lineWidth=1;imgCtx.beginPath();imgCtx.moveTo(0,N/2);imgCtx.lineTo(N,N/2);imgCtx.stroke();const um=nm/1000;let l=`defocus: ${um.toFixed(3)} μm`;if(Math.abs(um)<0.001)l+='';else if(Math.abs(um-0.088)<0.005)l+=' (Scherzer)';else if(um>0.01)l+=' under';else if(um<-0.01)l+=' over';document.getElementById('defocus-badge').textContent=l;}
+
+function drawProfile(ctx,data,yMid,color,yRange){
+    const c=ctx.canvas,w=c.width,h=c.height;ctx.clearRect(0,0,w,h);
+    const m={l:32,r:6,t:6,b:16},pw=w-m.l-m.r,ph=h-m.t-m.b;
+    ctx.strokeStyle='rgba(255,255,255,0.05)';ctx.lineWidth=0.5;
+    ctx.beginPath();ctx.moveTo(m.l,m.t+ph/2);ctx.lineTo(m.l+pw,m.t+ph/2);ctx.stroke();
+    ctx.fillStyle='#444';ctx.font='8px Inter,sans-serif';
+    ctx.fillText(yRange[1].toFixed(1),m.l-22,m.t+8);
+    ctx.fillText(yRange[0].toFixed(1),m.l-24,m.t+ph+2);
+    // fill under curve
+    ctx.beginPath();
+    const baseline=yRange[0]<0?m.t+ph/2:m.t+ph;
+    for(let i=0;i<N;i++){const v=data[yMid*N+i],x=m.l+(i/N)*pw;const ny=(v-yRange[0])/(yRange[1]-yRange[0]);const y=m.t+ph-ny*ph;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.lineTo(m.l+pw,baseline);ctx.lineTo(m.l,baseline);ctx.closePath();
+    ctx.fillStyle=color.replace(')',',0.08)').replace('rgb','rgba');ctx.fill();
+    ctx.strokeStyle=color;ctx.lineWidth=1.4;ctx.beginPath();
+    for(let i=0;i<N;i++){const v=data[yMid*N+i],x=m.l+(i/N)*pw;const ny=(v-yRange[0])/(yRange[1]-yRange[0]);const y=m.t+ph-ny*ph;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.stroke();
+}
+
+function drawCTF(nm){
+    const c=ctfCtx.canvas,w=c.width,h=c.height,dA=nm*10;ctfCtx.clearRect(0,0,w,h);
+    const m={l:30,r:8,t:5,b:12},pw=w-m.l-m.r,ph=h-m.t-m.b,sMax=0.35;
+    ctfCtx.strokeStyle='rgba(255,255,255,0.05)';ctfCtx.lineWidth=0.5;
+    ctfCtx.beginPath();ctfCtx.moveTo(m.l,m.t+ph/2);ctfCtx.lineTo(m.l+pw,m.t+ph/2);ctfCtx.stroke();
+    ctfCtx.beginPath();ctfCtx.moveTo(m.l,m.t+ph/2);
+    for(let i=0;i<=pw;i++){const s=(i/pw)*sMax,s2=s*s,v=ctfValue(s2,dA);ctfCtx.lineTo(m.l+i,m.t+ph/2-v*(ph/2)*0.9);}
+    ctfCtx.lineTo(m.l+pw,m.t+ph/2);ctfCtx.closePath();ctfCtx.fillStyle='rgba(129,140,248,0.06)';ctfCtx.fill();
+    ctfCtx.strokeStyle='#818cf8';ctfCtx.lineWidth=1.3;ctfCtx.beginPath();
+    for(let i=0;i<=pw;i++){const s=(i/pw)*sMax,s2=s*s,v=ctfValue(s2,dA);const x=m.l+i,y=m.t+ph/2-v*(ph/2)*0.9;i===0?ctfCtx.moveTo(x,y):ctfCtx.lineTo(x,y);}
+    ctfCtx.stroke();
+    ctfCtx.fillStyle='#444';ctfCtx.font='8px Inter,sans-serif';
+    ctfCtx.fillText('1',m.l-10,m.t+6);ctfCtx.fillText('-1',m.l-12,m.t+ph);
+    ctfCtx.fillText('0',m.l-2,m.t+ph+10);ctfCtx.fillText(sMax.toFixed(2),m.l+pw-14,m.t+ph+10);
+}
+
+// === Structured info panel ===
+function updateInfo(nm) {
+    const um = nm / 1000, el = document.getElementById('info-card');
+    // Compute first zero crossing for stats
+    const dA = nm * 10;
+    const firstZero = dA > 0 ? (1 / Math.sqrt(lambda * dA)).toFixed(3) : '—';
+    const resolution = dA > 0 ? (1 / (1 / Math.sqrt(lambda * dA))).toFixed(1) : '—';
+    // Compute image RMS for contrast metric
+    let rms = 0;
+    for (let i = 0; i < N*N; i++) rms += imgRe[i]*imgRe[i];
+    rms = Math.sqrt(rms / (N*N));
+    const contrastPct = Math.min(100, (rms / 0.025 * 100)).toFixed(0);
+
+    let stage, stageClass, title, observe, physics;
+
+    if (Math.abs(um) < 0.01) {
+        stage = 'IN FOCUS'; stageClass = 'stage-focus';
+        title = 'No phase contrast — image is nearly blank';
+        observe = 'The image panel shows <span>uniform gray</span>. The line profile is <span>flat</span>. The CTF is essentially zero at all frequencies.';
+        physics = 'Biological specimens are <b>weak phase objects</b> — nearly transparent to electrons. Without defocus, there is no mechanism to convert phase shifts into amplitude (intensity) contrast.';
+    } else if (Math.abs(um - 0.088) < 0.015) {
+        stage = 'SCHERZER'; stageClass = 'stage-scherzer';
+        title = 'Optimal resolution, minimal contrast';
+        observe = 'A <span>faint image</span> of the object appears. The profile shows a <span>weak signal</span> matching the object shape. The CTF has a <span>single broad passband</span> before the first zero.';
+        physics = 'The Scherzer defocus <b>Δf = 1.2√(Cs·λ) ≈ 875 Å</b> maximizes the CTF passband. Commonly used in materials science for atomic resolution, but the contrast is too weak for cryo-EM particle picking.';
+    } else if (um > 0 && um < 0.3) {
+        stage = 'LOW DEFOCUS'; stageClass = 'stage-low';
+        title = 'Contrast building, still weak';
+        observe = 'Structure begins to appear as the CTF departs from zero. The <span>line profile</span> shows a growing signal, but it remains subtle.';
+        physics = 'As defocus increases, the first passband of the CTF widens, transferring more <b>low-frequency information</b> to the image. High-resolution features remain well-localized.';
+    } else if (um >= 0.3 && um < 1.0) {
+        stage = 'MODERATE'; stageClass = 'stage-mid';
+        title = 'Usable contrast with mild delocalization';
+        observe = 'The object structure is <span>clearly visible</span>. The profile shows <span>oscillating contrast</span>. Note the CTF oscillations — each zero crossing is a <span>"Thon ring"</span>.';
+        physics = 'This is the <b>typical cryo-EM range</b> for single particle analysis. Contrast is sufficient for particle picking, while CTF correction can restore high-resolution information lost at the zero crossings.';
+    } else if (um >= 1.0 && um < 2.0) {
+        stage = 'HIGH DEFOCUS'; stageClass = 'stage-high';
+        title = 'Strong contrast but delocalized';
+        observe = '<span>Fresnel fringes</span> (rings) appear around the object. The profile shows <span>wide oscillations</span> extending far from the protein. The CTF oscillates rapidly.';
+        physics = 'High-resolution information is <b>strongly delocalized</b> — spread over many pixels. Image processing can partially re-localize signals, but only ~50% of theoretical contrast is recoverable. "Underfocus" = weaker lens, focal plane above specimen.';
+    } else if (um >= 2.0) {
+        stage = 'EXTREME'; stageClass = 'stage-extreme';
+        title = 'Maximum Fresnel fringes, severe delocalization';
+        observe = '<span>Prominent concentric rings</span> dominate the image. The profile shows <span>large oscillations</span> extending far from the object center. The CTF is densely oscillating.';
+        physics = 'At extreme defocus, the <b>point spread function</b> becomes very broad. While contrast is maximized, positional accuracy is severely degraded. Used sometimes for initial screening but not for high-resolution reconstruction.';
+    } else {
+        stage = 'OVERFOCUS'; stageClass = 'stage-over';
+        title = 'Lens too strong — reversed phase';
+        observe = 'Similar features but with <span>inverted contrast</span> for some frequencies compared to underfocus.';
+        physics = 'Overfocus means the <b>lens is too strong</b>, focusing below the specimen. The CTF mirrors the underfocus case but with opposite sign in certain frequency ranges.';
+    }
+
+    el.innerHTML = `
+        <div class="info-stage ${stageClass}">${stage}</div>
+        <div class="info-title">${title}</div>
+        <div class="info-observe">${observe}</div>
+        <div class="info-physics">${physics}</div>
+        <div class="info-stat">
+            <div><div class="val">${um.toFixed(3)}</div><div class="lbl">Defocus (μm)</div></div>
+            <div><div class="val">${contrastPct}%</div><div class="lbl">Rel. Contrast</div></div>
+            <div><div class="val">${firstZero}</div><div class="lbl">1st zero (Å⁻¹)</div></div>
+        </div>`;
+}
+
+function update(nm){
+    computeImage(nm);drawImage(nm);
+    let mx=0;for(let i=0;i<N*N;i++)mx=Math.max(mx,objV[i]);
+    drawProfile(oPCtx,objV,N/2,'rgb(52,211,153)',[0,mx*1.1]);
+    const il=new Float64Array(N*N);for(let i=0;i<N*N;i++)il[i]=imgRe[i]*displayGain/150;
+    drawProfile(iPCtx,il,N/2,'rgb(96,165,250)',[-0.8,0.8]);
+    drawCTF(nm);updateInfo(nm);
+    document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+    const pm={0:0,88:1,500:2,1000:3,2000:4,3000:5};
+    if(pm[nm]!==undefined)document.querySelectorAll('.pill')[pm[nm]].classList.add('active');
+}
+
+let playing=false,animId=null,cur=0;
+function onSlider(){cur=parseFloat(document.getElementById('defocus-slider').value);document.getElementById('slider-label').textContent=(cur/1000).toFixed(3)+' μm';update(cur);}
+function setDefocus(nm){cur=nm;document.getElementById('defocus-slider').value=nm;document.getElementById('slider-label').textContent=(nm/1000).toFixed(3)+' μm';update(nm);}
+function togglePlay(){playing=!playing;document.getElementById('play-btn').textContent=playing?'⏸':'▶';if(playing)animate();else if(animId){cancelAnimationFrame(animId);animId=null;}}
+function animate(){if(!playing)return;cur+=3;if(cur>3000)cur=-200;document.getElementById('defocus-slider').value=cur;document.getElementById('slider-label').textContent=(cur/1000).toFixed(3)+' μm';update(cur);animId=requestAnimationFrame(animate);}
+
+drawObject();update(0);
+</script>
+</body>
+</html>

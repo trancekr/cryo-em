@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Collection Settings</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(22px, 2.8vh, 36px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(11px, 1.3vh, 17px); color: #777; margin-top: 2px; font-weight: 500; }
+.sec-canvas { flex: 1; min-height: 0; padding: clamp(4px,0.5vh,8px) 0; }
+.sec-canvas canvas { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="./">&larr; Home</a>
+    <h1>Data Collection Settings</h1>
+    <p>Key microscope parameters and imaging conditions for cryo-EM data acquisition</p>
+  </div>
+  <div class="sec-canvas"><canvas id="cv"></canvas></div>
+  <div style="flex-shrink:0;font-size:clamp(8px,0.9vh,11px);color:#aaa;text-align:center;padding:2px 8px;">Grant &amp; Grigorieff, eLife (2015) &middot; Cheng et al., Cell (2015)</div>
+</div>
+
+<script>
+function setupCanvas(id) {
+    const c = document.getElementById(id);
+    const rect = c.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    c.width = Math.round(rect.width * dpr);
+    c.height = Math.round(rect.height * dpr);
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: rect.width, h: rect.height };
+}
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    if (Array.isArray(r)) { ctx.moveTo(x+r[0],y); ctx.arcTo(x+w,y,x+w,y+h,r[1]); ctx.arcTo(x+w,y+h,x,y+h,r[2]); ctx.arcTo(x,y+h,x,y,r[3]); ctx.arcTo(x,y,x+w,y,r[0]); }
+    else { ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+r,r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r); ctx.arcTo(x,y+h,x,y+h-r,r); ctx.arcTo(x,y,x+r,y,r); }
+    ctx.closePath();
+}
+
+function draw(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 1050, h / 560);
+    const pad = 16 * s;
+
+    // Layout: Left = TEM column diagram, Right = parameter cards (2 columns)
+    const colDiagW = w * 0.3;
+    const cardsX = colDiagW + pad * 2;
+    const cardsW = w - cardsX - pad;
+
+    // === Left: Simplified TEM Column ===
+    const cx = pad + colDiagW / 2;
+    const topY = pad;
+    const botY = h - pad;
+    const colH = botY - topY;
+
+    // Column background
+    ctx.fillStyle = '#f8f7ff';
+    roundRect(ctx, pad, topY, colDiagW, colH, 12);
+    ctx.fill();
+    ctx.strokeStyle = '#e0ddf5';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, pad, topY, colDiagW, colH, 12);
+    ctx.stroke();
+
+    ctx.font = `bold ${Math.round(13*s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#7c3aed';
+    ctx.textAlign = 'center';
+    ctx.fillText('TEM Column', cx, topY + 20*s);
+
+    // Components top to bottom
+    const components = [
+        { y: 0.08, label: 'Electron Source', sub: '300 kV FEG', color: '#ef4444', icon: 'gun' },
+        { y: 0.20, label: 'Condenser Lens', sub: 'Beam diameter', color: '#f59e0b', icon: 'lens' },
+        { y: 0.32, label: 'Specimen Stage', sub: 'Cryo holder, \u221296\u00b0C', color: '#10b981', icon: 'stage' },
+        { y: 0.44, label: 'Objective Lens', sub: 'Cs = 2.7 mm', color: '#3b82f6', icon: 'lens' },
+        { y: 0.56, label: 'Energy Filter', sub: 'Zero-loss (optional)', color: '#8b5cf6', icon: 'filter' },
+        { y: 0.70, label: 'Detector', sub: 'K3 / Falcon IV', color: '#ec4899', icon: 'det' },
+    ];
+
+    const compW = colDiagW * 0.7;
+    const compH = colH * 0.08;
+
+    // Draw beam path
+    ctx.strokeStyle = '#ddd';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(cx, topY + colH * 0.07);
+    ctx.lineTo(cx, topY + colH * 0.78);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    for (const comp of components) {
+        const cy2 = topY + colH * comp.y + 24*s;
+        const bx = cx - compW / 2;
+
+        ctx.fillStyle = comp.color + '12';
+        roundRect(ctx, bx, cy2, compW, compH, 6);
+        ctx.fill();
+        ctx.strokeStyle = comp.color;
+        ctx.lineWidth = 1.5;
+        roundRect(ctx, bx, cy2, compW, compH, 6);
+        ctx.stroke();
+
+        // Left strip
+        ctx.fillStyle = comp.color;
+        ctx.fillRect(bx, cy2 + 4, 3, compH - 8);
+
+        ctx.font = `bold ${Math.round(10*s)}px Inter,sans-serif`;
+        ctx.fillStyle = comp.color;
+        ctx.textAlign = 'left';
+        ctx.fillText(comp.label, bx + 10*s, cy2 + compH * 0.42);
+        ctx.font = `${Math.round(8.5*s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#888';
+        ctx.fillText(comp.sub, bx + 10*s, cy2 + compH * 0.78);
+    }
+
+    // Bottom note
+    const noteY = topY + colH * 0.84;
+    ctx.font = `${Math.round(9*s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#999';
+    ctx.textAlign = 'center';
+    ctx.fillText('Typical: Titan Krios, Glacios', cx, noteY);
+    ctx.fillText('Arctica (200/300 kV)', cx, noteY + 13*s);
+
+    // === Right: Parameter Cards ===
+    const categories = [
+        {
+            title: 'Voltage & Optics',
+            color: '#ef4444',
+            params: [
+                { name: 'Acceleration voltage', value: '300 kV (or 200 kV)', note: 'Higher = more penetration, less contrast' },
+                { name: 'Spherical aberration (Cs)', value: '2.7 mm', note: 'Fixed by objective lens design' },
+                { name: 'Electron wavelength', value: '0.0197 \u212b (300 kV)', note: '\u03bb = h / \u221a(2meV)' },
+            ]
+        },
+        {
+            title: 'Imaging Conditions',
+            color: '#3b82f6',
+            params: [
+                { name: 'Magnification', value: '81,000\u2013105,000\u00d7', note: 'Determines pixel size on detector' },
+                { name: 'Pixel size', value: '0.5\u20131.1 \u212b/px', note: 'Super-resolution: 0.5 \u212b, counting: 1.0 \u212b' },
+                { name: 'Defocus range', value: '\u22120.5 to \u22122.5 \u03bcm', note: 'Underfocus for phase contrast' },
+            ]
+        },
+        {
+            title: 'Dose & Exposure',
+            color: '#10b981',
+            params: [
+                { name: 'Total dose', value: '40\u201360 e\u207b/\u212b\u00b2', note: 'Balance contrast vs radiation damage' },
+                { name: 'Dose rate', value: '15\u201320 e\u207b/px/s', note: 'Optimal for counting mode' },
+                { name: 'Exposure time', value: '2\u20134 s', note: 'Split into 40\u201360 frames' },
+                { name: 'Frames per movie', value: '40\u201360', note: '~50 ms/frame for motion correction' },
+            ]
+        },
+        {
+            title: 'Data Strategy',
+            color: '#8b5cf6',
+            params: [
+                { name: 'Holes per stage move', value: '4\u201312', note: 'Beam-image shift for throughput' },
+                { name: 'Movies per session', value: '5,000\u201315,000+', note: '24\u201372 hr session typical' },
+                { name: 'Target particles', value: '100k\u20131M+', note: 'Depends on symmetry, target resolution' },
+                { name: 'Data size', value: '5\u201320 TB', note: 'Per dataset (compressed)' },
+            ]
+        },
+    ];
+
+    const cardCols = 2;
+    const cardGap = 10 * s;
+    const cardW = (cardsW - cardGap) / cardCols;
+    const cardRows = 2;
+    const cardRowH = (h - pad * 2 - cardGap) / cardRows;
+
+    for (let i = 0; i < categories.length; i++) {
+        const cat = categories[i];
+        const col = i % cardCols;
+        const row = Math.floor(i / cardCols);
+        const cx2 = cardsX + col * (cardW + cardGap);
+        const cy2 = pad + row * (cardRowH + cardGap);
+
+        // Card
+        ctx.fillStyle = '#fff';
+        roundRect(ctx, cx2, cy2, cardW, cardRowH, 10);
+        ctx.fill();
+        ctx.strokeStyle = cat.color + '40';
+        ctx.lineWidth = 1.5;
+        roundRect(ctx, cx2, cy2, cardW, cardRowH, 10);
+        ctx.stroke();
+
+        // Top strip
+        ctx.fillStyle = cat.color;
+        roundRect(ctx, cx2, cy2, cardW, 4, [10, 10, 0, 0]);
+        ctx.fill();
+
+        // Title
+        ctx.font = `bold ${Math.round(13*s)}px Inter,sans-serif`;
+        ctx.fillStyle = cat.color;
+        ctx.textAlign = 'left';
+        ctx.fillText(cat.title, cx2 + 12*s, cy2 + 22*s);
+
+        // Parameters
+        const paramStartY = cy2 + 36*s;
+        const paramH = (cardRowH - 42*s) / cat.params.length;
+
+        for (let j = 0; j < cat.params.length; j++) {
+            const p = cat.params[j];
+            const py = paramStartY + j * paramH;
+
+            // Alternating row bg
+            if (j % 2 === 0) {
+                ctx.fillStyle = cat.color + '06';
+                ctx.fillRect(cx2 + 4, py, cardW - 8, paramH);
+            }
+
+            // Param name
+            ctx.font = `${Math.round(10*s)}px Inter,sans-serif`;
+            ctx.fillStyle = '#444';
+            ctx.textAlign = 'left';
+            ctx.fillText(p.name, cx2 + 12*s, py + 14*s);
+
+            // Value
+            ctx.font = `bold ${Math.round(11*s)}px Inter,sans-serif`;
+            ctx.fillStyle = cat.color;
+            ctx.textAlign = 'right';
+            ctx.fillText(p.value, cx2 + cardW - 12*s, py + 14*s);
+
+            // Note
+            ctx.font = `${Math.round(8.5*s)}px Inter,sans-serif`;
+            ctx.fillStyle = '#999';
+            ctx.textAlign = 'left';
+            ctx.fillText(p.note, cx2 + 12*s, py + 28*s);
+        }
+    }
+}
+
+function renderAll() { draw('cv'); }
+window.addEventListener('DOMContentLoaded', renderAll);
+window.addEventListener('resize', () => { clearTimeout(window._rt); window._rt = setTimeout(renderAll, 150); });
+</script>
+</body>
+</html>

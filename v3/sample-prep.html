@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample Preparation – Cryo-EM Tutorial</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.topbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 16px;
+  background: #fff;
+  border-bottom: 2px solid #e0e0e8;
+  gap: 8px;
+  min-height: 44px;
+}
+.topbar .home-btn {
+  display: flex; align-items: center; gap: 4px;
+  padding: 4px 12px; border-radius: 20px;
+  border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(11px, 1.3vh, 15px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  white-space: nowrap;
+}
+.topbar .home-btn:hover { background: #f5f3ff; color: #059669; border-color: #c4b5fd; }
+.topbar .section-name {
+  font-size: clamp(14px, 1.8vh, 22px);
+  font-weight: 800;
+  color: #059669;
+  text-align: center;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.topbar .nav-group {
+  display: flex; align-items: center; gap: 6px;
+  white-space: nowrap;
+}
+.nav-btn {
+  padding: 4px 10px; border-radius: 8px;
+  border: 2px solid #e0e0e8; background: #fff;
+  color: #555; font-size: clamp(13px, 1.5vh, 18px); font-weight: 700;
+  cursor: pointer; transition: all 0.15s;
+  line-height: 1;
+}
+.nav-btn:hover { background: #f5f3ff; border-color: #c4b5fd; color: #059669; }
+.nav-btn:disabled { opacity: 0.3; cursor: default; }
+.page-info {
+  font-size: clamp(11px, 1.2vh, 15px);
+  color: #888; font-weight: 600;
+  min-width: 50px; text-align: center;
+}
+
+/* ── Slide container ── */
+.slides-area {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  padding: clamp(8px, 1.2vh, 16px) clamp(12px, 2vw, 32px);
+  overflow: hidden;
+}
+.slide.active {
+  display: flex;
+}
+.slide-title {
+  font-size: clamp(18px, 2.8vh, 34px);
+  font-weight: 800;
+  color: #1a1a2e;
+  text-align: center;
+  padding: 2px 0 clamp(4px, 0.8vh, 10px);
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+.slide-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.6vh, 10px);
+  overflow: hidden;
+}
+/* Text-only slides: center vertically */
+.slide-body:not(:has(.img-single)):not(:has(.img-grid)):not(:has(.layout-split)) {
+  justify-content: center;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+.slide-ref {
+  flex-shrink: 0;
+  font-size: clamp(8px, 0.9vh, 11px);
+  color: #aaa;
+  text-align: center;
+  padding: 2px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.slide-pptx {
+  flex-shrink: 0;
+  font-size: clamp(7px, 0.7vh, 9px);
+  color: #ccc;
+  text-align: right;
+  padding: 0 4px;
+}
+
+/* ── Image layouts ── */
+.img-single {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.img-single img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.img-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  gap: clamp(4px, 0.5vh, 8px);
+  overflow: hidden;
+}
+.img-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+}
+.img-grid.g2 { grid-template-columns: 1fr 1fr; }
+.img-grid.g3 { grid-template-columns: 1fr 1fr 1fr; }
+.img-grid.g4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.img-grid.gm {
+  grid-template-columns: repeat(auto-fill, minmax(min(180px, 28%), 1fr));
+  grid-auto-rows: 1fr;
+  align-items: center;
+}
+.img-grid.gc3 { grid-template-columns: repeat(3, 1fr); }
+.img-grid.gc4 { grid-template-columns: repeat(4, 1fr); }
+
+/* ── Text blocks ── */
+.text-block {
+  flex-shrink: 0;
+  padding: clamp(2px, 0.3vh, 6px) clamp(8px, 1vw, 16px);
+}
+.text-block p {
+  margin-bottom: 1px;
+  line-height: 1.35;
+}
+.text-block.bold p { font-weight: 700; }
+.text-block.text-lg p { font-size: clamp(14px, 2vh, 26px); }
+.text-block.text-md p { font-size: clamp(12px, 1.5vh, 20px); }
+.text-block.text-sm p { font-size: clamp(10px, 1.2vh, 16px); color: #444; }
+
+/* ── Split layout: images left, text right ── */
+.layout-split {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: clamp(8px, 1vw, 16px);
+  overflow: hidden;
+}
+.split-img {
+  flex: 3;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.split-img .img-single,
+.split-img .img-grid {
+  flex: 1;
+  min-height: 0;
+}
+.split-text {
+  flex: 2;
+  min-width: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="home-btn" href="index.html">&larr; Home</a>
+  <div class="section-name">Sample Preparation</div>
+  <div class="nav-group">
+    <button class="nav-btn" id="prev-btn" onclick="go(-1)">&lsaquo;</button>
+    <span class="page-info" id="page-info">1 / 29</span>
+    <button class="nav-btn" id="next-btn" onclick="go(1)">&rsaquo;</button>
+  </div>
+</div>
+
+<div class="slides-area">
+  <div class="slide active" data-n="1">
+    <div class="slide-title">Sample Preparation</div>
+    <div class="slide-body">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s036_79.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s037_80.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Sample Preparation</p>
+</div>
+<div class="text-block text-sm">
+  <p>37</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Halfon et al., 2022 Faraday Discuss.</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Time &amp; Cost of a single particle cryo-EM pipeline</p>
+</div>
+    </div>
+    <div class="slide-ref">Halfon et al., 2022 Faraday Discuss.</div>
+    <div class="slide-pptx">PPTX: p36, p37</div>
+  </div>
+  <div class="slide" data-n="2">
+    <div class="slide-title">Goal of Sample Preparation</div>
+    <div class="slide-body">
+<div class="text-block bold text-lg">
+  <p>Goal of sample preparation</p>
+</div>
+<div class="text-block bold text-lg">
+  <p>Preserve the biological specimen in a native state such that it will give maximum contrast</p>
+  <p>To obtain a high resolution structure:</p>
+  <p>Best specimen</p>
+  <p>Use optimal magnification</p>
+  <p>Use detector with best DQE possible</p>
+  <p>Obtain best micrographs possible</p>
+  <p>Leading to highest resolution structure with least data</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p38</div>
+  </div>
+  <div class="slide" data-n="3">
+    <div class="slide-title">Sample and Grid Preparation</div>
+    <div class="slide-body">
+<div class="img-grid gm gc3">
+<img src="../cryo-slides-img/s039_81.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s039_82.jpg" alt="" loading="lazy">
+<img src="../cryo-slides-img/s040_83.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s040_84.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s040_85.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Sample and grid preparation</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>3년간 데이터 집계</p>
+</div>
+<div class="text-block text-sm">
+  <p>40</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Zhou et al., 2019 Nat. Struct. Mol. Biol.</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>The circle of cryo-EM sample preparation</p>
+</div>
+    </div>
+    <div class="slide-ref">Zhou et al., 2019 Nat. Struct. Mol. Biol.</div>
+    <div class="slide-pptx">PPTX: p39, p40</div>
+  </div>
+  <div class="slide" data-n="4">
+    <div class="slide-title">Sample Homogeneity Assessment</div>
+    <div class="slide-body">
+<div class="img-grid g4">
+<img src="../cryo-slides-img/s041_86.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s041_87.jpg" alt="" loading="lazy">
+<img src="../cryo-slides-img/s041_88.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s041_89.jpg" alt="" loading="lazy">
+</div>
+<div class="text-block text-sm">
+  <p>41</p>
+</div>
+<div class="text-block text-sm">
+  <p>© 2024. Baobab AiBIO</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Size exclusion chromatography</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>SEC-MALS</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Dynamic light scattering</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Mass photometry</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Homogenous sample</p>
+</div>
+    </div>
+    <div class="slide-ref">© 2024. Baobab AiBIO</div>
+    <div class="slide-pptx">PPTX: p41</div>
+  </div>
+  <div class="slide" data-n="5">
+    <div class="slide-title">Negative Staining vs. Cryo-EM</div>
+    <div class="slide-body">
+<div class="layout-split">
+  <div class="split-img">
+<div class="img-single"><img src="../cryo-slides-img/s042_90.png" alt="" loading="lazy"></div>
+  </div>
+  <div class="split-text">
+<div class="text-block bold text-sm">
+  <p>Negative staining vs. Vitrification</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Negative stain</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Cryo-EM</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Vitreous</p>
+  <p>ice</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Heavy</p>
+  <p>metal</p>
+  <p>stain</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Carbon support film (holey)</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Carbon support film (continuous)</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Negative staining vs. Cryo-EM</p>
+</div>
+<div class="text-block text-sm">
+  <p>Faster &amp; easier</p>
+  <p>Less expensive</p>
+  <p>Higher contrast / low resolution</p>
+  <p>Artifacts from the staining</p>
+  <p>Can be done at room temp.</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Negative staining</p>
+</div>
+<div class="text-block text-sm">
+  <p>Slower &amp; difficult</p>
+  <p>Expensive</p>
+  <p>Lower contrast / high resolution</p>
+  <p>Retain almost native state</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Cryo-EM (Vitrification)</p>
+</div>
+<div class="text-block text-sm">
+  <p>Useful for QC of the sample</p>
+  <p>(aggregation, dissociation, heterogeneity)</p>
+</div>
+  </div>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p42, p43</div>
+  </div>
+  <div class="slide" data-n="6">
+    <div class="slide-title">Low Signal-to-Noise Ratio</div>
+    <div class="slide-body">
+<div class="img-single"><img src="../cryo-slides-img/s044_91.jpg" alt="" loading="lazy"></div>
+<div class="text-block text-sm">
+  <p>Low signal-to-noise ratio</p>
+</div>
+<div class="text-block text-sm">
+  <p>Radiation sensitivity</p>
+</div>
+<div class="text-block text-sm">
+  <p>Few morphological features</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Wentinck et al, 2022 Curr Res Struc Biol.</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Small proteins and cryo-EM</p>
+</div>
+    </div>
+    <div class="slide-ref">Wentinck et al, 2022 Curr Res Struc Biol.</div>
+    <div class="slide-pptx">PPTX: p44</div>
+  </div>
+  <div class="slide" data-n="7">
+    <div class="slide-title">Size Augmentation Strategies</div>
+    <div class="slide-body">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s045_92.jpg" alt="" loading="lazy">
+<img src="../cryo-slides-img/s046_93.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Wentinck et al, 2022 Curr Res Struc Biol.</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Wentinck et al, 2022 Curr Res Struc Biol.</p>
+</div>
+    </div>
+    <div class="slide-ref">Wentinck et al, 2022 Curr Res Struc Biol.</div>
+    <div class="slide-pptx">PPTX: p45, p46</div>
+  </div>
+  <div class="slide" data-n="8">
+    <div class="slide-title">Size Augmentation – Approaches</div>
+    <div class="slide-body">
+<div class="img-grid g4">
+<img src="../cryo-slides-img/s047_94.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s047_95.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s047_96.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s047_97.png" alt="" loading="lazy">
+</div>
+<div class="text-block text-sm">
+  <p>SP26</p>
+  <p>(26 kDa)</p>
+</div>
+<div class="text-block text-sm">
+  <p>SP21</p>
+  <p>(21 kDa)</p>
+</div>
+<div class="text-block text-sm">
+  <p>Ligand</p>
+  <p>(6 kDa)</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Total 74 kDa</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Total 69 kDa</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Total 54 kDa</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Rigid Fab (as a structural chaperone)</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p47</div>
+  </div>
+  <div class="slide" data-n="9">
+    <div class="slide-title">Ordered Mass, Not MW</div>
+    <div class="slide-body">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s049_98.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s050_99.jpg" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Ordered mass, not MW</p>
+</div>
+<div class="text-block text-sm">
+  <p>hSAGA activator complex</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Ordered mass, not MW</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Ordered mass, not MW</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p48, p49, p50</div>
+  </div>
+  <div class="slide" data-n="10">
+    <div class="slide-title">Henderson 1995 – Size Limit</div>
+    <div class="slide-body">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s051_100.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s051_101.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>R. Henderson, 1995, Q. Rev. Biophys.</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>38 kDa</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>How low can we go for single particle cryo-EM?</p>
+</div>
+    </div>
+    <div class="slide-ref">R. Henderson, 1995, Q. Rev. Biophys.</div>
+    <div class="slide-pptx">PPTX: p51</div>
+  </div>
+  <div class="slide" data-n="11">
+    <div class="slide-title">Sigworth 2016 – Resolution Trends</div>
+    <div class="slide-body">
+<div class="img-grid g3">
+<img src="../cryo-slides-img/s052_102.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s052_103.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s052_104.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Fred J. Sigworth, 2016, Vol.65, No.1, 57-67 Microscopy</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>How low can we go for single particle cryo-EM?</p>
+</div>
+    </div>
+    <div class="slide-ref">Fred J. Sigworth, 2016, Vol.65, No.1, 57-67 Microscopy</div>
+    <div class="slide-pptx">PPTX: p52</div>
+  </div>
+  <div class="slide" data-n="12">
+    <div class="slide-title">Recent Size Limit Studies</div>
+    <div class="slide-body">
+<div class="img-grid g4">
+<img src="../cryo-slides-img/s053_105.gif" alt="" loading="lazy">
+<img src="../cryo-slides-img/s054_106.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s054_107.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s054_108.png" alt="" loading="lazy">
+</div>
+<div class="text-block text-sm">
+  <p>53</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Russo et al., 2022 Faraday Discuss.</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Minimum molecular mass identifiable in situ</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Wu et al, 2020 Curr Opin Struc Biol.</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Are we there yet?</p>
+</div>
+<div class="text-block text-sm">
+  <p>HSA</p>
+  <p>65 kDa (3.2 Å)</p>
+</div>
+    </div>
+    <div class="slide-ref">Russo et al., 2022 Faraday Discuss. &middot; Wu et al, 2020 Curr Opin Struc Biol.</div>
+    <div class="slide-pptx">PPTX: p53, p54</div>
+  </div>
+  <div class="slide" data-n="13">
+    <div class="slide-title">Grid Production Guide</div>
+    <div class="slide-body">
+<div class="layout-split">
+  <div class="split-img">
+<div class="img-single"><img src="../cryo-slides-img/s055_109.png" alt="" loading="lazy"></div>
+  </div>
+  <div class="split-text">
+<div class="text-block text-sm">
+  <p>https://www.nanoimagingservices.com/about/blog/a-guide-to-cryo-grid-production-materials-interfaces-and-their-impact-on-sample-prep</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Grid : Cu, Au, Ni, Ti</p>
+  <p>(Mesh : 200, 300, 400, hexagonal)</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Foil : amorphous C, Au, Ni/Ti</p>
+  <p>Continous or holey</p>
+  <p>Hole size/spacing (um)</p>
+  <p>1.2/1.3, 2/1, 1/1, 0.6/1</p>
+  <p>HexAuFoil 0.3/0.3</p>
+  <p>Lacey carbon</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Support film</p>
+  <p>: amorphous carbon, Graphene, GO</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Cryo-EM grid</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>hydrophobic</p>
+</div>
+  </div>
+</div>
+    </div>
+    <div class="slide-ref">https://www.nanoimagingservices.com/about/blog/a-guide-to-cryo-grid-production-m</div>
+    <div class="slide-pptx">PPTX: p55</div>
+  </div>
+  <div class="slide" data-n="14">
+    <div class="slide-title">Grid Handling</div>
+    <div class="slide-body">
+<div class="img-grid g3">
+<img src="../cryo-slides-img/s056_110.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s056_111.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s056_112.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Grid handing</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p56</div>
+  </div>
+  <div class="slide" data-n="15">
+    <div class="slide-title">Grid Preparation (Vitrification)</div>
+    <div class="slide-body">
+<div class="img-grid gm gc4">
+<img src="../cryo-slides-img/s057_113.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s057_114.jpg" alt="" loading="lazy">
+<img src="../cryo-slides-img/s057_115.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s057_116.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s057_117.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s057_118.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s057_119.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Grid preparation (Vitrification)</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Increase hydrophilicity</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Vitrification</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Ice contamination</p>
+</div>
+<div class="text-block text-sm">
+  <p>Ice thickness</p>
+  <p>Particle behavior</p>
+</div>
+<div class="text-block text-sm">
+  <p>Blotting vs. Spraying vs. drawing</p>
+  <p>Time to freeze</p>
+  <p>Reproducibility</p>
+  <p>Speed</p>
+</div>
+<div class="text-block text-sm">
+  <p>Humidity (&lt; 20%)</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p57</div>
+  </div>
+  <div class="slide" data-n="16">
+    <div class="slide-title">Automated Grid Preparation</div>
+    <div class="slide-body">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s058_120.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s059_121.jpg" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Chameleon</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Automated grid preparation</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Vitrojet</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Automated grid preparation</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p58, p59</div>
+  </div>
+  <div class="slide" data-n="17">
+    <div class="slide-title">Grid Preparation &amp; Screening Time</div>
+    <div class="slide-body">
+<div class="text-block bold text-lg">
+  <p>Grid preparation and screening time</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>1 sample x 2 conc. x 2 grid types x 3 =</p>
+  <p>12 grids</p>
+</div>
+<div class="text-block text-sm">
+  <p>Step 1 : Make 3 x grids for every condition (reproducibility issue)  3 x sample &amp; 3 x time in the lab</p>
+  <p>Step 2 : Need to Screen all the grids  3 x screening time + data collection</p>
+  <p>Step 3 : The samples may have issues  back to step 1 &amp; 2 for repeating (multiple times)</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>1 conc. x 4 grid types x 3 =  12 grids</p>
+  <p>or</p>
+  <p>1 conc. X 1 grid types x 4 additives x 3 = 12 grids</p>
+  <p>or</p>
+  <p>1 conc. X 2 grid types x 3 additives x 2 = 12 grids</p>
+  <p>or</p>
+  <p>……………</p>
+</div>
+<div class="text-block text-sm">
+  <p>1 conc. X 1 grid types x 1 additive = 1 final grid</p>
+  <p>(data collection)</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p60</div>
+  </div>
+  <div class="slide" data-n="18">
+    <div class="slide-title">Atlas View</div>
+    <div class="slide-body">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s061_122.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s061_123.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Atlas view</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>General ice quality of the specimen</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p61</div>
+  </div>
+  <div class="slide" data-n="19">
+    <div class="slide-title">Square View</div>
+    <div class="slide-body">
+<div class="img-single"><img src="../cryo-slides-img/s062_124.png" alt="" loading="lazy"></div>
+<div class="text-block bold text-sm">
+  <p>Square view</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Good looking</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Cracked</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Contaminated</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Small, thick ice</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Confirming ice quality of the grid</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p62</div>
+  </div>
+  <div class="slide" data-n="20">
+    <div class="slide-title">Hole View – Ideal</div>
+    <div class="slide-body">
+<div class="img-grid g3">
+<img src="../cryo-slides-img/s063_125.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s063_126.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s063_127.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Hole view - Ideal</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p63</div>
+  </div>
+  <div class="slide" data-n="21">
+    <div class="slide-title">Hole View – Crystalline Ice &amp; Aggregation</div>
+    <div class="slide-body">
+<div class="img-grid gm gc3">
+<img src="../cryo-slides-img/s064_128.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s064_129.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s064_130.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s064_131.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s064_132.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s064_133.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Hole view - Crystalline ice</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Hole view - Particle aggregation</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p64, p65</div>
+  </div>
+  <div class="slide" data-n="22">
+    <div class="slide-title">Hole View – Concentration Issue</div>
+    <div class="slide-body">
+<div class="img-grid g3">
+<img src="../cryo-slides-img/s066_134.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s066_135.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s066_136.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Hole view – Concentration issue</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p66</div>
+  </div>
+  <div class="slide" data-n="23">
+    <div class="slide-title">Hole View – Contamination</div>
+    <div class="slide-body">
+<div class="img-grid g3">
+<img src="../cryo-slides-img/s067_137.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s067_138.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s067_139.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Hole view - Contamination</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p67</div>
+  </div>
+  <div class="slide" data-n="24">
+    <div class="slide-title">Hole View – Other Ice Issues</div>
+    <div class="slide-body">
+<div class="img-grid g2">
+<img src="../cryo-slides-img/s068_140.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s068_141.png" alt="" loading="lazy">
+</div>
+<div class="text-block bold text-sm">
+  <p>Hole view - Other ice issues</p>
+</div>
+<div class="text-block text-sm">
+  <p>69</p>
+</div>
+<div class="text-block text-sm">
+  <p>69</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Grid screening</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p68, p69</div>
+  </div>
+  <div class="slide" data-n="25">
+    <div class="slide-title">Air-Water Interface (AWI)</div>
+    <div class="slide-body">
+<div class="layout-split">
+  <div class="split-img">
+<div class="img-single"><img src="../cryo-slides-img/s070_142.png" alt="" loading="lazy"></div>
+  </div>
+  <div class="split-text">
+<div class="text-block text-sm">
+  <p>https://www.nanoimagingservices.com/about/blog/a-guide-to-cryo-grid-production-materials-interfaces-and-their-impact-on-sample-prep</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Air-Water interface (AWI)</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>At the AWI, proteins can undergo denaturation, aggregation or preferred orientation</p>
+  <p>Negatively impacts the final image quality</p>
+</div>
+<div class="text-block text-sm">
+  <p>100 ~ 150 nm</p>
+</div>
+<div class="text-block text-sm">
+  <p>10 ~ 15 nm</p>
+</div>
+  </div>
+</div>
+    </div>
+    <div class="slide-ref">https://www.nanoimagingservices.com/about/blog/a-guide-to-cryo-grid-production-m</div>
+    <div class="slide-pptx">PPTX: p70</div>
+  </div>
+  <div class="slide" data-n="26">
+    <div class="slide-title">Spot-to-Plunge Time Effect</div>
+    <div class="slide-body">
+<div class="layout-split">
+  <div class="split-img">
+<div class="img-grid g3">
+<img src="../cryo-slides-img/s071_143.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s071_144.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s072_145.png" alt="" loading="lazy">
+</div>
+  </div>
+  <div class="split-text">
+<div class="text-block bold text-sm">
+  <p>Spot-to-plunge time effect (with Chameleon)</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Noble, A.J. et al., 2018, Nat. Methods</p>
+</div>
+<div class="text-block text-sm">
+  <p>~ 1 s</p>
+</div>
+<div class="text-block text-sm">
+  <p>500 ms</p>
+</div>
+<div class="text-block text-sm">
+  <p>100 ms</p>
+</div>
+<div class="text-block text-sm">
+  <p>600 ms</p>
+</div>
+<div class="text-block text-sm">
+  <p>200 ms</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Hemagglutinin</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Insulin receptor</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Longer blotting time</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Spot-to-plunge time effect (with Chameleon)</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Noble, A.J. et al., 2018, Nat. Methods</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Particles can move 100 nm within 1 ms or less.</p>
+  <p>Once adsorbed, denaturation may follow is as little as a few ns.</p>
+</div>
+  </div>
+</div>
+    </div>
+    <div class="slide-ref">Noble, A.J. et al., 2018, Nat. Methods</div>
+    <div class="slide-pptx">PPTX: p71, p72</div>
+  </div>
+  <div class="slide" data-n="27">
+    <div class="slide-title">Support Films</div>
+    <div class="slide-body">
+<div class="img-single"><img src="../cryo-slides-img/s073_146.png" alt="" loading="lazy"></div>
+<div class="text-block text-sm">
+  <p>https://www.nanoimagingservices.com/about/blog/a-guide-to-cryo-grid-production-materials-interfaces-and-their-impact-on-sample-prep</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Continuous Support Films</p>
+</div>
+    </div>
+    <div class="slide-ref">https://www.nanoimagingservices.com/about/blog/a-guide-to-cryo-grid-production-m</div>
+    <div class="slide-pptx">PPTX: p73</div>
+  </div>
+  <div class="slide" data-n="28">
+    <div class="slide-title">Grid Optimization</div>
+    <div class="slide-body">
+<div class="img-single"><img src="../cryo-slides-img/s074_147.jpg" alt="" loading="lazy"></div>
+<div class="text-block bold text-sm">
+  <p>Grid optimization and ......</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Domen, K. et al., 2021, iScience</p>
+</div>
+<div class="text-block text-sm">
+  <p>Different vitrification procedures</p>
+  <p>Functionalized grids</p>
+  <p>Longer data collection</p>
+  <p>Tilted data collection</p>
+</div>
+    </div>
+    <div class="slide-ref">Domen, K. et al., 2021, iScience</div>
+    <div class="slide-pptx">PPTX: p74</div>
+  </div>
+  <div class="slide" data-n="29">
+    <div class="slide-title">Sample Requirements Summary</div>
+    <div class="slide-body">
+<div class="img-grid g3">
+<img src="../cryo-slides-img/s075_148.png" alt="" loading="lazy">
+<img src="../cryo-slides-img/s075_149.jpg" alt="" loading="lazy">
+<img src="../cryo-slides-img/s075_150.png" alt="" loading="lazy">
+</div>
+<div class="text-block text-sm">
+  <p>75</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Size</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Quantity (concentration)</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Reagents (Buffer)</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>&gt; 80 kDa of ordered mass</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>0.5~1 mg protein</p>
+  <p>50 nM ~ 5 uM concentration</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Most of buffers are fine.</p>
+  <p>But DMSO &gt; 0.5 %, high carbon</p>
+  <p>chemicals, cryoprotectants are</p>
+  <p>exceptions.</p>
+</div>
+<div class="text-block bold text-sm">
+  <p>Sample requirements for SPA</p>
+</div>
+    </div>
+    
+    <div class="slide-pptx">PPTX: p75</div>
+  </div>
+</div>
+
+<script>
+const N = 29;
+let cur = 1;
+
+function show(n) {
+  n = Math.max(1, Math.min(N, n));
+  const prev = document.querySelector('.slide.active');
+  if (prev) prev.classList.remove('active');
+  const next = document.querySelector('[data-n="' + n + '"]');
+  if (next) next.classList.add('active');
+  cur = n;
+  document.getElementById('page-info').textContent = cur + ' / ' + N;
+  document.getElementById('prev-btn').disabled = (cur === 1);
+  document.getElementById('next-btn').disabled = (cur === N);
+}
+
+function go(d) { show(cur + d); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') { go(-1); e.preventDefault(); }
+  else if (e.key === 'ArrowRight') { go(1); e.preventDefault(); }
+  else if (e.key === 'Home') { show(1); e.preventDefault(); }
+  else if (e.key === 'End') { show(N); e.preventDefault(); }
+});
+
+// Touch swipe
+let tx = 0;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+});
+
+show(1);
+</script>
+
+</body>
+</html>

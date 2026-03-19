@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grid Screening &amp; Ice Quality</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(24px, 3vh, 38px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(12px, 1.4vh, 18px); color: #777; margin-top: 2px; font-weight: 500; }
+
+.content {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-rows: 18fr 42fr 40fr;
+  gap: clamp(6px, 0.8vh, 10px);
+  padding: clamp(4px, 0.5vh, 8px) 0;
+}
+
+.panel {
+  background: #fff;
+  border: 2px solid #e0e0e8;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.panel:hover { border-color: #c4b5fd; }
+
+.panel-header {
+  padding: clamp(4px, 0.6vh, 10px) clamp(10px, 1vw, 16px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  border-bottom: 1.5px solid #f0f0f5;
+}
+.panel-dot {
+  width: clamp(8px, 1vh, 12px);
+  height: clamp(8px, 1vh, 12px);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.panel-title {
+  font-size: clamp(13px, 1.5vh, 19px);
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.panel-canvas {
+  flex: 1; min-height: 0;
+}
+.panel-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Row 2: 6 problem cards */
+.problems-grid {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: clamp(4px, 0.5vh, 8px);
+  padding: clamp(4px, 0.5vh, 8px);
+}
+.prob-card {
+  background: #fafafa;
+  border: 1.5px solid #e8e8f0;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.prob-card-icon {
+  flex: 1; min-height: 0;
+}
+.prob-card-icon canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.prob-card-body {
+  padding: clamp(3px, 0.5vh, 8px) clamp(4px, 0.5vw, 8px);
+  border-top: 1px solid #eee;
+}
+.prob-card-name {
+  font-size: clamp(10px, 1.2vh, 15px);
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+.prob-card-desc {
+  font-size: clamp(9px, 1vh, 13px);
+  color: #666;
+  line-height: 1.35;
+}
+
+/* Row 3: two-column */
+.row3-grid {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(6px, 0.8vh, 10px);
+}
+.sub-panel {
+  background: #fff;
+  border: 2px solid #e0e0e8;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.sub-panel:hover { border-color: #c4b5fd; }
+
+.footer {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 2px 0;
+  font-size: clamp(9px, 1vh, 12px);
+  color: #aaa;
+}
+
+@media (max-width: 900px) {
+  .problems-grid { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="./">← Home</a>
+    <h1>Grid Screening &amp; Ice Quality</h1>
+    <p>Evaluating grid quality at atlas, square, and hole level</p>
+  </div>
+
+  <div class="content">
+    <!-- Row 1: Screening Hierarchy -->
+    <div class="panel">
+      <div class="panel-canvas"><canvas id="cvHier"></canvas></div>
+    </div>
+
+    <!-- Row 2: Common Problems (6 cards) -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-dot" style="background:#ef4444"></div>
+        <span class="panel-title">Common Ice &amp; Sample Problems</span>
+      </div>
+      <div class="problems-grid">
+        <div class="prob-card" style="border-color:#10b981">
+          <div class="prob-card-icon"><canvas id="cvIdeal"></canvas></div>
+          <div class="prob-card-body">
+            <div class="prob-card-name" style="color:#10b981">✓ Ideal</div>
+            <div class="prob-card-desc">Even particles, thin vitreous ice</div>
+          </div>
+        </div>
+        <div class="prob-card" style="border-color:#ef4444">
+          <div class="prob-card-icon"><canvas id="cvCrystal"></canvas></div>
+          <div class="prob-card-body">
+            <div class="prob-card-name" style="color:#ef4444">✗ Crystalline</div>
+            <div class="prob-card-desc">Ice rings in FFT; slow cooling</div>
+          </div>
+        </div>
+        <div class="prob-card" style="border-color:#f59e0b">
+          <div class="prob-card-icon"><canvas id="cvAgg"></canvas></div>
+          <div class="prob-card-body">
+            <div class="prob-card-name" style="color:#f59e0b">✗ Aggregation</div>
+            <div class="prob-card-desc">Clumped; instability or high conc.</div>
+          </div>
+        </div>
+        <div class="prob-card" style="border-color:#8b5cf6">
+          <div class="prob-card-icon"><canvas id="cvConc"></canvas></div>
+          <div class="prob-card-body">
+            <div class="prob-card-name" style="color:#8b5cf6">✗ Concentration</div>
+            <div class="prob-card-desc">Too few / too many particles</div>
+          </div>
+        </div>
+        <div class="prob-card" style="border-color:#6366f1">
+          <div class="prob-card-icon"><canvas id="cvContam"></canvas></div>
+          <div class="prob-card-body">
+            <div class="prob-card-name" style="color:#6366f1">✗ Contamination</div>
+            <div class="prob-card-desc">Ice crystals; humidity issues</div>
+          </div>
+        </div>
+        <div class="prob-card" style="border-color:#ec4899">
+          <div class="prob-card-icon"><canvas id="cvThick"></canvas></div>
+          <div class="prob-card-body">
+            <div class="prob-card-name" style="color:#ec4899">✗ Thick / Thin</div>
+            <div class="prob-card-desc">Poor contrast or empty holes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Support Films & Optimization -->
+    <div class="row3-grid">
+      <div class="sub-panel">
+        <div class="panel-header">
+          <div class="panel-dot" style="background:#3b82f6"></div>
+          <span class="panel-title">Support Films</span>
+        </div>
+        <div class="panel-canvas"><canvas id="cvSupport"></canvas></div>
+      </div>
+      <div class="sub-panel">
+        <div class="panel-header">
+          <div class="panel-dot" style="background:#10b981"></div>
+          <span class="panel-title">Grid Optimization Checklist</span>
+        </div>
+        <div class="panel-canvas"><canvas id="cvChecklist"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Passmore &amp; Russo (2016) Methods Enzymol · Naydenova &amp; Russo (2017) Nature Communications
+  </div>
+</div>
+
+<script>
+const dpr = window.devicePixelRatio || 1;
+
+function initCanvas(id) {
+  const c = document.getElementById(id);
+  const p = c.parentElement;
+  const w = p.clientWidth, h = p.clientHeight;
+  c.width = w * dpr; c.height = h * dpr;
+  const ctx = c.getContext('2d');
+  ctx.scale(dpr, dpr);
+  return { ctx, w, h };
+}
+
+function F(h, level) {
+  switch(level) {
+    case 'xl': return Math.round(Math.min(Math.max(h * 0.075, 14), 30));
+    case 'lg': return Math.round(Math.min(Math.max(h * 0.06, 12), 24));
+    case 'md': return Math.round(Math.min(Math.max(h * 0.05, 11), 20));
+    case 'sm': return Math.round(Math.min(Math.max(h * 0.04, 10), 16));
+  }
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+/* Row 1: Screening Hierarchy */
+function drawHierarchy() {
+  const { ctx, w, h } = initCanvas('cvHier');
+  const fs = F(h, 'lg');
+  const subFs = F(h, 'md');
+  const steps = [
+    { label: 'Atlas', sub: 'Whole grid', color: '#3b82f6', icon: 'grid' },
+    { label: 'Square', sub: 'Mesh square', color: '#8b5cf6', icon: 'square' },
+    { label: 'Hole', sub: 'Individual hole', color: '#f59e0b', icon: 'hole' },
+    { label: 'Decision', sub: 'Collect / Optimize', color: '#10b981', icon: 'check' },
+  ];
+
+  const stepW = w / (steps.length + 0.5);
+  const cy = h * 0.5;
+  const boxW = stepW * 0.72;
+  const boxH = h * 0.7;
+
+  steps.forEach((s, i) => {
+    const cx = stepW * (i + 0.7);
+
+    ctx.fillStyle = s.color + '12'; ctx.strokeStyle = s.color; ctx.lineWidth = 2;
+    roundRect(ctx, cx - boxW / 2, cy - boxH / 2, boxW, boxH, 8); ctx.fill(); ctx.stroke();
+
+    const iconY = cy - boxH * 0.12;
+    ctx.fillStyle = s.color;
+    if (s.icon === 'grid') {
+      for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++)
+        ctx.fillRect(cx - 10 + c * 8, iconY - 10 + r * 8, 6, 6);
+    } else if (s.icon === 'square') {
+      ctx.strokeStyle = s.color; ctx.lineWidth = 2;
+      ctx.strokeRect(cx - 10, iconY - 10, 20, 20);
+      ctx.fillStyle = s.color + '30'; ctx.fillRect(cx - 10, iconY - 10, 20, 20);
+    } else if (s.icon === 'hole') {
+      ctx.beginPath(); ctx.arc(cx, iconY, 10, 0, Math.PI * 2);
+      ctx.fillStyle = s.color + '30'; ctx.fill();
+      ctx.strokeStyle = s.color; ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = s.color;
+      [[-3,-3],[3,2],[0,4],[-4,2],[4,-2]].forEach(([dx,dy]) => {
+        ctx.beginPath(); ctx.arc(cx + dx, iconY + dy, 1.5, 0, Math.PI * 2); ctx.fill();
+      });
+    } else {
+      ctx.strokeStyle = s.color; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(cx - 8, iconY); ctx.lineTo(cx - 2, iconY + 7); ctx.lineTo(cx + 10, iconY - 6); ctx.stroke();
+    }
+
+    ctx.fillStyle = s.color; ctx.font = `800 ${fs}px Inter`; ctx.textAlign = 'center';
+    ctx.fillText(s.label, cx, cy + boxH * 0.22);
+    ctx.fillStyle = '#888'; ctx.font = `500 ${subFs}px Inter`;
+    ctx.fillText(s.sub, cx, cy + boxH * 0.22 + subFs + 2);
+
+    if (i < steps.length - 1) {
+      const ax1 = cx + boxW / 2 + 4, ax2 = cx + stepW - boxW / 2 - 4;
+      ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(ax1, cy); ctx.lineTo(ax2, cy); ctx.stroke();
+      ctx.fillStyle = '#cbd5e1';
+      ctx.beginPath(); ctx.moveTo(ax2, cy); ctx.lineTo(ax2 - 6, cy - 4); ctx.lineTo(ax2 - 6, cy + 4); ctx.closePath(); ctx.fill();
+    }
+  });
+}
+
+/* Problem Card Canvases */
+function drawProblemCard(id, drawFn) {
+  const { ctx, w, h } = initCanvas(id);
+  drawFn(ctx, w, h);
+}
+
+function drawIdeal(ctx, w, h) {
+  ctx.fillStyle = 'rgba(147,197,253,0.15)';
+  ctx.beginPath(); ctx.arc(w/2, h/2, Math.min(w,h)*0.38, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = '#10b981'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(w/2, h/2, Math.min(w,h)*0.38, 0, Math.PI*2); ctx.stroke();
+  ctx.fillStyle = '#1e40af';
+  [[0.3,0.3],[0.5,0.25],[0.7,0.35],[0.25,0.5],[0.45,0.48],
+   [0.65,0.52],[0.75,0.55],[0.35,0.65],[0.55,0.7],[0.5,0.5],
+   [0.4,0.38],[0.6,0.42],[0.3,0.55],[0.7,0.65],[0.45,0.6]].forEach(([rx,ry]) => {
+    ctx.beginPath(); ctx.arc(w*rx, h*ry, 2.5, 0, Math.PI*2); ctx.fill();
+  });
+}
+
+function drawCrystalline(ctx, w, h) {
+  ctx.fillStyle = 'rgba(239,68,68,0.06)'; ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = 'rgba(239,68,68,0.5)'; ctx.lineWidth = 1.5;
+  [0.2, 0.35, 0.5].forEach(r => {
+    ctx.beginPath(); ctx.arc(w/2, h/2, Math.min(w,h)*r, 0, Math.PI*2); ctx.stroke();
+  });
+  ctx.fillStyle = '#ef4444'; ctx.font = `700 ${F(h, 'sm')}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Ice rings', w/2, h*0.88);
+}
+
+function drawAggregation(ctx, w, h) {
+  ctx.fillStyle = 'rgba(147,197,253,0.1)';
+  ctx.beginPath(); ctx.arc(w/2, h/2, Math.min(w,h)*0.38, 0, Math.PI*2); ctx.fill();
+  [[0.3,0.35],[0.65,0.55]].forEach(([cx,cy]) => {
+    ctx.fillStyle = 'rgba(245,158,11,0.15)';
+    ctx.beginPath(); ctx.arc(w*cx, h*cy, 18, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#92400e';
+    for (let i = 0; i < 8; i++) {
+      const a = (i/8)*Math.PI*2, d = 3 + (i*7%11)/11*9;
+      ctx.beginPath(); ctx.arc(w*cx+Math.cos(a)*d, h*cy+Math.sin(a)*d, 2.5, 0, Math.PI*2); ctx.fill();
+    }
+  });
+}
+
+function drawConcentration(ctx, w, h) {
+  const s = Math.min(w, h);
+  ctx.strokeStyle = '#ddd'; ctx.lineWidth = 1; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(w/2, 4); ctx.lineTo(w/2, h-4); ctx.stroke(); ctx.setLineDash([]);
+
+  ctx.fillStyle = 'rgba(147,197,253,0.1)';
+  ctx.beginPath(); ctx.arc(w*0.25, h*0.45, s*0.25, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#1e40af';
+  [[0.2,0.4],[0.3,0.5]].forEach(([rx,ry]) => { ctx.beginPath(); ctx.arc(w*rx, h*ry, 2.5, 0, Math.PI*2); ctx.fill(); });
+  ctx.fillStyle = '#8b5cf6'; ctx.font = `600 ${F(h,'sm')}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Too few', w*0.25, h*0.82);
+
+  ctx.fillStyle = 'rgba(147,197,253,0.1)';
+  ctx.beginPath(); ctx.arc(w*0.75, h*0.45, s*0.25, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#1e40af';
+  for (let i = 0; i < 25; i++) {
+    const a = (i/25)*Math.PI*2, d = (0.05+(i*7%11)/11*0.2)*s;
+    ctx.beginPath(); ctx.arc(w*0.75+Math.cos(a)*d, h*0.45+Math.sin(a)*d, 1.5, 0, Math.PI*2); ctx.fill();
+  }
+  ctx.fillStyle = '#8b5cf6'; ctx.fillText('Too many', w*0.75, h*0.82);
+}
+
+function drawContamination(ctx, w, h) {
+  ctx.fillStyle = 'rgba(147,197,253,0.1)';
+  ctx.beginPath(); ctx.arc(w/2, h/2, Math.min(w,h)*0.35, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#1e40af';
+  [[0.4,0.4],[0.55,0.5],[0.5,0.6]].forEach(([rx,ry]) => { ctx.beginPath(); ctx.arc(w*rx, h*ry, 2, 0, Math.PI*2); ctx.fill(); });
+  ctx.fillStyle = 'rgba(99,102,241,0.3)'; ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 1;
+  [[0.3,0.3,12],[0.7,0.35,15],[0.6,0.7,10]].forEach(([rx,ry,sz]) => {
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) { const a = i*Math.PI/3; const px = w*rx+Math.cos(a)*sz, py = h*ry+Math.sin(a)*sz; i===0?ctx.moveTo(px,py):ctx.lineTo(px,py); }
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+  });
+}
+
+function drawThickThin(ctx, w, h) {
+  const s = Math.min(w, h);
+  ctx.fillStyle = '#1e293b';
+  ctx.beginPath(); ctx.arc(w*0.25, h*0.42, s*0.25, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#334155';
+  [[0.2,0.35],[0.25,0.45],[0.3,0.4]].forEach(([rx,ry]) => { ctx.beginPath(); ctx.arc(w*rx, h*ry, 2, 0, Math.PI*2); ctx.fill(); });
+  ctx.fillStyle = '#ec4899'; ctx.font = `600 ${F(h,'sm')}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Thick', w*0.25, h*0.82);
+
+  ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(w*0.75, h*0.42, s*0.25, 0, Math.PI*2); ctx.stroke();
+  ctx.strokeStyle = '#cbd5e1'; ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.arc(w*0.75, h*0.42, s*0.18, 0, Math.PI*1.3); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = '#ec4899'; ctx.fillText('Thin/Empty', w*0.75, h*0.82);
+}
+
+/* Row 3a: Support Films */
+function drawSupportFilms() {
+  const { ctx, w, h } = initCanvas('cvSupport');
+  const titleFs = F(h, 'lg');
+  const bodyFs = F(h, 'md');
+  const pad = 10;
+
+  const films = [
+    { name: 'Holey Carbon', color: '#64748b', bg: '#f1f5f9',
+      pros: ['Standard, widely available', 'Works for most samples'],
+      cons: ['AWI problem persists', 'Hydrophilization needed'] },
+    { name: 'Graphene Oxide', color: '#10b981', bg: '#dcfce7',
+      pros: ['Reduces AWI exposure', 'Works with small proteins'],
+      cons: ['Adds background', 'Prep variability'] },
+    { name: 'UltrAuFoil', color: '#f59e0b', bg: '#fef3c7',
+      pros: ['Less beam-induced motion', 'Flat, stable support'],
+      cons: ['More expensive', 'Limited hole patterns'] },
+  ];
+
+  const cardW = (w - pad * 4) / 3;
+  const cardH = h - pad * 2;
+  const lineH = bodyFs + 4;
+
+  films.forEach((f, i) => {
+    const cx = pad + i * (cardW + pad);
+
+    ctx.fillStyle = f.bg; ctx.strokeStyle = f.color; ctx.lineWidth = 1.5;
+    roundRect(ctx, cx, pad, cardW, cardH, 8); ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle = f.color; ctx.font = `800 ${titleFs}px Inter`; ctx.textAlign = 'center';
+    ctx.fillText(f.name, cx + cardW / 2, pad + titleFs + 6);
+
+    let y = pad + titleFs + lineH + 8;
+    ctx.fillStyle = '#16a34a'; ctx.font = `600 ${bodyFs}px Inter`; ctx.textAlign = 'left';
+    ctx.fillText('Pros:', cx + 8, y); y += lineH;
+    ctx.font = `500 ${bodyFs}px Inter`; ctx.fillStyle = '#333';
+    f.pros.forEach(p => { ctx.fillText('+ ' + p, cx + 8, y); y += lineH; });
+
+    y += 4;
+    ctx.fillStyle = '#dc2626'; ctx.font = `600 ${bodyFs}px Inter`;
+    ctx.fillText('Cons:', cx + 8, y); y += lineH;
+    ctx.font = `500 ${bodyFs}px Inter`; ctx.fillStyle = '#666';
+    f.cons.forEach(c => { ctx.fillText('− ' + c, cx + 8, y); y += lineH; });
+  });
+}
+
+/* Row 3b: Grid Optimization Checklist */
+function drawChecklist() {
+  const { ctx, w, h } = initCanvas('cvChecklist');
+  const catFs = F(h, 'lg');
+  const itemFs = F(h, 'md');
+  const pad = 10;
+
+  const items = [
+    { cat: 'Sample', color: '#3b82f6', items: ['SEC / DLS to confirm homogeneity', 'Negative stain to assess quality', 'Optimize conc. (0.5–5 mg/mL)'] },
+    { cat: 'Grid', color: '#f59e0b', items: ['Choose grid type (C-flat, Quantifoil)', 'Glow discharge (10–60 s)', 'Consider support film if needed'] },
+    { cat: 'Freezing', color: '#8b5cf6', items: ['Optimize blot time & force', 'Check humidity (>90%)', 'Test multiple conditions'] },
+    { cat: 'Screening', color: '#10b981', items: ['Check atlas for grid coverage', 'Assess ice thickness at holes', 'Verify particle distribution'] },
+  ];
+
+  const colW = (w - pad * 2) / 2;
+  const rowH = (h - pad * 2) / 2;
+  const lineH = itemFs + 5;
+
+  items.forEach((group, gi) => {
+    const col = gi % 2, row = Math.floor(gi / 2);
+    const gx = pad + col * colW, gy = pad + row * rowH;
+
+    ctx.fillStyle = group.color; ctx.font = `800 ${catFs}px Inter`; ctx.textAlign = 'left';
+    ctx.fillText(group.cat, gx + 4, gy + catFs);
+
+    ctx.fillStyle = '#333'; ctx.font = `500 ${itemFs}px Inter`;
+    group.items.forEach((item, j) => {
+      const iy = gy + catFs + 6 + j * lineH;
+      ctx.strokeStyle = group.color; ctx.lineWidth = 1.5;
+      roundRect(ctx, gx + 4, iy - itemFs * 0.55, itemFs * 0.7, itemFs * 0.7, 2); ctx.stroke();
+      ctx.strokeStyle = group.color; ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(gx + 4 + itemFs * 0.15, iy - itemFs * 0.1);
+      ctx.lineTo(gx + 4 + itemFs * 0.3, iy + itemFs * 0.05);
+      ctx.lineTo(gx + 4 + itemFs * 0.55, iy - itemFs * 0.3);
+      ctx.stroke();
+      ctx.fillStyle = '#333';
+      ctx.fillText(item, gx + itemFs + 4, iy);
+    });
+  });
+}
+
+function init() {
+  drawHierarchy();
+  drawProblemCard('cvIdeal', drawIdeal);
+  drawProblemCard('cvCrystal', drawCrystalline);
+  drawProblemCard('cvAgg', drawAggregation);
+  drawProblemCard('cvConc', drawConcentration);
+  drawProblemCard('cvContam', drawContamination);
+  drawProblemCard('cvThick', drawThickThin);
+  drawSupportFilms();
+  drawChecklist();
+}
+
+window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('resize', init);
+</script>
+</body>
+</html>

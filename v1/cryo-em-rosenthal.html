@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Particle Count & Resolution</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(22px, 2.8vh, 36px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(11px, 1.3vh, 17px); color: #777; margin-top: 2px; font-weight: 500; }
+.content {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: clamp(8px, 1vw, 16px);
+  padding: clamp(4px, 0.5vh, 8px) 0;
+}
+.sec-canvas { min-height: 0; }
+.sec-canvas canvas { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="./">&larr; Home</a>
+    <h1>Particle Count & Resolution</h1>
+    <p>Rosenthal-Henderson plot: how particle number determines achievable resolution</p>
+  </div>
+  <div class="content">
+    <div class="sec-canvas"><canvas id="cv1"></canvas></div>
+    <div class="sec-canvas"><canvas id="cv2"></canvas></div>
+  </div>
+  <div style="flex-shrink:0;font-size:clamp(8px,0.9vh,11px);color:#aaa;text-align:center;padding:2px 8px;">Rosenthal &amp; Henderson, J Mol Biol (2003)</div>
+</div>
+
+<script>
+function setupCanvas(id) {
+    const c = document.getElementById(id);
+    const rect = c.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    c.width = Math.round(rect.width * dpr);
+    c.height = Math.round(rect.height * dpr);
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: rect.width, h: rect.height };
+}
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    if (Array.isArray(r)) { ctx.moveTo(x+r[0],y); ctx.arcTo(x+w,y,x+w,y+h,r[1]); ctx.arcTo(x+w,y+h,x,y+h,r[2]); ctx.arcTo(x,y+h,x,y,r[3]); ctx.arcTo(x,y,x+w,y,r[0]); }
+    else { ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+r,r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r); ctx.arcTo(x,y+h,x,y+h-r,r); ctx.arcTo(x,y,x+r,y,r); }
+    ctx.closePath();
+}
+
+// === Left: Rosenthal-Henderson Plot ===
+function drawPlot(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 700, h / 650);
+    const pad = 14 * s;
+
+    // Background card
+    ctx.fillStyle = '#fff';
+    roundRect(ctx, 0, 0, w, h, 10);
+    ctx.fill();
+    ctx.strokeStyle = '#e0e0e8';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, 0, 0, w, h, 10);
+    ctx.stroke();
+
+    // Plot area
+    const plotL = 70 * s;
+    const plotR = w - 30 * s;
+    const plotT = 20 * s;
+    const plotB = h - 60 * s;
+    const plotW = plotR - plotL;
+    const plotH = plotB - plotT;
+
+    // Axes
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(plotL, plotT);
+    ctx.lineTo(plotL, plotB);
+    ctx.lineTo(plotR, plotB);
+    ctx.stroke();
+
+    // X-axis: log10(N) from 2 (100) to 7 (10M)
+    // Y-axis: Resolution in Å from 1 to 30 (inverted, lower = better = top)
+    const xMin = 2, xMax = 7; // log10 scale
+    const yMin = 1, yMax = 30; // Å (log scale)
+
+    function toX(logN) { return plotL + (logN - xMin) / (xMax - xMin) * plotW; }
+    function toY(res) { return plotT + Math.log(res / yMin) / Math.log(yMax / yMin) * plotH; }
+
+    // Grid lines
+    ctx.strokeStyle = '#f0f0f5';
+    ctx.lineWidth = 0.8;
+    for (let logN = 3; logN <= 6; logN++) {
+        const x = toX(logN);
+        ctx.beginPath(); ctx.moveTo(x, plotT); ctx.lineTo(x, plotB); ctx.stroke();
+    }
+    const yTicks = [2, 3, 5, 10, 20];
+    for (const yt of yTicks) {
+        const y = toY(yt);
+        ctx.beginPath(); ctx.moveTo(plotL, y); ctx.lineTo(plotR, y); ctx.stroke();
+    }
+
+    // X tick labels
+    ctx.font = `${Math.round(9 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#666';
+    ctx.textAlign = 'center';
+    const xLabels = [
+        { v: 2, t: '10²' }, { v: 3, t: '10³' }, { v: 4, t: '10⁴' },
+        { v: 5, t: '10⁵' }, { v: 6, t: '10⁶' }, { v: 7, t: '10⁷' },
+    ];
+    for (const xl of xLabels) {
+        ctx.fillText(xl.t, toX(xl.v), plotB + 14 * s);
+    }
+
+    // Y tick labels
+    ctx.textAlign = 'right';
+    for (const yt of [2, 3, 5, 10, 20]) {
+        ctx.fillText(yt + ' Å', plotL - 6 * s, toY(yt) + 3 * s);
+    }
+
+    // Axis labels
+    ctx.font = `bold ${Math.round(11 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#333';
+    ctx.textAlign = 'center';
+    ctx.fillText('Number of Particles', (plotL + plotR) / 2, plotB + 32 * s);
+
+    ctx.save();
+    ctx.translate(16 * s, (plotT + plotB) / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Resolution (Å)', 0, 0);
+    ctx.restore();
+
+    // Formula box
+    ctx.font = `${Math.round(9 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#8b5cf6' + '12';
+    const fBoxW = 180 * s;
+    const fBoxH = 38 * s;
+    const fBoxX = plotR - fBoxW - 10 * s;
+    const fBoxY = plotT + 10 * s;
+    roundRect(ctx, fBoxX, fBoxY, fBoxW, fBoxH, 6);
+    ctx.fill();
+    ctx.strokeStyle = '#8b5cf6' + '40';
+    ctx.lineWidth = 1;
+    roundRect(ctx, fBoxX, fBoxY, fBoxW, fBoxH, 6);
+    ctx.stroke();
+    ctx.font = `bold ${Math.round(9 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#8b5cf6';
+    ctx.textAlign = 'center';
+    ctx.fillText('d ∝ 1 / √N', fBoxX + fBoxW / 2, fBoxY + 14 * s);
+    ctx.font = `${Math.round(8 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#888';
+    ctx.fillText('Rosenthal & Henderson, 2003', fBoxX + fBoxW / 2, fBoxY + 28 * s);
+
+    // Theoretical curves for different B-factors
+    // Resolution = C * B^(1/2) / N^(1/2) (simplified)
+    // d = k / sqrt(N) where k depends on SNR/B-factor
+    const curves = [
+        { k: 200, color: '#10b981', label: 'Ideal (high SNR)', dash: [] },
+        { k: 600, color: '#3b82f6', label: 'Typical (moderate)', dash: [] },
+        { k: 2000, color: '#f59e0b', label: 'Challenging (low SNR)', dash: [] },
+    ];
+
+    for (const curve of curves) {
+        ctx.strokeStyle = curve.color;
+        ctx.lineWidth = 2.5;
+        ctx.setLineDash(curve.dash);
+        ctx.beginPath();
+        let started = false;
+        for (let logN = xMin; logN <= xMax; logN += 0.05) {
+            const N = Math.pow(10, logN);
+            const res = curve.k / Math.sqrt(N);
+            if (res < yMin || res > yMax) { if (started) { ctx.stroke(); ctx.beginPath(); started = false; } continue; }
+            const x = toX(logN);
+            const y = toY(res);
+            if (!started) { ctx.moveTo(x, y); started = true; }
+            else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    // Legend
+    const legX = plotL + 12 * s;
+    const legY = plotT + 14 * s;
+    for (let i = 0; i < curves.length; i++) {
+        const ly = legY + i * 16 * s;
+        ctx.strokeStyle = curves[i].color;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.moveTo(legX, ly); ctx.lineTo(legX + 20 * s, ly); ctx.stroke();
+        ctx.font = `${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#555';
+        ctx.textAlign = 'left';
+        ctx.fillText(curves[i].label, legX + 26 * s, ly + 3 * s);
+    }
+
+    // Landmark data points
+    const landmarks = [
+        { logN: Math.log10(300000), res: 2.2, label: 'β-gal', color: '#10b981' },
+        { logN: Math.log10(130000), res: 2.8, label: 'Ribosome', color: '#3b82f6' },
+        { logN: Math.log10(500000), res: 1.8, label: 'Apoferritin', color: '#10b981' },
+        { logN: Math.log10(50000), res: 3.5, label: 'GPCR', color: '#f59e0b' },
+        { logN: Math.log10(800000), res: 3.0, label: 'Small protein', color: '#3b82f6' },
+        { logN: Math.log10(25000), res: 4.2, label: 'Membrane', color: '#f59e0b' },
+    ];
+
+    for (const lm of landmarks) {
+        const lx = toX(lm.logN);
+        const ly = toY(lm.res);
+        ctx.fillStyle = lm.color;
+        ctx.beginPath(); ctx.arc(lx, ly, 4 * s, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(lx, ly, 4 * s, 0, Math.PI * 2); ctx.stroke();
+
+        ctx.font = `bold ${Math.round(8 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#444';
+        ctx.textAlign = 'left';
+        ctx.fillText(lm.label, lx + 7 * s, ly + 3 * s);
+    }
+
+    // Resolution zones shading
+    // 3Å threshold line
+    ctx.strokeStyle = '#ef4444' + '50';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 3]);
+    const y3A = toY(3);
+    ctx.beginPath(); ctx.moveTo(plotL, y3A); ctx.lineTo(plotR, y3A); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.font = `${Math.round(8 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#ef4444';
+    ctx.textAlign = 'right';
+    ctx.fillText('3 Å threshold', plotR - 4 * s, y3A - 4 * s);
+
+    // Bottom note
+    ctx.font = `${Math.round(8.5 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#aaa';
+    ctx.textAlign = 'center';
+    ctx.fillText('Log-log plot: resolution improves as √N (doubling resolution needs 4× particles)', (plotL + plotR) / 2, plotB + 48 * s);
+}
+
+// === Right: Key Concepts & Practical Guide ===
+function drawRight(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 550, h / 650);
+    const pad = 12 * s;
+
+    // Card bg
+    ctx.fillStyle = '#fff';
+    roundRect(ctx, 0, 0, w, h, 10);
+    ctx.fill();
+    ctx.strokeStyle = '#e0e0e8';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, 0, 0, w, h, 10);
+    ctx.stroke();
+
+    let y = pad;
+
+    // Title: Key Insight
+    ctx.fillStyle = '#7c3aed' + '10';
+    roundRect(ctx, pad, y, w - pad * 2, 50 * s, 8);
+    ctx.fill();
+    ctx.strokeStyle = '#7c3aed' + '40';
+    ctx.lineWidth = 1;
+    roundRect(ctx, pad, y, w - pad * 2, 50 * s, 8);
+    ctx.stroke();
+
+    ctx.font = `bold ${Math.round(13 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#7c3aed';
+    ctx.textAlign = 'center';
+    ctx.fillText('Key Insight: The √N Rule', w / 2, y + 20 * s);
+    ctx.font = `${Math.round(10 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#666';
+    ctx.fillText('To halve resolution (e.g. 4→2 Å), need 4× more particles', w / 2, y + 38 * s);
+
+    y += 62 * s;
+
+    // Practical examples table
+    const tableData = [
+        { particles: '10,000', typical: '~6–10 Å', use: 'Initial model' },
+        { particles: '50,000', typical: '~4–5 Å', use: 'Secondary structure' },
+        { particles: '100,000', typical: '~3–4 Å', use: 'Near-atomic' },
+        { particles: '500,000', typical: '~2–3 Å', use: 'Atomic detail' },
+        { particles: '1,000,000+', typical: '~1.5–2 Å', use: 'Drug binding' },
+    ];
+
+    ctx.font = `bold ${Math.round(11 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#333';
+    ctx.textAlign = 'left';
+    ctx.fillText('Typical Particle Count Requirements', pad + 6 * s, y + 4 * s);
+    y += 16 * s;
+
+    // Table header
+    const colX = [pad + 6 * s, pad + 110 * s, pad + 200 * s];
+    ctx.fillStyle = '#f8f7ff';
+    ctx.fillRect(pad, y, w - pad * 2, 18 * s);
+    ctx.font = `bold ${Math.round(9 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#7c3aed';
+    ctx.fillText('Particles', colX[0], y + 12 * s);
+    ctx.fillText('Resolution', colX[1], y + 12 * s);
+    ctx.fillText('What You See', colX[2], y + 12 * s);
+    y += 20 * s;
+
+    ctx.font = `${Math.round(9 * s)}px Inter,sans-serif`;
+    for (let i = 0; i < tableData.length; i++) {
+        const d = tableData[i];
+        if (i % 2 === 0) {
+            ctx.fillStyle = '#fafafa';
+            ctx.fillRect(pad, y, w - pad * 2, 18 * s);
+        }
+        ctx.fillStyle = '#333';
+        ctx.font = `bold ${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.fillText(d.particles, colX[0], y + 12 * s);
+        ctx.font = `${Math.round(9 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#3b82f6';
+        ctx.fillText(d.typical, colX[1], y + 12 * s);
+        ctx.fillStyle = '#666';
+        ctx.fillText(d.use, colX[2], y + 12 * s);
+        y += 18 * s;
+    }
+
+    y += 16 * s;
+
+    // Factors affecting resolution
+    ctx.font = `bold ${Math.round(11 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#333';
+    ctx.textAlign = 'left';
+    ctx.fillText('Factors Beyond Particle Count', pad + 6 * s, y);
+    y += 14 * s;
+
+    const factors = [
+        { name: 'Molecular weight', detail: 'Larger → higher SNR → fewer particles needed', color: '#10b981', icon: '▪' },
+        { name: 'Symmetry', detail: 'Icosahedral (60×) vs C1 (1×) multiplier', color: '#3b82f6', icon: '▪' },
+        { name: 'Conformational homogeneity', detail: 'Flexible regions limit local resolution', color: '#f59e0b', icon: '▪' },
+        { name: 'Preferred orientation', detail: 'Missing views → anisotropic resolution', color: '#ef4444', icon: '▪' },
+        { name: 'Ice quality', detail: 'Thin vitreous ice → better contrast', color: '#8b5cf6', icon: '▪' },
+        { name: 'Detector & microscope', detail: 'DED, Cs corrector, energy filter', color: '#ec4899', icon: '▪' },
+    ];
+
+    for (const f of factors) {
+        ctx.fillStyle = f.color + '10';
+        roundRect(ctx, pad + 4 * s, y, w - pad * 2 - 8 * s, 30 * s, 6);
+        ctx.fill();
+
+        ctx.fillStyle = f.color;
+        ctx.font = `bold ${Math.round(9.5 * s)}px Inter,sans-serif`;
+        ctx.fillText(f.icon + ' ' + f.name, pad + 12 * s, y + 12 * s);
+        ctx.font = `${Math.round(8.5 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#777';
+        ctx.fillText(f.detail, pad + 12 * s, y + 24 * s);
+        y += 34 * s;
+    }
+
+    y += 8 * s;
+
+    // Bottom note
+    ctx.fillStyle = '#f59e0b' + '10';
+    roundRect(ctx, pad, y, w - pad * 2, 40 * s, 8);
+    ctx.fill();
+    ctx.strokeStyle = '#f59e0b' + '40';
+    ctx.lineWidth = 1;
+    roundRect(ctx, pad, y, w - pad * 2, 40 * s, 8);
+    ctx.stroke();
+
+    ctx.font = `bold ${Math.round(9 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#f59e0b';
+    ctx.textAlign = 'center';
+    ctx.fillText('⚠ Real-world caveat', w / 2, y + 14 * s);
+    ctx.font = `${Math.round(8.5 * s)}px Inter,sans-serif`;
+    ctx.fillStyle = '#888';
+    ctx.fillText('More particles alone won\'t help if sample is heterogeneous or has preferred orientation', w / 2, y + 28 * s);
+}
+
+function renderAll() { drawPlot('cv1'); drawRight('cv2'); }
+window.addEventListener('DOMContentLoaded', renderAll);
+window.addEventListener('resize', () => { clearTimeout(window._rt); window._rt = setTimeout(renderAll, 150); });
+</script>
+</body>
+</html>

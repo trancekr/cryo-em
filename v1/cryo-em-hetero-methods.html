@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heterogeneity Analysis Methods</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(22px, 2.8vh, 36px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(11px, 1.3vh, 17px); color: #777; margin-top: 2px; font-weight: 500; }
+.sec-canvas { flex: 1; min-height: 0; padding: clamp(4px, 0.5vh, 8px) 0; }
+.sec-canvas canvas { display: block; width: 100%; height: 100%; }
+.refs { flex-shrink: 0; font-size: clamp(8px, 0.9vh, 11px); color: #aaa; text-align: center; padding: 2px 8px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="./">&larr; Home</a>
+    <h1>Heterogeneity Analysis Methods</h1>
+    <p>Computational approaches for resolving conformational states from cryo-EM data</p>
+  </div>
+  <div class="sec-canvas"><canvas id="cv"></canvas></div>
+  <div class="refs">Scheres, Methods Enzymol (2016) &middot; Punjani &amp; Fleet, J Struct Biol (2021) &middot; Zhong et al., Nat Methods (2021) &middot; Gilles &amp; Singer, PNAS (2025)</div>
+</div>
+
+<script>
+function setupCanvas(id) {
+    const c = document.getElementById(id);
+    const rect = c.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    c.width = Math.round(rect.width * dpr);
+    c.height = Math.round(rect.height * dpr);
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: rect.width, h: rect.height };
+}
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    if (Array.isArray(r)) { ctx.moveTo(x+r[0],y); ctx.arcTo(x+w,y,x+w,y+h,r[1]); ctx.arcTo(x+w,y+h,x,y+h,r[2]); ctx.arcTo(x,y+h,x,y,r[3]); ctx.arcTo(x,y,x+w,y,r[0]); }
+    else { ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+r,r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r); ctx.arcTo(x,y+h,x,y+h-r,r); ctx.arcTo(x,y,x+r,y,r); }
+    ctx.closePath();
+}
+
+function draw(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 1050, h / 520);
+    const pad = 14 * s;
+
+    // 4 method cards in a row
+    const methods = [
+        {
+            title: '3D Classification',
+            color: '#8b5cf6',
+            tool: 'RELION',
+            approach: 'Discrete',
+            desc: 'Assigns particles to K discrete classes using maximum likelihood expectation-maximization.',
+            how: ['Choose number of classes K (3\u20136)', 'EM algorithm iterates particle\nassignments and 3D models', 'Each class produces separate map'],
+            best: 'Known discrete states\n(e.g., ligand bound vs unbound)',
+            pros: ['Well-established, reliable', 'Clear discrete outputs'],
+            cons: ['Must pre-specify K', 'Cannot capture continuous motion'],
+        },
+        {
+            title: 'Heterogeneous\nRefinement',
+            color: '#3b82f6',
+            tool: 'cryoSPARC',
+            approach: 'Discrete',
+            desc: 'Simultaneous ab initio reconstruction of multiple classes without requiring initial models.',
+            how: ['No initial model needed', 'Runs multiple ab initio\nreconstructions in parallel', 'Auto-assigns particles to classes'],
+            best: 'Initial exploration of\nheterogeneity in new datasets',
+            pros: ['No prior model needed', 'Fast GPU implementation'],
+            cons: ['Limited number of classes', 'May not find rare states'],
+        },
+        {
+            title: '3D Variability\nAnalysis (3DVA)',
+            color: '#10b981',
+            tool: 'cryoSPARC',
+            approach: 'Continuous',
+            desc: 'Fits a linear subspace model to capture continuous conformational changes via PCA.',
+            how: ['Compute principal components\nof 3D variance', 'Each PC represents one\nmode of motion', 'Generate movie along each PC'],
+            best: 'Continuous domain motions\n(e.g., hinge-bending, breathing)',
+            pros: ['Captures continuous dynamics', 'Interpretable motion modes'],
+            cons: ['Linear model only', 'Needs >100k particles'],
+        },
+        {
+            title: 'Deep Learning\n(cryoDRGN/RECOVAR)',
+            color: '#ef4444',
+            tool: 'cryoDRGN',
+            approach: 'Continuous',
+            desc: 'Uses variational autoencoders (VAE) or regularized covariance to learn a non-linear conformational landscape.',
+            how: ['Encode particles into low-\ndimensional latent space', 'Decode any latent point\ninto a 3D density map', 'Cluster/traverse the landscape'],
+            best: 'Complex non-linear motions\nand conformational landscapes',
+            pros: ['Non-linear heterogeneity', 'Landscape visualization'],
+            cons: ['Computationally expensive', 'Risk of overfitting noise'],
+        },
+    ];
+
+    const gap = 10 * s;
+    const cardW = (w - pad * 2 - gap * 3) / 4;
+    const cardH = h - pad * 2;
+
+    for (let i = 0; i < methods.length; i++) {
+        const m = methods[i];
+        const cx = pad + i * (cardW + gap);
+        const cy = pad;
+
+        // Card bg
+        ctx.fillStyle = '#fff';
+        roundRect(ctx, cx, cy, cardW, cardH, 10);
+        ctx.fill();
+        ctx.strokeStyle = m.color + '40';
+        ctx.lineWidth = 1.5;
+        roundRect(ctx, cx, cy, cardW, cardH, 10);
+        ctx.stroke();
+
+        // Top strip
+        ctx.fillStyle = m.color;
+        roundRect(ctx, cx, cy, cardW, 4, [10, 10, 0, 0]);
+        ctx.fill();
+
+        let y = cy + 18 * s;
+
+        // Title (may be multiline)
+        ctx.font = `bold ${Math.round(16 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = m.color;
+        ctx.textAlign = 'center';
+        const titleLines = m.title.split('\n');
+        for (const tl of titleLines) {
+            ctx.fillText(tl, cx + cardW / 2, y);
+            y += 20 * s;
+        }
+
+        // Tool pill
+        ctx.font = `bold ${Math.round(11 * s)}px Inter,sans-serif`;
+        const pillW = ctx.measureText(m.tool).width + 16 * s;
+        ctx.fillStyle = m.color + '15';
+        roundRect(ctx, cx + (cardW - pillW) / 2, y, pillW, 22 * s, 11 * s);
+        ctx.fill();
+        ctx.fillStyle = m.color;
+        ctx.fillText(m.tool, cx + cardW / 2, y + 15 * s);
+        y += 28 * s;
+
+        // Approach badge
+        ctx.font = `bold ${Math.round(10 * s)}px Inter,sans-serif`;
+        const apColor = m.approach === 'Discrete' ? '#8b5cf6' : '#10b981';
+        const apW = ctx.measureText(m.approach).width + 14 * s;
+        ctx.fillStyle = apColor + '15';
+        roundRect(ctx, cx + (cardW - apW) / 2, y, apW, 19 * s, 9 * s);
+        ctx.fill();
+        ctx.fillStyle = apColor;
+        ctx.fillText(m.approach, cx + cardW / 2, y + 13 * s);
+        y += 26 * s;
+
+        // Description
+        ctx.font = `${Math.round(11 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#666';
+        ctx.textAlign = 'left';
+        const words = m.desc.split(' ');
+        let line = '';
+        const maxW = cardW - 24 * s;
+        for (const word of words) {
+            const test = line + (line ? ' ' : '') + word;
+            if (ctx.measureText(test).width > maxW && line) {
+                ctx.fillText(line, cx + 12 * s, y);
+                line = word; y += 15 * s;
+            } else line = test;
+        }
+        if (line) { ctx.fillText(line, cx + 12 * s, y); y += 15 * s; }
+
+        y += 8 * s;
+
+        // How it works
+        ctx.fillStyle = m.color + '08';
+        const howH = 76 * s;
+        roundRect(ctx, cx + 6 * s, y, cardW - 12 * s, howH, 6);
+        ctx.fill();
+        ctx.font = `bold ${Math.round(11 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = m.color;
+        ctx.fillText('How it works', cx + 14 * s, y + 15 * s);
+        ctx.font = `${Math.round(10 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#555';
+        let hy = y + 28 * s;
+        for (let j = 0; j < m.how.length; j++) {
+            const hLines = m.how[j].split('\n');
+            ctx.fillStyle = m.color;
+            ctx.fillText((j + 1) + '.', cx + 14 * s, hy);
+            ctx.fillStyle = '#555';
+            for (const hl of hLines) {
+                ctx.fillText(hl, cx + 26 * s, hy);
+                hy += 14 * s;
+            }
+        }
+        y += howH + 10 * s;
+
+        // Best for
+        ctx.fillStyle = '#fefce8';
+        roundRect(ctx, cx + 6 * s, y, cardW - 12 * s, 42 * s, 6);
+        ctx.fill();
+        ctx.font = `bold ${Math.round(11 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#92400e';
+        ctx.fillText('Best for:', cx + 14 * s, y + 15 * s);
+        ctx.font = `${Math.round(10 * s)}px Inter,sans-serif`;
+        const bLines = m.best.split('\n');
+        for (let bl = 0; bl < bLines.length; bl++) {
+            ctx.fillText(bLines[bl], cx + 14 * s, y + 28 * s + bl * 14 * s);
+        }
+        y += 52 * s;
+
+        // Pros
+        ctx.font = `bold ${Math.round(11 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#10b981';
+        ctx.fillText('Strengths', cx + 12 * s, y);
+        y += 16 * s;
+        ctx.font = `${Math.round(10.5 * s)}px Inter,sans-serif`;
+        for (const p of m.pros) {
+            ctx.fillStyle = '#10b981';
+            ctx.fillText('\u2713', cx + 12 * s, y);
+            ctx.fillStyle = '#555';
+            ctx.fillText(p, cx + 24 * s, y);
+            y += 15 * s;
+        }
+        y += 6 * s;
+
+        // Cons
+        ctx.font = `bold ${Math.round(11 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#ef4444';
+        ctx.fillText('Limitations', cx + 12 * s, y);
+        y += 16 * s;
+        ctx.font = `${Math.round(10.5 * s)}px Inter,sans-serif`;
+        for (const c2 of m.cons) {
+            ctx.fillStyle = '#ef4444';
+            ctx.fillText('\u2212', cx + 12 * s, y);
+            ctx.fillStyle = '#555';
+            ctx.fillText(c2, cx + 24 * s, y);
+            y += 15 * s;
+        }
+    }
+}
+
+function renderAll() { draw('cv'); }
+window.addEventListener('DOMContentLoaded', renderAll);
+window.addEventListener('resize', () => { clearTimeout(window._rt); window._rt = setTimeout(renderAll, 150); });
+</script>
+</body>
+</html>

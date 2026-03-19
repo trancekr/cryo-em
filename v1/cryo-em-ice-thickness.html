@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ice Thickness & Sample Distribution</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(24px, 3vh, 38px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(12px, 1.4vh, 18px); color: #777; margin-top: 2px; font-weight: 500; }
+
+.canvas-wrap {
+  flex: 1; min-height: 0;
+  background: #fff;
+  border: 2px solid #e0e0e8;
+  border-radius: 14px;
+  overflow: hidden;
+  margin: clamp(4px, 0.5vh, 8px) 0;
+}
+.canvas-wrap canvas { display: block; width: 100%; height: 100%; }
+
+.footer {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 2px 0;
+  font-size: clamp(9px, 1vh, 12px);
+  color: #aaa;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="./">&larr; Home</a>
+    <h1>Ice Thickness &amp; Sample Distribution</h1>
+    <p>Ice is thinnest at the hole center due to meniscus effect</p>
+  </div>
+  <div class="canvas-wrap"><canvas id="cv"></canvas></div>
+  <div class="footer">
+    Passmore &amp; Russo (2016) Methods Enzymol &middot; Grassucci et al. (2007) Nat Protoc
+  </div>
+</div>
+
+<script>
+const dpr = window.devicePixelRatio || 1;
+
+function initCanvas(id) {
+  const c = document.getElementById(id);
+  const p = c.parentElement;
+  const w = p.clientWidth, h = p.clientHeight;
+  c.width = w * dpr; c.height = h * dpr;
+  const ctx = c.getContext('2d');
+  ctx.scale(dpr, dpr);
+  return { ctx, w, h };
+}
+
+function F(h, level) {
+  switch(level) {
+    case 'xl': return Math.round(Math.min(Math.max(h * 0.055, 20), 40));
+    case 'lg': return Math.round(Math.min(Math.max(h * 0.042, 17), 32));
+    case 'md': return Math.round(Math.min(Math.max(h * 0.034, 15), 26));
+    case 'sm': return Math.round(Math.min(Math.max(h * 0.028, 13), 22));
+    case 'xs': return Math.round(Math.min(Math.max(h * 0.024, 12), 18));
+  }
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  if (Array.isArray(r)) {
+    ctx.beginPath();
+    ctx.moveTo(x + r[0], y); ctx.lineTo(x + w - r[1], y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r[1]);
+    ctx.lineTo(x + w, y + h - r[2]);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r[2], y + h);
+    ctx.lineTo(x + r[3], y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r[3]);
+    ctx.lineTo(x, y + r[0]);
+    ctx.quadraticCurveTo(x, y, x + r[0], y);
+    ctx.closePath();
+  } else {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+}
+
+function draw() {
+  const { ctx, w, h } = initCanvas('cv');
+  const lg = F(h, 'lg'), md = F(h, 'md'), sm = F(h, 'sm'), xs = F(h, 'xs');
+  const pad = Math.max(w * 0.025, 16);
+
+  // ── Top title ──
+  ctx.fillStyle = '#8b5cf6'; ctx.font = `800 ${lg}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Ice Cross-Section in a Grid Hole', w / 2, pad + lg);
+
+  // ── Meniscus cross-section (compact, centered) ──
+  const startY = pad + lg + sm + 16;
+  const diagH = h * 0.22;
+  const diagW = w * 0.42;
+  const diagX = (w - diagW) / 2;
+
+  // Carbon support bars
+  const barW = Math.max(10, diagW * 0.04);
+  ctx.fillStyle = '#78716c';
+  roundRect(ctx, diagX, startY, barW, diagH, 3); ctx.fill();
+  roundRect(ctx, diagX + diagW - barW, startY, barW, diagH, 3); ctx.fill();
+
+  // Ice geometry
+  const iceL = diagX + barW;
+  const iceR = diagX + diagW - barW;
+  const iceMid = (iceL + iceR) / 2;
+  const edgeGap = diagH * 0.08;
+  const edgeTop = startY + edgeGap;
+  const edgeBot = startY + diagH - edgeGap;
+  const meniscus = diagH * 0.14;
+
+  // Fill ice
+  ctx.fillStyle = 'rgba(191,219,254,0.22)';
+  ctx.beginPath();
+  ctx.moveTo(iceL, edgeTop);
+  ctx.quadraticCurveTo(iceMid, edgeTop + meniscus, iceR, edgeTop);
+  ctx.lineTo(iceR, edgeBot);
+  ctx.quadraticCurveTo(iceMid, edgeBot - meniscus, iceL, edgeBot);
+  ctx.closePath(); ctx.fill();
+
+  // Ice outlines
+  ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(iceL, edgeTop);
+  ctx.quadraticCurveTo(iceMid, edgeTop + meniscus, iceR, edgeTop);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(iceL, edgeBot);
+  ctx.quadraticCurveTo(iceMid, edgeBot - meniscus, iceL, edgeBot);
+  ctx.stroke();
+
+  // Particles (larger, 5px radius)
+  ctx.fillStyle = '#6d28d9';
+  const cy = (edgeTop + edgeBot) / 2;
+  [[-0.12, -0.01], [0.08, 0.015], [-0.04, 0.02], [0.15, -0.01],
+   [-0.18, 0.005], [0.20, 0.01], [0.01, -0.015], [-0.09, 0.01]
+  ].forEach(([rx, ry]) => {
+    ctx.beginPath();
+    ctx.arc(iceMid + rx * (iceR - iceL), cy + ry * diagH, 5, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // ── Labels OUTSIDE diagram (no overlap) ──
+  // Carbon foil thickness (above diagram, near bars)
+  ctx.fillStyle = '#57534e'; ctx.font = `600 ${xs}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Carbon foil (10–12 nm)', diagX + barW / 2, startY - 6);
+
+  // Center thickness (right of diagram)
+  const cDimX = diagX + diagW + 14;
+  const cTop = edgeTop + meniscus * 0.9;
+  const cBot = edgeBot - meniscus * 0.9;
+  ctx.strokeStyle = '#b45309'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(cDimX, cTop); ctx.lineTo(cDimX, cBot); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cDimX - 4, cTop); ctx.lineTo(cDimX + 4, cTop); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cDimX - 4, cBot); ctx.lineTo(cDimX + 4, cBot); ctx.stroke();
+  ctx.fillStyle = '#b45309'; ctx.font = `700 ${sm}px Inter`; ctx.textAlign = 'left';
+  ctx.fillText('30–80 nm', cDimX + 8, (cTop + cBot) / 2 - 2);
+  ctx.fillStyle = '#888'; ctx.font = `500 ${xs}px Inter`;
+  ctx.fillText('(center, thinnest)', cDimX + 8, (cTop + cBot) / 2 + sm);
+
+  // Edge thickness (left of diagram)
+  const eDimX = diagX - 14;
+  ctx.strokeStyle = '#dc2626'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(eDimX, edgeTop + 2); ctx.lineTo(eDimX, edgeBot - 2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(eDimX - 4, edgeTop + 2); ctx.lineTo(eDimX + 4, edgeTop + 2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(eDimX - 4, edgeBot - 2); ctx.lineTo(eDimX + 4, edgeBot - 2); ctx.stroke();
+  ctx.fillStyle = '#dc2626'; ctx.font = `700 ${sm}px Inter`; ctx.textAlign = 'right';
+  ctx.fillText('100–150 nm', eDimX - 8, (edgeTop + edgeBot) / 2 - 2);
+  ctx.fillStyle = '#888'; ctx.font = `500 ${xs}px Inter`;
+  ctx.fillText('(edge, thicker)', eDimX - 8, (edgeTop + edgeBot) / 2 + sm);
+
+  // "Vitreous ice" label (above diagram, centered)
+  ctx.fillStyle = '#3b82f6'; ctx.font = `600 ${sm}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Vitreous ice', iceMid, startY - 6);
+
+  // Note below diagram
+  const noteY = startY + diagH + 6;
+  ctx.fillStyle = '#555'; ctx.font = `italic 600 ${sm}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Data is collected from the thin center of the hole', w / 2, noteY + sm);
+
+  // ── Bottom: Ice Thickness Assessment (larger cards, no mini holes) ──
+  const secTitleY = noteY + sm + 10;
+  ctx.fillStyle = '#4338ca'; ctx.font = `800 ${lg}px Inter`; ctx.textAlign = 'center';
+  ctx.fillText('Ice Thickness Assessment', w / 2, secTitleY + lg);
+
+  const cardsY = secTitleY + lg + 8;
+  const cardsH = h - cardsY - 6;
+  const gap = 12;
+  const cardW = (w - pad * 2 - gap * 2) / 3;
+
+  const scenarios = [
+    {
+      title: 'Too Thin', subtitle: '< 30 nm',
+      color: '#ef4444', bg: '#fef2f2', border: '#fecaca',
+      pts: ['Particles excluded from holes',
+            'AWI denaturation dominant',
+            'Empty or broken ice']
+    },
+    {
+      title: 'Optimal', subtitle: '1–1.5× particle ⌀',
+      color: '#10b981', bg: '#f0fdf4', border: '#bbf7d0',
+      pts: ['Best signal-to-noise ratio',
+            'Single particle layer',
+            'Minimal ice background']
+    },
+    {
+      title: 'Too Thick', subtitle: '> 100 nm',
+      color: '#f59e0b', bg: '#fffbeb', border: '#fde68a',
+      pts: ['Poor contrast from ice',
+            'Multiple overlapping layers',
+            'High inelastic scattering']
+    }
+  ];
+
+  scenarios.forEach((s, si) => {
+    const x0 = pad + si * (cardW + gap);
+
+    // Card
+    ctx.fillStyle = s.bg;
+    roundRect(ctx, x0, cardsY, cardW, cardsH, 10); ctx.fill();
+    ctx.strokeStyle = s.border; ctx.lineWidth = 1.5;
+    roundRect(ctx, x0, cardsY, cardW, cardsH, 10); ctx.stroke();
+
+    // Color accent bar
+    ctx.fillStyle = s.color;
+    roundRect(ctx, x0, cardsY, 5, cardsH, [10, 0, 0, 10]); ctx.fill();
+
+    // Title
+    ctx.fillStyle = s.color; ctx.font = `800 ${md}px Inter`; ctx.textAlign = 'center';
+    ctx.fillText(s.title, x0 + cardW / 2, cardsY + md + 8);
+
+    // Subtitle
+    ctx.fillStyle = s.color + 'bb'; ctx.font = `600 ${sm}px Inter`;
+    ctx.fillText(s.subtitle, x0 + cardW / 2, cardsY + md + sm + 14);
+
+    // Bullet points (start higher, more space)
+    const ptsStartY = cardsY + md + sm + 24;
+    const ptH = (cardsH - md - sm - 30) / s.pts.length;
+    ctx.textAlign = 'left';
+    s.pts.forEach((pt, pi) => {
+      const py = ptsStartY + pi * ptH;
+      ctx.fillStyle = s.color; ctx.font = `700 ${sm}px Inter`;
+      ctx.fillText('•', x0 + 14, py + sm);
+      ctx.fillStyle = '#333'; ctx.font = `500 ${sm}px Inter`;
+      ctx.fillText(pt, x0 + 14 + sm * 0.8, py + sm);
+    });
+  });
+}
+
+window.addEventListener('DOMContentLoaded', draw);
+window.addEventListener('resize', () => {
+  clearTimeout(window._rt);
+  window._rt = setTimeout(draw, 150);
+});
+</script>
+</body>
+</html>

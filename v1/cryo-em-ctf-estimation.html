@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTF Estimation</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(22px, 2.8vh, 36px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(11px, 1.3vh, 17px); color: #777; margin-top: 2px; font-weight: 500; }
+
+/* Three-column layout */
+.content {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: clamp(8px, 1vw, 14px);
+  padding: clamp(4px, 0.5vh, 8px) 0;
+}
+
+.panel {
+  background: #fff;
+  border: 2px solid #e0e0e8;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-header {
+  padding: clamp(6px, 0.7vh, 10px) clamp(10px, 1vw, 16px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  border-bottom: 1.5px solid #f0f0f5;
+}
+.panel-dot {
+  width: clamp(8px, 1vh, 12px);
+  height: clamp(8px, 1vh, 12px);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.panel-title {
+  font-size: clamp(12px, 1.4vh, 18px);
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.panel-sub {
+  font-size: clamp(9px, 1vh, 13px);
+  color: #888;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.panel-canvas {
+  flex: 1; min-height: 0;
+}
+.panel-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="./">&larr; Home</a>
+    <h1>CTF Estimation in Practice</h1>
+    <p>Determining defocus &amp; astigmatism from power spectra of micrographs</p>
+  </div>
+  <div class="refs" style="flex-shrink:0;font-size:clamp(8px,0.9vh,11px);color:#aaa;text-align:center;padding:0 8px 2px;">Rohou &amp; Grigorieff, J Struct Biol (2015) &middot; Zhang, J Struct Biol (2016) &middot; Thon, Z Naturforsch (1971)</div>
+
+  <div class="content">
+    <!-- Panel 1: CTF Theory -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-dot" style="background:#7c3aed"></div>
+        <div class="panel-title">CTF Theory</div>
+        <div class="panel-sub">Phase shift &amp; envelope</div>
+      </div>
+      <div class="panel-canvas"><canvas id="cvTheory"></canvas></div>
+    </div>
+
+    <!-- Panel 2: Power Spectrum -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-dot" style="background:#3b82f6"></div>
+        <div class="panel-title">Power Spectrum</div>
+        <div class="panel-sub">Thon rings in 2D FFT</div>
+      </div>
+      <div class="panel-canvas"><canvas id="cvPS"></canvas></div>
+    </div>
+
+    <!-- Panel 3: CTF Fitting -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-dot" style="background:#10b981"></div>
+        <div class="panel-title">CTF Fitting</div>
+        <div class="panel-sub">Match model to data</div>
+      </div>
+      <div class="panel-canvas"><canvas id="cvFit"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function setupCanvas(id) {
+    const c = document.getElementById(id);
+    const rect = c.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    c.width = Math.round(rect.width * dpr);
+    c.height = Math.round(rect.height * dpr);
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: rect.width, h: rect.height };
+}
+
+// CTF function: -sin(chi(s))
+// chi(s) = pi * lambda * Δf * s² - 0.5 * pi * Cs * lambda³ * s⁴
+const LAMBDA = 0.01969; // Å, 300 kV
+const CS = 2.7e7;       // Å (2.7 mm)
+
+function ctfValue(s, defocusA) {
+    const s2 = s * s;
+    const chi = Math.PI * (defocusA * LAMBDA * s2 - 0.5 * CS * Math.pow(LAMBDA, 3) * s2 * s2);
+    return -Math.sin(chi);
+}
+
+function envelope(s, B) {
+    return Math.exp(-B * s * s / 4);
+}
+
+// Seeded PRNG
+function mulberry32(a) {
+    return function() {
+        a |= 0; a = a + 0x6D2B79F5 | 0;
+        let t = Math.imul(a ^ a >>> 15, 1 | a);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.arcTo(x + w, y, x + w, y + r, r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+    ctx.lineTo(x + r, y + h);
+    ctx.arcTo(x, y + h, x, y + h - r, r);
+    ctx.lineTo(x, y + r);
+    ctx.arcTo(x, y, x + r, y, r);
+    ctx.closePath();
+}
+
+// ===== Panel 1: CTF Theory =====
+function drawTheory(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 500, h / 650);
+    const pad = 16 * s;
+
+    // --- CTF Formula at top ---
+    const fmY = pad + 10 * s;
+    ctx.fillStyle = '#f8f7ff';
+    roundRect(ctx, pad, fmY - 8 * s, w - pad * 2, 56 * s, 8);
+    ctx.fill();
+    ctx.strokeStyle = '#e0ddf5';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, pad, fmY - 8 * s, w - pad * 2, 56 * s, 8);
+    ctx.stroke();
+
+    ctx.font = `bold ${Math.round(13 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#7c3aed';
+    ctx.textAlign = 'center';
+    ctx.fillText('CTF(s) = \u2212sin(\u03c7(s))', w / 2, fmY + 10 * s);
+
+    ctx.font = `${Math.round(11 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#666';
+    ctx.fillText('\u03c7(s) = \u03c0\u03bb\u0394f\u00b7s\u00b2 \u2212 \u00bd\u03c0C\u209b\u03bb\u00b3\u00b7s\u2074', w / 2, fmY + 30 * s);
+
+    ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#999';
+    ctx.fillText('\u03bb = wavelength, \u0394f = defocus, C\u209b = spherical aberration, s = spatial frequency', w / 2, fmY + 44 * s);
+
+    // --- CTF curve plot ---
+    const plotTop = fmY + 68 * s;
+    const gPad = 40 * s;
+    const gx = gPad;
+    const gy = plotTop;
+    const gw = w - gPad * 2;
+    const gh = h * 0.35;
+
+    // Background
+    ctx.fillStyle = '#fafbfc';
+    ctx.fillRect(gx, gy, gw, gh);
+    ctx.strokeStyle = '#e8e8f0';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(gx, gy, gw, gh);
+
+    const cy = gy + gh / 2;
+
+    // Zero line
+    ctx.strokeStyle = '#ddd';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(gx, cy); ctx.lineTo(gx + gw, cy); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // +1 / -1 lines
+    ctx.strokeStyle = '#eee'; ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(gx, gy + 2); ctx.lineTo(gx + gw, gy + 2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(gx, gy + gh - 2); ctx.lineTo(gx + gw, gy + gh - 2); ctx.stroke();
+
+    // Y-axis labels
+    ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#999';
+    ctx.textAlign = 'right';
+    ctx.fillText('+1', gx - 4, gy + 12 * s);
+    ctx.fillText('0', gx - 4, cy + 4);
+    ctx.fillText('\u22121', gx - 4, gy + gh - 4);
+
+    // X-axis
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#999';
+    const sMax = 0.35;
+    for (let i = 0; i <= 5; i++) {
+        const t = i / 5;
+        const xx = gx + t * gw;
+        ctx.fillText((t * sMax).toFixed(2), xx, gy + gh + 12 * s);
+        if (i > 0) {
+            ctx.strokeStyle = '#f0f0f5'; ctx.lineWidth = 0.5;
+            ctx.beginPath(); ctx.moveTo(xx, gy); ctx.lineTo(xx, gy + gh); ctx.stroke();
+        }
+    }
+    ctx.fillText('Spatial frequency (1/\u212b)', gx + gw / 2, gy + gh + 24 * s);
+
+    // Draw CTF curves at two defocus values
+    const defoci = [
+        { dA: 10000, color: '#7c3aed', lw: 2.5, label: '\u0394f = 1.0 \u03bcm' },
+        { dA: 20000, color: '#3b82f6', lw: 1.5, label: '\u0394f = 2.0 \u03bcm' },
+    ];
+    const B = 60; // envelope B-factor
+
+    for (const df of defoci) {
+        ctx.beginPath();
+        ctx.strokeStyle = df.color;
+        ctx.lineWidth = df.lw * s;
+        for (let i = 0; i <= gw; i++) {
+            const freq = (i / gw) * sMax;
+            const v = ctfValue(freq, df.dA) * envelope(freq, B);
+            const px = gx + i;
+            const py = cy - v * (gh / 2 - 4);
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+    }
+
+    // Envelope
+    ctx.beginPath();
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([5, 3]);
+    for (let i = 0; i <= gw; i++) {
+        const freq = (i / gw) * sMax;
+        const v = envelope(freq, B);
+        const px = gx + i;
+        const py = cy - v * (gh / 2 - 4);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    // Negative envelope
+    ctx.beginPath();
+    for (let i = 0; i <= gw; i++) {
+        const freq = (i / gw) * sMax;
+        const v = -envelope(freq, B);
+        const px = gx + i;
+        const py = cy - v * (gh / 2 - 4);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Legend
+    const legX = gx + gw - 10 * s;
+    const legY = gy + 12 * s;
+    ctx.textAlign = 'right';
+    for (let i = 0; i < defoci.length; i++) {
+        const ly = legY + i * 16 * s;
+        ctx.fillStyle = defoci[i].color;
+        ctx.fillRect(legX - 50 * s, ly - 4 * s, 14 * s, 3 * s);
+        ctx.font = `${Math.round(10 * s)}px Inter, sans-serif`;
+        ctx.fillText(defoci[i].label, legX, ly);
+    }
+    // Envelope legend
+    ctx.fillStyle = '#ef4444';
+    ctx.setLineDash([3, 2]);
+    ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(legX - 50 * s, legY + 28 * s);
+    ctx.lineTo(legX - 36 * s, legY + 28 * s);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.font = `${Math.round(10 * s)}px Inter, sans-serif`;
+    ctx.fillText('Envelope', legX, legY + 32 * s);
+
+    // --- Key points below plot ---
+    const keyY = gy + gh + 42 * s;
+    const points = [
+        { icon: '\u2022', color: '#7c3aed', text: 'CTF oscillates: contrast reversal at zero crossings' },
+        { icon: '\u2022', color: '#3b82f6', text: 'Higher defocus \u2192 more oscillations at low frequency' },
+        { icon: '\u2022', color: '#ef4444', text: 'Envelope damps signal at high resolution' },
+        { icon: '\u2022', color: '#666', text: 'Zero crossings = lost information \u2192 need multiple defoci' },
+        { icon: '\u2022', color: '#666', text: 'First zero crossing determines first CTF passband' },
+    ];
+
+    ctx.textAlign = 'left';
+    for (let i = 0; i < points.length; i++) {
+        const py = keyY + i * 16 * s;
+        if (py > h - 8) break;
+        ctx.font = `${Math.round(10 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = points[i].color;
+        ctx.fillText(points[i].icon, pad + 4, py);
+        ctx.fillStyle = '#555';
+        ctx.fillText(points[i].text, pad + 16 * s, py);
+    }
+}
+
+// ===== Panel 2: Power Spectrum (Thon rings) =====
+function drawPowerSpectrum(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 500, h / 650);
+    const pad = 16 * s;
+
+    // Two power spectra side by side: Noiseless vs Noisy
+    const psSize = Math.min((w - pad * 3) / 2, h * 0.42);
+    const ps1x = pad + (w / 2 - pad * 1.5 - psSize) / 2;
+    const ps2x = w / 2 + pad * 0.5 + (w / 2 - pad * 1.5 - psSize) / 2;
+    const psY = pad + 20 * s;
+
+    // Labels
+    ctx.font = `bold ${Math.round(12 * s)}px Inter, sans-serif`;
+    ctx.textAlign = 'center';
+
+    ctx.fillStyle = '#3b82f6';
+    ctx.fillText('Noiseless (Simulated)', ps1x + psSize / 2, psY - 6 * s);
+    ctx.fillStyle = '#f59e0b';
+    ctx.fillText('Noisy (Real Data)', ps2x + psSize / 2, psY - 6 * s);
+
+    // Draw Thon rings (noiseless)
+    drawThonRings(ctx, ps1x, psY, psSize, psSize, 10000, false);
+
+    // Draw Thon rings (noisy)
+    drawThonRings(ctx, ps2x, psY, psSize, psSize, 10000, true);
+
+    // --- 1D radial profile below ---
+    const profY = psY + psSize + 24 * s;
+    const profH = h * 0.22;
+    const gPad = 30 * s;
+    const gx = gPad;
+    const gw = w - gPad * 2;
+
+    ctx.font = `bold ${Math.round(12 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#666';
+    ctx.textAlign = 'center';
+    ctx.fillText('Radial Average of Power Spectrum', w / 2, profY - 6 * s);
+
+    // Background
+    ctx.fillStyle = '#fafbfc';
+    ctx.fillRect(gx, profY, gw, profH);
+    ctx.strokeStyle = '#e8e8f0';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(gx, profY, gw, profH);
+
+    // CTF² curve (what you see in power spectrum)
+    const sMax = 0.35;
+    const defocusA = 10000;
+    const B = 60;
+
+    ctx.beginPath();
+    ctx.strokeStyle = '#3b82f6';
+    ctx.lineWidth = 2 * s;
+    for (let i = 0; i <= gw; i++) {
+        const freq = (i / gw) * sMax;
+        const v = Math.pow(ctfValue(freq, defocusA) * envelope(freq, B), 2);
+        const px = gx + i;
+        const py = profY + profH - v * profH * 0.9 - profH * 0.05;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+
+    // Noisy version overlay
+    const rng = mulberry32(777);
+    ctx.beginPath();
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 1.2 * s;
+    ctx.globalAlpha = 0.7;
+    for (let i = 0; i <= gw; i++) {
+        const freq = (i / gw) * sMax;
+        const v = Math.pow(ctfValue(freq, defocusA) * envelope(freq, B), 2);
+        const noise = (rng() - 0.5) * 0.15 + v * 0.1 * (rng() - 0.5);
+        const px = gx + i;
+        const py = profY + profH - (v + noise) * profH * 0.9 - profH * 0.05;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    // X-axis label
+    ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#999';
+    ctx.textAlign = 'center';
+    ctx.fillText('Spatial frequency (1/\u212b)', gx + gw / 2, profY + profH + 14 * s);
+
+    // Legend
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#3b82f6';
+    ctx.fillRect(gx + 8, profY + 8, 12 * s, 3 * s);
+    ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#555';
+    ctx.fillText('CTF\u00b2 (ideal)', gx + 8 + 16 * s, profY + 14);
+    ctx.fillStyle = '#f59e0b';
+    ctx.fillRect(gx + 8, profY + 22, 12 * s, 3 * s);
+    ctx.fillStyle = '#555';
+    ctx.fillText('Experimental', gx + 8 + 16 * s, profY + 28);
+
+    // --- Key points ---
+    const keyY = profY + profH + 28 * s;
+    const pts = [
+        'Power spectrum = |FT(micrograph)|\u00b2 \u221d CTF\u00b2',
+        'Thon rings: concentric rings from CTF oscillation',
+        'Ring spacing \u221d defocus (more rings = higher defocus)',
+        'Astigmatism: elliptical Thon rings (non-round)',
+        'Information limit: where rings fade into noise',
+    ];
+
+    ctx.textAlign = 'left';
+    ctx.font = `${Math.round(10 * s)}px Inter, sans-serif`;
+    for (let i = 0; i < pts.length; i++) {
+        const py = keyY + i * 15 * s;
+        if (py > h - 8) break;
+        ctx.fillStyle = '#3b82f6';
+        ctx.fillText('\u2022', pad + 4, py);
+        ctx.fillStyle = '#555';
+        ctx.fillText(pts[i], pad + 16 * s, py);
+    }
+}
+
+// Helper: draw Thon rings
+function drawThonRings(ctx, x, y, w, h, defocusA, noisy) {
+    ctx.save();
+    roundRect(ctx, x, y, w, h, 6);
+    ctx.clip();
+
+    const cx = x + w / 2, cy = y + h / 2;
+    const maxR = Math.min(w, h) / 2;
+    const sMax = 0.35;
+    const B = 60;
+
+    // Black background
+    ctx.fillStyle = '#0a0a1a';
+    ctx.fillRect(x, y, w, h);
+
+    // Draw radial CTF² pattern
+    const imgData = ctx.createImageData(Math.round(w), Math.round(h));
+    const data = imgData.data;
+    const rng = noisy ? mulberry32(999) : null;
+
+    for (let py = 0; py < Math.round(h); py++) {
+        for (let px = 0; px < Math.round(w); px++) {
+            const dx = px - w / 2;
+            const dy = py - h / 2;
+            const r = Math.sqrt(dx * dx + dy * dy);
+            const freq = (r / maxR) * sMax;
+
+            let val = Math.pow(ctfValue(freq, defocusA) * envelope(freq, B), 2);
+
+            if (noisy && rng) {
+                val = val * 0.6 + rng() * 0.3 + 0.05;
+                val = Math.max(0, Math.min(1, val));
+            }
+
+            const brightness = Math.round(val * 200 + 15);
+            const idx = (py * Math.round(w) + px) * 4;
+            data[idx] = brightness;
+            data[idx + 1] = brightness;
+            data[idx + 2] = brightness + (noisy ? 0 : 10);
+            data[idx + 3] = 255;
+        }
+    }
+    ctx.putImageData(imgData, Math.round(x), Math.round(y));
+
+    // Border
+    ctx.restore();
+    ctx.strokeStyle = noisy ? '#f59e0b' : '#3b82f6';
+    ctx.lineWidth = 2;
+    roundRect(ctx, x, y, w, h, 6);
+    ctx.stroke();
+}
+
+// ===== Panel 3: CTF Fitting =====
+function drawFitting(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 500, h / 650);
+    const pad = 16 * s;
+
+    // --- Step-by-step fitting process ---
+    ctx.font = `bold ${Math.round(12 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#10b981';
+    ctx.textAlign = 'center';
+    ctx.fillText('CTF Fitting Workflow', w / 2, pad + 10 * s);
+
+    // 3 steps: Compute PS → Fit CTF model → Extract parameters
+    const stepY = pad + 28 * s;
+    const stepH = 38 * s;
+    const stepW = (w - pad * 2 - 16 * s) / 3;
+    const steps = [
+        { num: '1', title: 'Compute PS', desc: 'FFT of micrograph\ntiles, average', color: '#3b82f6' },
+        { num: '2', title: 'Fit Model', desc: 'Match CTF² to\nThon rings', color: '#7c3aed' },
+        { num: '3', title: 'Parameters', desc: 'Defocus, astig.\nconfidence', color: '#10b981' },
+    ];
+
+    for (let i = 0; i < 3; i++) {
+        const sx = pad + i * (stepW + 8 * s);
+        const st = steps[i];
+
+        ctx.fillStyle = st.color + '12';
+        roundRect(ctx, sx, stepY, stepW, stepH, 6);
+        ctx.fill();
+        ctx.strokeStyle = st.color;
+        ctx.lineWidth = 1.5;
+        roundRect(ctx, sx, stepY, stepW, stepH, 6);
+        ctx.stroke();
+
+        // Number circle
+        ctx.fillStyle = st.color;
+        ctx.beginPath();
+        ctx.arc(sx + 14 * s, stepY + stepH / 2, 9 * s, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.font = `bold ${Math.round(10 * s)}px Inter, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText(st.num, sx + 14 * s, stepY + stepH / 2 + 4 * s);
+
+        // Title
+        ctx.fillStyle = st.color;
+        ctx.font = `bold ${Math.round(10 * s)}px Inter, sans-serif`;
+        ctx.textAlign = 'left';
+        ctx.fillText(st.title, sx + 28 * s, stepY + 14 * s);
+
+        // Desc
+        ctx.fillStyle = '#888';
+        ctx.font = `${Math.round(8 * s)}px Inter, sans-serif`;
+        const lines = st.desc.split('\n');
+        lines.forEach((l, li) => ctx.fillText(l, sx + 28 * s, stepY + 24 * s + li * 10 * s));
+
+        // Arrow
+        if (i < 2) {
+            ctx.fillStyle = '#ccc';
+            const ax = sx + stepW + 2 * s;
+            ctx.beginPath();
+            ctx.moveTo(ax, stepY + stepH / 2 - 4);
+            ctx.lineTo(ax + 5 * s, stepY + stepH / 2);
+            ctx.lineTo(ax, stepY + stepH / 2 + 4);
+            ctx.fill();
+        }
+    }
+
+    // --- Power spectrum with CTF overlay (fitted) ---
+    const psSize = Math.min(w * 0.45, h * 0.38);
+    const psCX = w * 0.32;
+    const psCY = stepY + stepH + 18 * s + psSize / 2;
+
+    // Draw PS
+    drawThonRings(ctx, psCX - psSize / 2, psCY - psSize / 2, psSize, psSize, 10000, true);
+
+    // Overlay CTF fit rings (green circles)
+    const maxR = psSize / 2;
+    const sMax = 0.35;
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth = 1.5;
+    ctx.globalAlpha = 0.8;
+
+    // Draw rings at zero crossings of CTF
+    const defocusA = 10000;
+    let prevSign = 0;
+    for (let r = 1; r < maxR; r++) {
+        const freq = (r / maxR) * sMax;
+        const val = ctfValue(freq, defocusA);
+        const sign = val >= 0 ? 1 : -1;
+        if (prevSign !== 0 && sign !== prevSign) {
+            ctx.beginPath();
+            ctx.arc(psCX, psCY, r, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+        prevSign = sign;
+    }
+    ctx.globalAlpha = 1;
+
+    // Labels
+    ctx.font = `bold ${Math.round(10 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#10b981';
+    ctx.textAlign = 'center';
+    ctx.fillText('CTF fit overlay', psCX, psCY + psSize / 2 + 14 * s);
+    ctx.font = `${Math.round(9 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#888';
+    ctx.fillText('Green rings = fitted CTF zeros', psCX, psCY + psSize / 2 + 26 * s);
+
+    // --- Fitted parameters box (right side) ---
+    const boxX = w * 0.58;
+    const boxY = stepY + stepH + 24 * s;
+    const boxW = w * 0.38;
+    const boxH = psSize * 0.85;
+
+    ctx.fillStyle = '#f0fdf4';
+    roundRect(ctx, boxX, boxY, boxW, boxH, 8);
+    ctx.fill();
+    ctx.strokeStyle = '#86efac';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, boxX, boxY, boxW, boxH, 8);
+    ctx.stroke();
+
+    ctx.font = `bold ${Math.round(12 * s)}px Inter, sans-serif`;
+    ctx.fillStyle = '#059669';
+    ctx.textAlign = 'left';
+    ctx.fillText('Fitted Parameters', boxX + 12 * s, boxY + 18 * s);
+
+    const params = [
+        { label: 'Defocus U', value: '1.05 \u03bcm', status: 'good' },
+        { label: 'Defocus V', value: '0.98 \u03bcm', status: 'good' },
+        { label: 'Astigmatism', value: '70 nm', status: 'good' },
+        { label: 'Astig. angle', value: '42.3\u00b0', status: 'good' },
+        { label: 'Phase shift', value: '0\u00b0', status: 'info' },
+        { label: 'Resolution', value: '3.8 \u212b', status: 'good' },
+        { label: 'Confidence', value: 'High', status: 'good' },
+    ];
+
+    const pStartY = boxY + 34 * s;
+    for (let i = 0; i < params.length; i++) {
+        const py = pStartY + i * 18 * s;
+        if (py + 10 > boxY + boxH - 4) break;
+
+        ctx.font = `${Math.round(10 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = '#666';
+        ctx.textAlign = 'left';
+        ctx.fillText(params[i].label, boxX + 12 * s, py);
+
+        ctx.font = `bold ${Math.round(10 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = params[i].status === 'good' ? '#059669' : '#3b82f6';
+        ctx.textAlign = 'right';
+        ctx.fillText(params[i].value, boxX + boxW - 12 * s, py);
+    }
+
+    // --- Bottom: Key tools & tips ---
+    const keyY = Math.max(psCY + psSize / 2 + 38 * s, boxY + boxH + 16 * s);
+    const tips = [
+        { icon: '\u2022', color: '#10b981', text: 'Tools: CTFFIND4, Gctf, cryoSPARC CTF Estimation' },
+        { icon: '\u2022', color: '#666', text: 'Good fit: rings match to high resolution (< 5 \u212b)' },
+        { icon: '\u2022', color: '#666', text: 'Bad fit: mismatch at low freq \u2192 incorrect defocus' },
+        { icon: '\u2022', color: '#ef4444', text: 'Reject micrographs with poor CTF fit or drift' },
+        { icon: '\u2022', color: '#666', text: 'Astigmatism: elliptical rings \u2192 two defocus values (U, V)' },
+    ];
+
+    ctx.textAlign = 'left';
+    for (let i = 0; i < tips.length; i++) {
+        const py = keyY + i * 15 * s;
+        if (py > h - 8) break;
+        ctx.font = `${Math.round(10 * s)}px Inter, sans-serif`;
+        ctx.fillStyle = tips[i].color;
+        ctx.fillText(tips[i].icon, pad + 4, py);
+        ctx.fillStyle = '#555';
+        ctx.fillText(tips[i].text, pad + 16 * s, py);
+    }
+}
+
+// ===== Init =====
+function renderAll() {
+    drawTheory('cvTheory');
+    drawPowerSpectrum('cvPS');
+    drawFitting('cvFit');
+}
+
+window.addEventListener('DOMContentLoaded', renderAll);
+window.addEventListener('resize', () => {
+    clearTimeout(window._resizeTimer);
+    window._resizeTimer = setTimeout(renderAll, 150);
+});
+</script>
+</body>
+</html>

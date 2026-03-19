@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Common Problems & Limitations</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f0f0f5;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a2e;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+#app {
+  max-width: 1800px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 0 2px;
+  position: relative;
+}
+.home-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(10px, 1.2vw, 16px);
+  border-radius: 20px; border: 2px solid #e0e0e8; background: #fff;
+  color: #666; font-size: clamp(12px, 1.4vh, 17px); font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.home-btn:hover { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+.header h1 { font-size: clamp(22px, 2.8vh, 36px); font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+.header p { font-size: clamp(11px, 1.3vh, 17px); color: #777; margin-top: 2px; font-weight: 500; }
+.sec-canvas { flex: 1; min-height: 0; padding: clamp(4px, 0.5vh, 8px) 0; }
+.sec-canvas canvas { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <a class="home-btn" href="./">&larr; Home</a>
+    <h1>Common Problems & Limitations</h1>
+    <p>Typical challenges encountered in cryo-EM single particle analysis</p>
+  </div>
+  <div class="sec-canvas"><canvas id="cv"></canvas></div>
+  <div style="flex-shrink:0;font-size:clamp(8px,0.9vh,11px);color:#aaa;text-align:center;padding:2px 8px;">Glaeser, Nat Methods (2016) &middot; Tan et al., Nat Methods (2017)</div>
+</div>
+
+<script>
+function setupCanvas(id) {
+    const c = document.getElementById(id);
+    const rect = c.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    c.width = Math.round(rect.width * dpr);
+    c.height = Math.round(rect.height * dpr);
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: rect.width, h: rect.height };
+}
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    if (Array.isArray(r)) { ctx.moveTo(x+r[0],y); ctx.arcTo(x+w,y,x+w,y+h,r[1]); ctx.arcTo(x+w,y+h,x,y+h,r[2]); ctx.arcTo(x,y+h,x,y,r[3]); ctx.arcTo(x,y,x+w,y,r[0]); }
+    else { ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+r,r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r); ctx.arcTo(x,y+h,x,y+h-r,r); ctx.arcTo(x,y,x+r,y,r); }
+    ctx.closePath();
+}
+function mulberry32(a) {
+    return function() { a |= 0; a = a + 0x6D2B79F5 | 0;
+    var t = Math.imul(a ^ a >>> 15, 1 | a); t ^= t + Math.imul(t ^ t >>> 7, 61 | t);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+}
+
+function draw(id) {
+    const { ctx, w, h } = setupCanvas(id);
+    const s = Math.min(w / 1050, h / 520);
+    const pad = 12 * s;
+
+    // 3 columns × 2 rows = 6 problem cards
+    const cols = 3;
+    const rows = 2;
+    const gap = 10 * s;
+    const cardW = (w - pad * 2 - gap * (cols - 1)) / cols;
+    const cardH = (h - pad * 2 - gap * (rows - 1)) / rows;
+
+    const problems = [
+        {
+            title: 'Preferred Orientation',
+            color: '#ef4444',
+            severity: 'High',
+            mini: 'orientation',
+            desc: 'Particles adsorb to air-water interface in limited orientations',
+            symptoms: ['Elongated/streaky 3D map', 'Anisotropic resolution', 'Missing angular coverage'],
+            solutions: ['Tilt data collection (30–40°)', 'Surfactant additives', 'Different grid types (GO, UltrAuFoil)'],
+        },
+        {
+            title: 'Ice Thickness Issues',
+            color: '#3b82f6',
+            severity: 'High',
+            mini: 'ice',
+            desc: 'Too thick → poor contrast; Too thin → denaturation at air-water interface',
+            symptoms: ['Low contrast micrographs', 'Aggregated particles', 'Empty holes'],
+            solutions: ['Optimize blotting (time, force)', 'Chameleon / Spotiton', 'Cryo-FIB milling for thick samples'],
+        },
+        {
+            title: 'Beam-Induced Motion',
+            color: '#f59e0b',
+            severity: 'Medium',
+            mini: 'motion',
+            desc: 'Radiation causes specimen movement, especially in early frames',
+            symptoms: ['Blurred first frames', 'Poor Thon rings', 'Low resolution despite good particles'],
+            solutions: ['Faster frame rates', 'Gold grids (UltrAuFoil)', 'Dose weighting + frame alignment'],
+        },
+        {
+            title: 'Conformational Heterogeneity',
+            color: '#8b5cf6',
+            severity: 'Medium',
+            mini: 'hetero',
+            desc: 'Flexible regions or multiple states blur the reconstruction',
+            symptoms: ['Blurry density in flexible regions', 'Low local resolution', 'Failed refinement convergence'],
+            solutions: ['3D classification', 'Multi-body refinement', '3DVA / cryoDRGN for continuous motion'],
+        },
+        {
+            title: 'Small Particle Size',
+            color: '#10b981',
+            severity: 'Medium',
+            mini: 'small',
+            desc: 'Proteins <100 kDa have inherently low SNR in cryo-EM',
+            symptoms: ['Difficulty in particle picking', 'Poor 2D class averages', 'Resolution plateau'],
+            solutions: ['Phase plate (VPP)', 'Scaffold/nanobody enlargement', 'Energy filter + direct detector'],
+        },
+        {
+            title: 'Sample Degradation',
+            color: '#ec4899',
+            severity: 'Variable',
+            mini: 'degrade',
+            desc: 'Protein unfolds or aggregates at air-water interface',
+            symptoms: ['Denatured particles', 'Aggregation in holes', 'Loss of activity after freezing'],
+            solutions: ['Rapid plunge-freezing', 'Surfactants (CHAPSO, fluorinated)', 'Graphene oxide support'],
+        },
+    ];
+
+    for (let i = 0; i < problems.length; i++) {
+        const p = problems[i];
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        const cx = pad + col * (cardW + gap);
+        const cy = pad + row * (cardH + gap);
+
+        // Card bg
+        ctx.fillStyle = '#fff';
+        roundRect(ctx, cx, cy, cardW, cardH, 10);
+        ctx.fill();
+        ctx.strokeStyle = p.color + '40';
+        ctx.lineWidth = 1.5;
+        roundRect(ctx, cx, cy, cardW, cardH, 10);
+        ctx.stroke();
+
+        // Top strip
+        ctx.fillStyle = p.color;
+        roundRect(ctx, cx, cy, cardW, 4, [10, 10, 0, 0]);
+        ctx.fill();
+
+        // Title row
+        ctx.font = `bold ${Math.round(16 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = p.color;
+        ctx.textAlign = 'left';
+        ctx.fillText(p.title, cx + 14 * s, cy + 26 * s);
+
+        // Severity pill
+        const sevColors = { 'High': '#ef4444', 'Medium': '#f59e0b', 'Variable': '#8b5cf6' };
+        const sevC = sevColors[p.severity];
+        ctx.font = `bold ${Math.round(10 * s)}px Inter,sans-serif`;
+        const sevW = ctx.measureText(p.severity).width + 14 * s;
+        ctx.fillStyle = sevC + '15';
+        roundRect(ctx, cx + cardW - sevW - 14 * s, cy + 12 * s, sevW, 20 * s, 10 * s);
+        ctx.fill();
+        ctx.fillStyle = sevC;
+        ctx.textAlign = 'center';
+        ctx.fillText(p.severity, cx + cardW - sevW / 2 - 14 * s, cy + 25 * s);
+
+        // Description
+        ctx.font = `${Math.round(11 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#888';
+        ctx.textAlign = 'left';
+        const descWords = p.desc.split(' ');
+        let line = '';
+        let dy = cy + 44 * s;
+        const maxW = cardW - 28 * s;
+        for (const word of descWords) {
+            const test = line + (line ? ' ' : '') + word;
+            if (ctx.measureText(test).width > maxW && line) {
+                ctx.fillText(line, cx + 14 * s, dy);
+                line = word;
+                dy += 15 * s;
+            } else {
+                line = test;
+            }
+        }
+        if (line) { ctx.fillText(line, cx + 14 * s, dy); dy += 15 * s; }
+
+        dy += 5 * s;
+
+        // Mini illustration area
+        const miniH = 55 * s;
+        const miniX = cx + 14 * s;
+        const miniW = cardW - 28 * s;
+        ctx.fillStyle = p.color + '06';
+        roundRect(ctx, miniX, dy, miniW, miniH, 6);
+        ctx.fill();
+        ctx.strokeStyle = p.color + '20';
+        ctx.lineWidth = 0.8;
+        roundRect(ctx, miniX, dy, miniW, miniH, 6);
+        ctx.stroke();
+
+        drawMini(ctx, p.mini, p.color, miniX, dy, miniW, miniH, s);
+        dy += miniH + 10 * s;
+
+        // Symptoms
+        ctx.font = `bold ${Math.round(12 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#ef4444';
+        ctx.textAlign = 'left';
+        ctx.fillText('Symptoms', cx + 14 * s, dy);
+        dy += 16 * s;
+
+        ctx.font = `${Math.round(11 * s)}px Inter,sans-serif`;
+        for (const sym of p.symptoms) {
+            ctx.fillStyle = '#ef4444';
+            ctx.fillText('•', cx + 16 * s, dy);
+            ctx.fillStyle = '#555';
+            ctx.fillText(sym, cx + 28 * s, dy);
+            dy += 15 * s;
+        }
+
+        dy += 8 * s;
+
+        // Solutions
+        ctx.font = `bold ${Math.round(12 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#10b981';
+        ctx.fillText('Solutions', cx + 14 * s, dy);
+        dy += 16 * s;
+
+        ctx.font = `${Math.round(11 * s)}px Inter,sans-serif`;
+        for (const sol of p.solutions) {
+            ctx.fillStyle = '#10b981';
+            ctx.fillText('✓', cx + 16 * s, dy);
+            ctx.fillStyle = '#555';
+            ctx.fillText(sol, cx + 28 * s, dy);
+            dy += 15 * s;
+        }
+    }
+}
+
+function drawMini(ctx, type, color, x, y, w, h, s) {
+    const cx = x + w / 2;
+    const cy = y + h / 2;
+
+    if (type === 'orientation') {
+        // Show particles all in same orientation vs random
+        const rng = mulberry32(10);
+        // Left half: all same angle
+        for (let i = 0; i < 6; i++) {
+            const px = x + 10 * s + i * (w * 0.4 / 6);
+            const py = cy - 4 * s + (rng() - 0.5) * 10 * s;
+            ctx.strokeStyle = color + '80';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.ellipse(px, py, 8 * s, 3 * s, 0, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+        // Arrow
+        ctx.font = `${Math.round(8 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#999';
+        ctx.textAlign = 'center';
+        ctx.fillText('→', cx, cy);
+        // Right half: elongated map
+        ctx.strokeStyle = color + '60';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(x + w * 0.75, cy, 20 * s, 8 * s, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([2, 2]);
+        ctx.strokeStyle = '#ccc';
+        ctx.beginPath();
+        ctx.ellipse(x + w * 0.75, cy, 12 * s, 12 * s, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+    } else if (type === 'ice') {
+        // Ice thickness gradient
+        const grad = ctx.createLinearGradient(x, y, x + w, y);
+        grad.addColorStop(0, color + '10');
+        grad.addColorStop(0.5, color + '30');
+        grad.addColorStop(1, color + '60');
+        ctx.fillStyle = grad;
+        ctx.fillRect(x + 4, y + 8 * s, w - 8, h - 16 * s);
+        ctx.font = `${Math.round(7 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#666';
+        ctx.textAlign = 'left';
+        ctx.fillText('Too thin', x + 8 * s, y + h - 4 * s);
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#10b981';
+        ctx.fillText('Optimal', cx, y + h - 4 * s);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#666';
+        ctx.fillText('Too thick', x + w - 8 * s, y + h - 4 * s);
+    } else if (type === 'motion') {
+        // Zigzag motion path
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x + 10 * s, cy);
+        for (let i = 1; i <= 8; i++) {
+            const mx = x + 10 * s + i * (w - 20 * s) / 8;
+            const my = cy + (i % 2 === 0 ? -1 : 1) * (8 + Math.random() * 4) * s * (1 - i / 10);
+            ctx.lineTo(mx, my);
+        }
+        ctx.stroke();
+        ctx.font = `${Math.round(7 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#666';
+        ctx.textAlign = 'left';
+        ctx.fillText('Frame 1', x + 6 * s, y + 10 * s);
+        ctx.textAlign = 'right';
+        ctx.fillText('Frame 40', x + w - 6 * s, y + 10 * s);
+    } else if (type === 'hetero') {
+        // Multiple conformations overlaid
+        const shapes = [
+            { dx: -15, dy: 0, r: 12, a: 0 },
+            { dx: 0, dy: 0, r: 10, a: Math.PI / 4 },
+            { dx: 15, dy: 0, r: 14, a: -Math.PI / 6 },
+        ];
+        for (const sh of shapes) {
+            ctx.strokeStyle = color + '50';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.ellipse(cx + sh.dx * s, cy + sh.dy * s, sh.r * s, sh.r * s * 0.6, sh.a, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+        ctx.font = `${Math.round(7 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#999';
+        ctx.textAlign = 'center';
+        ctx.fillText('Multiple states overlap → blur', cx, y + h - 4 * s);
+    } else if (type === 'small') {
+        // SNR comparison: large vs small
+        const rng = mulberry32(77);
+        // Large particle (left)
+        ctx.fillStyle = color + '40';
+        ctx.beginPath(); ctx.arc(x + w * 0.25, cy, 15 * s, 0, Math.PI * 2); ctx.fill();
+        ctx.font = `${Math.round(7 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#666';
+        ctx.textAlign = 'center';
+        ctx.fillText('>300 kDa', x + w * 0.25, y + h - 4 * s);
+        // Small particle (right) — barely visible
+        ctx.fillStyle = color + '15';
+        ctx.beginPath(); ctx.arc(x + w * 0.75, cy, 6 * s, 0, Math.PI * 2); ctx.fill();
+        // Add noise dots
+        for (let i = 0; i < 30; i++) {
+            const nx = x + w * 0.6 + rng() * w * 0.3;
+            const ny = y + 6 * s + rng() * (h - 12 * s);
+            ctx.fillStyle = '#00000010';
+            ctx.fillRect(nx, ny, 2 * s, 2 * s);
+        }
+        ctx.fillStyle = '#666';
+        ctx.fillText('<100 kDa', x + w * 0.75, y + h - 4 * s);
+    } else if (type === 'degrade') {
+        // Air-water interface cartoon
+        ctx.strokeStyle = color + '60';
+        ctx.lineWidth = 1;
+        // Top surface
+        ctx.setLineDash([3, 2]);
+        ctx.beginPath(); ctx.moveTo(x + 10 * s, y + 12 * s); ctx.lineTo(x + w - 10 * s, y + 12 * s); ctx.stroke();
+        // Bottom surface
+        ctx.beginPath(); ctx.moveTo(x + 10 * s, y + h - 12 * s); ctx.lineTo(x + w - 10 * s, y + h - 12 * s); ctx.stroke();
+        ctx.setLineDash([]);
+        // Denatured particles at surfaces
+        ctx.font = `${Math.round(7 * s)}px Inter,sans-serif`;
+        ctx.fillStyle = '#999';
+        ctx.textAlign = 'left';
+        ctx.fillText('Air', x + 6 * s, y + 10 * s);
+        ctx.fillText('Air', x + 6 * s, y + h - 4 * s);
+        // Unfolded shapes at interface
+        ctx.strokeStyle = color + '60';
+        ctx.lineWidth = 1.2;
+        for (let i = 0; i < 3; i++) {
+            const bx = x + w * 0.3 + i * w * 0.2;
+            ctx.beginPath();
+            ctx.moveTo(bx - 6 * s, y + 12 * s);
+            ctx.quadraticCurveTo(bx, y + 20 * s, bx + 6 * s, y + 12 * s);
+            ctx.stroke();
+        }
+        // Normal particle in middle
+        ctx.fillStyle = color + '30';
+        ctx.beginPath(); ctx.arc(cx, cy, 6 * s, 0, Math.PI * 2); ctx.fill();
+    }
+}
+
+function renderAll() { draw('cv'); }
+window.addEventListener('DOMContentLoaded', renderAll);
+window.addEventListener('resize', () => { clearTimeout(window._rt); window._rt = setTimeout(renderAll, 150); });
+</script>
+</body>
+</html>
