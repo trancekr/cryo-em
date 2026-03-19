@@ -3,3 +3,13 @@ screenshots/
 **/editor.js
 **/slide-editor.html
 **/check-slide-design.js
+**/design-principles.md
+**/next-session-tasks.md
+**/slide-design-reference.md
+**/layout-comparison.html
+**/wysiwyg.js
+**/*_backup_*.html
+**/backup_originals/
+pdb_mw_data.json
+generate_v3.py
+presentation-outline.md
