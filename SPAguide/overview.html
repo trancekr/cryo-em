@@ -52,7 +52,7 @@ body {
 .page-info { font-size: clamp(11px, 1.2vh, 15px); color: #888; font-weight: 600; min-width: 50px; text-align: center; }
 
 /* ── Slide system ── */
-.slides-area { flex: 1; min-height: 0; position: relative; overflow: hidden; display:flex; align-items:center; justify-content:center; }
+.slides-area { flex: 1; min-height: 0; position: relative; overflow: hidden; display:flex; align-items:center; justify-content:center; background:#000; }
 .slides-scaler { width:1920px; height:1080px; position:relative; transform-origin:center center; flex-shrink:0; }
 .slide {
   position: absolute; inset: 0; display: none; flex-direction: column;
@@ -1786,8 +1786,7 @@ function scaleSlides() {
   const scaler = document.getElementById('slides-scaler');
   if (!area || !scaler) return;
   const sw = area.clientWidth, sh = area.clientHeight;
-  const baseScale = Math.min(sw / 1920, sh / 1080);
-  const scale = Math.min(1, baseScale < 1 ? baseScale * 1.1 : baseScale);
+  const scale = Math.min(sw / 1920, sh / 1080);
   scaler.style.transform = 'scale(' + scale + ')';
 }
 scaleSlides();
