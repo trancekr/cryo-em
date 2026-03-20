@@ -1432,9 +1432,12 @@ body {
   function startAnimation(){
     if(started) return;
     init(); hideCards();
+    // Draw axes/legend first, then start graph after 1s delay
+    ctx.clearRect(0,0,W,H);
+    drawAxes(); drawLegend();
     started = true; finished = false;
     currentProgress = 0; milestoneIdx = 0; pauseRemaining = 0;
-    requestAnimationFrame(animate);
+    setTimeout(()=>{ requestAnimationFrame(animate); }, 1000);
   }
 
   function resetAnimation(){
@@ -1520,31 +1523,131 @@ body {
 
 <!-- ======== Slide 17: Sizing Up Cryo-EM ======== -->
 <div class="slide" data-n="17">
-  <div class="slide-title">Sizing Up Cryo-EM</div>
+  <div class="slide-title" style="margin-top:20px;width:100%">Sizing Up Cryo-EM</div>
+  <div class="slide-body" style="position:absolute;left:240px;top:130px;right:240px;bottom:80px;overflow:visible">
+    <div id="sizing-diagram" style="position:relative;width:100%;height:100%;overflow:visible">
+
+      <!-- White background box behind all content -->
+      <div style="position:absolute;top:-2px;left:-50px;right:-50px;bottom:-30px;background:#fff;border-radius:12px;z-index:0;box-shadow:0 1px 4px rgba(0,0,0,0.06)"></div>
+
+      <!-- Row 1: Zoom-in images (0–30%) -->
+      <img src="../cryo-slides-img/s020_zoom_row.png" alt="Biological length scales"
+           style="position:absolute;top:0;left:0;right:0;height:30%;width:100%;object-fit:contain;object-position:center bottom;z-index:1">
+
+      <!-- Row 2: Category labels (30–35%) -->
+      <!-- Labels centered over actual biological size ranges -->
+      <!-- Cells: 1–100 µm → 14.3%–42.9% -->
+      <span style="position:absolute;top:30.5%;left:0%;width:42.9%;text-align:center;font:700 26px 'Helvetica Neue',sans-serif;color:#1e3a5f">Cells</span>
+      <!-- Viruses: 20–300 nm → ~53%–73% -->
+      <span style="position:absolute;top:30.5%;left:42.9%;width:28.5%;text-align:center;font:700 26px 'Helvetica Neue',sans-serif;color:#1e3a5f">Viruses</span>
+      <!-- Proteins: 1–10 nm → 71.4%–85.7% -->
+      <span style="position:absolute;top:30.5%;left:71.4%;width:14.3%;text-align:center;font:700 26px 'Helvetica Neue',sans-serif;color:#1e3a5f">Proteins</span>
+      <!-- Atoms: ~1 Å → ~93%–100% -->
+      <span style="position:absolute;top:30.5%;left:85.7%;width:14.3%;text-align:center;font:700 26px 'Helvetica Neue',sans-serif;color:#1e3a5f">Atoms</span>
+
+      <!-- Dashed dividers (from labels through bars to axis) -->
+      <div style="position:absolute;top:30%;left:42.9%;bottom:6%;border-left:1.5px dashed #b0b8c4"></div>
+      <div style="position:absolute;top:30%;left:71.4%;bottom:6%;border-left:1.5px dashed #b0b8c4"></div>
+      <div style="position:absolute;top:30%;left:85.7%;bottom:6%;border-left:1.5px dashed #b0b8c4"></div>
+
+      <!-- Technique bars — all use same 0–100% x-axis as scale -->
+      <!-- microED: 85.7%–100% -->
+      <div style="position:absolute;top:36%;left:85.7%;width:14.3%;height:5.5%;background:#eab308;border-radius:5px;display:flex;align-items:center;justify-content:center;z-index:1">
+        <span style="font:700 23px 'Helvetica Neue',sans-serif;color:#fff">microED</span>
+      </div>
+      <!-- Single Particle Cryo-TEM: 57.1%–85.7% -->
+      <div style="position:absolute;top:46%;left:57.1%;width:28.6%;height:5.5%;background:#eab308;border-radius:5px;display:flex;align-items:center;justify-content:center;z-index:1">
+        <span style="font:700 23px 'Helvetica Neue',sans-serif;color:#fff">Single Particle Cryo-TEM</span>
+      </div>
+      <!-- Cryo-ET: 42.9%–78.6% -->
+      <div style="position:absolute;top:56%;left:42.9%;width:35.7%;height:5.5%;background:#eab308;border-radius:5px;display:flex;align-items:center;justify-content:center;z-index:1">
+        <span style="font:700 23px 'Helvetica Neue',sans-serif;color:#fff">Cryo-TEM Tomography (Cryo-ET)</span>
+      </div>
+      <!-- NMR: 78.6%–100% -->
+      <div style="position:absolute;top:56%;left:80%;width:20%;height:5.5%;background:#f59e0b;border-radius:5px;display:flex;align-items:center;justify-content:center;z-index:1">
+        <span style="font:700 23px 'Helvetica Neue',sans-serif;color:#fff">NMR</span>
+      </div>
+      <!-- Small angle x-ray scattering: ~50%–85.7% -->
+      <div style="position:absolute;top:66%;left:50%;width:35.7%;height:5.5%;background:#16a34a;border-radius:5px;display:flex;align-items:center;justify-content:center;z-index:1">
+        <span style="font:700 23px 'Helvetica Neue',sans-serif;color:#fff">Small Angle X-ray Scattering</span>
+      </div>
+      <!-- X-ray microscopy: 28.6%–57.1% -->
+      <div style="position:absolute;top:76%;left:20%;width:37%;height:5.5%;background:#16a34a;border-radius:5px;display:flex;align-items:center;justify-content:center;z-index:1">
+        <span style="font:700 23px 'Helvetica Neue',sans-serif;color:#fff">X-ray Microscopy</span>
+      </div>
+      <!-- X-ray crystallography: 71.4%–100% -->
+      <div style="position:absolute;top:76%;left:68%;width:32%;height:5.5%;background:#16a34a;border-radius:5px;display:flex;align-items:center;justify-content:center;z-index:1">
+        <span style="font:700 23px 'Helvetica Neue',sans-serif;color:#fff">X-ray Crystallography</span>
+      </div>
+      <!-- Light Microscopy: 0%–57% -->
+      <div style="position:absolute;top:86%;left:0%;width:57%;height:5.5%;background:#78716c;border-radius:5px;display:flex;align-items:center;padding-left:16px;z-index:1">
+        <span style="font:700 23px 'Helvetica Neue',sans-serif;color:#fff">Light Microscopy</span>
+      </div>
+
+      <!-- Scale axis line -->
+      <div style="position:absolute;bottom:6%;left:0;right:0;height:2px;background:#374151"></div>
+      <!-- Tick marks -->
+      <div style="position:absolute;bottom:6%;left:0%;width:1.5px;height:8px;background:#374151"></div>
+      <div style="position:absolute;bottom:6%;left:14.3%;width:1.5px;height:8px;background:#374151"></div>
+      <div style="position:absolute;bottom:6%;left:28.6%;width:1.5px;height:8px;background:#374151"></div>
+      <div style="position:absolute;bottom:6%;left:42.9%;width:1.5px;height:8px;background:#374151"></div>
+      <div style="position:absolute;bottom:6%;left:57.1%;width:1.5px;height:8px;background:#374151"></div>
+      <div style="position:absolute;bottom:6%;left:71.4%;width:1.5px;height:8px;background:#374151"></div>
+      <div style="position:absolute;bottom:6%;left:85.7%;width:1.5px;height:8px;background:#374151"></div>
+      <div style="position:absolute;bottom:6%;right:0;width:1.5px;height:8px;background:#374151"></div>
+      <!-- Scale labels -->
+      <span style="position:absolute;bottom:1.5%;left:0%;font:500 21px 'Helvetica Neue',sans-serif;color:#6b7280">1 mm</span>
+      <span style="position:absolute;bottom:1.5%;left:14.3%;transform:translateX(-50%);font:500 21px 'Helvetica Neue',sans-serif;color:#6b7280">100 &micro;m</span>
+      <span style="position:absolute;bottom:1.5%;left:28.6%;transform:translateX(-50%);font:500 21px 'Helvetica Neue',sans-serif;color:#6b7280">10 &micro;m</span>
+      <span style="position:absolute;bottom:1.5%;left:42.9%;transform:translateX(-50%);font:500 21px 'Helvetica Neue',sans-serif;color:#6b7280">1 &micro;m</span>
+      <span style="position:absolute;bottom:1.5%;left:57.1%;transform:translateX(-50%);font:500 21px 'Helvetica Neue',sans-serif;color:#6b7280">100 nm</span>
+      <span style="position:absolute;bottom:1.5%;left:71.4%;transform:translateX(-50%);font:500 21px 'Helvetica Neue',sans-serif;color:#6b7280">10 nm</span>
+      <span style="position:absolute;bottom:1.5%;left:85.7%;transform:translateX(-50%);font:500 21px 'Helvetica Neue',sans-serif;color:#6b7280">1 nm</span>
+      <span style="position:absolute;bottom:1.5%;right:0%;font:500 21px 'Helvetica Neue',sans-serif;color:#6b7280">1 &Aring;</span>
+
+    </div>
+  </div>
 </div>
 
 <!-- ======== Slide 18: Structural Biologist’s Dream ======== -->
 <div class="slide" data-n="18">
-  <div class="slide-title">A Structural Biologist&rsquo;s Dream</div>
-  <div class="slide-body">
-    <div class="full-bleed">
-      <img src="../cryo-slides-img/s021_38.png" alt="Structural biology dream" loading="lazy">
-      <div class="overlay-panel">
-        <h3>From Molecules to Cells</h3>
-        <ul>
-          <li><strong>Single particle analysis</strong> &mdash; Purified proteins to atomic models (&lt;4 &Aring;)</li>
-          <li><strong>Cryo-electron tomography</strong> &mdash; 3D imaging of intact cells at molecular resolution</li>
-          <li><strong>In situ structural biology</strong> &mdash; Protein complexes in their native cellular environment</li>
-          <li><strong>Integrative approaches</strong> &mdash; Combine cryo-EM with AlphaFold, X-ray, NMR, cross-linking MS</li>
-        </ul>
-        <div class="overlay-callout">
-          <h4>Future: Cellular Cryo-EM</h4>
-          <p>FIB-SEM milling + cryo-ET enables imaging within intact cells at ~15&ndash;30 &Aring;, with subtomogram averaging pushing toward near-atomic detail.</p>
+  <div class="slide-title" style="margin-top:15px">A Structural Biologist&rsquo;s Dream</div>
+  <div class="slide-subtitle">See protein structures directly inside cells &mdash; no purification needed</div>
+  <div class="slide-body" style="position:absolute;left:30px;top:130px;right:30px;bottom:40px">
+    <div style="display:flex;gap:30px;height:100%;align-items:center;padding:0">
+
+      <!-- Left: Image (55%) -->
+      <div style="flex:0 0 55%;height:90%;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08);padding:40px 2px 2px 2px">
+        <img src="../cryo-slides-img/s021_38.png" alt="Structural cell biology" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:6px">
+      </div>
+
+      <!-- Right: Text cards (45%) -->
+      <div id="s18-text" style="flex:1;display:flex;flex-direction:column;gap:20px;opacity:0;transition:opacity 0.8s ease">
+
+        <div style="background:#ede9fe;border-left:5px solid #7c3aed;border-radius:0 8px 8px 0;padding:16px 20px">
+          <div style="font:700 20px ‘Helvetica Neue’,sans-serif;color:#5b21b6;margin-bottom:6px">Single Particle Analysis</div>
+          <div style="font:400 16px/1.5 ‘Helvetica Neue’,sans-serif;color:#4c1d95">Purified proteins to atomic models (&lt;4 &Aring;)</div>
         </div>
+
+        <div style="background:#dbeafe;border-left:5px solid #2563eb;border-radius:0 8px 8px 0;padding:16px 20px">
+          <div style="font:700 20px ‘Helvetica Neue’,sans-serif;color:#1e40af;margin-bottom:6px">Cryo-Electron Tomography</div>
+          <div style="font:400 16px/1.5 ‘Helvetica Neue’,sans-serif;color:#1e3a5f">3D imaging of intact cells at molecular resolution</div>
+        </div>
+
+        <div style="background:#dcfce7;border-left:5px solid #16a34a;border-radius:0 8px 8px 0;padding:16px 20px">
+          <div style="font:700 20px ‘Helvetica Neue’,sans-serif;color:#166534;margin-bottom:6px">In Situ Structural Biology</div>
+          <div style="font:400 16px/1.5 ‘Helvetica Neue’,sans-serif;color:#14532d">Protein complexes in their native cellular environment</div>
+        </div>
+
+        <div id="s18-future" style="background:rgba(5,150,105,0.12);border:2px solid #059669;border-radius:10px;padding:18px 22px;opacity:0;transition:opacity 0.8s ease">
+          <div style="font:800 20px ‘Helvetica Neue’,sans-serif;color:#059669;margin-bottom:6px">Future: Cellular Cryo-EM</div>
+          <div style="font:400 16px/1.5 ‘Helvetica Neue’,sans-serif;color:#065f46">FIB-SEM milling + cryo-ET enables imaging within intact cells at ~15&ndash;30 &Aring;, with subtomogram averaging pushing toward near-atomic detail.</div>
+        </div>
+
       </div>
     </div>
   </div>
-  <div class="slide-ref">K&uuml;hlbrandt, Science (2014) &middot; Bhatt et al., Nature (2015) &middot; Turk &amp; Bhatt, Nat Rev Mol Cell Biol (2024)</div>
+  <div class="slide-ref" style="position:absolute;left:32px;bottom:10px;width:1934px">Chakraborty et al., Protein Science (2020) &middot; K&uuml;hlbrandt, Science (2014) &middot; Turk &amp; Bhatt, Nat Rev Mol Cell Biol (2024)</div>
 </div>
 
 <!-- ======== Slide 19: SPA Workflow + Timeline ======== -->
@@ -1685,6 +1788,22 @@ function show(n) {
   document.getElementById('page-info').textContent = cur + ' / ' + N;
   document.getElementById('prev-btn').disabled = (cur === 1);
   document.getElementById('next-btn').disabled = (cur === N);
+  // Slide 18 animation
+  const s18text = document.getElementById('s18-text');
+  const s18future = document.getElementById('s18-future');
+  if(s18text){
+    if(n === 18){
+      if(s18text.dataset.shown !== '1'){
+        s18text.dataset.shown = '1';
+        setTimeout(()=>{ s18text.style.opacity = '1'; }, 1000);
+        setTimeout(()=>{ s18future.style.opacity = '1'; }, 2500);
+      }
+    } else if(s18text.dataset.shown === '1'){
+      s18text.dataset.shown = '0';
+      s18text.style.opacity = '0';
+      s18future.style.opacity = '0';
+    }
+  }
 }
 
 function go(d) { show(cur + d); }
