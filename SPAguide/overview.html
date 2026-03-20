@@ -1203,9 +1203,8 @@ body {
   function init(){
     canvas = document.getElementById('pdb-chart');
     if(!canvas) return;
-    const rect = canvas.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
-    W = rect.width; H = rect.height;
+    W = canvas.clientWidth; H = canvas.clientHeight;
     canvas.width = W * dpr; canvas.height = H * dpr;
     canvas.style.width = W+'px'; canvas.style.height = H+'px';
     ctx = canvas.getContext('2d');
