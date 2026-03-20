@@ -1777,6 +1777,18 @@ body {
 const N = 21;
 let cur = 1;
 
+// Zoom entire page to fit 1920px content in smaller viewports
+(function() {
+  const stored = screen.width; // true screen width, unaffected by zoom
+  function zoomPage() {
+    document.documentElement.style.zoom = '1'; // reset to get true width
+    const w = window.innerWidth;
+    const z = Math.min(1, w / 1920);
+    document.documentElement.style.zoom = z;
+  }
+  zoomPage();
+  window.addEventListener('resize', zoomPage);
+})();
 
 function show(n) {
   n = Math.max(1, Math.min(N, n));
