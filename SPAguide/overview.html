@@ -52,8 +52,7 @@ body {
 .page-info { font-size: clamp(11px, 1.2vh, 15px); color: #888; font-weight: 600; min-width: 50px; text-align: center; }
 
 /* ── Slide system ── */
-.slides-area { flex: 1; min-height: 0; position: relative; overflow: hidden; background:#000; }
-.slides-scaler { width:1920px; height:1080px; position:absolute; top:50%; left:50%; transform-origin:center center; background:#f5f5f7; }
+.slides-area { flex: 1; min-height: 0; position: relative; overflow: hidden; }
 .slide {
   position: absolute; inset: 0; display: none; flex-direction: column;
   padding: clamp(6px, 1vh, 14px) clamp(12px, 2vw, 32px); overflow: hidden;
@@ -531,7 +530,6 @@ body {
 </div>
 
 <div class="slides-area">
-<div class="slides-scaler" id="slides-scaler">
 
 <!-- ======== Slide 1: Title / Cover ======== -->
 <div class="slide active" data-n="1" style="padding:0">
@@ -1773,24 +1771,12 @@ body {
   <div class="slide-ref">Glaeser, Nat Methods (2016) &middot; Drulyte et al., Acta Cryst D (2018) &middot; Henderson, Angew Chem (2013)</div>
 </div>
 
-</div><!-- /slides-scaler -->
 </div><!-- /slides-area -->
 
 <script>
 const N = 21;
 let cur = 1;
 
-// Scale slides to fit viewport
-function scaleSlides() {
-  const area = document.querySelector('.slides-area');
-  const scaler = document.getElementById('slides-scaler');
-  if (!area || !scaler) return;
-  const sw = area.clientWidth, sh = area.clientHeight;
-  const scale = Math.min(sw / 1920, sh / 1080);
-  scaler.style.transform = 'translate(-50%,-50%) scale(' + scale + ')';
-}
-scaleSlides();
-window.addEventListener('resize', scaleSlides);
 
 function show(n) {
   n = Math.max(1, Math.min(N, n));
