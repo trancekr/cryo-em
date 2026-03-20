@@ -1786,7 +1786,8 @@ function scaleSlides() {
   const scaler = document.getElementById('slides-scaler');
   if (!area || !scaler) return;
   const sw = area.clientWidth, sh = area.clientHeight;
-  const scale = Math.min(sw / 1920, sh / 1080);
+  const baseScale = Math.min(sw / 1920, sh / 1080);
+  const scale = Math.min(1, baseScale < 1 ? baseScale * 1.1 : baseScale);
   scaler.style.transform = 'scale(' + scale + ')';
 }
 scaleSlides();
