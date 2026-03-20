@@ -7,16 +7,17 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { background: #000; height: 100vh; display: flex; justify-content: center; }
+html { background: #000; margin: 0; padding: 0; }
 body {
   background: #f0f0f5;
   font-family: 'Inter', -apple-system, sans-serif;
   color: #1a1a2e;
-  height: 100vh;
-  width: 100%;
-  max-width: calc(100vh * 16 / 9);
+  width: 1920px;
+  height: 1080px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   overflow: hidden;
 }
 
@@ -1777,14 +1778,12 @@ body {
 const N = 21;
 let cur = 1;
 
-// Zoom entire page to fit 1920px content in smaller viewports
+// Zoom body (1920x1080 fixed) to fit viewport
 (function() {
-  const stored = screen.width; // true screen width, unaffected by zoom
   function zoomPage() {
-    document.documentElement.style.zoom = '1'; // reset to get true width
-    const w = window.innerWidth;
-    const z = Math.min(1, w / 1920);
-    document.documentElement.style.zoom = z;
+    document.body.style.zoom = '1';
+    const z = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    document.body.style.zoom = z;
   }
   zoomPage();
   window.addEventListener('resize', zoomPage);
