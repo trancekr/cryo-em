@@ -7,14 +7,14 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { background: #000; margin: 0; padding: 0; }
+html { background: #000; margin: 0; padding: 0; height: 100%; display: flex; align-items: center; justify-content: center; }
 body {
   background: #f0f0f5;
   font-family: 'Inter', -apple-system, sans-serif;
   color: #1a1a2e;
   width: 1920px;
   height: 1080px;
-  margin: 0 auto;
+  margin: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -71,7 +71,9 @@ body {
   flex-shrink: 0; font-size: clamp(12px, 1.4vh, 16px);
   color: #999; text-align: center; padding: 2px 0;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  position: relative; z-index: 10;
 }
+.slide-ref a { pointer-events: auto; }
 .slide-subtitle {
   font-size: clamp(13px, 1.6vh, 20px); color: #888;
   text-align: center; font-weight: 600; flex-shrink: 0; margin-top: -2px;
@@ -525,7 +527,7 @@ body {
   <div class="section-name">Section 1: Cryo-EM Overview</div>
   <div class="nav-group">
     <button class="nav-btn" id="prev-btn" onclick="go(-1)">&lsaquo;</button>
-    <span class="page-info" id="page-info">1 / 25</span>
+    <span class="page-info" id="page-info" onclick="jumpToSlide()" style="cursor:pointer" title="Click to jump to slide">1 / 21</span>
     <button class="nav-btn" id="next-btn" onclick="go(1)">&rsaquo;</button>
   </div>
 </div>
@@ -594,7 +596,7 @@ body {
       </div>
     </div>
   </div>
-  <div class="slide-ref">Dubochet et al., Q Rev Biophys (1988) &middot; Glaeser, Biophys J (1971) &middot; Taylor &amp; Glaeser, Science (1974)</div>
+  <div class="slide-ref"><a href="https://doi.org/10.1017/S0033583500004297" target="_blank" style="color:inherit">Dubochet et al., Q Rev Biophys (1988)</a> &middot; <a href="https://doi.org/10.1016/S0022-5320(71)80118-1" target="_blank" style="color:inherit">Glaeser, J Ultrastruct Res (1971)</a> &middot; <a href="https://doi.org/10.1126/science.186.4168.1036" target="_blank" style="color:inherit">Taylor &amp; Glaeser, Science (1974)</a></div>
 </div>
 
 <!-- ======== Slide 4: Conventional TEM vs Cryo-EM ======== -->
@@ -628,7 +630,7 @@ body {
       </div>
     </div>
   </div>
-  <div class="slide-ref">Henderson, Q Rev Biophys (1995) &middot; Glaeser, Nat Methods (2016)</div>
+  <div class="slide-ref">Images: <a href="https://doi.org/10.1016/bs.mie.2016.04.011" target="_blank" style="color:inherit">Passmore &amp; Russo, Methods Enzymol (2016)</a></div>
 </div>
 
 <!-- ======== Slide 5: Cryo-EM Components (3-column) ======== -->
@@ -680,7 +682,7 @@ body {
       </div>
     </div>
   </div>
-  <div class="slide-ref">Images: MyScope (myscope.training), Microscopy Australia &middot; McMullan et al., Ultramicroscopy (2009) &middot; Faruqi &amp; McMullan, Q Rev Biophys (2011)</div>
+  <div class="slide-ref">Images: <a href="https://myscope.training" target="_blank" style="color:inherit">MyScope (myscope.training)</a>, Microscopy Australia &middot; <a href="https://doi.org/10.1016/j.ultramic.2009.04.002" target="_blank" style="color:inherit">McMullan et al., Ultramicroscopy (2009)</a> &middot; <a href="https://doi.org/10.1017/S0033583511000035" target="_blank" style="color:inherit">Faruqi &amp; McMullan, Q Rev Biophys (2011)</a></div>
 </div>
 
 <!-- ======== Slide 6: Resolution Revolution — Before & After ======== -->
@@ -717,7 +719,7 @@ body {
       </div>
     </div>
   </div>
-  <div class="slide-ref">K&uuml;hlbrandt, Science (2014) &middot; Li et al., Nat Methods (2013) &middot; Bai et al., TiBS (2015) &middot; Image: <a href="https://www.nobelprize.org/prizes/chemistry/2017/popular-information/" target="_blank" style="color:inherit">&copy; Nobel Prize Committee (2017)</a></div>
+  <div class="slide-ref"><a href="https://doi.org/10.1126/science.1251652" target="_blank" style="color:inherit">K&uuml;hlbrandt, Science (2014)</a> &middot; <a href="https://doi.org/10.1038/nmeth.2472" target="_blank" style="color:inherit">Li et al., Nat Methods (2013)</a> &middot; <a href="https://doi.org/10.1016/j.tibs.2014.10.005" target="_blank" style="color:inherit">Bai et al., TiBS (2015)</a> &middot; Image: <a href="https://www.nobelprize.org/prizes/chemistry/2017/popular-information/" target="_blank" style="color:inherit">&copy; Nobel Prize Committee (2017)</a></div>
 </div>
 
 <!-- ======== Slide 7: History 1968–1982 ======== -->
@@ -727,7 +729,7 @@ body {
   <div class="slide-body">
     <div class="history-grid" style="position:absolute;left:24px;top:122px;right:24px;height:957px">
       <div class="history-card" style="position:absolute;left:48px;width:571px;top:0;bottom:0">
-        <div class="img-card" style="position:absolute;top:260px;left:0;right:0;height:647px;font-size:19px">
+        <div class="img-card" style="position:absolute;top:260px;left:0px;width:571px;height:618px;font-size:19px">
           <div class="img-labeled" style="position:absolute;left:7px;top:7px;width:555px;height:596px">
             <img src="../cryo-slides-img/s010_12.png?v=2" alt="Fourier reconstruction scheme" style="position:absolute;left:140px;top:25px;width:275px;height:546px">
             <span class="img-label" style="left:17px;top:37px;width:137px;height:29px;font-size:15px">Directions<br>of view</span>
@@ -736,21 +738,21 @@ body {
             <span class="img-label" style="font-size:15px;left:15px;top:257px">Fourier transform of a<br>projection gives coefficients<br>in a section of<br>&ldquo;Fourier space&rdquo;</span>
             <span class="img-label" style="font-size:15px;left:16px;top:430px">Reconstruction by<br>Fourier synthesis<br>using all sections</span>
           </div>
-          <span class="img-caption" style="position:absolute;left:141px;top:593px;width:329px;height:32px;font-size:17px">T4 phage tail Fourier reconstruction</span>
+          <span class="img-caption" style="position:absolute;left:126px;top:568px;width:329px;height:32px;font-size:17px">T4 phage tail Fourier reconstruction</span>
         </div>
         <div class="content-card purple" style="position:absolute;top:6px;left:0;right:0;height:233px">
-          <div class="card-head"><span class="year">1968</span><span class="card-title">First 3D reconstruction from EM</span></div>
-          <div class="citation"><a href="https://doi.org/10.1038/217130a0" target="_blank">DeRosier &amp; Klug &middot; <em>Nature</em> 217, 130&ndash;134</a></div>
-          <ul class="details">
+          <div class="card-head" style="position:absolute;left:15px;top:10px;width:521px;height:28px"><span class="year">1968</span><span class="card-title">First 3D reconstruction from EM</span></div>
+          <div class="citation" style="position:absolute;left:15px;top:49px;width:521px;height:14px"><a href="https://doi.org/10.1038/217130a0" target="_blank">DeRosier &amp; Klug &middot; <em>Nature</em> 217, 130&ndash;134</a></div>
+          <ul class="details" style="position:absolute;left:15px;top:67px;width:521px;height:65px">
             <li><strong>Specimen:</strong> T4 bacteriophage tail (helical symmetry)</li>
             <li><strong>Method:</strong> Helical Fourier reconstruction &mdash; digital computer for 2D &rarr; 3D</li>
             <li><strong>Resolution:</strong> ~20&ndash;30 &Aring;. Klug: <strong>Nobel Prize Chemistry 1982</strong></li>
           </ul>
-          <div class="key-insight">&#x1F4A1; Established Projection-Slice Theorem &rarr; FT of 2D projection = central section of 3D FT. Mathematical foundation for medical CT and all 3D reconstruction</div>
+          <div class="key-insight" style="position:absolute;left:19px;top:167px;width:534px;height:46px">&#x1F4A1; Established Projection-Slice Theorem &rarr; FT of 2D projection = central section of 3D FT. Mathematical foundation for medical CT and all 3D reconstruction</div>
         </div>
       </div>
       <div class="history-card" style="position:absolute;left:643px;width:571px;top:0;bottom:0">
-        <div class="img-card" style="position:absolute;top:260px;left:0;right:0;height:647px"><img src="../cryo-slides-img/s010_13.png?v=2" alt="Catalase electron diffraction" style="position:absolute;left:26px;top:62px;width:525px;height:372px"><span class="img-caption" style="position:absolute;left:106px;top:588px;width:349px;height:20px;font-size:18px">Frozen catalase electron diffraction</span></div>
+        <div class="img-card" style="position:absolute;top:260px;left:0px;width:571px;height:617px"><img src="../cryo-slides-img/s010_13.png?v=2" alt="Catalase electron diffraction" style="position:absolute;left:26px;top:62px;width:525px;height:372px"><span class="img-caption" style="position:absolute;left:119px;top:564px;width:349px;height:20px;font-size:18px">Frozen catalase electron diffraction</span></div>
         <div class="content-card purple" style="position:absolute;top:6px;left:0;right:0;height:233px">
           <div class="card-head"><span class="year">1974</span><span class="card-title">Frozen hydrated protein crystals</span></div>
           <div class="citation"><a href="https://doi.org/10.1126/science.186.4168.1036" target="_blank">Taylor &amp; Glaeser &middot; <em>Science</em> 186, 1036&ndash;1037</a></div>
@@ -763,7 +765,7 @@ body {
         </div>
       </div>
       <div class="history-card" style="position:absolute;left:1237px;width:571px;top:0;bottom:0">
-        <div class="img-card" style="position:absolute;top:260px;left:0;right:0;height:647px"><img src="../cryo-slides-img/s010_14.png?v=2" alt="Vitrified virus particles" style="position:absolute;left:22px;top:52px;width:607px;height:452px"><span class="img-caption" style="font-size:18px;position:absolute;left:154px;top:588px;width:265px;height:22px">Vitrified virus in amorphous ice</span></div>
+        <div class="img-card" style="position:absolute;top:260px;left:0px;width:571px;height:616px"><img src="../cryo-slides-img/s010_14.png?v=2" alt="Vitrified virus particles" style="position:absolute;left:22px;top:52px;width:607px;height:452px"><span class="img-caption" style="font-size:18px;position:absolute;left:161px;top:557px;width:265px;height:22px">Vitrified virus in amorphous ice</span></div>
         <div class="content-card purple" style="position:absolute;top:6px;left:0;right:0;height:233px">
           <div class="card-head"><span class="year">1982</span><span class="card-title">Vitrification</span></div>
           <div class="citation"><a href="https://doi.org/10.1111/j.1365-2818.1981.tb02483.x" target="_blank">Dubochet &amp; McDowall &middot; <em>J Microsc</em> 124, RP3&ndash;RP4</a></div>
@@ -787,7 +789,7 @@ body {
   <div class="slide-body">
     <div class="history-grid" style="position:absolute;left:24px;top:122px;right:24px;height:957px">
       <div class="history-card" style="position:absolute;left:48px;width:571px;top:0;bottom:0">
-        <div class="img-card" style="position:absolute;top:260px;left:0;right:0;height:647px">
+        <div class="img-card" style="position:absolute;top:260px;left:0px;width:571px;height:618px">
           <div class="img-labeled" style="position:absolute;left:7px;top:7px;width:265px;height:580px">
             <img src="../cryo-slides-img/s010_16a.png" alt="Central sections in Fourier space" style="position:absolute;left:14px;top:-17px;width:255px;height:260px;max-width:none;max-height:none">
             <span class="img-label" style="position:absolute;left:291px;top:30px;width:250px;font-size:14px;line-height:1.5">Each projection&rsquo;s FT = a plane through 3D Fourier space<br><span style="color:#555">Two planes always meet at a <em>common line</em></span></span>
@@ -801,9 +803,9 @@ body {
             <div style="font-size:20px;margin:3px 0;color:#7c3aed">&darr;</div>
             <div style="background:#f3eeff;border:1px solid #d4c4f0;border-radius:6px;padding:7px 12px;font-size:14px;line-height:1.3">3D reconstruction from random orientations &mdash; <strong>no tilting needed</strong></div>
           </div>
-          <span class="img-caption" style="position:absolute;left:70px;top:600px;font-size:17px">Common-line angular reconstitution (van Heel, 1987)</span>
+          <span class="img-caption" style="position:absolute;left:72px;top:577px;font-size:17px">Common-line angular reconstitution (van Heel, 1987)</span>
         </div>
-        <div class="content-card purple" style="position:absolute;top:6px;left:0;right:0;height:233px">
+        <div class="content-card purple" style="position:absolute;top:6px;left:0;width:571px;height:246px">
           <div class="card-head"><span class="year">1987</span><span class="card-title">Angular reconstitution</span></div>
           <div class="citation"><a href="https://doi.org/10.1016/0304-3991(87)90078-7" target="_blank">van Heel &middot; <em>Ultramicroscopy</em> 21, 111&ndash;123</a></div>
           <ul class="details">
@@ -815,16 +817,16 @@ body {
         </div>
       </div>
       <div class="history-card" style="position:absolute;left:643px;width:571px;top:0;bottom:0">
-        <div class="img-card" style="position:absolute;top:260px;left:0;right:0;height:647px">
+        <div class="img-card" style="position:absolute;top:260px;left:0px;width:571px;height:618px">
           <img src="../cryo-slides-img/s010_18_crop.png" alt="Bacteriorhodopsin 3.5 Å" style="position:absolute;left:28px;top:20px;width:516px;height:400px">
           <div style="position:absolute;left:20px;top:430px;width:530px;text-align:center">
-            <div style="background:#f3eeff;border:1px solid #d4c4f0;border-radius:6px;padding:6px 12px;font-size:13px;line-height:1.4">2D crystal + e<sup>&minus;</sup> diffraction &rarr; <strong>3.5 &Aring;</strong> density map</div>
-            <div style="font-size:18px;margin:3px 0;color:#7c3aed">&darr;</div>
-            <div style="background:#f3eeff;border:1px solid #d4c4f0;border-radius:6px;padding:6px 12px;font-size:13px;line-height:1.4">Individual residues visible &mdash; <strong>EM can reach atomic resolution</strong></div>
+            <div style="position:absolute;left:0px;top:32px;width:514px;height:33px;background:#f3eeff;border:1px solid #d4c4f0;border-radius:6px;padding:6px 12px;font-size:13px;line-height:1.4">2D crystal + e<sup>&minus;</sup> diffraction &rarr; <strong>3.5 &Aring;</strong> density map</div>
+            <div style="position:absolute;left:0px;top:70px;width:514px;height:21px;font-size:18px;color:#7c3aed">&darr;</div>
+            <div style="position:absolute;left:0px;top:96px;width:514px;height:31px;background:#f3eeff;border:1px solid #d4c4f0;border-radius:6px;padding:6px 12px;font-size:13px;line-height:1.4">Individual residues visible &mdash; <strong>EM can reach atomic resolution</strong></div>
           </div>
-          <span class="img-caption" style="position:absolute;left:100px;top:600px;font-size:16px">Bacteriorhodopsin 3.5 &Aring; structure</span>
+          <span class="img-caption" style="position:absolute;left:140px;top:580px;font-size:16px">Bacteriorhodopsin 3.5 &Aring; structure</span>
         </div>
-        <div class="content-card purple" style="position:absolute;top:6px;left:0;right:0;height:233px">
+        <div class="content-card purple" style="position:absolute;top:6px;left:0;width:571px;height:244px">
           <div class="card-head"><span class="year">1990</span><span class="card-title">First atomic structure by EM</span></div>
           <div class="citation"><a href="https://doi.org/10.1016/S0022-2836(05)80271-2" target="_blank">Henderson et al. &middot; <em>J Mol Biol</em> 213, 899&ndash;929</a></div>
           <ul class="details">
@@ -836,7 +838,7 @@ body {
         </div>
       </div>
       <div class="history-card" style="position:absolute;left:1237px;width:571px;top:0;bottom:0">
-        <div class="img-card" style="position:absolute;top:260px;left:0;right:0;height:647px">
+        <div class="img-card" style="position:absolute;top:260px;left:0px;width:571px;height:618px">
           <img src="../cryo-slides-img/s010_17_crop.png" alt="Projection matching scheme" style="position:absolute;left:6px;top:49px;width:571px;height:319px;max-width:none;max-height:none">
           <div style="position:absolute;left:280px;top:77px;width:262px;background:rgba(255,255,255,0.95);border:1px solid #d4c4f0;border-radius:6px;padding:8px 10px;font-size:14px;line-height:1.45;color:#333;z-index:2">
             <strong style="color:#7c3aed;font-size:11px">OSSP Method</strong><br>
@@ -845,13 +847,13 @@ body {
             → max CCF → orientation (φ,θ,ψ)
           </div>
           <div style="position:absolute;left:13px;top:440px;width:540px;text-align:center">
-            <div style="background:#f3eeff;border:1px solid #d4c4f0;border-radius:6px;padding:7px 12px;font-size:14px;line-height:1.3">Match each image to <strong>projections of a 3D reference</strong>, not to each other</div>
-            <div style="font-size:20px;margin:3px 0;color:#7c3aed">↓</div>
-            <div style="background:#f3eeff;border:1px solid #d4c4f0;border-radius:6px;padding:7px 12px;font-size:14px;line-height:1.3">Refine orientation + translation iteratively — <strong>no tilt pairs needed</strong></div>
+            <div style="position:absolute;left:9px;top:22px;width:522px;height:33px;background:#f3eeff;border:1px solid #d4c4f0;border-radius:6px;padding:7px 12px;font-size:14px;line-height:1.3">Match each image to <strong>projections of a 3D reference</strong>, not to each other</div>
+            <div style="position:absolute;left:0px;top:58px;width:524px;height:24px;font-size:20px;color:#7c3aed">↓</div>
+            <div style="position:absolute;left:7px;top:86px;width:524px;height:33px;background:#f3eeff;border:1px solid #d4c4f0;border-radius:6px;padding:7px 12px;font-size:14px;line-height:1.3">Refine orientation + translation iteratively — <strong>no tilt pairs needed</strong></div>
           </div>
-          <span class="img-caption" style="position:absolute;left:50px;top:600px;font-size:16px">OSSP block diagram (Penczek, Grassucci & Frank, 1994)</span>
+          <span class="img-caption" style="position:absolute;left:64px;top:578px;font-size:16px">OSSP block diagram (Penczek, Grassucci & Frank, 1994)</span>
         </div>
-        <div class="content-card purple" style="position:absolute;top:6px;left:0;right:0;height:233px">
+        <div class="content-card purple" style="position:absolute;top:6px;left:0;width:571px;height:243px">
           <div class="card-head" style="position:absolute;left:16px;top:11px;width:537px"><span class="year">1994</span><span class="card-title">Iterative projection matching</span></div>
           <div class="citation" style="position:absolute;left:16px;top:55px;width:537px"><a href="https://doi.org/10.1016/0304-3991(94)90003-5" target="_blank">Penczek, Grassucci &amp; Frank &middot; <em>Ultramicroscopy</em> 53, 251&ndash;270</a></div>
           <ul class="details" style="position:absolute;left:16px;top:74px;width:537px">
@@ -874,13 +876,12 @@ body {
   <div class="slide-body">
     <div class="history-grid" style="position:absolute;left:24px;top:122px;right:24px;height:957px">
       <div class="history-card" style="position:absolute;left:48px;width:571px;top:0;bottom:0">
-        <div class="img-card" style="position:absolute;top:261px;left:-1px;right:0;height:647px">
-          <img src="../cryo-slides-img/s011_19a_sharp.png" alt="HBV capsid whole shell" style="position:absolute;left:25px;top:22px;width:242px;height:247px">
-          <img src="../cryo-slides-img/s011_19b_sharp.png" alt="HBV capsid colored subunits" style="position:absolute;left:290px;top:25px;width:248px;height:231px">
-          <span class="img-label" style="position:absolute;left:13px;top:285px;width:540px;font-size:12px;line-height:1.4;color:#555"><strong>B&ouml;ttcher et al.</strong> 7.4 &Aring; &mdash; <strong>a:</strong> T=4 capsid, ~6,400 particles &middot; <strong>b:</strong> 4 quasi-equivalent subunits colored</span>
-          <img src="../cryo-slides-img/s011_27_sharp.png" alt="4-helix bundle stereo density" style="position:absolute;left:16px;top:330px;width:540px;height:275px">
-          <span class="img-label" style="position:absolute;left:33px;top:610px;width:490px;height:20px;font-size:12px;line-height:1.4;color:#555"><strong>Conway et al.</strong> 9 &Aring; &mdash; Spike dimer density + wire model &rarr; 4-helix bundle confirmed</span>
-          <span class="img-caption" style="position:absolute;left:79px;top:644px;font-size:15px">B&ouml;ttcher et al. &amp; Conway et al., <em>Nature</em> 386 (1997)</span>
+        <div class="img-card" style="position:absolute;top:261px;left:-1px;width:572px;height:615px">
+          <img src="../cryo-slides-img/s011_19a_sharp.png" alt="HBV capsid whole shell" style="position:absolute;left:53px;top:22px;width:214px;height:227px">
+          <img src="../cryo-slides-img/s011_19b_sharp.png" alt="HBV capsid colored subunits" style="position:absolute;left:311px;top:25px;width:227px;height:214px">
+          <span class="img-label" style="position:absolute;left:14px;top:264px;width:540px;font-size:12px;line-height:1.4;color:#555"><strong>B&ouml;ttcher et al.</strong> 7.4 &Aring; &mdash; <strong>a:</strong> T=4 capsid, ~6,400 particles &middot; <strong>b:</strong> 4 quasi-equivalent subunits colored</span>
+          <img src="../cryo-slides-img/s011_27_sharp.png" alt="4-helix bundle stereo density" style="position:absolute;left:27px;top:300px;width:513px;height:252px">
+          <span class="img-label" style="position:absolute;left:37px;top:561px;width:490px;height:20px;font-size:12px;line-height:1.4;color:#555"><strong>Conway et al.</strong> 9 &Aring; &mdash; Spike dimer density + wire model &rarr; 4-helix bundle confirmed</span>
         </div>
         <div class="content-card blue" style="position:absolute;top:6px;left:0;right:0;height:233px">
           <div class="card-head" style="position:absolute;left:16px;top:11px;width:537px;height:32px"><span class="year">1997</span><span class="card-title">Sub-nanometer virus structure</span></div>
@@ -893,12 +894,11 @@ body {
         </div>
       </div>
       <div class="history-card" style="position:absolute;left:643px;width:571px;top:0;bottom:0">
-        <div class="img-card" style="position:absolute;top:261px;left:0;right:0;height:647px">
-          <div class="img-labeled" style="position:absolute;left:7px;top:7px;width:555px;height:620px">
+        <div class="img-card" style="position:absolute;top:261px;left:0px;width:571px;height:615px">
+          <div class="img-labeled" style="position:absolute;left:6px;top:6px;width:555px;height:615px">
             <img src="../cryo-slides-img/s011_20_sharp.png" alt="ML 2D classification" style="position:absolute;left:30px;top:40px;width:498px;height:412px">
             <span class="img-label" style="position:absolute;left:25px;top:491px;width:540px;font-size:13px;line-height:1.4;color:#555"><strong>A:</strong> Wrong starting ref (&ldquo;radiation symbol&rdquo;) &rarr; ML converges to true structure (n=274)<br><strong>B:</strong> Pure noise starting ref &rarr; ML still converges (n=300) &mdash; no model bias</span>
           </div>
-          <span class="img-caption" style="position:absolute;left:127px;top:637px;font-size:17px">ML refinement &mdash; robust convergence</span>
         </div>
         <div class="content-card blue" style="position:absolute;top:6px;left:0;right:0;height:233px">
           <div class="card-head" style="position:absolute;left:16px;top:11px;width:537px;height:32px"><span class="year">1998</span><span class="card-title">Maximum likelihood classification</span></div>
@@ -911,12 +911,11 @@ body {
         </div>
       </div>
       <div class="history-card" style="position:absolute;left:1237px;width:571px;top:0;bottom:0">
-        <div class="img-card" style="position:absolute;top:261px;left:0;right:0;height:647px">
+        <div class="img-card" style="position:absolute;top:261px;left:0px;width:571px;height:618px">
           <div class="img-labeled" style="position:absolute;left:7px;top:7px;width:555px;height:620px">
             <img src="../cryo-slides-img/s011_21_sharp.png" alt="CPV atomic model from EM" style="position:absolute;left:28px;top:40px;width:500px;height:442px">
             <span class="img-label" style="position:absolute;left:24px;top:504px;width:540px;font-size:13px;line-height:1.4;color:#555"><strong>a,b:</strong> Full CPV capsid (radial color) &amp; asymmetric unit with 5 proteins<br><strong>c&ndash;e:</strong> At 3.88 &Aring;, &alpha;-helix pitch and &beta;-strand spacing visible &rarr; C&alpha; backbone traced directly from density</span>
           </div>
-          <span class="img-caption" style="position:absolute;left:141px;top:638px;font-size:17px">CPV 3.88 Å de novo atomic model</span>
         </div>
         <div class="content-card blue" style="position:absolute;top:6px;left:0;right:0;height:233px">
           <div class="card-head" style="position:absolute;left:16px;top:11px;width:537px;height:32px"><span class="year">2008</span><span class="card-title">De novo atomic model from cryo-EM</span></div>
@@ -940,16 +939,16 @@ body {
   <div class="slide-body">
     <div class="history-grid" style="position:absolute;left:24px;top:122px;right:24px;height:957px">
       <div class="history-card highlight" style="position:absolute;left:48px;width:571px;top:0;bottom:0">
-        <div class="img-card" style="position:absolute;top:261px;left:0px;right:0;height:647px">
-          <img src="../cryo-slides-img/s011_22_new_sharp.png" alt="DED motion correction" style="position:absolute;left:13px;top:41px;width:532px;height:252px">
-          <span class="img-label" style="position:absolute;left:88px;top:300px;width:159px;height:21px;font-size:15px;line-height:1.4;color:#555">Before correction</span>
-          <span class="img-label" style="position:absolute;left:329px;top:297px;width:180px;height:21px;font-size:15px;line-height:1.4;color:#555">After frame alignment</span>
+        <div class="img-card" style="position:absolute;top:261px;left:0px;width:571px;height:618px">
+          <img src="../cryo-slides-img/s011_22_new_sharp.png" alt="DED motion correction" style="position:absolute;left:14px;top:46px;width:532px;height:252px">
+          <span class="img-label" style="position:absolute;left:89px;top:315px;width:159px;height:21px;font-size:15px;line-height:1.4;color:#555">Before correction</span>
+          <span class="img-label" style="position:absolute;left:329px;top:315px;width:180px;height:21px;font-size:15px;line-height:1.4;color:#555">After frame alignment</span>
           <div style="position:absolute;left:5px;top:340px;width:540px">
-            <div style="background:#e8f0fe;border:1px solid #c4d4f0;border-radius:6px;padding:7px 12px;font-size:14px;line-height:1.3;text-align:center">Split exposure into subframes &rarr; align each frame &rarr; <strong>correct beam-induced motion</strong></div>
-            <div style="font-size:20px;margin:3px 0;color:#2563eb;text-align:center">&darr;</div>
-            <div style="background:#e8f0fe;border:1px solid #c4d4f0;border-radius:6px;padding:7px 12px;font-size:14px;line-height:1.3;text-align:center;margin:0 36px">DQE &gt;2&times; over film/CCD &rarr; <strong>high-resolution details recovered</strong></div>
+            <div style="position:absolute;left:64px;top:44px;width:407px;height:51px;background:#e8f0fe;border:1px solid #c4d4f0;border-radius:6px;padding:7px 12px;font-size:14px;line-height:1.3;text-align:center">Split exposure into subframes &rarr; align each frame &rarr; <strong>correct beam-induced motion</strong></div>
+            <div style="position:absolute;left:0px;top:108px;width:524px;height:24px;font-size:20px;color:#2563eb;text-align:center">&darr;</div>
+            <div style="position:absolute;left:47px;top:143px;width:454px;height:33px;background:#e8f0fe;border:1px solid #c4d4f0;border-radius:6px;padding:7px 12px;font-size:14px;line-height:1.3;text-align:center">DQE &gt;2&times; over film/CCD &rarr; <strong>high-resolution details recovered</strong></div>
           </div>
-          <span class="img-caption" style="position:absolute;left:48px;top:603px;font-size:17px">K2 Summit: beam-induced motion correction (Li et al., 2013)</span>
+          <span class="img-caption" style="position:absolute;left:43px;top:570px;font-size:17px">K2 Summit: beam-induced motion correction (Li et al., 2013)</span>
         </div>
         <div class="content-card blue" style="position:absolute;top:6px;left:0;right:0;height:233px">
           <div class="card-head" style="position:absolute;left:16px;top:11px;width:537px;height:32px"><span class="year">2012</span><span class="card-title">DED + motion correction</span></div>
@@ -959,43 +958,43 @@ body {
             <li style="position:absolute;left:0px;top:33px;width:537px;height:23px"><strong>Demonstration:</strong> 20S proteasome <strong>3.3 &Aring;</strong> (D7). DQE &gt;2&times; over film/CCD</li>
             <li style="position:absolute;left:0px;top:58px;width:537px;height:23px"><strong>Key insight:</strong> Resolution-limiting factor = beam-induced specimen motion</li>
           </ul>
-          <div class="key-insight" style="position:absolute;left:15px;top:185px;width:537px;height:31px">&#x1F4A1; Frame alignment for motion correction &rarr; key technical breakthrough of the Resolution Revolution</div>
+          <div class="key-insight" style="position:absolute;left:15px;top:166px;width:537px;height:44px">&#x1F4A1; Frame alignment for motion correction &rarr; key technical breakthrough of the Resolution Revolution</div>
         </div>
       </div>
       <div class="history-card" style="position:absolute;left:643px;width:571px;top:0;bottom:0">
-        <div class="img-card" style="position:absolute;top:260px;left:0;right:0;height:647px">
+        <div class="img-card" style="position:absolute;top:260px;left:0px;width:571px;height:618px">
           <div class="img-labeled" style="position:absolute;left:7px;top:7px;width:555px;height:580px">
-            <img src="../cryo-slides-img/s011_23_sharp.png" alt="Ribosome near-atomic resolution" style="position:absolute;left:-23px;top:10px;width:596px;height:532px">
-            <span class="img-label" style="position:absolute;left:70px;top:569px;width:442px;height:36px;font-size:13px;line-height:1.4;color:#555"><strong>A:</strong> FSC &mdash; near-atomic resolution from only ~30,000 particles<br><strong>C&ndash;I:</strong> &alpha;-helix pitch and &beta;-strand separation clearly resolved in density</span>
+            <img src="../cryo-slides-img/s011_23_sharp.png" alt="Ribosome near-atomic resolution" style="position:absolute;left:7px;top:18px;width:531px;height:517px">
+            <span class="img-label" style="position:absolute;left:70px;top:540px;width:442px;height:36px;font-size:13px;line-height:1.4;color:#555"><strong>A:</strong> FSC &mdash; near-atomic resolution from only ~30,000 particles<br><strong>C&ndash;I:</strong> &alpha;-helix pitch and &beta;-strand separation clearly resolved in density</span>
           </div>
         </div>
         <div class="content-card blue" style="position:absolute;top:6px;left:0;right:0;height:233px">
           <div class="card-head" style="position:absolute;left:16px;top:11px;width:537px;height:32px"><span class="year">2013</span><span class="card-title">Ribosome from 30k particles</span></div>
           <div class="citation" style="position:absolute;left:16px;top:55px;width:537px;height:15px"><a href="https://doi.org/10.7554/eLife.00461" target="_blank">Bai, Fernandez, McMullan &amp; Scheres &middot; <em>eLife</em> 2:e00461</a></div>
           <ul class="details" style="position:absolute;left:16px;top:74px;width:537px;height:99px">
-            <li><strong>Detector:</strong> FEI Falcon DED &mdash; back-thinned, movie-mode</li>
-            <li><strong>Result:</strong> Near-atomic map from 30,000 particles (100&times; fewer than before)</li>
-            <li><strong>Advance:</strong> 2D/3D classification &rarr; structural heterogeneity resolved</li>
+            <li style="position:absolute;left:0px;top:9px;width:521px;height:21px"><strong>Detector:</strong> FEI Falcon DED &mdash; back-thinned, movie-mode</li>
+            <li style="position:absolute;left:0px;top:31px;width:521px;height:21px"><strong>Result:</strong> Near-atomic map from 30,000 particles (100&times; fewer than before)</li>
+            <li style="position:absolute;left:0px;top:54px;width:521px;height:21px"><strong>Advance:</strong> 2D/3D classification &rarr; structural heterogeneity resolved</li>
           </ul>
-          <div class="key-insight" style="position:absolute;left:16px;top:183px;width:537px;height:31px">&#x1F4A1; DED + RELION &rarr; 100&times; fewer particles needed for near-atomic resolution</div>
+          <div class="key-insight" style="position:absolute;left:15px;top:177px;width:537px;height:31px">&#x1F4A1; DED + RELION &rarr; 100&times; fewer particles needed for near-atomic resolution</div>
         </div>
       </div>
       <div class="history-card" style="position:absolute;left:1237px;width:571px;top:0;bottom:0">
-        <div class="img-card" style="position:absolute;top:260px;left:0;right:0;height:647px">
+        <div class="img-card" style="position:absolute;top:260px;left:0px;width:571px;height:617px">
           <div class="img-labeled" style="position:absolute;left:7px;top:7px;width:555px;height:580px">
-            <img src="../cryo-slides-img/s011_26_sharp.png" alt="TRPV1 3.4 Å" style="position:absolute;left:8px;top:63px;width:528px;height:300px">
-            <span class="img-label" style="position:absolute;left:26px;top:410px;width:540px;font-size:13px;line-height:1.4;color:#555"><strong>a:</strong> Cryo-EM micrograph (1.7 &mu;m defocus) <strong>b:</strong> FFT &mdash; Thon rings to ~3 &Aring;<br><strong>c&ndash;f:</strong> 3D map (each subunit color-coded) &mdash; side / top / bottom views<br>~300 kDa, C4 symmetry only &mdash; first side-chain resolution for a membrane protein</span>
+            <img src="../cryo-slides-img/s011_26_sharp.png" alt="TRPV1 3.4 Å" style="position:absolute;left:8px;top:71px;width:534px;height:309px">
+            <span class="img-label" style="position:absolute;left:25px;top:446px;width:540px;font-size:13px;line-height:1.4;color:#555"><strong>a:</strong> Cryo-EM micrograph (1.7 &mu;m defocus) <strong>b:</strong> FFT &mdash; Thon rings to ~3 &Aring;<br><strong>c&ndash;f:</strong> 3D map (each subunit color-coded) &mdash; side / top / bottom views<br>~300 kDa, C4 symmetry only &mdash; first side-chain resolution for a membrane protein</span>
           </div>
         </div>
         <div class="content-card blue" style="position:absolute;top:6px;left:0;right:0;height:233px">
           <div class="card-head" style="position:absolute;left:16px;top:11px;width:537px;height:32px"><span class="year">2013</span><span class="card-title">TRPV1 at 3.4 &Aring;</span></div>
           <div class="citation" style="position:absolute;left:16px;top:55px;width:537px;height:15px"><a href="https://doi.org/10.1038/nature12822" target="_blank">Liao, Cao, Julius &amp; Cheng &middot; <em>Nature</em> 504, 107&ndash;112</a></div>
           <ul class="details" style="position:absolute;left:16px;top:74px;width:537px;height:95px">
-            <li><strong>Specimen:</strong> TRPV1 &mdash; ~300 kDa, C4 symmetry only</li>
-            <li><strong>Method:</strong> DED + motion correction + RELION</li>
-            <li><strong>Impact:</strong> First small membrane protein at near-atomic resolution</li>
+            <li style="position:absolute;left:0px;top:8px;width:521px;height:21px"><strong>Specimen:</strong> TRPV1 &mdash; ~300 kDa, C4 symmetry only</li>
+            <li style="position:absolute;left:0px;top:29px;width:521px;height:21px"><strong>Method:</strong> DED + motion correction + RELION</li>
+            <li style="position:absolute;left:0px;top:52px;width:521px;height:21px"><strong>Impact:</strong> First small membrane protein at near-atomic resolution</li>
           </ul>
-          <div class="key-insight" style="position:absolute;left:18px;top:184px;width:537px;height:32px">&#x1F4A1; Membrane protein at near-atomic &rarr; &ldquo;Resolution Revolution&rdquo; started</div>
+          <div class="key-insight" style="position:absolute;left:18px;top:174px;width:537px;height:32px">&#x1F4A1; Membrane protein at near-atomic &rarr; &ldquo;Resolution Revolution&rdquo; started</div>
         </div>
       </div>
     </div>
@@ -1010,51 +1009,51 @@ body {
   <div class="slide-body">
     <div class="history-grid" style="position:absolute;left:24px;top:122px;right:24px;height:957px">
       <div class="history-card highlight" style="position:absolute;left:48px;width:571px;top:0;bottom:0">
-        <div class="img-card" style="position:absolute;top:261px;left:0;right:0;height:647px">
+        <div class="img-card" style="position:absolute;top:261px;left:0px;width:571px;height:617px">
           <img src="../cryo-slides-img/s011_gamma_secretase_ab_sharp.png" alt="γ-secretase micrograph + 2D classes" style="position:absolute;left:4px;top:25px;width:559px;height:178px;object-fit:contain">
-          <img src="../cryo-slides-img/s011_25_sharp.png" alt="γ-secretase 3.4 Å structure" style="position:absolute;left:30px;top:219px;width:512px;height:412px;object-fit:contain">
+          <img src="../cryo-slides-img/s011_25_sharp.png" alt="γ-secretase 3.4 Å structure" style="position:absolute;left:44px;top:210px;width:486px;height:391px;object-fit:contain">
         </div>
         <div class="content-card blue" style="position:absolute;top:6px;left:0;right:0;height:233px">
           <div class="card-head" style="position:absolute;left:16px;top:11px;width:537px;height:32px"><span class="year">2015</span><span class="card-title">&gamma;-secretase at 3.4 &Aring;</span></div>
           <div class="citation" style="position:absolute;left:16px;top:55px;width:537px;height:15px"><a href="https://doi.org/10.1038/nature14892" target="_blank">Bai, Yan, ..., Scheres &amp; Shi &middot; <em>Nature</em> 525, 212&ndash;217</a></div>
-          <ul class="details" style="position:absolute;left:16px;top:74px;width:537px;height:72px">
+          <ul class="details" style="position:absolute;left:16px;top:84px;width:537px;height:72px">
             <li><strong>Protein:</strong> Human &gamma;-secretase &mdash; ~170 kDa, 4-subunit complex</li>
             <li><strong>Finding:</strong> First atomic model &mdash; AD mutation hotspots mapped in PS1</li>
             <li><strong>Significance:</strong> Alzheimer&rsquo;s drug target solved without crystals</li>
           </ul>
-          <div class="key-insight" style="position:absolute;left:15px;top:185px;width:537px;height:31px">&#x1F4A1; Membrane protein drug target &rarr; de novo atomic model by cryo-EM</div>
+          <div class="key-insight" style="position:absolute;left:15px;top:170px;width:537px;height:31px">&#x1F4A1; Membrane protein drug target &rarr; de novo atomic model by cryo-EM</div>
         </div>
       </div>
       <div class="history-card" style="position:absolute;left:643px;width:571px;top:0;bottom:0">
-        <div class="img-card" style="position:absolute;top:261px;left:0;right:0;height:647px">
-          <img src="../cryo-slides-img/s011_campbell_2015_fig1_sharp.png" alt="Micrograph + Thon rings" style="position:absolute;left:2px;top:26px;width:563px;height:184px;object-fit:contain">
-          <img src="../cryo-slides-img/s011_campbell_2015_sharp.png" alt="20S proteasome 2.8 Å density" style="position:absolute;left:57px;top:231px;width:473px;height:394px;object-fit:contain">
+        <div class="img-card" style="position:absolute;top:261px;left:0px;width:571px;height:617px">
+          <img src="../cryo-slides-img/s011_campbell_2015_fig1_sharp.png" alt="Micrograph + Thon rings" style="position:absolute;left:13px;top:26px;width:552px;height:173px;object-fit:contain">
+          <img src="../cryo-slides-img/s011_campbell_2015_sharp.png" alt="20S proteasome 2.8 Å density" style="position:absolute;left:53px;top:206px;width:473px;height:394px;object-fit:contain">
         </div>
         <div class="content-card blue" style="position:absolute;top:6px;left:0;right:0;height:233px">
           <div class="card-head" style="position:absolute;left:16px;top:11px;width:537px;height:32px"><span class="year">2015</span><span class="card-title">20S proteasome at 2.8 &Aring;</span></div>
           <div class="citation" style="position:absolute;left:16px;top:55px;width:537px;height:15px"><a href="https://doi.org/10.7554/eLife.06380" target="_blank">Campbell, Veesler, Cheng, Potter &amp; Carragher &middot; <em>eLife</em> 4:e06380</a></div>
-          <ul class="details" style="position:absolute;left:16px;top:74px;width:537px;height:72px">
+          <ul class="details" style="position:absolute;left:16px;top:84px;width:537px;height:72px">
             <li><strong>Protein:</strong> <em>T. acidophilum</em> 20S proteasome &mdash; 700 kDa, D7</li>
             <li><strong>Finding:</strong> Rotamers + water molecules resolved</li>
             <li><strong>Significance:</strong> Cryo-EM matches X-ray for drug design</li>
           </ul>
-          <div class="key-insight" style="position:absolute;left:15px;top:185px;width:537px;height:31px">&#x1F4A1; Sub-3 &Aring; &rarr; structure-based drug design now possible by cryo-EM</div>
+          <div class="key-insight" style="position:absolute;left:15px;top:170px;width:537px;height:31px">&#x1F4A1; Sub-3 &Aring; &rarr; structure-based drug design now possible by cryo-EM</div>
         </div>
       </div>
       <div class="history-card" style="position:absolute;left:1237px;width:571px;top:0;bottom:0">
-        <div class="img-card" style="position:absolute;top:261px;left:0;right:0;height:647px">
-          <img src="../cryo-slides-img/s011_bartesaghi_fig_s2_ab_sharp.png" alt="Micrograph + Thon rings 2.5Å" style="position:absolute;left:-22px;top:-30px;width:603px;height:227px;object-fit:contain">
-          <img src="../cryo-slides-img/s011_24_sharp.png" alt="β-galactosidase 2.2 Å density" style="position:absolute;left:53px;top:217px;width:481px;height:402px;object-fit:contain">
+        <div class="img-card" style="position:absolute;top:261px;left:0px;width:571px;height:617px">
+          <img src="../cryo-slides-img/s011_bartesaghi_fig_s2_ab_sharp.png" alt="Micrograph + Thon rings 2.5Å" style="position:absolute;left:-34px;top:-32px;width:581px;height:232px;object-fit:contain">
+          <img src="../cryo-slides-img/s011_24_sharp.png" alt="β-galactosidase 2.2 Å density" style="position:absolute;left:76px;top:210px;width:462px;height:383px;object-fit:contain">
         </div>
         <div class="content-card blue" style="position:absolute;top:6px;left:0;right:0;height:233px">
           <div class="card-head" style="position:absolute;left:16px;top:11px;width:537px;height:32px"><span class="year">2015</span><span class="card-title">&beta;-galactosidase at 2.2 &Aring;</span></div>
           <div class="citation" style="position:absolute;left:16px;top:55px;width:537px;height:15px"><a href="https://doi.org/10.1126/science.aab1576" target="_blank">Bartesaghi, Merk, ..., Milne &amp; Subramaniam &middot; <em>Science</em> 348, 1147&ndash;1151</a></div>
-          <ul class="details" style="position:absolute;left:16px;top:74px;width:537px;height:72px">
-            <li><strong>Protein:</strong> <em>E. coli</em> &beta;-galactosidase + PETG &mdash; 465 kDa, D2</li>
-            <li><strong>Finding:</strong> Ligand, ~800 waters, Mg&sup2;&#x207A;/Na&#x207A; ions visible</li>
-            <li><strong>Significance:</strong> Bottleneck = sample quality, not imaging</li>
+          <ul class="details" style="position:absolute;left:16px;top:86px;width:537px;height:72px">
+            <li style="position:absolute;left:0px;top:0px;width:521px;height:21px"><strong>Protein:</strong> <em>E. coli</em> &beta;-galactosidase + PETG &mdash; 465 kDa, D2</li>
+            <li style="position:absolute;left:0px;top:22px;width:521px;height:21px"><strong>Finding:</strong> Ligand, ~800 waters, Mg&sup2;&#x207A;/Na&#x207A; ions visible</li>
+            <li style="position:absolute;left:0px;top:44px;width:521px;height:21px"><strong>Significance:</strong> Bottleneck = sample quality, not imaging</li>
           </ul>
-          <div class="key-insight" style="position:absolute;left:15px;top:185px;width:537px;height:31px">&#x1F4A1; 2 &Aring; barrier broken &mdash; sample prep is now the limiting factor</div>
+          <div class="key-insight" style="position:absolute;left:15px;top:171px;width:537px;height:31px">&#x1F4A1; 2 &Aring; barrier broken &mdash; sample prep is now the limiting factor</div>
         </div>
       </div>
     </div>
@@ -1177,7 +1176,7 @@ body {
       </div>
     </div>
   </div>
-  <div class="slide-ref" style="position:absolute;left:32px;top:1046px;right:32px;height:23px">RCSB PDB Statistics (rcsb.org/stats) &middot; wwPDB Annual Report &middot; EMDB (ebi.ac.uk/emdb)</div>
+  <div class="slide-ref" style="position:absolute;left:32px;top:1046px;right:32px;height:23px"><a href="https://www.rcsb.org/stats" target="_blank" style="color:inherit">RCSB PDB Statistics (rcsb.org/stats)</a> &middot; <a href="https://www.wwpdb.org/documentation/annual-reports" target="_blank" style="color:inherit">wwPDB Annual Report</a> &middot; <a href="https://www.ebi.ac.uk/emdb/" target="_blank" style="color:inherit">EMDB (ebi.ac.uk/emdb)</a></div>
 </div>
 <script>
 (function(){
@@ -1508,7 +1507,7 @@ body {
       </div>
     </div>
   </div>
-  <div class="slide-ref" style="position:absolute;left:32px;top:1046px;right:32px;height:23px">Data: RCSB PDB Search API (search.rcsb.org) &middot; 251,217 entries queried &middot; March 2026</div>
+  <div class="slide-ref" style="position:absolute;left:32px;top:1046px;right:32px;height:23px">Data: <a href="https://search.rcsb.org" target="_blank" style="color:inherit">RCSB PDB Search API (search.rcsb.org)</a> &middot; 251,217 entries queried &middot; March 2026</div>
 </div>
 
 <!-- ======== Slide 16: Cryo-EM Methodology ======== -->
@@ -1518,7 +1517,7 @@ body {
   <div class="slide-body" style="position:absolute;left:0;top:120px;right:0;height:900px;display:flex;align-items:center;justify-content:center">
     <img src="../cryo-slides-img/s018_36_sharp.png" style="width:1500px;height:auto">
   </div>
-  <div class="slide-ref" style="position:absolute;left:32px;top:1046px;right:32px;height:23px"><a href="https://www.sciencedirect.com/science/article/pii/S0959440X20300890" target="_blank" style="color:inherit;text-decoration:underline">Current Opinion in Structural Biology 64 (2020) &middot; doi:10.1016/j.sbi.2020.06.007</a></div>
+  <div class="slide-ref" style="position:absolute;bottom:10px;left:32px;right:32px"></div>
 </div>
 
 <!-- ======== Slide 17: Sizing Up Cryo-EM ======== -->
@@ -1531,8 +1530,20 @@ body {
       <div style="position:absolute;top:-2px;left:-50px;right:-50px;bottom:-30px;background:#fff;border-radius:12px;z-index:0;box-shadow:0 1px 4px rgba(0,0,0,0.06)"></div>
 
       <!-- Row 1: Zoom-in images (0–30%) -->
-      <img src="../cryo-slides-img/s020_zoom_row.png" alt="Biological length scales"
-           style="position:absolute;top:0;left:0;right:0;height:30%;width:100%;object-fit:contain;object-position:center bottom;z-index:1">
+      <div style="position:absolute;top:0;left:0;right:0;height:30%;z-index:1">
+        <img src="../cryo-slides-img/s020_zoom_row.jpg" alt="Biological length scales"
+             style="width:100%;height:100%;object-fit:contain;object-position:center bottom">
+        <!-- Size label overlays (9 panels, all px for editor compatibility) -->
+        <span style="position:absolute;top:207px;left:48px;width:69px;height:20px;text-align:center;background:rgba(200,40,40,0.85);color:#fff;font:700 13px/20px 'Helvetica Neue',sans-serif;border-radius:3px">20 mm</span>
+        <span style="position:absolute;top:207px;left:205px;width:65px;height:20px;text-align:center;background:rgba(200,40,40,0.85);color:#fff;font:700 13px/20px 'Helvetica Neue',sans-serif;border-radius:3px">2 mm</span>
+        <span style="position:absolute;top:208px;left:365px;width:65px;height:20px;text-align:center;background:rgba(200,40,40,0.85);color:#fff;font:700 13px/20px 'Helvetica Neue',sans-serif;border-radius:3px">0.2 mm</span>
+        <span style="position:absolute;top:207px;left:527px;width:64px;height:20px;text-align:center;background:rgba(200,40,40,0.85);color:#fff;font:700 13px/20px 'Helvetica Neue',sans-serif;border-radius:3px">20 µm</span>
+        <span style="position:absolute;top:207px;left:690px;width:60px;height:20px;text-align:center;background:rgba(200,40,40,0.85);color:#fff;font:700 13px/20px 'Helvetica Neue',sans-serif;border-radius:3px">2 µm</span>
+        <span style="position:absolute;top:208px;left:849px;width:70px;height:20px;text-align:center;background:rgba(200,40,40,0.85);color:#fff;font:700 13px/20px 'Helvetica Neue',sans-serif;border-radius:3px">0.2 µm</span>
+        <span style="position:absolute;top:208px;left:1014px;width:56px;height:20px;text-align:center;background:rgba(200,40,40,0.85);color:#fff;font:700 13px/20px 'Helvetica Neue',sans-serif;border-radius:3px">20 nm</span>
+        <span style="position:absolute;top:207px;left:1179px;width:48px;height:20px;text-align:center;background:rgba(200,40,40,0.85);color:#fff;font:700 13px/20px 'Helvetica Neue',sans-serif;border-radius:3px">2 nm</span>
+        <span style="position:absolute;top:208px;left:1338px;width:57px;height:20px;text-align:center;background:rgba(200,40,40,0.85);color:#fff;font:700 13px/20px 'Helvetica Neue',sans-serif;border-radius:3px">0.2 nm</span>
+      </div>
 
       <!-- Row 2: Category labels (30–35%) -->
       <!-- Labels centered over actual biological size ranges -->
@@ -1546,9 +1557,9 @@ body {
       <span style="position:absolute;top:30.5%;left:85.7%;width:14.3%;text-align:center;font:700 26px 'Helvetica Neue',sans-serif;color:#1e3a5f">Atoms</span>
 
       <!-- Dashed dividers (from labels through bars to axis) -->
-      <div style="position:absolute;top:30%;left:42.9%;bottom:6%;border-left:1.5px dashed #b0b8c4"></div>
-      <div style="position:absolute;top:30%;left:71.4%;bottom:6%;border-left:1.5px dashed #b0b8c4"></div>
-      <div style="position:absolute;top:30%;left:85.7%;bottom:6%;border-left:1.5px dashed #b0b8c4"></div>
+      <div style="position:absolute;top:30%;left:42.9%;bottom:1%;border-left:1.5px dashed #b0b8c4"></div>
+      <div style="position:absolute;top:30%;left:71.4%;bottom:1%;border-left:1.5px dashed #b0b8c4"></div>
+      <div style="position:absolute;top:30%;left:85.7%;bottom:1%;border-left:1.5px dashed #b0b8c4"></div>
 
       <!-- Technique bars — all use same 0–100% x-axis as scale -->
       <!-- microED: 85.7%–100% -->
@@ -1585,16 +1596,16 @@ body {
       </div>
 
       <!-- Scale axis line -->
-      <div style="position:absolute;bottom:6%;left:0;right:0;height:2px;background:#374151"></div>
+      <div style="position:absolute;bottom:1%;left:0;right:0;height:2px;background:#374151"></div>
       <!-- Tick marks -->
-      <div style="position:absolute;bottom:6%;left:0%;width:1.5px;height:8px;background:#374151"></div>
-      <div style="position:absolute;bottom:6%;left:14.3%;width:1.5px;height:8px;background:#374151"></div>
-      <div style="position:absolute;bottom:6%;left:28.6%;width:1.5px;height:8px;background:#374151"></div>
-      <div style="position:absolute;bottom:6%;left:42.9%;width:1.5px;height:8px;background:#374151"></div>
-      <div style="position:absolute;bottom:6%;left:57.1%;width:1.5px;height:8px;background:#374151"></div>
-      <div style="position:absolute;bottom:6%;left:71.4%;width:1.5px;height:8px;background:#374151"></div>
-      <div style="position:absolute;bottom:6%;left:85.7%;width:1.5px;height:8px;background:#374151"></div>
-      <div style="position:absolute;bottom:6%;right:0;width:1.5px;height:8px;background:#374151"></div>
+      <div style="position:absolute;bottom:1%;left:0%;width:1.5px;height:8px;background:#374151"></div>
+      <div style="position:absolute;bottom:1%;left:14.3%;width:1.5px;height:8px;background:#374151"></div>
+      <div style="position:absolute;bottom:1%;left:28.6%;width:1.5px;height:8px;background:#374151"></div>
+      <div style="position:absolute;bottom:1%;left:42.9%;width:1.5px;height:8px;background:#374151"></div>
+      <div style="position:absolute;bottom:1%;left:57.1%;width:1.5px;height:8px;background:#374151"></div>
+      <div style="position:absolute;bottom:1%;left:71.4%;width:1.5px;height:8px;background:#374151"></div>
+      <div style="position:absolute;bottom:1%;left:85.7%;width:1.5px;height:8px;background:#374151"></div>
+      <div style="position:absolute;bottom:1%;right:0;width:1.5px;height:8px;background:#374151"></div>
       <!-- Scale labels -->
       <span style="position:absolute;bottom:1.5%;left:0%;font:500 21px 'Helvetica Neue',sans-serif;color:#6b7280">1 mm</span>
       <span style="position:absolute;bottom:1.5%;left:14.3%;transform:translateX(-50%);font:500 21px 'Helvetica Neue',sans-serif;color:#6b7280">100 &micro;m</span>
@@ -1614,32 +1625,32 @@ body {
   <div class="slide-title" style="margin-top:20px">A Structural Biologist&rsquo;s Dream</div>
   <div class="slide-subtitle">See protein structures directly inside cells &mdash; no purification needed</div>
   <div class="slide-body" style="position:absolute;left:30px;top:130px;right:30px;bottom:40px">
-    <div style="display:flex;gap:30px;height:100%;align-items:center;padding:0">
+    <div style="position:absolute;left:0px;top:0px;width:1803px;height:840px">
 
-      <!-- Left: Image (55%) -->
-      <div style="flex:0 0 55%;height:90%;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08);padding:40px 2px 2px 2px">
+      <!-- Left: Image -->
+      <div style="position:absolute;left:114px;top:48px;width:744px;height:756px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08);padding:40px 2px 2px 2px">
         <img src="../cryo-slides-img/s021_38.png" alt="Structural cell biology" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:6px">
       </div>
 
-      <!-- Right: Text cards (45%) -->
-      <div id="s18-text" style="flex:1;display:flex;flex-direction:column;gap:20px;opacity:0;transition:opacity 0.8s ease">
+      <!-- Right: Text cards -->
+      <div id="s18-text" style="position:absolute;left:895px;top:212px;width:912px;height:416px;opacity:0;transition:opacity 0.8s ease">
 
-        <div style="background:#ede9fe;border-left:5px solid #7c3aed;border-radius:0 8px 8px 0;padding:16px 20px">
+        <div style="position:absolute;left:0px;top:0px;width:854px;height:82px;background:#ede9fe;border-left:5px solid #7c3aed;border-radius:0 8px 8px 0;padding:16px 20px">
           <div style="font:700 20px ‘Helvetica Neue’,sans-serif;color:#5b21b6;margin-bottom:6px">Single Particle Analysis</div>
           <div style="font:400 16px/1.5 ‘Helvetica Neue’,sans-serif;color:#4c1d95">Purified proteins to atomic models (&lt;4 &Aring;)</div>
         </div>
 
-        <div style="background:#dbeafe;border-left:5px solid #2563eb;border-radius:0 8px 8px 0;padding:16px 20px">
+        <div style="position:absolute;left:0px;top:101px;width:851px;height:82px;background:#dbeafe;border-left:5px solid #2563eb;border-radius:0 8px 8px 0;padding:16px 20px">
           <div style="font:700 20px ‘Helvetica Neue’,sans-serif;color:#1e40af;margin-bottom:6px">Cryo-Electron Tomography</div>
           <div style="font:400 16px/1.5 ‘Helvetica Neue’,sans-serif;color:#1e3a5f">3D imaging of intact cells at molecular resolution</div>
         </div>
 
-        <div style="background:#dcfce7;border-left:5px solid #16a34a;border-radius:0 8px 8px 0;padding:16px 20px">
+        <div style="position:absolute;left:0px;top:203px;width:852px;height:82px;background:#dcfce7;border-left:5px solid #16a34a;border-radius:0 8px 8px 0;padding:16px 20px">
           <div style="font:700 20px ‘Helvetica Neue’,sans-serif;color:#166534;margin-bottom:6px">In Situ Structural Biology</div>
           <div style="font:400 16px/1.5 ‘Helvetica Neue’,sans-serif;color:#14532d">Protein complexes in their native cellular environment</div>
         </div>
 
-        <div id="s18-future" style="background:rgba(5,150,105,0.12);border:2px solid #059669;border-radius:10px;padding:18px 22px;opacity:0;transition:opacity 0.8s ease">
+        <div id="s18-future" style="position:absolute;left:0px;top:304px;width:853px;height:111px;background:rgba(5,150,105,0.12);border:2px solid #059669;border-radius:10px;padding:18px 22px;opacity:0;transition:opacity 0.8s ease">
           <div style="font:800 20px ‘Helvetica Neue’,sans-serif;color:#059669;margin-bottom:6px">Future: Cellular Cryo-EM</div>
           <div style="font:400 16px/1.5 ‘Helvetica Neue’,sans-serif;color:#065f46">FIB-SEM milling + cryo-ET enables imaging within intact cells at ~15&ndash;30 &Aring;, with subtomogram averaging pushing toward near-atomic detail.</div>
         </div>
@@ -1647,94 +1658,234 @@ body {
       </div>
     </div>
   </div>
-  <div class="slide-ref" style="position:absolute;left:32px;bottom:10px;right:32px">Chakraborty et al., Protein Science (2020) &middot; K&uuml;hlbrandt, Science (2014) &middot; Turk &amp; Bhatt, Nat Rev Mol Cell Biol (2024)</div>
+  <div class="slide-ref" style="position:absolute;left:32px;bottom:10px;right:32px"><a href="https://doi.org/10.1038/s41586-024-07198-2" target="_blank" style="color:inherit">Nogales &amp; Mahamid, Nature (2024)</a></div>
 </div>
 
-<!-- ======== Slide 19: SPA Workflow + Timeline ======== -->
+<!-- ======== Slide 19: SPA Workflow — Visual Diagram ======== -->
 <div class="slide" data-n="19">
-  <div class="slide-title" style="margin-top:20px">Single Particle Analysis (SPA) Workflow</div>
-  <div class="slide-body" style="justify-content:center">
-    <div class="pipeline-row">
-      <div class="pipe-step">
-        <div class="pipe-icon">&#x1F9EA;</div>
-        <div class="pipe-name">Sample Prep</div>
-        <div class="pipe-desc">Protein purification &rarr; negative stain screening &rarr; grid optimization &rarr; vitrification</div>
+  <div class="slide-title" style="margin-top:20px">Single Particle Analysis (SPA) Workflow — An Example</div>
+  <div class="slide-body" style="position:absolute;left:30px;top:110px;right:30px;bottom:40px">
+    <div style="position:absolute;left:0;top:0;width:1860px;height:870px;display:flex;gap:20px">
+
+      <!-- Left: Image with highlight overlays -->
+      <div id="s19-img-wrap" style="position:relative;flex:0 0 1400px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08);padding:30px 36px;overflow:hidden">
+        <div style="position:relative">
+          <img src="../cryo-slides-img/s022_39.jpg" alt="SPA workflow overview" style="width:100%;max-height:810px;object-fit:contain;display:block">
+          <div id="hl-1" style="position:absolute;top:0px;left:100px;width:1128px;height:608px;background:rgba(124,58,237,0.10);border:3px solid #7c3aed;border-radius:8px;opacity:0;transition:opacity 0.3s;pointer-events:none"></div>
+          <div id="hl-2" style="position:absolute;top:616px;left:730px;width:498px;height:194px;background:rgba(37,99,235,0.10);border:3px solid #2563eb;border-radius:8px;opacity:0;transition:opacity 0.3s;pointer-events:none"></div>
+          <div id="hl-3" style="position:absolute;top:616px;left:292px;width:544px;height:194px;background:rgba(22,163,74,0.10);border:3px solid #16a34a;border-radius:8px;opacity:0;transition:opacity 0.3s;pointer-events:none"></div>
+          <div id="hl-4" style="position:absolute;top:616px;left:96px;width:229px;height:194px;background:rgba(217,119,6,0.10);border:3px solid #d97706;border-radius:8px;opacity:0;transition:opacity 0.3s;pointer-events:none"></div>
+        </div>
       </div>
-      <div class="pipe-arrow">&rarr;</div>
-      <div class="pipe-step">
-        <div class="pipe-icon">&#x1F52C;</div>
-        <div class="pipe-name">Data Collection</div>
-        <div class="pipe-desc">Automated imaging on Krios/Glacios; 1,000&ndash;10,000+ micrograph movies (1&ndash;3 days)</div>
-      </div>
-      <div class="pipe-arrow">&rarr;</div>
-      <div class="pipe-step">
-        <div class="pipe-icon">&#x1F4BB;</div>
-        <div class="pipe-name">Processing</div>
-        <div class="pipe-desc">Motion correction &rarr; CTF &rarr; picking &rarr; 2D/3D classification &rarr; refinement</div>
-      </div>
-      <div class="pipe-arrow">&rarr;</div>
-      <div class="pipe-step">
-        <div class="pipe-icon">&#x1F9EC;</div>
-        <div class="pipe-name">Model Building</div>
-        <div class="pipe-desc">Atomic model fitting into density map &rarr; real-space refinement &rarr; validation</div>
+
+      <!-- Right: 4-step boxes -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px;justify-content:center">
+
+        <div class="s19-step" data-hl="hl-1" style="background:#ede9fe;border-left:5px solid #7c3aed;border-radius:0 10px 10px 0;padding:18px 22px;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s">
+          <div style="font:800 20px 'Helvetica Neue',sans-serif;color:#5b21b6;margin-bottom:4px">1. Sample Preparation</div>
+          <div style="font:400 14px/1.5 'Helvetica Neue',sans-serif;color:#4c1d95">Protein expression &amp; purification, biochemical characterization, grid preparation, vitrification, screening</div>
+          <div style="font:600 13px 'Helvetica Neue',sans-serif;color:#7c3aed;margin-top:6px">⏱ Weeks to months</div>
+        </div>
+
+        <div class="s19-step" data-hl="hl-2" style="background:#dbeafe;border-left:5px solid #2563eb;border-radius:0 10px 10px 0;padding:18px 22px;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s">
+          <div style="font:800 20px 'Helvetica Neue',sans-serif;color:#1e40af;margin-bottom:4px">2. Data Collection</div>
+          <div style="font:400 14px/1.5 'Helvetica Neue',sans-serif;color:#1e3a5f">Grid screening, automated low-dose imaging, micrograph movie acquisition</div>
+          <div style="font:600 13px 'Helvetica Neue',sans-serif;color:#2563eb;margin-top:6px">⏱ 1&ndash;3 days</div>
+        </div>
+
+        <div class="s19-step" data-hl="hl-3" style="background:#dcfce7;border-left:5px solid #16a34a;border-radius:0 10px 10px 0;padding:18px 22px;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s">
+          <div style="font:800 20px 'Helvetica Neue',sans-serif;color:#166534;margin-bottom:4px">3. Image Processing</div>
+          <div style="font:400 14px/1.5 'Helvetica Neue',sans-serif;color:#14532d">Particle picking, 2D/3D classification, 3D reconstruction &amp; refinement</div>
+          <div style="font:600 13px 'Helvetica Neue',sans-serif;color:#16a34a;margin-top:6px">⏱ Hours to days</div>
+        </div>
+
+        <div class="s19-step" data-hl="hl-4" style="background:#fef3c7;border-left:5px solid #d97706;border-radius:0 10px 10px 0;padding:18px 22px;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s">
+          <div style="font:800 20px 'Helvetica Neue',sans-serif;color:#92400e;margin-bottom:4px">4. Model Building</div>
+          <div style="font:400 14px/1.5 'Helvetica Neue',sans-serif;color:#78350f">Atomic model fitting, real-space refinement, validation &amp; deposition</div>
+          <div style="font:600 13px 'Helvetica Neue',sans-serif;color:#d97706;margin-top:6px">⏱ Days to weeks</div>
+        </div>
+
       </div>
     </div>
-    <div style="flex:0 0 auto;display:flex;gap:clamp(6px,0.8vw,12px);overflow:hidden;align-items:flex-start">
-      <div class="info-panel blue" style="flex:1;min-width:0">
-        <h3>Typical Project Timeline</h3>
-        <ul>
-          <li><strong>Protein purification:</strong> 2&ndash;3 months (expression, purification, SEC/DLS/Mass Phot. quality assessment)</li>
-          <li><strong>Sample screening:</strong> ~2 weeks (negative stain + initial cryo-EM grid optimization)</li>
-          <li><strong>Data collection:</strong> 1&ndash;3 days per dataset</li>
-          <li><strong>Processing:</strong> Hours to days (GPU-intensive)</li>
-          <li><strong>Model building:</strong> Days to weeks</li>
-          <li><strong>Total:</strong> ~1&ndash;6 months from purified protein to deposited structure</li>
+  </div>
+  <script>
+  (function(){
+    document.querySelectorAll('.s19-step').forEach(function(el){
+      el.addEventListener('mouseenter', function(){
+        var hl = document.getElementById(el.dataset.hl);
+        if(hl) hl.style.opacity = '1';
+        el.style.transform = 'scale(1.02)';
+        el.style.boxShadow = '0 4px 16px rgba(0,0,0,0.12)';
+      });
+      el.addEventListener('mouseleave', function(){
+        var hl = document.getElementById(el.dataset.hl);
+        if(hl) hl.style.opacity = '0';
+        el.style.transform = '';
+        el.style.boxShadow = '';
+      });
+    });
+  })();
+  </script>
+  <div class="slide-ref" style="position:absolute;left:32px;bottom:10px;right:32px"><a href="https://doi.org/10.1016/j.xpro.2021.100855" target="_blank" style="color:inherit">Gangwar et al., STAR Protoc (2021)</a></div>
+</div>
+
+<!-- ======== Slide 20: SPA Workflow — Step Details ======== -->
+<div class="slide" data-n="20">
+  <div class="slide-title" style="margin-top:20px">SPA Workflow &mdash; Overview</div>
+  <div class="slide-body" style="position:absolute;left:60px;top:100px;right:60px;bottom:40px">
+
+    <!-- Step 1: Sample Preparation -->
+    <div id="s20-step1" class="s20-card" style="position:absolute;left:110px;top:120px;width:740px;height:270px;background:#ede9fe;border-left:6px solid #7c3aed;border-radius:0 12px 12px 0;padding:24px 28px;transition:opacity 0.4s,transform 0.3s">
+      <div style="font:800 28px 'Helvetica Neue',sans-serif;color:#5b21b6;margin-bottom:8px">🧪 1. Sample Preparation</div>
+      <ul style="font:400 20px/1.5 'Helvetica Neue',sans-serif;color:#4c1d95;padding-left:20px;margin:0">
+        <li><strong>Purification:</strong> Express, purify, assess monodispersity</li>
+        <li><strong>Negative stain:</strong> Quick TEM check for particle quality</li>
+        <li><strong>Grid prep:</strong> Apply sample, blot, plunge-freeze</li>
+        <li><strong>Screening:</strong> Evaluate ice, particle distribution, orientation</li>
+      </ul>
+      <div style="font:600 18px 'Helvetica Neue',sans-serif;color:#7c3aed;margin-top:10px">⏱ Weeks to months</div>
+    </div>
+
+    <!-- Arrow 1→2 -->
+    <div style="position:absolute;left:870px;top:210px;width:60px;text-align:center;font:900 52px 'Helvetica Neue',sans-serif;color:#4b5563">&#10140;</div>
+
+    <!-- Step 2: Data Collection -->
+    <div id="s20-step2" class="s20-card" style="position:absolute;left:950px;top:120px;width:740px;height:270px;background:#dbeafe;border-left:6px solid #2563eb;border-radius:0 12px 12px 0;padding:24px 28px;transition:opacity 0.4s,transform 0.3s">
+      <div style="font:800 28px 'Helvetica Neue',sans-serif;color:#1e40af;margin-bottom:8px">🔬 2. Data Collection</div>
+      <ul style="font:400 20px/1.5 'Helvetica Neue',sans-serif;color:#1e3a5f;padding-left:20px;margin:0">
+        <li><strong>Grid loading:</strong> Load grid, acquire low-mag atlas</li>
+        <li><strong>Area selection:</strong> Find thin vitreous ice regions</li>
+        <li><strong>Acquisition:</strong> EPU/SerialEM (search &rarr; focus &rarr; record)</li>
+        <li><strong>Movies:</strong> 1,000&ndash;10,000+ dose-fractionated frames</li>
+      </ul>
+      <div style="font:600 18px 'Helvetica Neue',sans-serif;color:#2563eb;margin-top:10px">⏱ 1&ndash;3 days per dataset</div>
+    </div>
+
+    <!-- Arrow 2→3 (diagonal) -->
+    <div style="position:absolute;left:870px;top:400px;width:60px;text-align:center;font:900 52px 'Helvetica Neue',sans-serif;color:#4b5563;transform:rotate(135deg)">&#10140;</div>
+
+    <!-- Step 3: Image Processing -->
+    <div id="s20-step3" class="s20-card" style="position:absolute;left:110px;top:460px;width:740px;height:270px;background:#dcfce7;border-left:6px solid #16a34a;border-radius:0 12px 12px 0;padding:24px 28px;transition:opacity 0.4s,transform 0.3s">
+      <div style="font:800 28px 'Helvetica Neue',sans-serif;color:#166534;margin-bottom:8px">💻 3. Image Processing</div>
+      <ul style="font:400 20px/1.5 'Helvetica Neue',sans-serif;color:#14532d;padding-left:20px;margin:0">
+        <li><strong>Motion correction:</strong> Align frames, dose weighting</li>
+        <li><strong>CTF estimation:</strong> Determine &amp; correct defocus</li>
+        <li><strong>Picking &amp; 2D classification:</strong> Extract, sort, remove junk</li>
+        <li><strong>3D reconstruction:</strong> Orientation assignment &rarr; 3D map</li>
+        <li><strong>Validation:</strong> Gold-standard FSC (0.143 threshold)</li>
+      </ul>
+      <div style="font:600 18px 'Helvetica Neue',sans-serif;color:#16a34a;margin-top:10px">⏱ Hours to days (GPU-intensive)</div>
+    </div>
+
+    <!-- Arrow 3→4 -->
+    <div style="position:absolute;left:870px;top:550px;width:60px;text-align:center;font:900 52px 'Helvetica Neue',sans-serif;color:#4b5563">&#10140;</div>
+
+    <!-- Step 4: Model Building -->
+    <div id="s20-step4" class="s20-card" style="position:absolute;left:950px;top:460px;width:740px;height:270px;background:#fef3c7;border-left:6px solid #d97706;border-radius:0 12px 12px 0;padding:24px 28px;transition:opacity 0.4s,transform 0.3s">
+      <div style="font:800 28px 'Helvetica Neue',sans-serif;color:#92400e;margin-bottom:8px">⚛️ 4. Model Building</div>
+      <ul style="font:400 20px/1.5 'Helvetica Neue',sans-serif;color:#78350f;padding-left:20px;margin:0">
+        <li><strong>Map fitting:</strong> Fit coordinates into density (Coot, ISOLDE)</li>
+        <li><strong>Refinement:</strong> Real-space refinement (Phenix)</li>
+        <li><strong>Validation:</strong> FSC, MolProbity, map-model correlation</li>
+        <li><strong>Deposition:</strong> Submit to PDB and EMDB</li>
+      </ul>
+      <div style="font:600 18px 'Helvetica Neue',sans-serif;color:#d97706;margin-top:10px">⏱ Days to weeks</div>
+    </div>
+
+  </div>
+  <script>
+  (function(){
+    var step = 0; // 0=all visible, 1-4=highlighted step
+    var cards = ['s20-step1','s20-step2','s20-step3','s20-step4'];
+    var slide = document.querySelector('[data-n="20"]');
+    if(!slide) return;
+
+    function updateHighlight(){
+      cards.forEach(function(id, i){
+        var el = document.getElementById(id);
+        if(!el) return;
+        if(step === 0){
+          el.style.opacity = '1';
+          el.style.transform = '';
+          el.style.boxShadow = '';
+        } else if(i === step - 1){
+          el.style.opacity = '1';
+          el.style.transform = 'scale(1.02)';
+          el.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
+        } else {
+          el.style.opacity = '0.3';
+          el.style.transform = '';
+          el.style.boxShadow = '';
+        }
+      });
+    }
+
+    slide.addEventListener('click', function(e){
+      if(e.target.closest('a')) return; // don't intercept link clicks
+      step = (step + 1) % 5; // 0→1→2→3→4→0
+      updateHighlight();
+    });
+
+    // Reset when leaving slide
+    var obs = new MutationObserver(function(){
+      if(!slide.classList.contains('active')){ step = 0; updateHighlight(); }
+    });
+    obs.observe(slide, {attributes:true, attributeFilter:['class']});
+  })();
+  </script>
+  <div class="slide-ref" style="position:absolute;left:32px;bottom:10px;right:32px"><a href="https://cryoem101.org" target="_blank" style="color:inherit">cryoem101.org</a> &middot; <a href="https://doi.org/10.1016/j.cell.2015.03.050" target="_blank" style="color:inherit">Cheng et al., Cell (2015)</a> &middot; <a href="https://doi.org/10.1016/bs.mie.2016.04.011" target="_blank" style="color:inherit">Passmore &amp; Russo, Methods Enzymol (2016)</a></div>
+</div>
+
+<!-- ======== Slide 21: Time & Cost in SPA Workflow ======== -->
+<div class="slide" data-n="21">
+  <div class="slide-title" style="margin-top:20px">Where Does the Time &amp; Money Go?</div>
+  <div class="slide-subtitle" style="text-align:center;font:400 18px 'Helvetica Neue',sans-serif;color:#6b7280;margin-top:2px">Time investment and cost breakdown across the SPA workflow</div>
+  <div class="slide-body" style="position:absolute;left:40px;top:120px;right:40px;bottom:40px">
+
+    <!-- Image: workflow + time + cost diagram -->
+    <div style="position:absolute;left:50%;top:0;bottom:260px;transform:translateX(-50%);background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08);padding:10px 16px;display:flex;align-items:center">
+      <img src="../cryo-slides-img/s024_41.png" alt="SPA workflow time and cost" style="height:100%;display:block">
+    </div>
+
+    <!-- Bottom cards: same centering as image box -->
+    <div id="s21-cards" style="position:absolute;left:50%;bottom:30px;transform:translateX(-50%);display:flex;gap:20px">
+      <div style="flex:1;background:#dbeafe;border-left:6px solid #2563eb;border-radius:0 12px 12px 0;padding:18px 20px">
+        <div style="font:800 26px 'Helvetica Neue',sans-serif;color:#1e40af;margin-bottom:10px">⏱ Why So Long?</div>
+        <ul style="font:400 20px/1.6 'Helvetica Neue',sans-serif;color:#1e3a5f;padding-left:18px;margin:0">
+          <li>Sample prep: <strong>iterative trial-and-error</strong></li>
+          <li>Each grid batch needs fresh screening</li>
+          <li>Processing scales with <strong>dataset size</strong></li>
+          <li>Model building: manual expert review</li>
         </ul>
       </div>
-      <div class="info-panel rose" style="flex:1;min-width:0">
-        <h3>Critical Bottleneck</h3>
-        <p>Sample preparation is the most time-consuming and unpredictable step. Grid optimization alone can take weeks of trial-and-error &mdash; ice thickness, particle distribution, and orientation are all highly variable.</p>
-        <p style="margin-top:clamp(4px,0.5vh,8px)"><strong>Tip:</strong> Invest in thorough biochemical characterization (SEC, DLS, mass photometry) before moving to cryo-EM grid preparation. Poor sample quality is the #1 cause of failed projects.</p>
+      <div style="flex:1;background:#fef3c7;border-left:6px solid #d97706;border-radius:0 12px 12px 0;padding:18px 20px">
+        <div style="font:800 26px 'Helvetica Neue',sans-serif;color:#92400e;margin-bottom:10px">💰 Where the Money Goes</div>
+        <ul style="font:400 20px/1.6 'Helvetica Neue',sans-serif;color:#78350f;padding-left:18px;margin:0">
+          <li><strong>Microscope:</strong> $5&ndash;8M (300 kV Krios)</li>
+          <li><strong>Facility fee:</strong> $1&ndash;3K/day beam time</li>
+          <li><strong>Staffing:</strong> Trained operators essential</li>
+          <li><strong>Computing:</strong> GPU cluster for processing</li>
+        </ul>
+      </div>
+      <div style="flex:1;background:#fee2e2;border-left:6px solid #dc2626;border-radius:0 12px 12px 0;padding:18px 20px">
+        <div style="font:800 26px 'Helvetica Neue',sans-serif;color:#991b1b;margin-bottom:10px">🔴 The Bottleneck</div>
+        <ul style="font:400 20px/1.6 'Helvetica Neue',sans-serif;color:#7f1d1d;padding-left:18px;margin:0">
+          <li><strong>Sample prep</strong> dominates total time</li>
+          <li>Red arrows = frequent <strong>feedback loops</strong></li>
+          <li>Failed grids → back to purification</li>
+          <li>Grid success rate often &lt;10%</li>
+        </ul>
       </div>
     </div>
   </div>
-  <div class="slide-ref">Cheng et al., Cell (2015) &middot; Thompson et al., Star Protocols (2021) &middot; Passmore &amp; Russo, Methods Enzymol (2016)</div>
+  <div class="slide-ref" style="position:absolute;left:32px;bottom:10px;right:32px"><a href="https://doi.org/10.1039/d2fd00129b" target="_blank" style="color:inherit">Halfon et al., Faraday Discuss (2022)</a> &middot; <a href="https://doi.org/10.1038/s41592-021-01130-6" target="_blank" style="color:inherit">Weissenberger et al., Nat Methods (2021)</a> &middot; <a href="https://doi.org/10.1107/s2059798318006496" target="_blank" style="color:inherit">Drulyte et al., Acta Cryst D (2018)</a></div>
 </div>
 
-<!-- ======== Slide 20: Sample Prep Overview (split 3:2) ======== -->
-<div class="slide" data-n="20">
-  <div class="slide-title" style="margin-top:20px">Sample Preparation &mdash; Overview &amp; Challenges</div>
-  <div class="slide-body">
-    <div class="layout-split">
-      <div class="split-img" style="flex:3">
-        <img src="../cryo-slides-img/s024_41.png" alt="Sample preparation overview" loading="lazy">
-      </div>
-      <div class="split-text" style="flex:2">
-        <div class="info-panel rose">
-          <h3>Key Challenges</h3>
-          <ul>
-            <li><strong>Size limitation</strong> &mdash; Particles below ~50 kDa have low SNR; may require scaffold or Fab augmentation</li>
-            <li><strong>Sample purity</strong> &mdash; Requires highly purified, monodisperse protein (&gt;90% homogeneity)</li>
-            <li><strong>Concentration</strong> &mdash; 0.5&ndash;5 mg/mL; too high = aggregation, too low = empty holes</li>
-            <li><strong>Vitrification</strong> &mdash; Ice thickness, preferred orientation, air-water interface denaturation</li>
-            <li><strong>Reproducibility</strong> &mdash; Manual blotting remains variable; automated systems improving</li>
-          </ul>
-        </div>
-        <div class="info-panel green">
-          <h3>Key Requirement</h3>
-          <p>The specimen must be <strong>biochemically well-behaved</strong>: stable, monodisperse, and structurally homogeneous in the buffer conditions used for grid preparation.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="slide-ref">Halfon et al., Faraday Discuss (2022) &middot; Weissenberger et al., Nat Methods (2021) &middot; Drulyte et al., Acta Cryst D (2018)</div>
-</div>
-
-<!-- ======== Slide 21: Problems and Limitations ======== -->
-<div class="slide" data-n="21">
-  <div class="slide-title" style="margin-top:20px">Problems and Limitations of Cryo-EM</div>
-  <div class="slide-body" style="justify-content:center">
-    <div style="display:flex;gap:clamp(8px,1vw,16px);flex:0 0 auto;overflow:hidden;padding:0 clamp(12px,2vw,24px)">
+<!-- ======== Slide 22: Problems and Limitations ======== -->
+<div class="slide" data-n="22">
+  <div class="slide-title" style="margin-top:20px;margin-bottom:0">Problems and Limitations of Cryo-EM</div>
+  <div class="slide-body" style="gap:clamp(16px,2vh,24px);padding-top:0">
+    <div style="display:flex;gap:clamp(8px,1vw,16px);flex:0 0 auto;overflow:hidden;padding:0 clamp(12px,2vw,24px);width:1856px;margin-top:97px">
       <div class="topic-card rose" style="flex:1;min-width:0">
         <h3>Sample</h3>
         <ul>
@@ -1750,7 +1901,7 @@ body {
           <li><strong>Beam damage</strong> &mdash; Electrons destroy biological structure</li>
           <li><strong>Low dose</strong> &mdash; Only 20&ndash;60 e&minus;/&Aring;&sup2; allowed &rarr; very noisy images</li>
           <li><strong>Imperfect imaging</strong> &mdash; CTF, lens aberrations, specimen charging</li>
-          <li><strong>Equipment cost</strong> &mdash; Titan Krios: $5&ndash;8M + $500K/yr maintenance</li>
+          <li><strong>Beam-induced motion</strong> &mdash; Sample moves during exposure, blurring high-resolution detail</li>
         </ul>
       </div>
       <div class="topic-card amber" style="flex:1;min-width:0">
@@ -1763,18 +1914,68 @@ body {
         </ul>
       </div>
     </div>
-    <div class="info-panel rose" style="flex-shrink:0">
-      <h3>The Bottom Line</h3>
-      <p>The process remains <strong>slow, manual, and non-reproducible</strong> &mdash; especially sample preparation. Despite the &ldquo;resolution revolution,&rdquo; cryo-EM still requires significant expertise at every step. Sample quality is the #1 determinant of success.</p>
+    <div style="flex-shrink:0;width:920px;height:187px;align-self:center;background:rgba(225,29,72,0.12);border:2px solid #e11d48;border-radius:12px;padding:clamp(20px,3vh,36px) clamp(28px,3vw,44px);text-align:center;margin-top:60px">
+      <div style="font-size:clamp(20px,3vh,34px);font-weight:800;color:#e11d48;margin-bottom:12px">The Bottom Line</div>
+      <div style="font-size:clamp(16px,2vh,22px);line-height:1.5;color:#1a1a2e">Sample preparation remains <strong>the major bottleneck</strong>, requiring substantial expertise at every step.</div>
     </div>
   </div>
-  <div class="slide-ref">Glaeser, Nat Methods (2016) &middot; Drulyte et al., Acta Cryst D (2018) &middot; Henderson, Angew Chem (2013)</div>
+  <!-- refs: Glaeser Nat Methods 2016, Drulyte Acta Cryst D 2018, Henderson PNAS 2013 — 별도 기록, 슬라이드에서 삭제 -->
+</div>
+
+<!-- ======== Slide 23: The Reality — Slow, Manual, Non-reproducible ======== -->
+<div class="slide" data-n="23">
+  <div class="slide-title" style="margin-top:20px">The Reality: Slow, Manual, Non-reproducible</div>
+  <div class="slide-subtitle" style="text-align:center;font:400 18px 'Helvetica Neue',sans-serif;color:#6b7280;margin-top:2px">Why cryo-EM remains challenging despite the resolution revolution</div>
+  <div class="slide-body" style="justify-content:center;width:1856px;height:924px">
+    <div style="display:flex;gap:clamp(8px,1vw,16px);flex:0 0 auto;overflow:visible;padding:0 clamp(12px,2vw,24px);align-items:stretch">
+      <div class="topic-card rose" style="flex:1;min-width:0">
+        <h3>Sample</h3>
+        <div style="margin-bottom:8px;text-align:center"><img src="../cryo-slides-img/s026_sample_prep.png" alt="Sample prep process" style="width:100%;height:224px;object-fit:contain;border-radius:6px"></div>
+        <ul>
+          <li><strong>Slow</strong> &mdash; Weeks to months of iterative optimization</li>
+          <li><strong>Manual</strong> &mdash; Blotting by hand, variable ice thickness</li>
+          <li><strong>Non-reproducible</strong> &mdash; Same sample, different grids, different results</li>
+          <li><strong>Grid dependent</strong> &mdash; Ice quality varies hole-to-hole</li>
+          <li><strong>Flexibility</strong> &mdash; Conformational heterogeneity limits resolution</li>
+        </ul>
+      </div>
+      <div class="topic-card blue" style="flex:1;min-width:0">
+        <h3>Microscopy</h3>
+        <div style="margin-bottom:8px;text-align:center;height:228px;overflow:hidden"><img src="../cryo-slides-img/s026_microscopy.png" alt="Microscopy process" style="width:585px;height:255px;object-fit:contain;border-radius:6px;margin-left:-62px;margin-top:-9px"></div>
+        <ul>
+          <li><strong>Slow</strong> &mdash; Days of data collection per dataset</li>
+          <li><strong>Manual (mostly)</strong> &mdash; Grid screening still requires expert judgment</li>
+          <li><strong>Grid dependent</strong> &mdash; Ice quality determines data quality</li>
+          <li><strong>Noisy images</strong> &mdash; Low dose (20&ndash;60 e&minus;/&Aring;&sup2;) = very low SNR</li>
+          <li><strong>Artifacts</strong> &mdash; CTF, beam-induced motion, specimen charging</li>
+        </ul>
+      </div>
+      <div class="topic-card amber" style="flex:1;min-width:0">
+        <h3>Data Processing</h3>
+        <div style="margin-bottom:8px;text-align:center"><img src="../cryo-slides-img/s026_dataproc.png" alt="Data processing" style="width:100%;height:224px;object-fit:contain;border-radius:6px"></div>
+        <ul>
+          <li><strong>Slow</strong> &mdash; Hours to weeks (GPU-dependent)</li>
+          <li><strong>Manual (mostly)</strong> &mdash; Multiple steps require expert decisions</li>
+          <li><strong>Heterogeneity</strong> &mdash; Dynamic/continuous conformations</li>
+          <li><strong>Wasted particles</strong> &mdash; Most picked particles discarded</li>
+          <li><strong>Interpretation</strong> &mdash; Multiple possible models from same data</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Arrows (positioned via editor 3/24) -->
+  <div class="s23-arrow" style="position:absolute;z-index:10;padding:8px;cursor:pointer;left:188px;top:352px;font:900 36px 'Helvetica Neue',sans-serif;color:#1a1a2e">&#x2192;</div>
+  <div class="s23-arrow" style="position:absolute;z-index:10;padding:8px;cursor:pointer;left:358px;top:351px;font:900 36px 'Helvetica Neue',sans-serif;color:#1a1a2e">&#x2192;</div>
+  <div class="s23-arrow" style="position:absolute;z-index:10;padding:8px;cursor:pointer;left:786px;top:351px;font:900 36px 'Helvetica Neue',sans-serif;color:#1a1a2e">&#x2192;</div>
+  <div class="s23-arrow" style="position:absolute;z-index:10;padding:8px;cursor:pointer;left:1465px;top:348px;font:900 36px 'Helvetica Neue',sans-serif;color:#1a1a2e">&#x2192;</div>
+  <div class="s23-arrow" style="position:absolute;z-index:10;padding:8px;cursor:pointer;left:1663px;top:346px;font:900 36px 'Helvetica Neue',sans-serif;color:#1a1a2e">&#x2192;</div>
+  <div class="slide-ref" style="position:absolute;left:32px;bottom:10px;right:32px"><a href="https://doi.org/10.1038/nmeth.3695" target="_blank" style="color:inherit">Glaeser, Nat Methods (2016)</a> &middot; <a href="https://doi.org/10.1107/s2059798318006496" target="_blank" style="color:inherit">Drulyte et al., Acta Cryst D (2018)</a></div>
 </div>
 
 </div><!-- /slides-area -->
 
 <script>
-const N = 21;
+const N = 23;
 let cur = 1;
 
 // Zoom body (1920x1080 fixed) to fit viewport
@@ -1787,6 +1988,13 @@ let cur = 1;
   zoomPage();
   window.addEventListener('resize', zoomPage);
 })();
+
+function jumpToSlide() {
+  var input = prompt('Go to slide (1–' + N + '):', cur);
+  if (input === null) return;
+  var n = parseInt(input, 10);
+  if (!isNaN(n) && n >= 1 && n <= N) show(n);
+}
 
 function show(n) {
   n = Math.max(1, Math.min(N, n));
@@ -1813,6 +2021,12 @@ function show(n) {
       s18text.style.opacity = '0';
       s18future.style.opacity = '0';
     }
+  }
+  // Slide 21: sync card container width to image box
+  if(n === 21){
+    var imgBox21 = document.querySelector('[data-n="21"] .slide-body > div:first-child');
+    var cards21 = document.getElementById('s21-cards');
+    if(imgBox21 && cards21) cards21.style.width = imgBox21.offsetWidth + 'px';
   }
 }
 

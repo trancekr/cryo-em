@@ -1,0 +1,81 @@
+# Cryo-EM Presentation Harness
+
+> airoasting/book_publishing 패턴을 프레젠테이션용으로 적용한 스킬 기반 워크플로우.
+> `presentation-spec.md` 하나만 교체하면 어떤 주제의 프레젠테이션이든 같은 과정으로 만들 수 있음.
+
+## 세션 시작 시 필수 읽기 파일
+
+1. `presentation-spec.md` — 슬라이드 정의, 레퍼런스, 상태
+2. `design-principles.md` — 디자인 원칙 10개 섹션
+3. `slide-design-reference.md` — CSS/레이아웃 레퍼런스
+4. `next-session-tasks.md` — 미해결 작업, 반복 실수 기록
+
+## 핵심 커맨드
+
+```
+/research   →  DOI 검증, 논문 내용 확인, 관련 논문 검색
+/write      →  검증된 레퍼런스 기반 HTML 슬라이드 생성/수정
+/review     →  4관점 리뷰 (레퍼런스, 디자인, CSS, 콘텐츠)
+/publish    →  전체 검증 + 백업 + git 배포
+/slide-status → 진행 현황 대시보드
+```
+
+## 워크플로우
+
+```
+/research [슬라이드번호] → /write [슬라이드번호] → /review [슬라이드번호] → /publish [섹션]
+```
+
+각 단계는 이전 단계 완료 후에만 진행 가능.
+
+## 절대 규칙 (위반 = 세션 실패)
+
+### 레퍼런스
+- DOI 검증 없이 레퍼런스 추가 **금지**
+- 논문 제목/저자/저널/연도를 DOI 메타데이터와 대조하지 않고 표기 **금지**
+- 논문 내용을 읽지 않고(최소한 abstract) 슬라이드에 주장 작성 **금지**
+- PubMed 도구 또는 WebFetch(doi.org)로 모든 레퍼런스 검증 필수
+- 논문을 찾을 수 없으면 "찾을 수 없음"으로 보고 — 추측 금지
+
+### 사용자 설정값
+- `presentation-spec.md`의 `design-locked-values` 변경 **금지**
+- 에디터 출력은 **그대로** 적용 — 선별 적용 금지
+- px → %, vw, vh 등 단위 변환 **금지** (명시적 요청 없는 한)
+- 사용자가 설정한 치수를 "개선" 또는 "최적화" **금지**
+
+### 디자인
+- design-principles.md 읽기 **전에** 슬라이드 수정 **금지**
+- 슬라이드 수정 **후** `check-slide-design.js` 실행 필수
+- 기존 CSS 클래스 사용 — 인라인 스타일로 재생성 금지
+- 한 번에 하나씩: 수정 → 사용자 확인 → 다음
+
+### 반복 실수 (절대 반복하지 말 것)
+1. 에디터 출력 선별 적용하여 레이아웃 깨뜨리기
+2. 사용자가 설정한 이미지 크기 임의 변경
+3. 거부된 이미지 크롭 반복
+4. 가짜 레퍼런스 추가
+5. 불확실할 때 임의 판단 (→ 확인할 것)
+6. 같은 컨테이너에서 px/% 혼용
+7. 의도적 겹침을 확인 없이 "수정"
+
+## 산출물 구조
+
+```
+SPAguide/
+├── presentation-spec.md          ← 중앙 설정 (유일한 교체 대상)
+├── research-reports/
+│   ├── research-report-s3.md     ← /research 출력
+│   └── ...
+├── overview.html                 ← 메인 슬라이드
+└── .claude/skills/               ← 스킬 5개
+```
+
+## 기술 스택
+
+| 용도 | 기술 |
+|------|------|
+| 슬라이드 | HTML/CSS (1920×1080, 단일 파일) |
+| 레퍼런스 검증 | PubMed MCP, WebFetch (doi.org) |
+| 디자인 검증 | check-slide-design.js (Node.js) |
+| 시각 편집 | editor.js (브라우저, E키 토글) |
+| 배포 | GitHub Pages |
