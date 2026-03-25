@@ -516,6 +516,196 @@ body {
 }
 
 /* ============================================================
+   LAYOUT: Rich Timeline v2 (.bl-rich-timeline)
+   Three milestones with large images above, year on line, details below
+   ============================================================ */
+.bl-rich-timeline {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Horizontal connecting line at 40% from top */
+.bl-rich-timeline .rt-line {
+  position: absolute;
+  top: 40%;
+  left: 30px;
+  right: 30px;
+  height: 4px;
+  background: linear-gradient(90deg, #3498db 0%, #9b59b6 50%, #2ecc71 100%);
+  border-radius: 2px;
+  z-index: 0;
+}
+
+.bl-rich-timeline .rt-items {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.bl-rich-timeline .rt-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Image area above timeline — fills from top to ~38% */
+.bl-rich-timeline .rt-img-area {
+  height: 38%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 4px 8px;
+  position: relative;
+}
+
+.bl-rich-timeline .rt-img-box {
+  background: #fff;
+  border-radius: 10px;
+  border: 2px solid #e0e0e8;
+  overflow: hidden;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  position: relative;
+}
+
+.bl-rich-timeline .rt-img-box img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Image label overlays */
+.bl-rich-timeline .rt-img-label {
+  position: absolute;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  white-space: nowrap;
+  z-index: 3;
+}
+
+/* Year badge on timeline line */
+.bl-rich-timeline .rt-year-row {
+  height: 4%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.bl-rich-timeline .rt-year-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 16px;
+  border-radius: 16px;
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  background: #3498db;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  min-width: 80px;
+}
+
+/* Details area below timeline — fills remaining ~58% */
+.bl-rich-timeline .rt-details {
+  flex: 1;
+  padding: 10px 6px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.bl-rich-timeline .rt-card-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1a1a2e;
+  line-height: 1.25;
+  margin-bottom: 2px;
+}
+
+.bl-rich-timeline .rt-card-author {
+  font-size: 11px;
+  color: #888;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+.bl-rich-timeline .rt-card-author a {
+  color: #2563eb;
+  text-decoration: none;
+}
+.bl-rich-timeline .rt-card-author a:hover {
+  text-decoration: underline;
+}
+
+.bl-rich-timeline .rt-detail-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.bl-rich-timeline .rt-detail-list li {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.4;
+  padding: 1px 0 1px 10px;
+  position: relative;
+}
+.bl-rich-timeline .rt-detail-list li::before {
+  content: '\2022';
+  position: absolute;
+  left: 0;
+  color: #bbb;
+}
+
+.bl-rich-timeline .rt-insight {
+  margin-top: auto;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: #fffbeb;
+  border-left: 3px solid #d97706;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #92400e;
+}
+
+.bl-rich-timeline .rt-badge {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* Highlight card background tint */
+.bl-rich-timeline .rt-item.highlight .rt-details {
+  background: rgba(37,99,235,0.04);
+  border-radius: 8px;
+  padding: 10px 8px 6px;
+}
+.bl-rich-timeline .rt-item.highlight .rt-img-box {
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+}
+
+/* ============================================================
    LAYOUT: Gallery (.bl-gallery)
    ============================================================ */
 .bl-gallery {
@@ -1490,60 +1680,94 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 7: History 1968-1982 (Timeline)
+     SLIDE 7: History 1968-1982 (Rich Timeline — V2 content)
      ============================================================ -->
 <div class="bl-slide" data-n="7">
   <div class="bl-header">
     <div class="bl-chapter">Section 1: Cryo-EM Overview</div>
     <div class="bl-title">From Blobs to High Resolution</div>
-    <div class="bl-subtitle">Foundational milestones — Part 1</div>
+    <div class="bl-subtitle">Foundational milestones — Part 1 (1968-1982)</div>
   </div>
   <div class="bl-content">
-    <div class="bl-timeline">
-      <div class="bl-timeline-line"></div>
-      <div class="bl-timeline-items">
-        <div class="bl-timeline-item">
-          <div class="bl-timeline-top">
-            <div class="tl-img">
-              <img src="../cryo-slides-img/s010_12.png?v=2" alt="Fourier reconstruction scheme">
+    <div class="bl-rich-timeline">
+      <div class="rt-line"></div>
+      <div class="rt-items">
+
+        <!-- 1968: First 3D Reconstruction -->
+        <div class="rt-item">
+          <div class="rt-img-area">
+            <div class="rt-img-box">
+              <img src="../cryo-slides-img/s010_12.png?v=2" alt="Fourier reconstruction of T4 phage tail">
+              <span class="rt-img-label" style="top:6px;left:6px">Projection-Slice Theorem</span>
             </div>
           </div>
-          <div class="bl-timeline-dot" style="border-color:#27ae60"></div>
-          <div class="bl-timeline-bottom">
-            <div class="tl-year">1968</div>
-            <div class="tl-title">First 3D Reconstruction</div>
-            <div class="tl-desc">T4 phage tail — helical Fourier reconstruction at ~20-30 A. Established Projection-Slice Theorem.</div>
-            <div class="tl-badge">Klug: Nobel Chemistry 1982</div>
+          <div class="rt-year-row">
+            <span class="rt-year-badge" style="background:#27ae60">1968</span>
+          </div>
+          <div class="rt-details">
+            <div class="rt-card-title">First 3D Reconstruction</div>
+            <div class="rt-card-author"><a href="https://doi.org/10.1038/217130a0" target="_blank">DeRosier &amp; Klug, Nature (1968)</a></div>
+            <ul class="rt-detail-list">
+              <li><strong>T4 phage tail</strong> — helical Fourier reconstruction</li>
+              <li>Resolution ~20-30 A from EM images</li>
+              <li>Established Projection-Slice Theorem</li>
+              <li>Foundation for CT and all 3D reconstruction methods</li>
+            </ul>
+            <span class="rt-badge" style="background:#fef3c7;color:#92400e">Klug: Nobel Chemistry 1982</span>
+            <div class="rt-insight">Projection-Slice Theorem became the mathematical basis for CT scanning and all 3D reconstruction.</div>
           </div>
         </div>
-        <div class="bl-timeline-item">
-          <div class="bl-timeline-top">
-            <div class="tl-img">
+
+        <!-- 1974: Frozen Hydrated Crystals -->
+        <div class="rt-item">
+          <div class="rt-img-area">
+            <div class="rt-img-box">
               <img src="../cryo-slides-img/s010_13.png?v=2" alt="Catalase electron diffraction">
+              <span class="rt-img-label" style="bottom:6px;left:6px">Catalase diffraction</span>
             </div>
           </div>
-          <div class="bl-timeline-dot" style="border-color:#3498db"></div>
-          <div class="bl-timeline-bottom">
-            <div class="tl-year">1974</div>
-            <div class="tl-title">Frozen Hydrated Crystals</div>
-            <div class="tl-desc">Catalase crystals diffracted to ~3 A when frozen hydrated. Slow cooling caused ice damage.</div>
-            <div class="tl-badge">First proof of frozen hydration</div>
+          <div class="rt-year-row">
+            <span class="rt-year-badge" style="background:#3498db">1974</span>
+          </div>
+          <div class="rt-details">
+            <div class="rt-card-title">Frozen Hydrated Crystals</div>
+            <div class="rt-card-author"><a href="https://doi.org/10.1126/science.186.4168.1036" target="_blank">Taylor &amp; Glaeser, Science (1974)</a></div>
+            <ul class="rt-detail-list">
+              <li><strong>Catalase crystals</strong> diffracted to ~3 A when frozen</li>
+              <li>First proof that frozen hydration preserves structure</li>
+              <li>Slow cooling caused ice crystal damage</li>
+              <li>Limitation solved by Dubochet's vitrification (1982)</li>
+            </ul>
+            <span class="rt-badge" style="background:#eff6ff;color:#2563eb">First proof of frozen hydration</span>
+            <div class="rt-insight">Demonstrated frozen hydration works, but vitrification was needed to avoid ice crystal damage.</div>
           </div>
         </div>
-        <div class="bl-timeline-item">
-          <div class="bl-timeline-top">
-            <div class="tl-img">
+
+        <!-- 1982: Vitrification -->
+        <div class="rt-item">
+          <div class="rt-img-area">
+            <div class="rt-img-box">
               <img src="../cryo-slides-img/s010_14.png?v=2" alt="Vitrified virus particles">
+              <span class="rt-img-label" style="bottom:6px;right:6px">Vitrified virus</span>
             </div>
           </div>
-          <div class="bl-timeline-dot" style="border-color:#9b59b6"></div>
-          <div class="bl-timeline-bottom">
-            <div class="tl-year">1982</div>
-            <div class="tl-title">Vitrification</div>
-            <div class="tl-desc">Plunge-freezing in liquid ethane — vitreous ice preserves native state. Foundation of modern cryo-EM.</div>
-            <div class="tl-badge" style="background:#f5f3ff;color:#7c3aed">Dubochet: Nobel Chemistry 2017</div>
+          <div class="rt-year-row">
+            <span class="rt-year-badge" style="background:#9b59b6">1982</span>
+          </div>
+          <div class="rt-details">
+            <div class="rt-card-title">Vitrification</div>
+            <div class="rt-card-author"><a href="https://doi.org/10.1111/j.1365-2818.1981.tb02483.x" target="_blank">Dubochet &amp; McDowall, J Microsc (1981)</a></div>
+            <ul class="rt-detail-list">
+              <li><strong>Plunge-freezing</strong> in liquid ethane</li>
+              <li>Cooling rate &gt;10&#x2075; K/s produces vitreous ice</li>
+              <li>Preserves native hydrated state of biomolecules</li>
+              <li>Foundation of all modern cryo-EM sample prep</li>
+            </ul>
+            <span class="rt-badge" style="background:#f5f3ff;color:#7c3aed">Dubochet: Nobel 2017</span>
+            <div class="rt-insight">Foundation of all modern cryo-EM sample preparation — vitreous ice preserves native state.</div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -1555,61 +1779,94 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 8: History 1987-1994 (Timeline continuation)
+     SLIDE 8: History 1987-1994 (Rich Timeline — V2 content)
      ============================================================ -->
 <div class="bl-slide" data-n="8">
   <div class="bl-header">
     <div class="bl-chapter">Section 1: Cryo-EM Overview</div>
     <div class="bl-title">From Blobs to High Resolution</div>
-    <div class="bl-subtitle">Foundational milestones — Part 2</div>
+    <div class="bl-subtitle">Foundational milestones — Part 2 (1987-1994)</div>
   </div>
   <div class="bl-content">
-    <div class="bl-timeline">
-      <div class="bl-timeline-line"></div>
-      <div class="bl-timeline-items">
-        <div class="bl-timeline-item">
-          <div class="bl-timeline-top">
-            <div class="tl-img" style="flex-direction:column;gap:2px">
+    <div class="bl-rich-timeline">
+      <div class="rt-line"></div>
+      <div class="rt-items">
+
+        <!-- 1987: Angular Reconstitution -->
+        <div class="rt-item">
+          <div class="rt-img-area">
+            <div class="rt-img-box" style="flex-direction:column;gap:2px">
               <img src="../cryo-slides-img/s010_16a.png" alt="Central sections" style="max-height:48%">
               <img src="../cryo-slides-img/s010_16b.png" alt="Great circles" style="max-height:48%">
             </div>
           </div>
-          <div class="bl-timeline-dot" style="border-color:#e67e22"></div>
-          <div class="bl-timeline-bottom">
-            <div class="tl-year">1987</div>
-            <div class="tl-title">Angular Reconstitution</div>
-            <div class="tl-desc">Common-line approach — 3D from untilted images. IMAGIC basis for EMAN, RELION.</div>
-            <div class="tl-badge">Core SPA algorithm</div>
+          <div class="rt-year-row">
+            <span class="rt-year-badge" style="background:#e67e22">1987</span>
+          </div>
+          <div class="rt-details">
+            <div class="rt-card-title">Angular Reconstitution</div>
+            <div class="rt-card-author"><a href="https://doi.org/10.1016/0304-3991(87)90078-7" target="_blank">van Heel, Ultramicroscopy (1987)</a></div>
+            <ul class="rt-detail-list">
+              <li><strong>Common-line approach</strong> — 3D from untilted images</li>
+              <li>No specimen tilting needed in the microscope</li>
+              <li>IMAGIC software — basis for EMAN, RELION</li>
+              <li>Core algorithm of all modern SPA software</li>
+            </ul>
+            <span class="rt-badge" style="background:#fffbeb;color:#d97706">Core SPA algorithm</span>
+            <div class="rt-insight">Solved the orientation problem — core of all single-particle analysis software today.</div>
           </div>
         </div>
-        <div class="bl-timeline-item">
-          <div class="bl-timeline-top">
-            <div class="tl-img">
+
+        <!-- 1990: First Atomic EM Structure -->
+        <div class="rt-item">
+          <div class="rt-img-area">
+            <div class="rt-img-box">
               <img src="../cryo-slides-img/s010_18_crop.png" alt="Bacteriorhodopsin 3.5 A">
+              <span class="rt-img-label" style="bottom:6px;left:6px">bR 3.5 A</span>
             </div>
           </div>
-          <div class="bl-timeline-dot" style="border-color:#27ae60"></div>
-          <div class="bl-timeline-bottom">
-            <div class="tl-year">1990</div>
-            <div class="tl-title">First Atomic EM Structure</div>
-            <div class="tl-desc">Bacteriorhodopsin at 3.5 A — 7-TM helix + retinal by electron crystallography.</div>
-            <div class="tl-badge" style="background:#f5f3ff;color:#7c3aed">Henderson: Nobel 2017</div>
+          <div class="rt-year-row">
+            <span class="rt-year-badge" style="background:#27ae60">1990</span>
+          </div>
+          <div class="rt-details">
+            <div class="rt-card-title">First Atomic EM Structure</div>
+            <div class="rt-card-author"><a href="https://doi.org/10.1016/S0022-2836(05)80271-2" target="_blank">Henderson et al., J Mol Biol (1990)</a></div>
+            <ul class="rt-detail-list">
+              <li><strong>Bacteriorhodopsin</strong> at 3.5 A resolution</li>
+              <li>7-transmembrane helix protein + retinal</li>
+              <li>Electron crystallography (required 2D crystals)</li>
+              <li>First proof EM can achieve atomic-level detail</li>
+            </ul>
+            <span class="rt-badge" style="background:#f5f3ff;color:#7c3aed">Henderson: Nobel 2017</span>
+            <div class="rt-insight">First proof EM can reach atomic resolution, but required 2D crystals — not single particles.</div>
           </div>
         </div>
-        <div class="bl-timeline-item">
-          <div class="bl-timeline-top">
-            <div class="tl-img">
-              <img src="../cryo-slides-img/s010_17_crop.png" alt="OSSP scheme">
+
+        <!-- 1994: Iterative Projection Matching -->
+        <div class="rt-item">
+          <div class="rt-img-area">
+            <div class="rt-img-box">
+              <img src="../cryo-slides-img/s010_17_crop.png" alt="OSSP iterative refinement">
+              <span class="rt-img-label" style="top:6px;right:6px">OSSP method</span>
             </div>
           </div>
-          <div class="bl-timeline-dot" style="border-color:#9b59b6"></div>
-          <div class="bl-timeline-bottom">
-            <div class="tl-year">1994</div>
-            <div class="tl-title">Iterative Projection Matching</div>
-            <div class="tl-desc">70S ribosome — iterative 3D vs image comparison. SPIDER software.</div>
-            <div class="tl-badge" style="background:#f5f3ff;color:#7c3aed">Frank: Nobel 2017</div>
+          <div class="rt-year-row">
+            <span class="rt-year-badge" style="background:#9b59b6">1994</span>
+          </div>
+          <div class="rt-details">
+            <div class="rt-card-title">Iterative Projection Matching</div>
+            <div class="rt-card-author"><a href="https://doi.org/10.1016/0304-3991(94)90003-5" target="_blank">Penczek, Grassucci &amp; Frank, Ultramicroscopy (1994)</a></div>
+            <ul class="rt-detail-list">
+              <li><strong>70S ribosome</strong> — iterative 3D refinement</li>
+              <li>Compare projections to experimental images</li>
+              <li>SPIDER software — evolved to ML/Bayesian methods</li>
+              <li>Established iterative refinement concept</li>
+            </ul>
+            <span class="rt-badge" style="background:#f5f3ff;color:#7c3aed">Frank: Nobel 2017</span>
+            <div class="rt-insight">Established the iterative refinement paradigm: SPIDER evolved into ML/Bayesian approaches.</div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -1621,49 +1878,94 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 9: History 1997-2008 (Gallery)
+     SLIDE 9: History 1997-2008 (Rich Timeline — V2 content)
      ============================================================ -->
 <div class="bl-slide" data-n="9">
   <div class="bl-header">
     <div class="bl-chapter">Section 1: Cryo-EM Overview</div>
     <div class="bl-title">The Resolution Revolution</div>
-    <div class="bl-subtitle">Steady progress toward atomic resolution — Part 1</div>
+    <div class="bl-subtitle">Steady progress toward atomic resolution — Part 1 (1997-2008)</div>
   </div>
   <div class="bl-content">
-    <div class="bl-gallery">
-      <div class="bl-gallery-item">
-        <div class="gal-img" style="background:#f8f9fa">
-          <img src="../cryo-slides-img/s011_19a_sharp.png" alt="HBV capsid" style="max-width:48%">
-          <img src="../cryo-slides-img/s011_19b_sharp.png" alt="HBV colored" style="max-width:48%">
+    <div class="bl-rich-timeline">
+      <div class="rt-line"></div>
+      <div class="rt-items">
+
+        <!-- 1997: Sub-nanometer Virus -->
+        <div class="rt-item">
+          <div class="rt-img-area">
+            <div class="rt-img-box" style="flex-direction:row;gap:4px">
+              <img src="../cryo-slides-img/s011_19a_sharp.png" alt="HBV capsid" style="max-width:32%;max-height:100%">
+              <img src="../cryo-slides-img/s011_19b_sharp.png" alt="HBV colored" style="max-width:32%;max-height:100%">
+              <img src="../cryo-slides-img/s011_27_sharp.png" alt="HBV fit" style="max-width:32%;max-height:100%">
+            </div>
+          </div>
+          <div class="rt-year-row">
+            <span class="rt-year-badge" style="background:#2563eb">1997</span>
+          </div>
+          <div class="rt-details">
+            <div class="rt-card-title">Sub-nanometer Virus</div>
+            <div class="rt-card-author"><a href="https://doi.org/10.1038/386088a0" target="_blank">Bottcher et al., Nature (1997)</a> &middot; <a href="https://doi.org/10.1038/386091a0" target="_blank">Conway et al., Nature (1997)</a></div>
+            <ul class="rt-detail-list">
+              <li><strong>HBV capsid</strong> at 7.4 A / 9 A resolution</li>
+              <li>First protein fold determined by EM alone</li>
+              <li>Two independent groups, same Nature issue</li>
+            </ul>
+            <span class="rt-badge" style="background:#eff6ff;color:#2563eb">Sub-nm EM is real</span>
+            <div class="rt-insight">Two groups independently proved sub-nanometer EM — protein folds visible without crystals.</div>
+          </div>
         </div>
-        <div class="gal-caption">
-          <div class="gal-year">1997</div>
-          <div class="gal-title">Sub-nanometer Virus</div>
-          <div class="gal-desc">HBV capsid at 7.4 A / 9 A. First protein fold by EM alone — two groups, same Nature issue.</div>
-          <div class="gal-badge" style="background:#eff6ff;color:#2563eb">Sub-nm EM is real</div>
+
+        <!-- 1998: Maximum Likelihood -->
+        <div class="rt-item">
+          <div class="rt-img-area">
+            <div class="rt-img-box">
+              <img src="../cryo-slides-img/s011_20_sharp.png" alt="ML 2D classification">
+              <span class="rt-img-label" style="top:6px;left:6px">ML classification</span>
+            </div>
+          </div>
+          <div class="rt-year-row">
+            <span class="rt-year-badge" style="background:#7c3aed">1998</span>
+          </div>
+          <div class="rt-details">
+            <div class="rt-card-title">Maximum Likelihood</div>
+            <div class="rt-card-author"><a href="https://doi.org/10.1006/jsbi.1998.4014" target="_blank">Sigworth, J Struct Biol (1998)</a></div>
+            <ul class="rt-detail-list">
+              <li>Cross-correlation replaced by <strong>probabilistic</strong> alignment</li>
+              <li>Marginalizes over all possible orientations</li>
+              <li>Foundation of RELION (Scheres, 2012)</li>
+              <li>Deterministic to probabilistic paradigm shift</li>
+            </ul>
+            <span class="rt-badge" style="background:#f5f3ff;color:#7c3aed">Paradigm shift</span>
+            <div class="rt-insight">Shift from deterministic to probabilistic alignment — foundation of RELION and modern SPA.</div>
+          </div>
         </div>
-      </div>
-      <div class="bl-gallery-item">
-        <div class="gal-img" style="background:#f8f9fa">
-          <img src="../cryo-slides-img/s011_20_sharp.png" alt="ML 2D classification">
+
+        <!-- 2008: De Novo Atomic Model -->
+        <div class="rt-item">
+          <div class="rt-img-area">
+            <div class="rt-img-box">
+              <img src="../cryo-slides-img/s011_21_sharp.png" alt="CPV 3.88 A atomic model">
+              <span class="rt-img-label" style="bottom:6px;left:6px">CPV 3.88 A</span>
+            </div>
+          </div>
+          <div class="rt-year-row">
+            <span class="rt-year-badge" style="background:#dc2626">2008</span>
+          </div>
+          <div class="rt-details">
+            <div class="rt-card-title">De Novo Atomic Model</div>
+            <div class="rt-card-author"><a href="https://doi.org/10.1038/nature06923" target="_blank">Yu, Jin &amp; Zhou, Nature (2008)</a></div>
+            <ul class="rt-detail-list">
+              <li><strong>CPV capsid</strong> at 3.88 A with CCD detector</li>
+              <li>First de novo atomic model without X-ray crystals</li>
+              <li>Achieved before direct electron detectors</li>
+              <li>Broke the 4 A barrier for single-particle EM</li>
+            </ul>
+            <span class="rt-badge" style="background:#fef2f2;color:#dc2626">Broke 4 A barrier</span>
+            <div class="rt-insight">Broke the 4 A barrier with CCD — proved atomic-resolution EM was possible without crystals.</div>
+          </div>
         </div>
-        <div class="gal-caption">
-          <div class="gal-year">1998</div>
-          <div class="gal-title">ML Classification</div>
-          <div class="gal-desc">Probabilistic alignment over all orientations. Foundation of RELION (Scheres, 2012).</div>
-          <div class="gal-badge" style="background:#f5f3ff;color:#7c3aed">Paradigm shift</div>
-        </div>
-      </div>
-      <div class="bl-gallery-item">
-        <div class="gal-img" style="background:#f8f9fa">
-          <img src="../cryo-slides-img/s011_21_sharp.png" alt="CPV atomic model">
-        </div>
-        <div class="gal-caption">
-          <div class="gal-year">2008</div>
-          <div class="gal-title">De Novo Atomic Model</div>
-          <div class="gal-desc">CPV capsid at 3.88 A with CCD (before DED). De novo atomic model by single-particle EM.</div>
-          <div class="gal-badge" style="background:#fef2f2;color:#dc2626">Broke the 4 A barrier</div>
-        </div>
+
       </div>
     </div>
   </div>
@@ -1675,48 +1977,95 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 10: History 2012-2013 — DED era (Gallery)
+     SLIDE 10: History 2012-2013 — DED era (Rich Timeline — V2 content)
      ============================================================ -->
 <div class="bl-slide" data-n="10">
   <div class="bl-header">
     <div class="bl-chapter">Section 1: Cryo-EM Overview</div>
     <div class="bl-title">The Resolution Revolution</div>
-    <div class="bl-subtitle">Direct electron detectors transform the field — Part 2</div>
+    <div class="bl-subtitle">Direct electron detectors transform the field — Part 2 (2012-2013)</div>
   </div>
   <div class="bl-content">
-    <div class="bl-gallery">
-      <div class="bl-gallery-item">
-        <div class="gal-img" style="background:#f8f9fa">
-          <img src="../cryo-slides-img/s011_22_new_sharp.png" alt="K2 Summit motion correction">
+    <div class="bl-rich-timeline">
+      <div class="rt-line"></div>
+      <div class="rt-items">
+
+        <!-- 2012: DED + Motion Correction — HIGHLIGHT -->
+        <div class="rt-item highlight">
+          <div class="rt-img-area">
+            <div class="rt-img-box">
+              <img src="../cryo-slides-img/s011_22_new_sharp.png" alt="K2 Summit motion correction before/after">
+              <span class="rt-img-label" style="top:6px;left:6px">Before correction</span>
+              <span class="rt-img-label" style="top:6px;right:6px">After correction</span>
+            </div>
+          </div>
+          <div class="rt-year-row">
+            <span class="rt-year-badge" style="background:#2563eb">2012</span>
+          </div>
+          <div class="rt-details">
+            <div class="rt-card-title">DED + Motion Correction</div>
+            <div class="rt-card-author"><a href="https://doi.org/10.1038/nmeth.2472" target="_blank">Li et al., Nat Methods (2013)</a></div>
+            <ul class="rt-detail-list">
+              <li><strong>Gatan K2 Summit</strong> — electron counting mode</li>
+              <li>20S proteasome at 3.3 A (D7 symmetry)</li>
+              <li>DQE &gt;2x over film/CCD at all spatial frequencies</li>
+              <li>Frame alignment = key breakthrough</li>
+            </ul>
+            <span class="rt-badge" style="background:#eff6ff;color:#2563eb">Key breakthrough</span>
+            <div class="rt-insight">Frame alignment was THE key breakthrough of the Resolution Revolution — correcting beam-induced motion.</div>
+          </div>
         </div>
-        <div class="gal-caption">
-          <div class="gal-year">2012</div>
-          <div class="gal-title">DED + Motion Correction</div>
-          <div class="gal-desc">Gatan K2 Summit — electron counting. 20S proteasome at 3.3 A (D7). DQE &gt;2x over film/CCD.</div>
-          <div class="gal-badge" style="background:#eff6ff;color:#2563eb">Key breakthrough</div>
+
+        <!-- 2013: Ribosome from 30k particles -->
+        <div class="rt-item">
+          <div class="rt-img-area">
+            <div class="rt-img-box">
+              <img src="../cryo-slides-img/s011_23_sharp.png" alt="Ribosome near-atomic">
+              <span class="rt-img-label" style="bottom:6px;left:6px">Near-atomic ribosome</span>
+            </div>
+          </div>
+          <div class="rt-year-row">
+            <span class="rt-year-badge" style="background:#059669">2013</span>
+          </div>
+          <div class="rt-details">
+            <div class="rt-card-title">Ribosome from 30k Particles</div>
+            <div class="rt-card-author"><a href="https://doi.org/10.7554/eLife.00461" target="_blank">Bai et al., eLife (2013)</a></div>
+            <ul class="rt-detail-list">
+              <li><strong>FEI Falcon DED</strong> — movie-mode acquisition</li>
+              <li>Near-atomic resolution from only 30,000 particles</li>
+              <li>100x fewer particles than previously needed</li>
+              <li>DED + RELION synergy demonstrated</li>
+            </ul>
+            <span class="rt-badge" style="background:#f0fdf4;color:#059669">100x fewer particles</span>
+            <div class="rt-insight">DED + RELION combination reduced particle requirements by 100x — democratizing high-resolution EM.</div>
+          </div>
         </div>
-      </div>
-      <div class="bl-gallery-item">
-        <div class="gal-img" style="background:#f8f9fa">
-          <img src="../cryo-slides-img/s011_23_sharp.png" alt="Ribosome near-atomic">
+
+        <!-- 2013: TRPV1 at 3.4 A -->
+        <div class="rt-item">
+          <div class="rt-img-area">
+            <div class="rt-img-box">
+              <img src="../cryo-slides-img/s011_26_sharp.png" alt="TRPV1 3.4 A structure">
+              <span class="rt-img-label" style="bottom:6px;right:6px">TRPV1 3.4 A</span>
+            </div>
+          </div>
+          <div class="rt-year-row">
+            <span class="rt-year-badge" style="background:#dc2626">2013</span>
+          </div>
+          <div class="rt-details">
+            <div class="rt-card-title">TRPV1 at 3.4 A</div>
+            <div class="rt-card-author"><a href="https://doi.org/10.1038/nature12822" target="_blank">Liao et al., Nature (2013)</a></div>
+            <ul class="rt-detail-list">
+              <li><strong>~300 kDa</strong> membrane protein, C4 symmetry only</li>
+              <li>First small membrane protein at near-atomic resolution</li>
+              <li>DED + motion correction + RELION pipeline</li>
+              <li>Marked the start of the "Resolution Revolution"</li>
+            </ul>
+            <span class="rt-badge" style="background:#fef2f2;color:#dc2626">Revolution begins</span>
+            <div class="rt-insight">"Resolution Revolution" officially started — small membrane proteins now accessible to cryo-EM.</div>
+          </div>
         </div>
-        <div class="gal-caption">
-          <div class="gal-year">2013</div>
-          <div class="gal-title">Ribosome from 30k Particles</div>
-          <div class="gal-desc">FEI Falcon DED — movie-mode. Near-atomic from 30,000 particles. 100x fewer than before.</div>
-          <div class="gal-badge" style="background:#f0fdf4;color:#059669">100x fewer particles</div>
-        </div>
-      </div>
-      <div class="bl-gallery-item">
-        <div class="gal-img" style="background:#f8f9fa">
-          <img src="../cryo-slides-img/s011_26_sharp.png" alt="TRPV1 3.4 A">
-        </div>
-        <div class="gal-caption">
-          <div class="gal-year">2013</div>
-          <div class="gal-title">TRPV1 at 3.4 A</div>
-          <div class="gal-desc">TRPV1 — ~300 kDa, C4 only. DED + motion correction + RELION. First small membrane protein at near-atomic.</div>
-          <div class="gal-badge" style="background:#fef2f2;color:#dc2626">Revolution begins</div>
-        </div>
+
       </div>
     </div>
   </div>
@@ -1728,50 +2077,94 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 11: Breaking the 3 A Barrier (Structure Grid)
+     SLIDE 11: Breaking the 3 A Barrier (Rich Timeline — V2 content)
      ============================================================ -->
 <div class="bl-slide" data-n="11">
   <div class="bl-header">
     <div class="bl-chapter">Section 1: Cryo-EM Overview</div>
     <div class="bl-title">Breaking the 3 A Barrier</div>
-    <div class="bl-subtitle">Cryo-EM reaches resolutions rivaling X-ray crystallography</div>
+    <div class="bl-subtitle">Cryo-EM reaches resolutions rivaling X-ray crystallography (2015)</div>
   </div>
   <div class="bl-content">
-    <div class="bl-structure-grid">
-      <div class="bl-struct-item" style="background:#0d1117">
-        <img src="../cryo-slides-img/s011_gamma_secretase_ab_sharp.png" alt="Gamma-secretase micrograph">
-        <div class="struct-overlay">
-          <div class="so-title">Gamma-secretase — Micrograph</div>
-          <div class="so-desc">~170 kDa, AD drug target</div>
+    <div class="bl-rich-timeline">
+      <div class="rt-line"></div>
+      <div class="rt-items">
+
+        <!-- 2015: Gamma-secretase 3.4 A — HIGHLIGHT -->
+        <div class="rt-item highlight">
+          <div class="rt-img-area">
+            <div class="rt-img-box" style="flex-direction:row;gap:4px">
+              <img src="../cryo-slides-img/s011_gamma_secretase_ab_sharp.png" alt="Gamma-secretase micrograph" style="max-width:48%;max-height:100%">
+              <img src="../cryo-slides-img/s011_25_sharp.png" alt="Gamma-secretase structure" style="max-width:48%;max-height:100%">
+            </div>
+          </div>
+          <div class="rt-year-row">
+            <span class="rt-year-badge" style="background:#2563eb">2015</span>
+          </div>
+          <div class="rt-details">
+            <div class="rt-card-title">Gamma-secretase 3.4 A</div>
+            <div class="rt-card-author"><a href="https://doi.org/10.1038/nature14892" target="_blank">Bai et al., Nature (2015)</a></div>
+            <ul class="rt-detail-list">
+              <li><strong>~170 kDa</strong> membrane protein complex</li>
+              <li>Alzheimer's disease drug target</li>
+              <li>De novo atomic model from cryo-EM density</li>
+              <li>PS1 mutation hotspots mapped</li>
+            </ul>
+            <span class="rt-badge" style="background:#eff6ff;color:#2563eb">Drug target revealed</span>
+            <div class="rt-insight">Membrane protein drug target solved — de novo model without any crystal structure.</div>
+          </div>
         </div>
-      </div>
-      <div class="bl-struct-item" style="background:#0d1117">
-        <img src="../cryo-slides-img/s011_25_sharp.png" alt="Gamma-secretase structure">
-        <div class="struct-overlay">
-          <div class="so-title">Gamma-secretase — 3.4 A</div>
-          <div class="so-desc">Mutation hotspots mapped in PS1</div>
+
+        <!-- 2015: 20S Proteasome 2.8 A -->
+        <div class="rt-item">
+          <div class="rt-img-area">
+            <div class="rt-img-box" style="flex-direction:row;gap:4px">
+              <img src="../cryo-slides-img/s011_campbell_2015_fig1_sharp.png" alt="20S proteasome micrograph" style="max-width:48%;max-height:100%">
+              <img src="../cryo-slides-img/s011_campbell_2015_sharp.png" alt="20S proteasome 2.8 A density" style="max-width:48%;max-height:100%">
+            </div>
+          </div>
+          <div class="rt-year-row">
+            <span class="rt-year-badge" style="background:#059669">2015</span>
+          </div>
+          <div class="rt-details">
+            <div class="rt-card-title">20S Proteasome 2.8 A</div>
+            <div class="rt-card-author"><a href="https://doi.org/10.7554/eLife.06380" target="_blank">Campbell et al., eLife (2015)</a></div>
+            <ul class="rt-detail-list">
+              <li><strong>700 kDa</strong>, D7 symmetry</li>
+              <li>Rotamers and ordered water molecules visible</li>
+              <li>Cryo-EM density matches X-ray quality</li>
+              <li>Viable for drug design applications</li>
+            </ul>
+            <span class="rt-badge" style="background:#f0fdf4;color:#059669">Matches X-ray</span>
+            <div class="rt-insight">Cryo-EM matches X-ray crystallography quality — viable for drug design.</div>
+          </div>
         </div>
-      </div>
-      <div class="bl-struct-item" style="background:#0d1117;grid-row:1/3">
-        <img src="../cryo-slides-img/s011_24_sharp.png" alt="Beta-gal 2.2 A">
-        <div class="struct-overlay">
-          <div class="so-title">Beta-galactosidase — 2.2 A</div>
-          <div class="so-desc">465 kDa, D2. ~800 waters, ions visible. Bottleneck = sample quality.</div>
+
+        <!-- 2015: Beta-galactosidase 2.2 A -->
+        <div class="rt-item">
+          <div class="rt-img-area">
+            <div class="rt-img-box" style="flex-direction:row;gap:4px">
+              <img src="../cryo-slides-img/s011_bartesaghi_fig_s2_ab_sharp.png" alt="Beta-gal FSC" style="max-width:48%;max-height:100%">
+              <img src="../cryo-slides-img/s011_24_sharp.png" alt="Beta-gal 2.2 A density" style="max-width:48%;max-height:100%">
+            </div>
+          </div>
+          <div class="rt-year-row">
+            <span class="rt-year-badge" style="background:#dc2626">2015</span>
+          </div>
+          <div class="rt-details">
+            <div class="rt-card-title">Beta-galactosidase 2.2 A</div>
+            <div class="rt-card-author"><a href="https://doi.org/10.1126/science.aab1576" target="_blank">Bartesaghi et al., Science (2015)</a></div>
+            <ul class="rt-detail-list">
+              <li><strong>465 kDa</strong>, D2 symmetry</li>
+              <li>Ligand, ~800 water molecules, ions all visible</li>
+              <li>Broke the 2 A barrier for cryo-EM</li>
+              <li>Sample preparation now the limiting factor</li>
+            </ul>
+            <span class="rt-badge" style="background:#fef2f2;color:#dc2626">2 A barrier broken</span>
+            <div class="rt-insight">2 A barrier broken — resolution no longer the limit; sample preparation is now the bottleneck.</div>
+          </div>
         </div>
-      </div>
-      <div class="bl-struct-item" style="background:#0d1117">
-        <img src="../cryo-slides-img/s011_campbell_2015_fig1_sharp.png" alt="20S proteasome micrograph">
-        <div class="struct-overlay">
-          <div class="so-title">20S Proteasome — Micrograph</div>
-          <div class="so-desc">700 kDa, D7 symmetry</div>
-        </div>
-      </div>
-      <div class="bl-struct-item" style="background:#0d1117">
-        <img src="../cryo-slides-img/s011_campbell_2015_sharp.png" alt="20S 2.8A density">
-        <div class="struct-overlay">
-          <div class="so-title">20S Proteasome — 2.8 A</div>
-          <div class="so-desc">Rotamers + water resolved</div>
-        </div>
+
       </div>
     </div>
   </div>
