@@ -5,7 +5,7 @@
 <title>Cryo-EM Overview — Section 1 (Brandlogy)</title>
 <style>
 /* ============================================================
-   BRANDLOGY CSS FRAMEWORK v1.0
+   BRANDLOGY CSS FRAMEWORK v2.0
    Based on Brandlogy_Template_01.pptx (1280x720 -> 1920x1080)
    Scale factor: 1.5x
    ============================================================ */
@@ -110,147 +110,6 @@ body {
 .bl-ref a:hover { text-decoration: underline; }
 
 /* ============================================================
-   LAYOUT: 3-Column Cards (.bl-3col)
-   ============================================================ */
-.bl-3col {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  height: 100%;
-}
-
-.bl-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 28px 28px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  overflow: hidden;
-}
-
-.bl-card::before {
-  content: '';
-  display: block;
-  width: 48px;
-  height: 4px;
-  border-radius: 2px;
-  margin-bottom: 20px;
-}
-.bl-card.accent-red::before    { background: #e74c3c; }
-.bl-card.accent-blue::before   { background: #3498db; }
-.bl-card.accent-orange::before { background: #e67e22; }
-.bl-card.accent-green::before  { background: #27ae60; }
-.bl-card.accent-purple::before { background: #9b59b6; }
-
-.bl-card-title {
-  font-size: 22px;
-  font-weight: 700;
-  color: #1a1a2e;
-  margin-bottom: 16px;
-}
-
-.bl-card-img {
-  width: 100%;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  overflow: hidden;
-}
-.bl-card-img img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  border-radius: 6px;
-}
-.bl-card-img.h120 { height: 120px; }
-.bl-card-img.h160 { height: 160px; }
-.bl-card-img.h200 { height: 200px; }
-.bl-card-img.h240 { height: 240px; }
-.bl-card-img.h280 { height: 280px; }
-.bl-card-img.h320 { height: 320px; }
-.bl-card-img.h360 { height: 360px; }
-
-.bl-card-list {
-  list-style: none;
-  padding: 0;
-  flex: 1;
-}
-.bl-card-list li {
-  font-size: 16px;
-  line-height: 1.45;
-  color: #333;
-  padding: 6px 0;
-  border-bottom: 1px solid #f0f0f0;
-}
-.bl-card-list li:last-child { border-bottom: none; }
-.bl-card-list li strong {
-  font-weight: 700;
-  color: #1a1a2e;
-}
-
-.bl-card-icon {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: #f8f9fa;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 16px auto;
-  font-size: 36px;
-}
-
-.bl-card-desc {
-  font-size: 15px;
-  color: #555;
-  line-height: 1.5;
-}
-
-/* ============================================================
-   LAYOUT: 2-Column Split (.bl-2col)
-   ============================================================ */
-.bl-2col {
-  display: grid;
-  gap: 30px;
-  height: 100%;
-}
-.bl-2col.split-50-50 { grid-template-columns: 1fr 1fr; }
-.bl-2col.split-30-70 { grid-template-columns: 3fr 7fr; }
-.bl-2col.split-70-30 { grid-template-columns: 7fr 3fr; }
-.bl-2col.split-40-60 { grid-template-columns: 4fr 6fr; }
-
-/* ============================================================
-   LAYOUT: 4-Column Cards (.bl-4col)
-   ============================================================ */
-.bl-4col {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  height: 100%;
-}
-
-/* ============================================================
-   LAYOUT: Full Width (.bl-full)
-   ============================================================ */
-.bl-full {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.bl-full img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  border-radius: 8px;
-}
-
-/* ============================================================
    LAYOUT: Hero/Cover (.bl-hero)
    ============================================================ */
 .bl-hero {
@@ -280,66 +139,1043 @@ body {
 }
 
 /* ============================================================
-   LAYOUT: Banner
+   LAYOUT: Problem/Solution Split (.bl-problem-solution)
    ============================================================ */
-.bl-banner {
-  background: #1a1a2e;
+.bl-problem-solution {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  gap: 0;
+  height: 100%;
+  align-items: stretch;
+}
+.bl-ps-card {
+  border-radius: 16px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.bl-ps-card.problem {
+  background: linear-gradient(135deg, #1a1a2e 0%, #2d1b3d 100%);
   color: #fff;
-  padding: 14px 32px;
-  border-radius: 12px;
-  font-size: 18px;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 24px;
+}
+.bl-ps-card.solution {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%);
+  border: 2px solid #bbf7d0;
+}
+.bl-ps-card .ps-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+.bl-ps-card.problem .ps-icon { background: rgba(231,76,60,0.3); }
+.bl-ps-card.solution .ps-icon { background: rgba(39,174,96,0.2); }
+.bl-ps-card .ps-title {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+.bl-ps-card.problem .ps-title { color: #e74c3c; }
+.bl-ps-card.solution .ps-title { color: #059669; }
+.bl-ps-card .ps-list {
+  list-style: none;
+  padding: 0;
+  flex: 1;
+}
+.bl-ps-card .ps-list li {
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.bl-ps-card.solution .ps-list li {
+  color: #333;
+  border-bottom-color: #e0f0e0;
+}
+.bl-ps-card .ps-list li:last-child { border-bottom: none; }
+.bl-ps-card .ps-list li strong { font-weight: 700; }
+.bl-ps-card.problem .ps-list li strong { color: #f8b4b4; }
+.bl-ps-card.solution .ps-list li strong { color: #059669; }
+.bl-ps-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  color: #9b59b6;
+  font-weight: 800;
 }
 
 /* ============================================================
-   Image Grid helpers
+   LAYOUT: Comparison (.bl-compare)
    ============================================================ */
-.bl-img-grid {
+.bl-compare {
   display: grid;
-  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
   height: 100%;
 }
-.bl-img-grid.cols-2 { grid-template-columns: 1fr 1fr; }
-.bl-img-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
-.bl-img-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
-.bl-img-grid.rows-2 { grid-template-rows: 1fr 1fr; }
-
-.bl-img-item {
+.bl-compare-side {
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.bl-compare-side.left {
+  background: linear-gradient(180deg, #fdf2e9 0%, #fbeadc 100%);
+  border-radius: 16px 0 0 16px;
+  border-right: 3px solid #e0e0e8;
+}
+.bl-compare-side.right {
+  background: linear-gradient(180deg, #eaf4fb 0%, #dceefb 100%);
+  border-radius: 0 16px 16px 0;
+}
+.bl-compare-side .compare-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  align-self: flex-start;
+}
+.bl-compare-side.left .compare-badge { background: #e67e22; color: #fff; }
+.bl-compare-side.right .compare-badge { background: #2980b9; color: #fff; }
+.bl-compare-side .compare-title {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+.bl-compare-side.left .compare-title { color: #c0392b; }
+.bl-compare-side.right .compare-title { color: #2471a3; }
+.bl-compare-side .compare-img {
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
   background: #fff;
-  border: 1.5px solid #e0e0e8;
   border-radius: 10px;
+  padding: 8px;
+  overflow: hidden;
+}
+.bl-compare-side .compare-img img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+}
+.bl-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  flex: 1;
+}
+.bl-compare-table td {
+  padding: 7px 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #333;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  vertical-align: top;
+}
+.bl-compare-table td:first-child {
+  font-weight: 700;
+  width: 120px;
+  color: #555;
+}
+
+/* ============================================================
+   LAYOUT: Feature Grid (.bl-feature-grid)
+   ============================================================ */
+.bl-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  height: 100%;
+}
+.bl-feature-item {
+  background: #fff;
+  border-radius: 16px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  transition: transform 0.2s;
 }
-.bl-img-item img {
+.bl-feature-item .feature-img {
+  height: 55%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow: hidden;
+}
+.bl-feature-item .feature-img img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.bl-feature-item .feature-body {
+  flex: 1;
+  padding: 16px 22px 20px;
+  display: flex;
+  flex-direction: column;
+  border-top: 3px solid #e0e0e8;
+}
+.bl-feature-item .feature-body h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin-bottom: 8px;
+}
+.bl-feature-item .feature-body ul {
+  list-style: none;
+  padding: 0;
+  flex: 1;
+}
+.bl-feature-item .feature-body li {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.45;
+  padding: 3px 0 3px 12px;
+  position: relative;
+}
+.bl-feature-item .feature-body li::before {
+  content: '\2022';
+  position: absolute;
+  left: 0;
+  color: #aaa;
+}
+
+/* ============================================================
+   LAYOUT: Journey Split (.bl-journey)
+   ============================================================ */
+.bl-journey {
+  display: grid;
+  grid-template-columns: 6fr 4fr;
+  gap: 30px;
+  height: 100%;
+}
+.bl-journey-img {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+.bl-journey-img img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.bl-journey-text {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+.bl-journey-text .era-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 22px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  border-left: 5px solid;
+}
+.bl-journey-text .era-card.before { border-color: #e74c3c; }
+.bl-journey-text .era-card.after { border-color: #27ae60; }
+.bl-journey-text .era-card h4 {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+.bl-journey-text .era-card.before h4 { color: #e74c3c; }
+.bl-journey-text .era-card.after h4 { color: #27ae60; }
+.bl-journey-text .era-card ul {
+  list-style: none;
+  padding: 0;
+}
+.bl-journey-text .era-card li {
+  font-size: 15px;
+  color: #444;
+  line-height: 1.45;
+  padding: 3px 0;
+}
+.bl-journey-text .era-card li strong { color: #1a1a2e; }
+
+/* ============================================================
+   LAYOUT: Timeline (.bl-timeline)
+   ============================================================ */
+.bl-timeline {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+}
+.bl-timeline-line {
+  position: absolute;
+  top: 50%;
+  left: 40px;
+  right: 40px;
+  height: 4px;
+  background: linear-gradient(90deg, #3498db 0%, #2ecc71 100%);
+  border-radius: 2px;
+  z-index: 0;
+}
+.bl-timeline-items {
+  display: flex;
+  width: 100%;
+  gap: 24px;
+  position: relative;
+  z-index: 1;
+}
+.bl-timeline-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.bl-timeline-top {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 12px;
+}
+.bl-timeline-top .tl-img {
+  background: #fff;
+  border-radius: 10px;
+  border: 2px solid #e0e0e8;
+  overflow: hidden;
+  margin: 0 auto;
+  width: 90%;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+.bl-timeline-top .tl-img img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.bl-timeline-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: 4px solid #3498db;
+  margin: 0 auto;
+  flex-shrink: 0;
+  z-index: 2;
+}
+.bl-timeline-bottom {
+  flex: 1;
+  padding-top: 12px;
+}
+.bl-timeline-bottom .tl-year {
+  font-size: 28px;
+  font-weight: 900;
+  color: #2c3e50;
+  margin-bottom: 6px;
+}
+.bl-timeline-bottom .tl-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.bl-timeline-bottom .tl-desc {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.45;
+}
+.bl-timeline-bottom .tl-badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* ============================================================
+   LAYOUT: Gallery (.bl-gallery)
+   ============================================================ */
+.bl-gallery {
+  display: flex;
+  gap: 24px;
+  height: 100%;
+  align-items: stretch;
+}
+.bl-gallery-item {
+  flex: 1;
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+.bl-gallery-item .gal-img {
   flex: 1;
   min-height: 0;
-  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  overflow: hidden;
+}
+.bl-gallery-item .gal-img img {
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
-  padding: 6px;
 }
-.bl-img-item .caption {
+.bl-gallery-item .gal-caption {
   flex-shrink: 0;
-  padding: 8px 12px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #444;
-  text-align: center;
+  padding: 14px 18px;
   background: #fafafa;
-  border-top: 1px solid #f0f0f5;
+  border-top: 1px solid #eee;
 }
-.bl-img-item .desc {
-  flex-shrink: 0;
-  padding: 4px 12px 8px;
+.bl-gallery-item .gal-caption .gal-year {
+  font-size: 24px;
+  font-weight: 900;
+  color: #2c3e50;
+  margin-bottom: 3px;
+}
+.bl-gallery-item .gal-caption .gal-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 4px;
+}
+.bl-gallery-item .gal-caption .gal-desc {
   font-size: 13px;
   color: #666;
-  text-align: center;
-  background: #fafafa;
+  line-height: 1.4;
 }
+.bl-gallery-item .gal-caption .gal-badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ============================================================
+   LAYOUT: Structure Grid (.bl-structure-grid)
+   ============================================================ */
+.bl-structure-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr 1fr;
+  gap: 16px;
+  height: 100%;
+}
+.bl-struct-item {
+  position: relative;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.bl-struct-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8px;
+}
+.bl-struct-item .struct-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px 14px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.85));
+  color: #fff;
+}
+.bl-struct-item .struct-overlay .so-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+.bl-struct-item .struct-overlay .so-desc {
+  font-size: 12px;
+  color: rgba(255,255,255,0.8);
+  margin-top: 2px;
+}
+
+/* ============================================================
+   LAYOUT: Magazine Covers (.bl-covers)
+   ============================================================ */
+.bl-covers {
+  display: flex;
+  gap: 40px;
+  height: 100%;
+  justify-content: center;
+  align-items: stretch;
+  padding: 0 40px;
+}
+.bl-cover-item {
+  flex: 1;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.bl-cover-item .cover-frame {
+  flex: 1;
+  min-height: 0;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 4px 6px 20px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.bl-cover-item .cover-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.bl-cover-item .cover-info {
+  flex-shrink: 0;
+  padding-top: 14px;
+}
+.bl-cover-item .cover-info .cover-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+.bl-cover-item .cover-info .cover-desc {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+}
+.bl-cover-item .cover-info .cover-cite {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+.bl-cover-item .cover-info .cover-cite a { color: inherit; text-decoration: none; }
+.bl-cover-item .cover-info .cover-cite a:hover { text-decoration: underline; }
+
+/* ============================================================
+   LAYOUT: Profile Cards (.bl-profiles)
+   ============================================================ */
+.bl-profiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  height: 100%;
+}
+.bl-profile-card {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+.bl-profile-banner {
+  padding: 16px 20px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+.bl-profile-photo {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 20px auto 12px;
+  border: 4px solid #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  flex-shrink: 0;
+}
+.bl-profile-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.bl-profile-body {
+  flex: 1;
+  padding: 0 24px 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+.bl-profile-body .pname {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin-bottom: 4px;
+}
+.bl-profile-body .prole {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.bl-profile-body .paffil {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 10px;
+}
+.bl-profile-body .pcontrib {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.5;
+  flex: 1;
+}
+.bl-profile-footer {
+  flex-shrink: 0;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* ============================================================
+   LAYOUT: Chart + Insights (.bl-chart-layout)
+   ============================================================ */
+.bl-chart-layout {
+  display: grid;
+  grid-template-columns: 55fr 45fr;
+  gap: 36px;
+  height: 100%;
+}
+.bl-chart-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bl-chart-insights {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+}
+
+/* ============================================================
+   LAYOUT: Full Width (.bl-full)
+   ============================================================ */
+.bl-full {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.bl-full img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* ============================================================
+   LAYOUT: Dream/Cinematic (.bl-cinema)
+   ============================================================ */
+.bl-cinema {
+  display: grid;
+  grid-template-columns: 6fr 4fr;
+  gap: 30px;
+  height: 100%;
+}
+.bl-cinema-img {
+  background: #0a0a14;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.bl-cinema-img img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.bl-cinema-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+.bl-cinema-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+}
+.bl-cinema-item .ci-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.bl-cinema-item .ci-text h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.bl-cinema-item .ci-text p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.45;
+}
+
+/* ============================================================
+   LAYOUT: Workflow Image + Steps (.bl-workflow)
+   ============================================================ */
+.bl-workflow {
+  display: grid;
+  grid-template-columns: 7fr 3fr;
+  gap: 30px;
+  height: 100%;
+}
+.bl-workflow-img {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.bl-workflow-img img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.bl-workflow-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+}
+.bl-workflow-step {
+  padding: 14px 18px;
+  border-radius: 10px;
+  border-left: 4px solid;
+}
+.bl-workflow-step h4 {
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.bl-workflow-step p {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.4;
+}
+.bl-workflow-step .step-time {
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+/* ============================================================
+   LAYOUT: 2x2 Process Flow (.bl-process-flow)
+   ============================================================ */
+.bl-process-flow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 24px;
+  height: 100%;
+  position: relative;
+}
+.bl-step-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  border-left: 6px solid;
+  position: relative;
+}
+.bl-step-card .step-num {
+  font-size: 36px;
+  font-weight: 900;
+  opacity: 0.12;
+  position: absolute;
+  top: 12px;
+  right: 18px;
+}
+.bl-step-card .step-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+.bl-step-card .step-list {
+  list-style: none;
+  padding: 0;
+  flex: 1;
+}
+.bl-step-card .step-list li {
+  font-size: 15px;
+  color: #444;
+  line-height: 1.45;
+  padding: 5px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+.bl-step-card .step-list li:last-child { border-bottom: none; }
+.bl-step-card .step-list li strong { font-weight: 700; color: #1a1a2e; }
+.bl-step-card .step-time {
+  margin-top: auto;
+  font-weight: 700;
+  font-size: 14px;
+  padding-top: 8px;
+}
+/* Flow arrows */
+.bl-flow-arrows {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+.bl-flow-arrow {
+  position: absolute;
+  font-size: 32px;
+  color: #ccc;
+  font-weight: 700;
+}
+
+/* ============================================================
+   LAYOUT: Stats (.bl-stats-layout)
+   ============================================================ */
+.bl-stats-layout {
+  display: grid;
+  grid-template-columns: 4fr 6fr;
+  gap: 30px;
+  height: 100%;
+}
+.bl-stats-img {
+  background: #fff;
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.bl-stats-img img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.bl-stats-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+.bl-stat-row {
+  display: flex;
+  gap: 16px;
+}
+.bl-stat-box {
+  flex: 1;
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.bl-stat-number {
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.bl-stat-label {
+  font-size: 14px;
+  color: #666;
+  font-weight: 600;
+}
+.bl-info-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  border-left: 5px solid;
+}
+.bl-info-card h4 {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+.bl-info-card ul {
+  list-style: none;
+  padding: 0;
+}
+.bl-info-card li {
+  font-size: 15px;
+  color: #444;
+  line-height: 1.5;
+  padding: 3px 0;
+}
+.bl-info-card li strong { font-weight: 700; color: #1a1a2e; }
+
+/* ============================================================
+   LAYOUT: Problems with icons (.bl-problems)
+   ============================================================ */
+.bl-problems-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  flex: 1;
+  min-height: 0;
+}
+.bl-problem-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  overflow: hidden;
+  border-top: 4px solid;
+}
+.bl-problem-card .prob-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin-bottom: 14px;
+}
+.bl-problem-card .prob-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+.bl-problem-card .prob-list {
+  list-style: none;
+  padding: 0;
+  flex: 1;
+}
+.bl-problem-card .prob-list li {
+  font-size: 15px;
+  color: #444;
+  line-height: 1.45;
+  padding: 6px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+.bl-problem-card .prob-list li:last-child { border-bottom: none; }
+.bl-problem-card .prob-list li strong { font-weight: 700; color: #1a1a2e; }
+.bl-callout {
+  flex-shrink: 0;
+  border-radius: 12px;
+  padding: 18px 28px;
+  text-align: center;
+}
+.bl-callout h4 {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.bl-callout p {
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   LAYOUT: Reality 3-col with images (.bl-reality)
+   ============================================================ */
+.bl-reality {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  height: 100%;
+}
+.bl-reality-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  border-top: 4px solid;
+}
+.bl-reality-card .rc-img {
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  overflow: hidden;
+}
+.bl-reality-card .rc-img img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.bl-reality-card .rc-body {
+  flex: 1;
+  padding: 16px 22px 20px;
+}
+.bl-reality-card .rc-body h3 {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+.bl-reality-card .rc-body ul {
+  list-style: none;
+  padding: 0;
+}
+.bl-reality-card .rc-body li {
+  font-size: 15px;
+  color: #444;
+  line-height: 1.45;
+  padding: 5px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+.bl-reality-card .rc-body li:last-child { border-bottom: none; }
+.bl-reality-card .rc-body li strong { font-weight: 700; color: #1a1a2e; }
 
 /* ============================================================
    Insight/callout boxes
@@ -357,52 +1193,17 @@ body {
 .bl-insight.orange { background: #fffbeb; color: #d97706; border-left: 4px solid #d97706; }
 
 /* ============================================================
-   Nobel card
+   Sizing chart (slide 17)
    ============================================================ */
-.bl-nobel-card {
-  background: #fff;
-  border-radius: 12px;
-  border: 1.5px solid #e0e0e8;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  overflow: hidden;
-}
-.bl-nobel-card .photo {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-bottom: 14px;
-  flex-shrink: 0;
-}
-.bl-nobel-card .photo img {
+.bl-sizing-chart {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-}
-.bl-nobel-card .name {
-  font-size: 20px;
-  font-weight: 800;
-  color: #1a1a2e;
-  margin-bottom: 4px;
-}
-.bl-nobel-card .role {
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-.bl-nobel-card .affiliation {
-  font-size: 12px;
-  color: #888;
-  margin-bottom: 8px;
-}
-.bl-nobel-card .contribution {
-  font-size: 14px;
-  color: #555;
-  line-height: 1.5;
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 16px;
+  overflow: hidden;
 }
 
 /* ============================================================
@@ -466,15 +1267,12 @@ body {
 .text-muted  { color: #999; }
 .text-sm     { font-size: 14px; }
 .mt-auto     { margin-top: auto; }
-.mb-12       { margin-bottom: 12px; }
-.gap-16      { gap: 16px; }
-.flex-1      { flex: 1; min-height: 0; min-width: 0; }
 </style>
 </head>
 <body>
 
 <!-- ============================================================
-     SLIDE 1: Title / Cover (Hero)
+     SLIDE 1: Title / Cover (Hero) — KEEP AS-IS
      ============================================================ -->
 <div class="bl-slide active" data-n="1">
   <div class="bl-hero" style="background:#0f0f1a">
@@ -490,7 +1288,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 2: What is Cryo-EM? (Hero — tweet on blurred bg)
+     SLIDE 2: What is Cryo-EM? (Hero — tweet on blurred bg) — KEEP AS-IS
      ============================================================ -->
 <div class="bl-slide" data-n="2">
   <div class="bl-hero" style="background:#0a0a14">
@@ -501,7 +1299,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 3: EM & Biological Samples (2-col: Problem / Solution)
+     SLIDE 3: EM & Biological Samples (Problem / Solution)
      ============================================================ -->
 <div class="bl-slide" data-n="3">
   <div class="bl-header">
@@ -510,10 +1308,11 @@ body {
     <div class="bl-subtitle">Why do we need cryo-EM?</div>
   </div>
   <div class="bl-content">
-    <div class="bl-2col split-50-50">
-      <div class="bl-card accent-red">
-        <div class="bl-card-title">The Problem</div>
-        <ul class="bl-card-list">
+    <div class="bl-problem-solution">
+      <div class="bl-ps-card problem">
+        <div class="ps-icon">&#9888;</div>
+        <div class="ps-title">The Problem</div>
+        <ul class="ps-list">
           <li><strong>Vacuum damage</strong> — Water evaporates instantly in EM column vacuum</li>
           <li><strong>Radiation damage</strong> — High-energy electrons break chemical bonds</li>
           <li><strong>Fixation artifacts</strong> — Chemical fixation alters native conformation</li>
@@ -521,9 +1320,11 @@ body {
           <li><strong>Charging</strong> — Non-conductive specimens accumulate charge</li>
         </ul>
       </div>
-      <div class="bl-card accent-green">
-        <div class="bl-card-title">The Cryo Solution</div>
-        <ul class="bl-card-list">
+      <div class="bl-ps-arrow">&#10132;</div>
+      <div class="bl-ps-card solution">
+        <div class="ps-icon">&#10004;</div>
+        <div class="ps-title">The Cryo Solution</div>
+        <ul class="ps-list">
           <li><strong>Vitreous ice</strong> — Rapid cooling (~10&#x2074; C/s) in liquid ethane</li>
           <li><strong>Native state</strong> — Proteins remain in solution-like conformation</li>
           <li><strong>Reduced damage</strong> — Imaging at -196 C slows radiation damage</li>
@@ -541,7 +1342,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 4: Conventional TEM vs Cryo-EM (2-col)
+     SLIDE 4: Conventional TEM vs Cryo-EM (Comparison Split)
      ============================================================ -->
 <div class="bl-slide" data-n="4">
   <div class="bl-header">
@@ -550,30 +1351,32 @@ body {
     <div class="bl-subtitle">Two approaches to electron microscopy of biological specimens</div>
   </div>
   <div class="bl-content">
-    <div class="bl-2col split-50-50">
-      <div class="bl-card accent-orange">
-        <div class="bl-card-title">Conventional TEM</div>
-        <ul class="bl-card-list">
-          <li><strong>Preparation:</strong> Chemical fixation, dehydration, heavy metal staining</li>
-          <li><strong>Advantages:</strong> High contrast, simple prep, radiation resistant</li>
-          <li><strong>Limitations:</strong> Artifacts; limited resolution (~15-20 A); surface only</li>
-          <li><strong>Best for:</strong> Quick screening, morphology assessment</li>
-        </ul>
-        <div class="bl-card-img h160" style="margin-top:auto">
+    <div class="bl-compare">
+      <div class="bl-compare-side left">
+        <span class="compare-badge">Conventional</span>
+        <div class="compare-title">Conventional TEM</div>
+        <div class="compare-img">
           <img src="../cryo-slides-img/neg_stain_crop.jpg" alt="Negative stain micrograph">
         </div>
+        <table class="bl-compare-table">
+          <tr><td>Prep</td><td>Chemical fixation, dehydration, heavy metal staining</td></tr>
+          <tr><td>Pros</td><td>High contrast, simple prep, radiation resistant</td></tr>
+          <tr><td>Limits</td><td>Artifacts; limited resolution (~15-20 A); surface only</td></tr>
+          <tr><td>Best for</td><td>Quick screening, morphology assessment</td></tr>
+        </table>
       </div>
-      <div class="bl-card accent-green">
-        <div class="bl-card-title">Cryo-EM</div>
-        <ul class="bl-card-list">
-          <li><strong>Preparation:</strong> Flash-freezing in vitreous ice — no fixation/staining</li>
-          <li><strong>Advantages:</strong> Native state, near-atomic resolution (&le;2 A)</li>
-          <li><strong>Limitations:</strong> Low SNR, radiation sensitivity, expensive equipment</li>
-          <li><strong>Best for:</strong> High-resolution structures, membrane proteins</li>
-        </ul>
-        <div class="bl-card-img h160" style="margin-top:auto">
+      <div class="bl-compare-side right">
+        <span class="compare-badge">Modern</span>
+        <div class="compare-title">Cryo-EM</div>
+        <div class="compare-img">
           <img src="../cryo-slides-img/cryo_em_crop.jpg" alt="Cryo-EM micrograph">
         </div>
+        <table class="bl-compare-table">
+          <tr><td>Prep</td><td>Flash-freezing in vitreous ice — no fixation/staining</td></tr>
+          <tr><td>Pros</td><td>Native state, near-atomic resolution (&le;2 A)</td></tr>
+          <tr><td>Limits</td><td>Low SNR, radiation sensitivity, expensive equipment</td></tr>
+          <tr><td>Best for</td><td>High-resolution structures, membrane proteins</td></tr>
+        </table>
       </div>
     </div>
   </div>
@@ -581,7 +1384,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 5: Key Components of Modern Cryo-TEM (3-col with images)
+     SLIDE 5: Key Components of Modern Cryo-TEM (Feature Grid)
      ============================================================ -->
 <div class="bl-slide" data-n="5">
   <div class="bl-header">
@@ -589,43 +1392,49 @@ body {
     <div class="bl-title">Key Components of Modern Cryo-TEM</div>
   </div>
   <div class="bl-content">
-    <div class="bl-3col">
-      <div class="bl-card accent-purple">
-        <div class="bl-card-title">Cryo Holder / Autoloader</div>
-        <div class="bl-card-img h200">
+    <div class="bl-feature-grid">
+      <div class="bl-feature-item" style="border-top:4px solid #9b59b6">
+        <div class="feature-img" style="background:#faf5ff">
           <img src="../cryo-slides-img/s007_8_nocap.png" alt="Krios autoloader">
         </div>
-        <ul class="bl-card-list">
-          <li>Maintains specimen at -180 C (liquid nitrogen)</li>
-          <li>Autoloader cassette holds up to 12 grids</li>
-          <li>Preserves vacuum during grid exchange</li>
-          <li>Enables unattended multi-grid collection</li>
-        </ul>
+        <div class="feature-body">
+          <h3 style="color:#9b59b6">Cryo Holder / Autoloader</h3>
+          <ul>
+            <li>Maintains specimen at -180 C (liquid nitrogen)</li>
+            <li>Autoloader cassette holds up to 12 grids</li>
+            <li>Preserves vacuum during grid exchange</li>
+            <li>Enables unattended multi-grid collection</li>
+          </ul>
+        </div>
       </div>
-      <div class="bl-card accent-blue">
-        <div class="bl-card-title">Energy Filter (Zero-loss)</div>
-        <div class="bl-card-img h200">
+      <div class="bl-feature-item" style="border-top:4px solid #3498db">
+        <div class="feature-img" style="background:#f0f7ff">
           <img src="../cryo-slides-img/s007_5.png" alt="Energy filter diagram">
         </div>
-        <ul class="bl-card-list">
-          <li>Prism separates electrons by energy loss</li>
-          <li>Energy slit selects zero-loss electrons</li>
-          <li>Removes inelastic scattering — improves SNR</li>
-          <li>Essential for thick specimens (&gt;50 nm)</li>
-        </ul>
+        <div class="feature-body">
+          <h3 style="color:#2980b9">Energy Filter (Zero-loss)</h3>
+          <ul>
+            <li>Prism separates electrons by energy loss</li>
+            <li>Energy slit selects zero-loss electrons</li>
+            <li>Removes inelastic scattering — improves SNR</li>
+            <li>Essential for thick specimens (&gt;50 nm)</li>
+          </ul>
+        </div>
       </div>
-      <div class="bl-card accent-green">
-        <div class="bl-card-title">Direct Electron Detector</div>
-        <div class="bl-card-img h200" style="flex-direction:column;gap:4px">
+      <div class="bl-feature-item" style="border-top:4px solid #27ae60">
+        <div class="feature-img" style="background:#f0faf5;flex-direction:column;gap:4px">
           <img src="../cryo-slides-img/s007_6.png" alt="Indirect vs Direct" style="max-height:48%">
           <img src="../cryo-slides-img/s007_7.png" alt="DQE comparison" style="max-height:48%">
         </div>
-        <ul class="bl-card-list">
-          <li>No scintillator — direct electron counting on CMOS</li>
-          <li>DQE &gt;2x over film/CCD at all frequencies</li>
-          <li>Single electron counting mode maximizes SNR</li>
-          <li>Movie-mode enables motion correction</li>
-        </ul>
+        <div class="feature-body">
+          <h3 style="color:#27ae60">Direct Electron Detector</h3>
+          <ul>
+            <li>No scintillator — direct electron counting on CMOS</li>
+            <li>DQE &gt;2x over film/CCD at all frequencies</li>
+            <li>Single electron counting mode maximizes SNR</li>
+            <li>Movie-mode enables motion correction</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -637,7 +1446,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 6: From Blobs to High Resolution (2-col 30/70)
+     SLIDE 6: From Blobs to High Resolution (Journey layout)
      ============================================================ -->
 <div class="bl-slide" data-n="6">
   <div class="bl-header">
@@ -646,29 +1455,30 @@ body {
     <div class="bl-subtitle">The direct electron detector transformed cryo-EM overnight</div>
   </div>
   <div class="bl-content">
-    <div class="bl-2col split-40-60">
-      <div style="display:flex;flex-direction:column;gap:20px;height:100%">
-        <div class="bl-card accent-red" style="flex:1">
-          <div class="bl-card-title">Before 2013</div>
-          <ul class="bl-card-list">
+    <div class="bl-journey">
+      <div class="bl-journey-img">
+        <img src="../cryo-slides-img/s008_9_crop.png" alt="Resolution before and after DED">
+      </div>
+      <div class="bl-journey-text">
+        <div class="era-card before">
+          <h4>Before 2013</h4>
+          <ul>
             <li>Resolution typically <strong>8-15 A</strong> ("blobology")</li>
             <li>Secondary structure barely visible</li>
             <li>CCD detectors + film: poor DQE</li>
             <li>No motion correction — beam-induced blur</li>
           </ul>
         </div>
-        <div class="bl-card accent-green" style="flex:1">
-          <div class="bl-card-title">After 2013</div>
-          <ul class="bl-card-list">
+        <div style="text-align:center;font-size:36px;color:#9b59b6;font-weight:800;padding:4px 0">&#8595;</div>
+        <div class="era-card after">
+          <h4>After 2013</h4>
+          <ul>
             <li>Routine <strong>2-4 A</strong> resolution</li>
             <li>Side chains, ligands, water molecules visible</li>
             <li>Direct electron detectors: electron counting</li>
             <li>Movie-mode + motion correction — sharp images</li>
           </ul>
         </div>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:center;background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
-        <img src="../cryo-slides-img/s008_9_crop.png" alt="Resolution before and after DED" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px">
       </div>
     </div>
   </div>
@@ -680,7 +1490,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 7: History 1968-1982 (3-col milestone cards)
+     SLIDE 7: History 1968-1982 (Timeline)
      ============================================================ -->
 <div class="bl-slide" data-n="7">
   <div class="bl-header">
@@ -689,43 +1499,51 @@ body {
     <div class="bl-subtitle">Foundational milestones — Part 1</div>
   </div>
   <div class="bl-content">
-    <div class="bl-3col">
-      <div class="bl-card accent-green">
-        <div class="bl-card-title">1968 — First 3D Reconstruction</div>
-        <div class="bl-card-img h200">
-          <img src="../cryo-slides-img/s010_12.png?v=2" alt="Fourier reconstruction scheme">
+    <div class="bl-timeline">
+      <div class="bl-timeline-line"></div>
+      <div class="bl-timeline-items">
+        <div class="bl-timeline-item">
+          <div class="bl-timeline-top">
+            <div class="tl-img">
+              <img src="../cryo-slides-img/s010_12.png?v=2" alt="Fourier reconstruction scheme">
+            </div>
+          </div>
+          <div class="bl-timeline-dot" style="border-color:#27ae60"></div>
+          <div class="bl-timeline-bottom">
+            <div class="tl-year">1968</div>
+            <div class="tl-title">First 3D Reconstruction</div>
+            <div class="tl-desc">T4 phage tail — helical Fourier reconstruction at ~20-30 A. Established Projection-Slice Theorem.</div>
+            <div class="tl-badge">Klug: Nobel Chemistry 1982</div>
+          </div>
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Specimen:</strong> T4 phage tail (helical symmetry)</li>
-          <li><strong>Method:</strong> Helical Fourier reconstruction</li>
-          <li><strong>Resolution:</strong> ~20-30 A</li>
-          <li>Klug: <strong>Nobel Prize Chemistry 1982</strong></li>
-        </ul>
-        <div class="bl-insight green" style="margin-top:auto;font-size:13px">Established Projection-Slice Theorem — foundation for all 3D reconstruction</div>
-      </div>
-      <div class="bl-card accent-green">
-        <div class="bl-card-title">1974 — Frozen Hydrated Crystals</div>
-        <div class="bl-card-img h200">
-          <img src="../cryo-slides-img/s010_13.png?v=2" alt="Catalase electron diffraction">
+        <div class="bl-timeline-item">
+          <div class="bl-timeline-top">
+            <div class="tl-img">
+              <img src="../cryo-slides-img/s010_13.png?v=2" alt="Catalase electron diffraction">
+            </div>
+          </div>
+          <div class="bl-timeline-dot" style="border-color:#3498db"></div>
+          <div class="bl-timeline-bottom">
+            <div class="tl-year">1974</div>
+            <div class="tl-title">Frozen Hydrated Crystals</div>
+            <div class="tl-desc">Catalase crystals diffracted to ~3 A when frozen hydrated. Slow cooling caused ice damage.</div>
+            <div class="tl-badge">First proof of frozen hydration</div>
+          </div>
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Specimen:</strong> Catalase crystals, frozen hydrated</li>
-          <li><strong>Result:</strong> Diffraction to ~3 A — structure preserved</li>
-          <li><strong>Limitation:</strong> Slow cooling — crystalline ice damage</li>
-        </ul>
-        <div class="bl-insight green" style="margin-top:auto;font-size:13px">First proof of frozen hydration principle. Practical vitrification solved by Dubochet in 1982</div>
-      </div>
-      <div class="bl-card accent-green">
-        <div class="bl-card-title">1982 — Vitrification</div>
-        <div class="bl-card-img h200">
-          <img src="../cryo-slides-img/s010_14.png?v=2" alt="Vitrified virus particles">
+        <div class="bl-timeline-item">
+          <div class="bl-timeline-top">
+            <div class="tl-img">
+              <img src="../cryo-slides-img/s010_14.png?v=2" alt="Vitrified virus particles">
+            </div>
+          </div>
+          <div class="bl-timeline-dot" style="border-color:#9b59b6"></div>
+          <div class="bl-timeline-bottom">
+            <div class="tl-year">1982</div>
+            <div class="tl-title">Vitrification</div>
+            <div class="tl-desc">Plunge-freezing in liquid ethane — vitreous ice preserves native state. Foundation of modern cryo-EM.</div>
+            <div class="tl-badge" style="background:#f5f3ff;color:#7c3aed">Dubochet: Nobel Chemistry 2017</div>
+          </div>
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Method:</strong> Plunge-freezing in liquid ethane</li>
-          <li><strong>Result:</strong> Vitreous ice — native state preserved</li>
-          <li><strong>Award:</strong> <strong>Nobel Prize Chemistry 2017</strong></li>
-        </ul>
-        <div class="bl-insight green" style="margin-top:auto;font-size:13px">Foundation of all modern cryo-EM sample preparation</div>
       </div>
     </div>
   </div>
@@ -737,7 +1555,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 8: History 1987-1994 (3-col milestone cards)
+     SLIDE 8: History 1987-1994 (Timeline continuation)
      ============================================================ -->
 <div class="bl-slide" data-n="8">
   <div class="bl-header">
@@ -746,43 +1564,52 @@ body {
     <div class="bl-subtitle">Foundational milestones — Part 2</div>
   </div>
   <div class="bl-content">
-    <div class="bl-3col">
-      <div class="bl-card accent-green">
-        <div class="bl-card-title">1987 — Angular Reconstitution</div>
-        <div class="bl-card-img h200" style="flex-direction:column;gap:4px">
-          <img src="../cryo-slides-img/s010_16a.png" alt="Central sections" style="max-height:48%">
-          <img src="../cryo-slides-img/s010_16b.png" alt="Great circles" style="max-height:48%">
+    <div class="bl-timeline">
+      <div class="bl-timeline-line"></div>
+      <div class="bl-timeline-items">
+        <div class="bl-timeline-item">
+          <div class="bl-timeline-top">
+            <div class="tl-img" style="flex-direction:column;gap:2px">
+              <img src="../cryo-slides-img/s010_16a.png" alt="Central sections" style="max-height:48%">
+              <img src="../cryo-slides-img/s010_16b.png" alt="Great circles" style="max-height:48%">
+            </div>
+          </div>
+          <div class="bl-timeline-dot" style="border-color:#e67e22"></div>
+          <div class="bl-timeline-bottom">
+            <div class="tl-year">1987</div>
+            <div class="tl-title">Angular Reconstitution</div>
+            <div class="tl-desc">Common-line approach — 3D from untilted images. IMAGIC basis for EMAN, RELION.</div>
+            <div class="tl-badge">Core SPA algorithm</div>
+          </div>
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Method:</strong> Common-line approach for orientation</li>
-          <li><strong>Breakthrough:</strong> 3D from untilted images alone</li>
-          <li><strong>Software:</strong> IMAGIC — basis for EMAN, RELION</li>
-        </ul>
-        <div class="bl-insight green" style="margin-top:auto;font-size:13px">Solved the orientation problem — core algorithm of all SPA software</div>
-      </div>
-      <div class="bl-card accent-green">
-        <div class="bl-card-title">1990 — First Atomic EM Structure</div>
-        <div class="bl-card-img h200">
-          <img src="../cryo-slides-img/s010_18_crop.png" alt="Bacteriorhodopsin 3.5 A">
+        <div class="bl-timeline-item">
+          <div class="bl-timeline-top">
+            <div class="tl-img">
+              <img src="../cryo-slides-img/s010_18_crop.png" alt="Bacteriorhodopsin 3.5 A">
+            </div>
+          </div>
+          <div class="bl-timeline-dot" style="border-color:#27ae60"></div>
+          <div class="bl-timeline-bottom">
+            <div class="tl-year">1990</div>
+            <div class="tl-title">First Atomic EM Structure</div>
+            <div class="tl-desc">Bacteriorhodopsin at 3.5 A — 7-TM helix + retinal by electron crystallography.</div>
+            <div class="tl-badge" style="background:#f5f3ff;color:#7c3aed">Henderson: Nobel 2017</div>
+          </div>
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Specimen:</strong> Bacteriorhodopsin 2D crystals</li>
-          <li><strong>Resolution:</strong> <strong>3.5 A</strong> — electron crystallography</li>
-          <li><strong>Structure:</strong> 7-TM helix + retinal. <strong>Nobel 2017</strong></li>
-        </ul>
-        <div class="bl-insight green" style="margin-top:auto;font-size:13px">First proof EM can achieve atomic-level structures — but required 2D crystals</div>
-      </div>
-      <div class="bl-card accent-green">
-        <div class="bl-card-title">1994 — Iterative Projection Matching</div>
-        <div class="bl-card-img h200">
-          <img src="../cryo-slides-img/s010_17_crop.png" alt="OSSP scheme">
+        <div class="bl-timeline-item">
+          <div class="bl-timeline-top">
+            <div class="tl-img">
+              <img src="../cryo-slides-img/s010_17_crop.png" alt="OSSP scheme">
+            </div>
+          </div>
+          <div class="bl-timeline-dot" style="border-color:#9b59b6"></div>
+          <div class="bl-timeline-bottom">
+            <div class="tl-year">1994</div>
+            <div class="tl-title">Iterative Projection Matching</div>
+            <div class="tl-desc">70S ribosome — iterative 3D vs image comparison. SPIDER software.</div>
+            <div class="tl-badge" style="background:#f5f3ff;color:#7c3aed">Frank: Nobel 2017</div>
+          </div>
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Specimen:</strong> 70S ribosome (~2.5 MDa)</li>
-          <li><strong>Method:</strong> Iterative 3D model vs image comparison</li>
-          <li><strong>Legacy:</strong> SPIDER. Frank: <strong>Nobel 2017</strong></li>
-        </ul>
-        <div class="bl-insight green" style="margin-top:auto;font-size:13px">Established iterative refinement — evolved into ML/Bayesian methods in RELION</div>
       </div>
     </div>
   </div>
@@ -794,7 +1621,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 9: History 1997-2008 (3-col milestone cards)
+     SLIDE 9: History 1997-2008 (Gallery)
      ============================================================ -->
 <div class="bl-slide" data-n="9">
   <div class="bl-header">
@@ -803,43 +1630,40 @@ body {
     <div class="bl-subtitle">Steady progress toward atomic resolution — Part 1</div>
   </div>
   <div class="bl-content">
-    <div class="bl-3col">
-      <div class="bl-card accent-blue">
-        <div class="bl-card-title">1997 — Sub-nanometer Virus</div>
-        <div class="bl-card-img h160" style="gap:4px">
+    <div class="bl-gallery">
+      <div class="bl-gallery-item">
+        <div class="gal-img" style="background:#f8f9fa">
           <img src="../cryo-slides-img/s011_19a_sharp.png" alt="HBV capsid" style="max-width:48%">
           <img src="../cryo-slides-img/s011_19b_sharp.png" alt="HBV colored" style="max-width:48%">
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Resolution:</strong> <strong>7.4 A</strong> / <strong>9 A</strong> — HBV capsid</li>
-          <li><strong>Achievement:</strong> First protein fold by EM alone</li>
-          <li>Two groups, same Nature issue</li>
-        </ul>
-        <div class="bl-insight blue" style="margin-top:auto;font-size:13px">Sub-nanometer EM is real — protein folds visible without crystallization</div>
+        <div class="gal-caption">
+          <div class="gal-year">1997</div>
+          <div class="gal-title">Sub-nanometer Virus</div>
+          <div class="gal-desc">HBV capsid at 7.4 A / 9 A. First protein fold by EM alone — two groups, same Nature issue.</div>
+          <div class="gal-badge" style="background:#eff6ff;color:#2563eb">Sub-nm EM is real</div>
+        </div>
       </div>
-      <div class="bl-card accent-blue">
-        <div class="bl-card-title">1998 — ML Classification</div>
-        <div class="bl-card-img h200">
+      <div class="bl-gallery-item">
+        <div class="gal-img" style="background:#f8f9fa">
           <img src="../cryo-slides-img/s011_20_sharp.png" alt="ML 2D classification">
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Innovation:</strong> Probabilistic alignment over all orientations</li>
-          <li><strong>Legacy:</strong> Foundation of RELION (Scheres, 2012)</li>
-          <li>Wrong/noise start ref — ML converges to truth</li>
-        </ul>
-        <div class="bl-insight blue" style="margin-top:auto;font-size:13px">Deterministic to probabilistic paradigm shift</div>
+        <div class="gal-caption">
+          <div class="gal-year">1998</div>
+          <div class="gal-title">ML Classification</div>
+          <div class="gal-desc">Probabilistic alignment over all orientations. Foundation of RELION (Scheres, 2012).</div>
+          <div class="gal-badge" style="background:#f5f3ff;color:#7c3aed">Paradigm shift</div>
+        </div>
       </div>
-      <div class="bl-card accent-blue">
-        <div class="bl-card-title">2008 — De Novo Atomic Model</div>
-        <div class="bl-card-img h200">
+      <div class="bl-gallery-item">
+        <div class="gal-img" style="background:#f8f9fa">
           <img src="../cryo-slides-img/s011_21_sharp.png" alt="CPV atomic model">
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Resolution:</strong> <strong>3.88 A</strong> — with CCD (before DED)</li>
-          <li><strong>Specimen:</strong> CPV capsid</li>
-          <li>De novo atomic model by single-particle EM</li>
-        </ul>
-        <div class="bl-insight blue" style="margin-top:auto;font-size:13px">Broke the 4 A barrier — cryo-EM can determine atomic structures</div>
+        <div class="gal-caption">
+          <div class="gal-year">2008</div>
+          <div class="gal-title">De Novo Atomic Model</div>
+          <div class="gal-desc">CPV capsid at 3.88 A with CCD (before DED). De novo atomic model by single-particle EM.</div>
+          <div class="gal-badge" style="background:#fef2f2;color:#dc2626">Broke the 4 A barrier</div>
+        </div>
       </div>
     </div>
   </div>
@@ -851,7 +1675,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 10: History 2012-2013 — DED era (3-col)
+     SLIDE 10: History 2012-2013 — DED era (Gallery)
      ============================================================ -->
 <div class="bl-slide" data-n="10">
   <div class="bl-header">
@@ -860,42 +1684,39 @@ body {
     <div class="bl-subtitle">Direct electron detectors transform the field — Part 2</div>
   </div>
   <div class="bl-content">
-    <div class="bl-3col">
-      <div class="bl-card accent-blue">
-        <div class="bl-card-title">2012 — DED + Motion Correction</div>
-        <div class="bl-card-img h200">
+    <div class="bl-gallery">
+      <div class="bl-gallery-item">
+        <div class="gal-img" style="background:#f8f9fa">
           <img src="../cryo-slides-img/s011_22_new_sharp.png" alt="K2 Summit motion correction">
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Technology:</strong> Gatan K2 Summit — electron counting</li>
-          <li><strong>Demo:</strong> 20S proteasome <strong>3.3 A</strong> (D7)</li>
-          <li>DQE &gt;2x over film/CCD</li>
-        </ul>
-        <div class="bl-insight blue" style="margin-top:auto;font-size:13px">Frame alignment for motion correction — key breakthrough of the Resolution Revolution</div>
+        <div class="gal-caption">
+          <div class="gal-year">2012</div>
+          <div class="gal-title">DED + Motion Correction</div>
+          <div class="gal-desc">Gatan K2 Summit — electron counting. 20S proteasome at 3.3 A (D7). DQE &gt;2x over film/CCD.</div>
+          <div class="gal-badge" style="background:#eff6ff;color:#2563eb">Key breakthrough</div>
+        </div>
       </div>
-      <div class="bl-card accent-blue">
-        <div class="bl-card-title">2013 — Ribosome from 30k Particles</div>
-        <div class="bl-card-img h200">
+      <div class="bl-gallery-item">
+        <div class="gal-img" style="background:#f8f9fa">
           <img src="../cryo-slides-img/s011_23_sharp.png" alt="Ribosome near-atomic">
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Detector:</strong> FEI Falcon DED — movie-mode</li>
-          <li><strong>Result:</strong> Near-atomic from 30,000 particles</li>
-          <li>100x fewer particles than before</li>
-        </ul>
-        <div class="bl-insight blue" style="margin-top:auto;font-size:13px">DED + RELION — 100x fewer particles needed for near-atomic resolution</div>
+        <div class="gal-caption">
+          <div class="gal-year">2013</div>
+          <div class="gal-title">Ribosome from 30k Particles</div>
+          <div class="gal-desc">FEI Falcon DED — movie-mode. Near-atomic from 30,000 particles. 100x fewer than before.</div>
+          <div class="gal-badge" style="background:#f0fdf4;color:#059669">100x fewer particles</div>
+        </div>
       </div>
-      <div class="bl-card accent-blue">
-        <div class="bl-card-title">2013 — TRPV1 at 3.4 A</div>
-        <div class="bl-card-img h200">
+      <div class="bl-gallery-item">
+        <div class="gal-img" style="background:#f8f9fa">
           <img src="../cryo-slides-img/s011_26_sharp.png" alt="TRPV1 3.4 A">
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Specimen:</strong> TRPV1 — ~300 kDa, C4 only</li>
-          <li><strong>Method:</strong> DED + motion correction + RELION</li>
-          <li>First small membrane protein at near-atomic</li>
-        </ul>
-        <div class="bl-insight blue" style="margin-top:auto;font-size:13px">"Resolution Revolution" officially started</div>
+        <div class="gal-caption">
+          <div class="gal-year">2013</div>
+          <div class="gal-title">TRPV1 at 3.4 A</div>
+          <div class="gal-desc">TRPV1 — ~300 kDa, C4 only. DED + motion correction + RELION. First small membrane protein at near-atomic.</div>
+          <div class="gal-badge" style="background:#fef2f2;color:#dc2626">Revolution begins</div>
+        </div>
       </div>
     </div>
   </div>
@@ -907,7 +1728,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 11: Breaking the 3 A Barrier (3-col)
+     SLIDE 11: Breaking the 3 A Barrier (Structure Grid)
      ============================================================ -->
 <div class="bl-slide" data-n="11">
   <div class="bl-header">
@@ -916,42 +1737,41 @@ body {
     <div class="bl-subtitle">Cryo-EM reaches resolutions rivaling X-ray crystallography</div>
   </div>
   <div class="bl-content">
-    <div class="bl-3col">
-      <div class="bl-card accent-blue">
-        <div class="bl-card-title">2015 — Gamma-secretase 3.4 A</div>
-        <div class="bl-card-img h200" style="flex-direction:column;gap:4px">
-          <img src="../cryo-slides-img/s011_gamma_secretase_ab_sharp.png" alt="Gamma-secretase micrograph" style="max-height:40%">
-          <img src="../cryo-slides-img/s011_25_sharp.png" alt="Gamma-secretase structure" style="max-height:58%">
+    <div class="bl-structure-grid">
+      <div class="bl-struct-item" style="background:#0d1117">
+        <img src="../cryo-slides-img/s011_gamma_secretase_ab_sharp.png" alt="Gamma-secretase micrograph">
+        <div class="struct-overlay">
+          <div class="so-title">Gamma-secretase — Micrograph</div>
+          <div class="so-desc">~170 kDa, AD drug target</div>
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Protein:</strong> Human gamma-secretase — ~170 kDa</li>
-          <li><strong>Finding:</strong> AD mutation hotspots mapped in PS1</li>
-          <li>Alzheimer's drug target solved without crystals</li>
-        </ul>
       </div>
-      <div class="bl-card accent-blue">
-        <div class="bl-card-title">2015 — 20S Proteasome 2.8 A</div>
-        <div class="bl-card-img h200" style="flex-direction:column;gap:4px">
-          <img src="../cryo-slides-img/s011_campbell_2015_fig1_sharp.png" alt="Micrograph" style="max-height:40%">
-          <img src="../cryo-slides-img/s011_campbell_2015_sharp.png" alt="20S 2.8A density" style="max-height:58%">
+      <div class="bl-struct-item" style="background:#0d1117">
+        <img src="../cryo-slides-img/s011_25_sharp.png" alt="Gamma-secretase structure">
+        <div class="struct-overlay">
+          <div class="so-title">Gamma-secretase — 3.4 A</div>
+          <div class="so-desc">Mutation hotspots mapped in PS1</div>
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Protein:</strong> 20S proteasome — 700 kDa, D7</li>
-          <li><strong>Finding:</strong> Rotamers + water molecules resolved</li>
-          <li>Cryo-EM matches X-ray for drug design</li>
-        </ul>
       </div>
-      <div class="bl-card accent-blue">
-        <div class="bl-card-title">2015 — Beta-galactosidase 2.2 A</div>
-        <div class="bl-card-img h200" style="flex-direction:column;gap:4px">
-          <img src="../cryo-slides-img/s011_bartesaghi_fig_s2_ab_sharp.png" alt="Micrograph" style="max-height:40%">
-          <img src="../cryo-slides-img/s011_24_sharp.png" alt="Beta-gal 2.2A" style="max-height:58%">
+      <div class="bl-struct-item" style="background:#0d1117;grid-row:1/3">
+        <img src="../cryo-slides-img/s011_24_sharp.png" alt="Beta-gal 2.2 A">
+        <div class="struct-overlay">
+          <div class="so-title">Beta-galactosidase — 2.2 A</div>
+          <div class="so-desc">465 kDa, D2. ~800 waters, ions visible. Bottleneck = sample quality.</div>
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Protein:</strong> Beta-galactosidase — 465 kDa, D2</li>
-          <li><strong>Finding:</strong> Ligand, ~800 waters, ions visible</li>
-          <li>Bottleneck = sample quality, not imaging</li>
-        </ul>
+      </div>
+      <div class="bl-struct-item" style="background:#0d1117">
+        <img src="../cryo-slides-img/s011_campbell_2015_fig1_sharp.png" alt="20S proteasome micrograph">
+        <div class="struct-overlay">
+          <div class="so-title">20S Proteasome — Micrograph</div>
+          <div class="so-desc">700 kDa, D7 symmetry</div>
+        </div>
+      </div>
+      <div class="bl-struct-item" style="background:#0d1117">
+        <img src="../cryo-slides-img/s011_campbell_2015_sharp.png" alt="20S 2.8A density">
+        <div class="struct-overlay">
+          <div class="so-title">20S Proteasome — 2.8 A</div>
+          <div class="so-desc">Rotamers + water resolved</div>
+        </div>
       </div>
     </div>
   </div>
@@ -963,7 +1783,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 12: Key Publications (3-col journal covers)
+     SLIDE 12: Key Publications (Magazine Covers)
      ============================================================ -->
 <div class="bl-slide" data-n="12">
   <div class="bl-header">
@@ -972,35 +1792,35 @@ body {
     <div class="bl-subtitle">2014-2015: Major journals summarize the cryo-EM transformation</div>
   </div>
   <div class="bl-content">
-    <div class="bl-3col">
-      <div class="bl-card accent-blue" style="padding:16px">
-        <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e0e0e8;margin-bottom:12px">
-          <img src="../cryo-slides-img/s012_29_sharp.jpg" alt="Kuhlbrandt, Science 2014" style="width:100%;height:100%;object-fit:contain">
+    <div class="bl-covers">
+      <div class="bl-cover-item">
+        <div class="cover-frame">
+          <img src="../cryo-slides-img/s012_29_sharp.jpg" alt="Kuhlbrandt, Science 2014">
         </div>
-        <div class="bl-card-title" style="font-size:18px">"The Resolution Revolution"</div>
-        <div class="bl-card-desc">Perspective that named the transformation. New detectors and processing enabled near-atomic structures.</div>
-        <div style="margin-top:auto;padding-top:8px;font-size:13px;font-weight:600;color:#3498db">
-          <a href="https://doi.org/10.1126/science.1251652" target="_blank" style="color:inherit">Kuhlbrandt, Science 343, 1443 (2014)</a>
-        </div>
-      </div>
-      <div class="bl-card accent-green" style="padding:16px">
-        <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e0e0e8;margin-bottom:12px">
-          <img src="../cryo-slides-img/s012_tibs_2015_sharp.jpg" alt="Bai et al., TiBS 2015" style="width:auto;height:100%;max-width:100%;object-fit:contain">
-        </div>
-        <div class="bl-card-title" style="font-size:18px">"How cryo-EM is revolutionizing structural biology"</div>
-        <div class="bl-card-desc">Reviews DEDs + motion correction + 3D classification. Their synergy was unexpectedly powerful.</div>
-        <div style="margin-top:auto;padding-top:8px;font-size:13px;font-weight:600;color:#27ae60">
-          <a href="https://doi.org/10.1016/j.tibs.2015.08.005" target="_blank" style="color:inherit">Bai, McMullan &amp; Scheres, TiBS 40, 49 (2015)</a>
+        <div class="cover-info">
+          <div class="cover-title">"The Resolution Revolution"</div>
+          <div class="cover-desc">Perspective that named the transformation. New detectors and processing enabled near-atomic structures.</div>
+          <div class="cover-cite" style="color:#3498db"><a href="https://doi.org/10.1126/science.1251652" target="_blank">Kuhlbrandt, Science 343, 1443 (2014)</a></div>
         </div>
       </div>
-      <div class="bl-card accent-red" style="padding:16px">
-        <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e0e0e8;margin-bottom:12px">
-          <img src="../cryo-slides-img/s012_28_sharp.jpg" alt="Callaway, Nature 2015" style="width:auto;height:100%;max-width:100%;object-fit:contain">
+      <div class="bl-cover-item">
+        <div class="cover-frame">
+          <img src="../cryo-slides-img/s012_tibs_2015_sharp.jpg" alt="Bai et al., TiBS 2015">
         </div>
-        <div class="bl-card-title" style="font-size:18px">"The revolution will not be crystallized"</div>
-        <div class="bl-card-desc">News feature on labs worldwide adopting cryo-EM. Brought the revolution to the broader community.</div>
-        <div style="margin-top:auto;padding-top:8px;font-size:13px;font-weight:600;color:#e74c3c">
-          <a href="https://doi.org/10.1038/525172a" target="_blank" style="color:inherit">Callaway, Nature 525, 172 (2015)</a>
+        <div class="cover-info">
+          <div class="cover-title">"How cryo-EM is revolutionizing structural biology"</div>
+          <div class="cover-desc">Reviews DEDs + motion correction + 3D classification. Their synergy was unexpectedly powerful.</div>
+          <div class="cover-cite" style="color:#27ae60"><a href="https://doi.org/10.1016/j.tibs.2015.08.005" target="_blank">Bai, McMullan &amp; Scheres, TiBS 40, 49 (2015)</a></div>
+        </div>
+      </div>
+      <div class="bl-cover-item">
+        <div class="cover-frame">
+          <img src="../cryo-slides-img/s012_28_sharp.jpg" alt="Callaway, Nature 2015">
+        </div>
+        <div class="cover-info">
+          <div class="cover-title">"The revolution will not be crystallized"</div>
+          <div class="cover-desc">News feature on labs worldwide adopting cryo-EM. Brought the revolution to the broader community.</div>
+          <div class="cover-cite" style="color:#e74c3c"><a href="https://doi.org/10.1038/525172a" target="_blank">Callaway, Nature 525, 172 (2015)</a></div>
         </div>
       </div>
     </div>
@@ -1008,7 +1828,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 13: Nobel Prize 2017 (3-col laureates)
+     SLIDE 13: Nobel Prize 2017 (Profile Cards)
      ============================================================ -->
 <div class="bl-slide" data-n="13">
   <div class="bl-header">
@@ -1017,27 +1837,39 @@ body {
     <div class="bl-subtitle">"for developing cryo-electron microscopy for the high-resolution structure determination of biomolecules in solution"</div>
   </div>
   <div class="bl-content">
-    <div class="bl-3col">
-      <div class="bl-nobel-card" style="border-top:4px solid #9b59b6">
-        <div class="photo"><img src="../cryo-slides-img/s013_dubochet.jpg" alt="Jacques Dubochet" style="object-position:center 20%"></div>
-        <div class="name">Jacques Dubochet</div>
-        <div class="role" style="color:#9b59b6">Vitrification &middot; 1982</div>
-        <div class="affiliation">University of Lausanne, Switzerland</div>
-        <div class="contribution">Developed rapid plunge-freezing in liquid ethane to create vitreous ice — preserving biomolecules in their native hydrated state.</div>
+    <div class="bl-profiles">
+      <div class="bl-profile-card">
+        <div class="bl-profile-banner" style="background:linear-gradient(135deg,#8e44ad,#9b59b6)">Vitrification &middot; 1982</div>
+        <div class="bl-profile-photo"><img src="../cryo-slides-img/s013_dubochet.jpg" alt="Jacques Dubochet" style="object-position:center 20%"></div>
+        <div class="bl-profile-body">
+          <div class="pname">Jacques Dubochet</div>
+          <div class="prole" style="color:#9b59b6">Sample Preparation Pioneer</div>
+          <div class="paffil">University of Lausanne, Switzerland</div>
+          <div class="pcontrib">Developed rapid plunge-freezing in liquid ethane to create vitreous ice — preserving biomolecules in their native hydrated state.</div>
+        </div>
+        <div class="bl-profile-footer" style="background:#faf5ff;color:#7c3aed">&#127942; Nobel Prize Chemistry 2017</div>
       </div>
-      <div class="bl-nobel-card" style="border-top:4px solid #3498db">
-        <div class="photo"><img src="../cryo-slides-img/s013_frank.jpg" alt="Joachim Frank" style="object-position:center 20%"></div>
-        <div class="name">Joachim Frank</div>
-        <div class="role" style="color:#3498db">Image Processing &middot; 1975-1981</div>
-        <div class="affiliation">Columbia University, New York, USA</div>
-        <div class="contribution">Pioneered single-particle reconstruction: aligning and classifying thousands of noisy 2D projections into sharp 3D structures.</div>
+      <div class="bl-profile-card">
+        <div class="bl-profile-banner" style="background:linear-gradient(135deg,#2471a3,#3498db)">Image Processing &middot; 1975-1981</div>
+        <div class="bl-profile-photo"><img src="../cryo-slides-img/s013_frank.jpg" alt="Joachim Frank" style="object-position:center 20%"></div>
+        <div class="bl-profile-body">
+          <div class="pname">Joachim Frank</div>
+          <div class="prole" style="color:#2980b9">Single-Particle Pioneer</div>
+          <div class="paffil">Columbia University, New York, USA</div>
+          <div class="pcontrib">Pioneered single-particle reconstruction: aligning and classifying thousands of noisy 2D projections into sharp 3D structures.</div>
+        </div>
+        <div class="bl-profile-footer" style="background:#eff6ff;color:#2563eb">&#127942; Nobel Prize Chemistry 2017</div>
       </div>
-      <div class="bl-nobel-card" style="border-top:4px solid #27ae60">
-        <div class="photo"><img src="../cryo-slides-img/s013_henderson.jpg" alt="Richard Henderson" style="object-position:center 20%"></div>
-        <div class="name">Richard Henderson</div>
-        <div class="role" style="color:#27ae60">EM Structure &middot; 1975-1990</div>
-        <div class="affiliation">MRC LMB, Cambridge, UK</div>
-        <div class="contribution">First atomic-resolution EM structure: bacteriorhodopsin at 3.5 A — proved EM can determine protein structures at near-atomic detail.</div>
+      <div class="bl-profile-card">
+        <div class="bl-profile-banner" style="background:linear-gradient(135deg,#1e8449,#27ae60)">EM Structure &middot; 1975-1990</div>
+        <div class="bl-profile-photo"><img src="../cryo-slides-img/s013_henderson.jpg" alt="Richard Henderson" style="object-position:center 20%"></div>
+        <div class="bl-profile-body">
+          <div class="pname">Richard Henderson</div>
+          <div class="prole" style="color:#27ae60">Atomic Resolution Pioneer</div>
+          <div class="paffil">MRC LMB, Cambridge, UK</div>
+          <div class="pcontrib">First atomic-resolution EM structure: bacteriorhodopsin at 3.5 A — proved EM can determine protein structures at near-atomic detail.</div>
+        </div>
+        <div class="bl-profile-footer" style="background:#f0fdf4;color:#059669">&#127942; Nobel Prize Chemistry 2017</div>
       </div>
     </div>
   </div>
@@ -1047,7 +1879,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 14: PDB Statistics (full-width chart image)
+     SLIDE 14: PDB Statistics (Chart + Insights)
      ============================================================ -->
 <div class="bl-slide" data-n="14">
   <div class="bl-header">
@@ -1056,11 +1888,11 @@ body {
     <div class="bl-subtitle">Cryo-EM growth: from &lt;1% (2010) to &gt;41% of new depositions (2025)</div>
   </div>
   <div class="bl-content">
-    <div class="bl-2col split-50-50" style="gap:40px">
-      <div style="display:flex;align-items:center;justify-content:center;background:#fff;border-radius:12px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+    <div class="bl-chart-layout">
+      <div class="bl-chart-box">
         <canvas id="pdb-chart" style="width:100%;height:100%"></canvas>
       </div>
-      <div style="display:flex;flex-direction:column;justify-content:center;gap:30px">
+      <div class="bl-chart-insights">
         <div class="bl-insight purple">
           <div style="font-weight:700;font-size:18px;margin-bottom:6px">2013 — Resolution Revolution</div>
           <div>Direct electron detectors replaced film/CCDs, enabling near-atomic resolution for the first time.</div>
@@ -1084,7 +1916,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 15: MW Distribution (full-width image + insights)
+     SLIDE 15: MW Distribution (Annotated Image)
      ============================================================ -->
 <div class="bl-slide" data-n="15">
   <div class="bl-header">
@@ -1093,11 +1925,15 @@ body {
     <div class="bl-subtitle">Molecular weight distribution of PDB structures by experimental method</div>
   </div>
   <div class="bl-content">
-    <div class="bl-2col split-50-50" style="gap:40px">
-      <div style="display:flex;align-items:center;justify-content:center;background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
-        <img src="../cryo-slides-img/s014_pdb_mw_kde.png" alt="MW distribution" style="width:100%;height:auto">
+    <div style="display:grid;grid-template-columns:55fr 45fr;gap:36px;height:100%">
+      <div style="position:relative;background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center">
+        <img src="../cryo-slides-img/s014_pdb_mw_kde.png" alt="MW distribution" style="width:100%;height:auto;max-height:100%;object-fit:contain">
+        <!-- Annotations overlaid on image -->
+        <div style="position:absolute;top:40%;left:18%;background:rgba(22,163,74,0.9);color:#fff;padding:6px 14px;border-radius:6px;font-size:13px;font-weight:700">NMR peak</div>
+        <div style="position:absolute;top:30%;left:45%;background:rgba(220,38,38,0.9);color:#fff;padding:6px 14px;border-radius:6px;font-size:13px;font-weight:700">X-ray peak</div>
+        <div style="position:absolute;top:50%;right:12%;background:rgba(37,99,235,0.9);color:#fff;padding:6px 14px;border-radius:6px;font-size:13px;font-weight:700">Cryo-EM peak</div>
       </div>
-      <div style="display:flex;flex-direction:column;justify-content:center;gap:30px">
+      <div style="display:flex;flex-direction:column;justify-content:center;gap:24px">
         <div class="bl-insight green">
           <div style="font-weight:700;font-size:18px;margin-bottom:6px">NMR — Small Proteins</div>
           <div>Peak at ~10-25 kDa. Solution-state technique limited by tumbling rate.</div>
@@ -1117,7 +1953,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 16: Cryo-EM Methodology (full-width diagram)
+     SLIDE 16: Cryo-EM Methodology (Full-width with gradient bg)
      ============================================================ -->
 <div class="bl-slide" data-n="16">
   <div class="bl-header">
@@ -1126,14 +1962,14 @@ body {
     <div class="bl-subtitle">Four electron microscopy approaches to structural biology</div>
   </div>
   <div class="bl-content">
-    <div class="bl-full">
+    <div class="bl-full" style="background:linear-gradient(180deg,#ffffff 0%,#f0f4f8 100%);border-radius:16px;padding:24px">
       <img src="../cryo-slides-img/s018_36_sharp.png" alt="Cryo-EM methodology" style="max-width:95%">
     </div>
   </div>
 </div>
 
 <!-- ============================================================
-     SLIDE 17: Sizing Up Cryo-EM (full-width comparison)
+     SLIDE 17: Sizing Up Cryo-EM (Full-width scale visualization)
      ============================================================ -->
 <div class="bl-slide" data-n="17">
   <div class="bl-header">
@@ -1142,8 +1978,8 @@ body {
     <div class="bl-subtitle">Biological length scales and imaging techniques</div>
   </div>
   <div class="bl-content">
-    <div class="bl-full" style="padding:0 100px">
-      <div style="width:100%;height:100%;position:relative;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);padding:16px;overflow:hidden">
+    <div class="bl-full" style="padding:0 60px">
+      <div class="bl-sizing-chart">
         <!-- Row 1: Zoom images -->
         <div style="position:absolute;top:10px;left:16px;right:16px;height:35%">
           <img src="../cryo-slides-img/s020_zoom_row.jpg" alt="Biological length scales" style="width:100%;height:100%;object-fit:contain;object-position:center bottom">
@@ -1191,7 +2027,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 18: Structural Biologist's Dream (2-col 50/50)
+     SLIDE 18: Structural Biologist's Dream (Cinematic)
      ============================================================ -->
 <div class="bl-slide" data-n="18">
   <div class="bl-header">
@@ -1200,26 +2036,35 @@ body {
     <div class="bl-subtitle">See protein structures directly inside cells — no purification needed</div>
   </div>
   <div class="bl-content">
-    <div class="bl-2col split-50-50">
-      <div style="display:flex;align-items:center;justify-content:center;background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
-        <img src="../cryo-slides-img/s021_38.png" alt="Structural cell biology" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px">
+    <div class="bl-cinema">
+      <div class="bl-cinema-img">
+        <img src="../cryo-slides-img/s021_38.png" alt="Structural cell biology">
       </div>
-      <div style="display:flex;flex-direction:column;justify-content:center;gap:20px">
-        <div class="bl-insight purple">
-          <div style="font-weight:700;font-size:17px;margin-bottom:4px">Single Particle Analysis</div>
-          <div>Purified proteins to atomic models (&lt;4 A)</div>
+      <div class="bl-cinema-items">
+        <div class="bl-cinema-item">
+          <div class="ci-icon" style="background:#f5f3ff;color:#7c3aed">&#128300;</div>
+          <div class="ci-text">
+            <h4 style="color:#7c3aed">Single Particle Analysis</h4>
+            <p>Purified proteins to atomic models (&lt;4 A)</p>
+          </div>
         </div>
-        <div class="bl-insight blue">
-          <div style="font-weight:700;font-size:17px;margin-bottom:4px">Cryo-Electron Tomography</div>
-          <div>3D imaging of intact cells at molecular resolution</div>
+        <div class="bl-cinema-item">
+          <div class="ci-icon" style="background:#eff6ff;color:#2563eb">&#127758;</div>
+          <div class="ci-text">
+            <h4 style="color:#2563eb">Cryo-Electron Tomography</h4>
+            <p>3D imaging of intact cells at molecular resolution</p>
+          </div>
         </div>
-        <div class="bl-insight green">
-          <div style="font-weight:700;font-size:17px;margin-bottom:4px">In Situ Structural Biology</div>
-          <div>Protein complexes in their native cellular environment</div>
+        <div class="bl-cinema-item">
+          <div class="ci-icon" style="background:#f0fdf4;color:#059669">&#129516;</div>
+          <div class="ci-text">
+            <h4 style="color:#059669">In Situ Structural Biology</h4>
+            <p>Protein complexes in their native cellular environment</p>
+          </div>
         </div>
-        <div style="background:rgba(5,150,105,0.12);border:2px solid #059669;border-radius:10px;padding:18px 22px">
-          <div style="font-weight:800;font-size:17px;color:#059669;margin-bottom:6px">Future: Cellular Cryo-EM</div>
-          <div style="font-size:15px;color:#065f46;line-height:1.5">FIB-SEM milling + cryo-ET enables imaging within intact cells at ~15-30 A, with subtomogram averaging pushing toward near-atomic detail.</div>
+        <div style="background:linear-gradient(135deg,#065f46,#059669);border-radius:14px;padding:20px 22px;color:#fff">
+          <div style="font-weight:800;font-size:17px;margin-bottom:6px">&#127775; Future: Cellular Cryo-EM</div>
+          <div style="font-size:14px;line-height:1.5;color:rgba(255,255,255,0.9)">FIB-SEM milling + cryo-ET enables imaging within intact cells at ~15-30 A, with subtomogram averaging pushing toward near-atomic detail.</div>
         </div>
       </div>
     </div>
@@ -1228,7 +2073,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 19: SPA Workflow — Visual Diagram (full-width)
+     SLIDE 19: SPA Workflow — Visual Diagram (Workflow)
      ============================================================ -->
 <div class="bl-slide" data-n="19">
   <div class="bl-header">
@@ -1237,30 +2082,30 @@ body {
     <div class="bl-subtitle">An example from sample to structure</div>
   </div>
   <div class="bl-content">
-    <div class="bl-2col" style="grid-template-columns:7fr 3fr">
-      <div style="display:flex;align-items:center;justify-content:center;background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06);overflow:hidden">
-        <img src="../cryo-slides-img/s022_39.jpg" alt="SPA workflow overview" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px">
+    <div class="bl-workflow">
+      <div class="bl-workflow-img">
+        <img src="../cryo-slides-img/s022_39.jpg" alt="SPA workflow overview">
       </div>
-      <div style="display:flex;flex-direction:column;gap:16px;justify-content:center">
-        <div class="bl-insight purple">
-          <div style="font-weight:800;font-size:16px;margin-bottom:4px">1. Sample Preparation</div>
-          <div style="font-size:13px">Protein expression, purification, grid prep, vitrification, screening</div>
-          <div style="font-weight:600;font-size:12px;margin-top:4px;color:#7c3aed">Weeks to months</div>
+      <div class="bl-workflow-steps">
+        <div class="bl-workflow-step" style="border-color:#7c3aed;background:#faf5ff">
+          <h4 style="color:#7c3aed">1. Sample Preparation</h4>
+          <p>Protein expression, purification, grid prep, vitrification, screening</p>
+          <div class="step-time" style="color:#7c3aed">Weeks to months</div>
         </div>
-        <div class="bl-insight blue">
-          <div style="font-weight:800;font-size:16px;margin-bottom:4px">2. Data Collection</div>
-          <div style="font-size:13px">Grid screening, automated low-dose imaging, movie acquisition</div>
-          <div style="font-weight:600;font-size:12px;margin-top:4px;color:#2563eb">1-3 days</div>
+        <div class="bl-workflow-step" style="border-color:#2563eb;background:#eff6ff">
+          <h4 style="color:#2563eb">2. Data Collection</h4>
+          <p>Grid screening, automated low-dose imaging, movie acquisition</p>
+          <div class="step-time" style="color:#2563eb">1-3 days</div>
         </div>
-        <div class="bl-insight green">
-          <div style="font-weight:800;font-size:16px;margin-bottom:4px">3. Image Processing</div>
-          <div style="font-size:13px">Particle picking, 2D/3D classification, 3D reconstruction</div>
-          <div style="font-weight:600;font-size:12px;margin-top:4px;color:#059669">Hours to days</div>
+        <div class="bl-workflow-step" style="border-color:#059669;background:#f0fdf4">
+          <h4 style="color:#059669">3. Image Processing</h4>
+          <p>Particle picking, 2D/3D classification, 3D reconstruction</p>
+          <div class="step-time" style="color:#059669">Hours to days</div>
         </div>
-        <div class="bl-insight orange">
-          <div style="font-weight:800;font-size:16px;margin-bottom:4px">4. Model Building</div>
-          <div style="font-size:13px">Atomic model fitting, refinement, validation, deposition</div>
-          <div style="font-weight:600;font-size:12px;margin-top:4px;color:#d97706">Days to weeks</div>
+        <div class="bl-workflow-step" style="border-color:#d97706;background:#fffbeb">
+          <h4 style="color:#d97706">4. Model Building</h4>
+          <p>Atomic model fitting, refinement, validation, deposition</p>
+          <div class="step-time" style="color:#d97706">Days to weeks</div>
         </div>
       </div>
     </div>
@@ -1269,7 +2114,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 20: SPA Workflow — Step Details (2-col 2x2 grid)
+     SLIDE 20: SPA Workflow — Step Details (2x2 Process Flow with Arrows)
      ============================================================ -->
 <div class="bl-slide" data-n="20">
   <div class="bl-header">
@@ -1278,51 +2123,61 @@ body {
     <div class="bl-subtitle">Four stages from sample to deposited structure</div>
   </div>
   <div class="bl-content">
-    <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:24px;height:100%">
+    <div class="bl-process-flow">
+      <!-- Flow arrows -->
+      <div class="bl-flow-arrows">
+        <div class="bl-flow-arrow" style="top:calc(50% - 24px);left:calc(50% - 16px);transform:rotate(0deg)">&#10132;</div>
+        <div class="bl-flow-arrow" style="top:calc(25% - 16px);right:30px;transform:rotate(90deg)">&#10132;</div>
+        <div class="bl-flow-arrow" style="bottom:calc(25% - 16px);left:30px;transform:rotate(90deg)">&#10132;</div>
+      </div>
       <!-- Step 1 -->
-      <div class="bl-card" style="padding:24px;border-left:6px solid #9b59b6">
-        <div style="font-size:24px;font-weight:800;color:#7c3aed;margin-bottom:10px">1. Sample Preparation</div>
-        <ul class="bl-card-list">
+      <div class="bl-step-card" style="border-color:#9b59b6">
+        <div class="step-num" style="color:#9b59b6">01</div>
+        <div class="step-title" style="color:#7c3aed">1. Sample Preparation</div>
+        <ul class="step-list">
           <li><strong>Purification:</strong> Express, purify, assess monodispersity</li>
           <li><strong>Negative stain:</strong> Quick TEM check for particle quality</li>
           <li><strong>Grid prep:</strong> Apply sample, blot, plunge-freeze</li>
           <li><strong>Screening:</strong> Evaluate ice, particle distribution, orientation</li>
         </ul>
-        <div style="margin-top:auto;font-weight:600;color:#7c3aed">Weeks to months</div>
+        <div class="step-time" style="color:#7c3aed">Weeks to months</div>
       </div>
       <!-- Step 2 -->
-      <div class="bl-card" style="padding:24px;border-left:6px solid #3498db">
-        <div style="font-size:24px;font-weight:800;color:#2563eb;margin-bottom:10px">2. Data Collection</div>
-        <ul class="bl-card-list">
+      <div class="bl-step-card" style="border-color:#3498db">
+        <div class="step-num" style="color:#3498db">02</div>
+        <div class="step-title" style="color:#2563eb">2. Data Collection</div>
+        <ul class="step-list">
           <li><strong>Grid loading:</strong> Load grid, acquire low-mag atlas</li>
           <li><strong>Area selection:</strong> Find thin vitreous ice regions</li>
           <li><strong>Acquisition:</strong> EPU/SerialEM (search-focus-record)</li>
           <li><strong>Movies:</strong> 1,000-10,000+ dose-fractionated frames</li>
         </ul>
-        <div style="margin-top:auto;font-weight:600;color:#2563eb">1-3 days per dataset</div>
+        <div class="step-time" style="color:#2563eb">1-3 days per dataset</div>
       </div>
       <!-- Step 3 -->
-      <div class="bl-card" style="padding:24px;border-left:6px solid #27ae60">
-        <div style="font-size:24px;font-weight:800;color:#16a34a;margin-bottom:10px">3. Image Processing</div>
-        <ul class="bl-card-list">
+      <div class="bl-step-card" style="border-color:#27ae60">
+        <div class="step-num" style="color:#27ae60">03</div>
+        <div class="step-title" style="color:#16a34a">3. Image Processing</div>
+        <ul class="step-list">
           <li><strong>Motion correction:</strong> Align frames, dose weighting</li>
           <li><strong>CTF estimation:</strong> Determine &amp; correct defocus</li>
           <li><strong>Picking &amp; 2D:</strong> Extract, sort, remove junk particles</li>
           <li><strong>3D reconstruction:</strong> Orientation assignment, 3D map</li>
           <li><strong>Validation:</strong> Gold-standard FSC (0.143 threshold)</li>
         </ul>
-        <div style="margin-top:auto;font-weight:600;color:#16a34a">Hours to days (GPU)</div>
+        <div class="step-time" style="color:#16a34a">Hours to days (GPU)</div>
       </div>
       <!-- Step 4 -->
-      <div class="bl-card" style="padding:24px;border-left:6px solid #e67e22">
-        <div style="font-size:24px;font-weight:800;color:#d97706;margin-bottom:10px">4. Model Building</div>
-        <ul class="bl-card-list">
+      <div class="bl-step-card" style="border-color:#e67e22">
+        <div class="step-num" style="color:#e67e22">04</div>
+        <div class="step-title" style="color:#d97706">4. Model Building</div>
+        <ul class="step-list">
           <li><strong>Map fitting:</strong> Fit coordinates into density (Coot, ISOLDE)</li>
           <li><strong>Refinement:</strong> Real-space refinement (Phenix)</li>
           <li><strong>Validation:</strong> FSC, MolProbity, map-model correlation</li>
           <li><strong>Deposition:</strong> Submit to PDB and EMDB</li>
         </ul>
-        <div style="margin-top:auto;font-weight:600;color:#d97706">Days to weeks</div>
+        <div class="step-time" style="color:#d97706">Days to weeks</div>
       </div>
     </div>
   </div>
@@ -1334,7 +2189,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 21: Time & Cost (2-col 30/70)
+     SLIDE 21: Time & Cost (Stats Layout)
      ============================================================ -->
 <div class="bl-slide" data-n="21">
   <div class="bl-header">
@@ -1343,36 +2198,40 @@ body {
     <div class="bl-subtitle">Time investment and cost breakdown across the SPA workflow</div>
   </div>
   <div class="bl-content">
-    <div class="bl-2col split-40-60">
-      <div style="display:flex;align-items:center;justify-content:center;background:#fff;border-radius:16px;padding:10px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
-        <img src="../cryo-slides-img/s024_41.png" alt="SPA time and cost" style="max-width:100%;max-height:100%;object-fit:contain">
+    <div class="bl-stats-layout">
+      <div class="bl-stats-img">
+        <img src="../cryo-slides-img/s024_41.png" alt="SPA time and cost">
       </div>
-      <div style="display:flex;flex-direction:column;gap:16px;height:100%">
-        <div class="bl-card accent-blue" style="flex:1">
-          <div class="bl-card-title">Why So Long?</div>
-          <ul class="bl-card-list">
+      <div class="bl-stats-right">
+        <div class="bl-stat-row">
+          <div class="bl-stat-box">
+            <div class="bl-stat-number" style="color:#e74c3c">$5-8M</div>
+            <div class="bl-stat-label">300 kV Krios</div>
+          </div>
+          <div class="bl-stat-box">
+            <div class="bl-stat-number" style="color:#2563eb">$1-3K</div>
+            <div class="bl-stat-label">Per Day Beam Time</div>
+          </div>
+          <div class="bl-stat-box">
+            <div class="bl-stat-number" style="color:#d97706">&lt;10%</div>
+            <div class="bl-stat-label">Grid Success Rate</div>
+          </div>
+        </div>
+        <div class="bl-info-card" style="border-color:#3498db;flex:1">
+          <h4 style="color:#2563eb">Why So Long?</h4>
+          <ul>
             <li>Sample prep: <strong>iterative trial-and-error</strong></li>
             <li>Each grid batch needs fresh screening</li>
             <li>Processing scales with <strong>dataset size</strong></li>
             <li>Model building: manual expert review</li>
           </ul>
         </div>
-        <div class="bl-card accent-orange" style="flex:1">
-          <div class="bl-card-title">Where the Money Goes</div>
-          <ul class="bl-card-list">
-            <li><strong>Microscope:</strong> $5-8M (300 kV Krios)</li>
-            <li><strong>Facility fee:</strong> $1-3K/day beam time</li>
-            <li><strong>Staffing:</strong> Trained operators essential</li>
-            <li><strong>Computing:</strong> GPU cluster for processing</li>
-          </ul>
-        </div>
-        <div class="bl-card accent-red" style="flex:1">
-          <div class="bl-card-title">The Bottleneck</div>
-          <ul class="bl-card-list">
+        <div class="bl-info-card" style="border-color:#e74c3c;flex:1">
+          <h4 style="color:#dc2626">The Bottleneck</h4>
+          <ul>
             <li><strong>Sample prep</strong> dominates total time</li>
             <li>Red arrows = frequent <strong>feedback loops</strong></li>
             <li>Failed grids — back to purification</li>
-            <li>Grid success rate often &lt;10%</li>
           </ul>
         </div>
       </div>
@@ -1385,7 +2244,7 @@ body {
 </div>
 
 <!-- ============================================================
-     SLIDE 22: Problems & Limitations (3-col)
+     SLIDE 22: Problems & Limitations (Problem cards with icons)
      ============================================================ -->
 <div class="bl-slide" data-n="22">
   <div class="bl-header">
@@ -1395,28 +2254,31 @@ body {
   </div>
   <div class="bl-content">
     <div style="display:flex;flex-direction:column;gap:20px;height:100%">
-      <div style="flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;min-height:0">
-        <div class="bl-card accent-red">
-          <div class="bl-card-title">Sample</div>
-          <ul class="bl-card-list">
+      <div class="bl-problems-grid">
+        <div class="bl-problem-card" style="border-color:#e74c3c">
+          <div class="prob-icon" style="background:#fef2f2">&#129514;</div>
+          <div class="prob-title" style="color:#dc2626">Sample</div>
+          <ul class="prob-list">
             <li><strong>Size limitation</strong> — Particles &lt;50 kDa challenging</li>
             <li><strong>Purity required</strong> — &gt;90% homogeneity essential</li>
             <li><strong>Vitrification</strong> — Ice thickness, preferred orientation, AWI</li>
             <li><strong>Reproducibility</strong> — Manual blotting highly variable</li>
           </ul>
         </div>
-        <div class="bl-card accent-blue">
-          <div class="bl-card-title">Microscopy</div>
-          <ul class="bl-card-list">
+        <div class="bl-problem-card" style="border-color:#3498db">
+          <div class="prob-icon" style="background:#eff6ff">&#128301;</div>
+          <div class="prob-title" style="color:#2563eb">Microscopy</div>
+          <ul class="prob-list">
             <li><strong>Beam damage</strong> — Electrons destroy biological structure</li>
             <li><strong>Low dose</strong> — Only 20-60 e-/A2 — very noisy images</li>
             <li><strong>Imperfect imaging</strong> — CTF, aberrations, charging</li>
             <li><strong>Beam-induced motion</strong> — Sample moves during exposure</li>
           </ul>
         </div>
-        <div class="bl-card accent-orange">
-          <div class="bl-card-title">Data Processing</div>
-          <ul class="bl-card-list">
+        <div class="bl-problem-card" style="border-color:#e67e22">
+          <div class="prob-icon" style="background:#fffbeb">&#128187;</div>
+          <div class="prob-title" style="color:#d97706">Data Processing</div>
+          <ul class="prob-list">
             <li><strong>Complex pipeline</strong> — Motion correction to 3D refinement</li>
             <li><strong>Heterogeneity</strong> — Multiple conformations complicate analysis</li>
             <li><strong>Interpretation</strong> — Map quality varies; model bias risk</li>
@@ -1424,16 +2286,16 @@ body {
           </ul>
         </div>
       </div>
-      <div style="background:rgba(225,29,72,0.12);border:2px solid #e11d48;border-radius:12px;padding:20px 32px;text-align:center;flex-shrink:0">
-        <div style="font-size:24px;font-weight:800;color:#e11d48;margin-bottom:8px">The Bottom Line</div>
-        <div style="font-size:18px;line-height:1.5;color:#1a1a2e">Sample preparation remains <strong>the major bottleneck</strong>, requiring substantial expertise at every step.</div>
+      <div class="bl-callout" style="background:rgba(225,29,72,0.1);border:2px solid #e11d48">
+        <h4 style="color:#e11d48">The Bottom Line</h4>
+        <p style="color:#1a1a2e">Sample preparation remains <strong>the major bottleneck</strong>, requiring substantial expertise at every step.</p>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ============================================================
-     SLIDE 23: The Reality (3-col with images)
+     SLIDE 23: The Reality (3-col with images) — KEEP AS-IS
      ============================================================ -->
 <div class="bl-slide" data-n="23">
   <div class="bl-header">
@@ -1442,45 +2304,51 @@ body {
     <div class="bl-subtitle">Why cryo-EM remains challenging despite the resolution revolution</div>
   </div>
   <div class="bl-content">
-    <div class="bl-3col">
-      <div class="bl-card accent-red">
-        <div class="bl-card-title">Sample</div>
-        <div class="bl-card-img h160">
+    <div class="bl-reality">
+      <div class="bl-reality-card" style="border-color:#e74c3c">
+        <div class="rc-img">
           <img src="../cryo-slides-img/s026_sample_prep.png" alt="Sample preparation">
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Slow</strong> — Weeks to months of iterative optimization</li>
-          <li><strong>Manual</strong> — Blotting by hand, variable ice thickness</li>
-          <li><strong>Non-reproducible</strong> — Same sample, different grids, different results</li>
-          <li><strong>Grid dependent</strong> — Ice quality varies hole-to-hole</li>
-          <li><strong>Flexibility</strong> — Conformational heterogeneity limits resolution</li>
-        </ul>
+        <div class="rc-body">
+          <h3 style="color:#dc2626">Sample</h3>
+          <ul>
+            <li><strong>Slow</strong> — Weeks to months of iterative optimization</li>
+            <li><strong>Manual</strong> — Blotting by hand, variable ice thickness</li>
+            <li><strong>Non-reproducible</strong> — Same sample, different grids, different results</li>
+            <li><strong>Grid dependent</strong> — Ice quality varies hole-to-hole</li>
+            <li><strong>Flexibility</strong> — Conformational heterogeneity limits resolution</li>
+          </ul>
+        </div>
       </div>
-      <div class="bl-card accent-blue">
-        <div class="bl-card-title">Microscopy</div>
-        <div class="bl-card-img h160">
+      <div class="bl-reality-card" style="border-color:#3498db">
+        <div class="rc-img">
           <img src="../cryo-slides-img/s026_microscopy.png" alt="Microscopy process">
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Slow</strong> — Days of data collection per dataset</li>
-          <li><strong>Manual (mostly)</strong> — Grid screening still requires expert judgment</li>
-          <li><strong>Grid dependent</strong> — Ice quality determines data quality</li>
-          <li><strong>Noisy images</strong> — Low dose (20-60 e-/A2) = very low SNR</li>
-          <li><strong>Artifacts</strong> — CTF, beam-induced motion, specimen charging</li>
-        </ul>
+        <div class="rc-body">
+          <h3 style="color:#2563eb">Microscopy</h3>
+          <ul>
+            <li><strong>Slow</strong> — Days of data collection per dataset</li>
+            <li><strong>Manual (mostly)</strong> — Grid screening still requires expert judgment</li>
+            <li><strong>Grid dependent</strong> — Ice quality determines data quality</li>
+            <li><strong>Noisy images</strong> — Low dose (20-60 e-/A2) = very low SNR</li>
+            <li><strong>Artifacts</strong> — CTF, beam-induced motion, specimen charging</li>
+          </ul>
+        </div>
       </div>
-      <div class="bl-card accent-orange">
-        <div class="bl-card-title">Data Processing</div>
-        <div class="bl-card-img h160">
+      <div class="bl-reality-card" style="border-color:#e67e22">
+        <div class="rc-img">
           <img src="../cryo-slides-img/s026_dataproc.png" alt="Data processing">
         </div>
-        <ul class="bl-card-list">
-          <li><strong>Slow</strong> — Hours to weeks (GPU-dependent)</li>
-          <li><strong>Manual (mostly)</strong> — Multiple steps require expert decisions</li>
-          <li><strong>Heterogeneity</strong> — Dynamic/continuous conformations</li>
-          <li><strong>Wasted particles</strong> — Most picked particles discarded</li>
-          <li><strong>Interpretation</strong> — Multiple possible models from same data</li>
-        </ul>
+        <div class="rc-body">
+          <h3 style="color:#d97706">Data Processing</h3>
+          <ul>
+            <li><strong>Slow</strong> — Hours to weeks (GPU-dependent)</li>
+            <li><strong>Manual (mostly)</strong> — Multiple steps require expert decisions</li>
+            <li><strong>Heterogeneity</strong> — Dynamic/continuous conformations</li>
+            <li><strong>Wasted particles</strong> — Most picked particles discarded</li>
+            <li><strong>Interpretation</strong> — Multiple possible models from same data</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -1558,7 +2426,7 @@ document.addEventListener('touchend', e => {
   if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
 });
 
-/* PDB Chart for slide 14 (simplified static version) */
+/* PDB Chart for slide 14 */
 (function(){
   const DATA = {
     years:[2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
