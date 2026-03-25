@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Brandlogy Framework Test — Slide 23</title>
+<style>
+/* ============================================================
+   BRANDLOGY CSS FRAMEWORK v1.0
+   Based on Brandlogy_Template_01.pptx (1280x720 → 1920x1080)
+   Scale factor: 1.5x
+   ============================================================ */
+
+/* --- Reset & Base --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+body {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  zoom: 1;
+}
+
+/* zoom is set by JS */
+
+/* --- Boundary System (Brandlogy 템플릿에서 추출) --- */
+:root {
+  --bl-header-top: 44px;       /* 챕터명 시작 */
+  --bl-title-top: 122px;       /* 제목 시작 */
+  --bl-subtitle-top: 212px;    /* 서브타이틀 시작 */
+  --bl-content-top: 318px;     /* 콘텐츠 영역 시작 (절대 위로 침범 금지) */
+  --bl-content-bottom: 952px;  /* 콘텐츠 영역 끝 (절대 아래로 침범 금지) */
+  --bl-content-height: 634px;  /* 952 - 318 */
+  --bl-margin-x: 75px;         /* 좌우 여백 */
+  --bl-ref-top: 990px;         /* 레퍼런스 위치 */
+}
+
+/* --- Slide Container --- */
+.bl-slide {
+  width: 1920px;
+  height: 1080px;
+  position: relative;
+  background: #f5f5f5;
+  overflow: hidden;
+}
+
+/* --- Header (공통 — 모든 슬라이드 동일 위치) --- */
+.bl-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: var(--bl-header-top) var(--bl-margin-x) 0 var(--bl-margin-x);
+  z-index: 10;
+}
+
+.bl-chapter {
+  font-size: 18px;
+  font-weight: 600;
+  color: #e74c3c;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.bl-title {
+  font-size: 42px;
+  font-weight: 800;
+  color: #1a1a2e;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.bl-subtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* --- Content Area (y=318 ~ y=1020, 좌우 75px) --- */
+.bl-content {
+  position: absolute;
+  top: var(--bl-content-top);
+  left: var(--bl-margin-x);
+  right: var(--bl-margin-x);
+  height: var(--bl-content-height);
+}
+
+/* --- Reference (하단) --- */
+.bl-ref {
+  position: absolute;
+  top: var(--bl-ref-top);
+  left: var(--bl-margin-x);
+  right: var(--bl-margin-x);
+  font-size: 14px;
+  color: #999;
+  text-align: center;
+}
+.bl-ref a { color: inherit; text-decoration: none; }
+.bl-ref a:hover { text-decoration: underline; }
+
+/* ============================================================
+   LAYOUT: 3-Column Cards (.bl-3col)
+   Brandlogy Slides 3, 7, 10, 17, 18
+   ============================================================ */
+.bl-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  height: 100%;
+}
+
+.bl-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 28px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+/* Card accent (좌측 상단 컬러 바) */
+.bl-card::before {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 4px;
+  border-radius: 2px;
+  margin-bottom: 20px;
+}
+.bl-card.accent-red::before    { background: #e74c3c; }
+.bl-card.accent-blue::before   { background: #3498db; }
+.bl-card.accent-orange::before { background: #e67e22; }
+.bl-card.accent-green::before  { background: #27ae60; }
+.bl-card.accent-purple::before { background: #9b59b6; }
+
+/* Card title */
+.bl-card-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 16px;
+}
+
+/* Card image area */
+.bl-card-img {
+  width: 100%;
+  height: 160px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  overflow: hidden;
+}
+.bl-card-img img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+/* Card bullet list */
+.bl-card-list {
+  list-style: none;
+  padding: 0;
+  flex: 1;
+}
+.bl-card-list li {
+  font-size: 16px;
+  line-height: 1.45;
+  color: #333;
+  padding: 6px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.bl-card-list li:last-child { border-bottom: none; }
+.bl-card-list li strong {
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+/* Card icon (큰 아이콘 중앙) */
+.bl-card-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+  font-size: 36px;
+}
+
+/* ============================================================
+   LAYOUT: 2-Column Split (.bl-2col)
+   Brandlogy Slides 4, 5, 12-16
+   ============================================================ */
+.bl-2col {
+  display: grid;
+  gap: 30px;
+  height: 100%;
+}
+.bl-2col.split-70-30 { grid-template-columns: 7fr 3fr; }
+.bl-2col.split-30-70 { grid-template-columns: 3fr 7fr; }
+.bl-2col.split-50-50 { grid-template-columns: 1fr 1fr; }
+
+/* ============================================================
+   LAYOUT: 4-Column Cards (.bl-4col)
+   Brandlogy Slide 2
+   ============================================================ */
+.bl-4col {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  height: 100%;
+}
+
+/* ============================================================
+   LAYOUT: Full Width (.bl-full)
+   Brandlogy Slide 11
+   ============================================================ */
+.bl-full {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.bl-full > * { flex: 1; }
+
+/* ============================================================
+   LAYOUT: Banner + Content (.bl-banner-content)
+   Brandlogy Slides 7, 8, 10
+   ============================================================ */
+.bl-banner {
+  background: #1a1a2e;
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.text-center { text-align: center; }
+.text-muted  { color: #999; }
+.text-sm     { font-size: 14px; }
+.mt-auto     { margin-top: auto; }
+.mb-12       { margin-bottom: 12px; }
+.gap-16      { gap: 16px; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SLIDE 23: The Reality — 3-Column Cards
+     Brandlogy Pattern: Slide 3 (3열 카드 + 아이콘)
+     ============================================================ -->
+<div class="bl-slide">
+
+  <!-- Header -->
+  <div class="bl-header">
+    <div class="bl-chapter">Section 1: Cryo-EM Overview</div>
+    <div class="bl-title">The Reality: Slow, Manual, Non-reproducible</div>
+    <div class="bl-subtitle">Why cryo-EM remains challenging despite the resolution revolution</div>
+  </div>
+
+  <!-- Content: 3-Column Cards -->
+  <div class="bl-content">
+    <div class="bl-3col">
+
+      <!-- Card 1: Sample -->
+      <div class="bl-card accent-red">
+        <div class="bl-card-title">Sample</div>
+        <div class="bl-card-img">
+          <img src="../cryo-slides-img/s026_sample_prep.png" alt="Sample preparation">
+        </div>
+        <ul class="bl-card-list">
+          <li><strong>Slow</strong> — Weeks to months of iterative optimization</li>
+          <li><strong>Manual</strong> — Blotting by hand, variable ice thickness</li>
+          <li><strong>Non-reproducible</strong> — Same sample, different grids, different results</li>
+          <li><strong>Grid dependent</strong> — Ice quality varies hole-to-hole</li>
+          <li><strong>Flexibility</strong> — Conformational heterogeneity limits resolution</li>
+        </ul>
+      </div>
+
+      <!-- Card 2: Microscopy -->
+      <div class="bl-card accent-blue">
+        <div class="bl-card-title">Microscopy</div>
+        <div class="bl-card-img">
+          <img src="../cryo-slides-img/s026_microscopy.png" alt="Microscopy process">
+        </div>
+        <ul class="bl-card-list">
+          <li><strong>Slow</strong> — Days of data collection per dataset</li>
+          <li><strong>Manual (mostly)</strong> — Grid screening still requires expert judgment</li>
+          <li><strong>Grid dependent</strong> — Ice quality determines data quality</li>
+          <li><strong>Noisy images</strong> — Low dose (20–60 e⁻/Å²) = very low SNR</li>
+          <li><strong>Artifacts</strong> — CTF, beam-induced motion, specimen charging</li>
+        </ul>
+      </div>
+
+      <!-- Card 3: Data Processing -->
+      <div class="bl-card accent-orange">
+        <div class="bl-card-title">Data Processing</div>
+        <div class="bl-card-img">
+          <img src="../cryo-slides-img/s026_dataproc.png" alt="Data processing">
+        </div>
+        <ul class="bl-card-list">
+          <li><strong>Slow</strong> — Hours to weeks (GPU-dependent)</li>
+          <li><strong>Manual (mostly)</strong> — Multiple steps require expert decisions</li>
+          <li><strong>Heterogeneity</strong> — Dynamic/continuous conformations</li>
+          <li><strong>Wasted particles</strong> — Most picked particles discarded</li>
+          <li><strong>Interpretation</strong> — Multiple possible models from same data</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Reference -->
+  <div class="bl-ref">
+    <a href="https://doi.org/10.1038/s41592-021-01130-6" target="_blank">Weissenberger et al., Nat Methods (2021)</a>
+  </div>
+
+</div>
+
+<script>
+function setZoom() {
+  const z = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+  document.body.style.zoom = z;
+}
+setZoom();
+window.addEventListener('resize', setZoom);
+</script>
+</body>
+</html>

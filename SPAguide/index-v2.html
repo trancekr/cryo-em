@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cryo-EM SPA Guide</title>
+<meta name="description" content="Single Particle Analysis guide for cryo-electron microscopy — from sample to structure">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css">
+<script src="https://code.iconify.design/iconify-icon/2.3.0/iconify-icon.min.js"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Pretendard', 'system-ui', 'sans-serif'],
+        display: ['Geist', 'Pretendard', 'system-ui', 'sans-serif'],
+      },
+    },
+  },
+}
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(1.5rem); filter: blur(2px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+  .animate-in {
+    animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .card-hover {
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .card-hover:hover {
+    transform: translateY(-6px) scale(1.02);
+  }
+  .card-hover:active {
+    transform: scale(0.98);
+  }
+  .font-display {
+    font-family: 'Outfit', 'Pretendard', system-ui, sans-serif;
+  }
+</style>
+</head>
+<body class="bg-zinc-50 min-h-[100dvh] flex flex-col items-center justify-center px-5 py-12 selection:bg-violet-200">
+
+  <!-- Noise texture overlay -->
+  <div class="fixed inset-0 z-[60] pointer-events-none opacity-[0.03]"
+       style="background-image:url('data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E')">
+  </div>
+
+  <div class="max-w-[960px] w-full relative z-10">
+
+    <!-- Title -->
+    <div class="text-center mb-14 animate-in" style="animation-delay: 0ms">
+      <h1 class="font-display text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight text-zinc-900">
+        Cryo-EM Guide
+        <span class="inline-flex items-center ml-3 text-sm font-semibold tracking-normal text-amber-700 bg-amber-50 ring-1 ring-amber-200/60 px-3 py-1 rounded-full align-middle translate-y-[-2px]">
+          <iconify-icon icon="solar:clock-circle-linear" class="mr-1.5 text-base"></iconify-icon>
+          Work in Progress
+        </span>
+      </h1>
+      <p class="mt-4 text-lg md:text-xl text-zinc-500 font-medium tracking-tight">
+        Single Particle Analysis — From Sample to Structure
+      </p>
+    </div>
+
+    <!-- Bento Grid: Section 1 large, 2-4 stacked -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+      <!-- Section 1: Large card (spans 2 cols) -->
+      <a href="overview.html"
+         class="card-hover md:col-span-2 md:row-span-2 group animate-in"
+         style="animation-delay: 100ms">
+        <!-- Outer bezel -->
+        <div class="rounded-[1.5rem] bg-violet-50/80 ring-1 ring-violet-200/40 p-1.5
+                    shadow-[0_20px_60px_-15px_rgba(124,58,237,0.08)]
+                    group-hover:shadow-[0_25px_70px_-15px_rgba(124,58,237,0.15)]
+                    group-hover:ring-violet-300/60
+                    transition-all duration-500"
+             style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1)">
+          <!-- Inner core -->
+          <div class="rounded-[calc(1.5rem-0.375rem)] bg-white p-8 md:p-10 h-full
+                      shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)]
+                      flex flex-col justify-between min-h-[280px] md:min-h-[340px]">
+            <div>
+              <div class="text-6xl md:text-7xl font-display font-black text-violet-500/20 leading-none select-none">01</div>
+              <div class="mt-3 text-2xl md:text-3xl font-bold text-zinc-900 tracking-tight">Cryo-EM Overview</div>
+              <div class="mt-3 text-base md:text-lg text-zinc-500 leading-relaxed max-w-[50ch]">
+                Introduction, history, methodology, and the structural biology landscape
+              </div>
+            </div>
+            <div class="mt-6 flex items-center justify-between">
+              <span class="text-sm font-semibold text-violet-600 tracking-tight">21 slides</span>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold text-violet-600
+                          bg-violet-50 ring-1 ring-violet-200/50 rounded-full px-4 py-2
+                          group-hover:bg-violet-100 group-hover:ring-violet-300/60
+                          transition-all duration-500"
+                    style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1)">
+                Start Learning
+                <iconify-icon icon="solar:arrow-right-linear"
+                              class="text-base transition-transform duration-500 group-hover:translate-x-1"
+                              style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1)">
+                </iconify-icon>
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- Section 2 -->
+      <div class="animate-in" style="animation-delay: 200ms">
+        <div class="rounded-[1.5rem] bg-emerald-50/50 ring-1 ring-emerald-200/30 p-1.5 opacity-40 cursor-default
+                    shadow-[0_20px_60px_-15px_rgba(5,150,105,0.04)]">
+          <div class="rounded-[calc(1.5rem-0.375rem)] bg-white p-6 md:p-7
+                      shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)]">
+            <div class="text-4xl font-display font-black text-emerald-500/20 leading-none select-none">02</div>
+            <div class="mt-2 text-lg font-bold text-zinc-900 tracking-tight">Sample Preparation</div>
+            <div class="mt-1.5 text-sm text-zinc-500 leading-relaxed">Grid preparation, vitrification, screening</div>
+            <div class="mt-3 text-xs font-semibold text-zinc-400 tracking-tight">Coming soon</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3 -->
+      <div class="animate-in" style="animation-delay: 300ms">
+        <div class="rounded-[1.5rem] bg-blue-50/50 ring-1 ring-blue-200/30 p-1.5 opacity-40 cursor-default
+                    shadow-[0_20px_60px_-15px_rgba(37,99,235,0.04)]">
+          <div class="rounded-[calc(1.5rem-0.375rem)] bg-white p-6 md:p-7
+                      shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)]">
+            <div class="text-4xl font-display font-black text-blue-500/20 leading-none select-none">03</div>
+            <div class="mt-2 text-lg font-bold text-zinc-900 tracking-tight">Imaging</div>
+            <div class="mt-1.5 text-sm text-zinc-500 leading-relaxed">Data collection, defocus, contrast, phase plate</div>
+            <div class="mt-3 text-xs font-semibold text-zinc-400 tracking-tight">Coming soon</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: spans full width below -->
+      <div class="md:col-span-3 animate-in" style="animation-delay: 400ms">
+        <div class="rounded-[1.5rem] bg-rose-50/50 ring-1 ring-rose-200/30 p-1.5 opacity-40 cursor-default
+                    shadow-[0_20px_60px_-15px_rgba(220,38,38,0.04)]">
+          <div class="rounded-[calc(1.5rem-0.375rem)] bg-white p-6 md:p-7
+                      shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)]
+                      flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div class="flex items-center gap-4">
+              <div class="text-4xl font-display font-black text-rose-500/20 leading-none select-none">04</div>
+              <div>
+                <div class="text-lg font-bold text-zinc-900 tracking-tight">Data Processing</div>
+                <div class="text-sm text-zinc-500 leading-relaxed">CTF, motion correction, 2D/3D classification, resolution</div>
+              </div>
+            </div>
+            <div class="text-xs font-semibold text-zinc-400 tracking-tight md:text-right">Coming soon</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-12 text-center animate-in" style="animation-delay: 500ms">
+      <p class="text-sm text-zinc-400 font-medium">
+        Issues or suggestions? Contact
+        <a href="mailto:hanseonk@snu.ac.kr"
+           class="text-violet-600 hover:text-violet-700 font-semibold transition-colors duration-300"
+           style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1)">
+          hanseonk@snu.ac.kr
+        </a>
+      </p>
+      <div class="mt-3 flex items-center justify-center gap-4 text-zinc-300">
+        <a href="https://github.com/trancekr/cryo-em" target="_blank"
+           class="hover:text-zinc-500 transition-colors duration-300">
+          <iconify-icon icon="mdi:github" class="text-xl"></iconify-icon>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

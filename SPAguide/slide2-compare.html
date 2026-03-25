@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slide 2 — 3 Versions Comparison</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #1a1a2e; font-family: 'Inter', sans-serif; padding: 20px; }
+h1 { color: #fff; text-align: center; margin-bottom: 20px; font-size: 24px; }
+.compare { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+.version { position: relative; }
+.version-label {
+  color: #fff; text-align: center; font-weight: 700; font-size: 16px;
+  margin-bottom: 8px; padding: 6px 16px; border-radius: 8px;
+}
+.version-label.orig { background: #e11d48; }
+.version-label.v1 { background: #2563eb; }
+.version-label.v2 { background: #059669; }
+.slide-frame {
+  width: 640px; height: 360px; overflow: hidden;
+  border: 2px solid #444; border-radius: 8px; background: #f0f0f5;
+  position: relative;
+}
+.slide-frame > .slide-inner {
+  width: 1920px; height: 1080px;
+  transform: scale(0.3333); transform-origin: top left;
+  display: flex; flex-direction: column;
+  font-family: 'Inter', sans-serif; color: #1a1a2e;
+  overflow: hidden;
+}
+
+/* ── Shared slide styles ── */
+.s-topbar {
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  padding: 6px 16px; background: #fff; border-bottom: 2px solid #e0e0e8;
+  min-height: 44px; font-size: 18px; font-weight: 800; color: #059669;
+}
+.s-title {
+  font-size: 34px; font-weight: 800; color: #1a1a2e;
+  text-align: center; padding: 6px 0 3px; flex-shrink: 0;
+}
+.s-subtitle {
+  font-size: 20px; color: #888; text-align: center; font-weight: 600;
+  flex-shrink: 0; margin-top: -2px;
+}
+.s-body {
+  flex: 1; min-height: 0; display: flex; flex-direction: column;
+  gap: 10px; overflow: hidden; padding: 14px 32px;
+}
+.topic-card {
+  background: #fff; border: 1.5px solid #e0e0e8;
+  border-radius: 12px; padding: 40px 38px;
+  display: flex; flex-direction: column; gap: 22px;
+}
+.topic-card.green { border-top: 4px solid #059669; }
+.topic-card.blue { border-top: 4px solid #2563eb; }
+.topic-card h3 { font-size: 34px; font-weight: 800; flex-shrink: 0; }
+.topic-card.green h3 { color: #059669; }
+.topic-card.blue h3 { color: #2563eb; }
+.topic-card ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.topic-card li {
+  font-size: 22px; color: #333; line-height: 1.5;
+  padding: 3px 0 3px 18px; position: relative;
+}
+.topic-card li::before { content: '\2022'; position: absolute; left: 0; color: #ccc; font-weight: 700; }
+</style>
+</head>
+<body>
+<h1>Slide 2: Goal of Sample Preparation — 3 Versions</h1>
+<div class="compare">
+
+<!-- ORIGINAL -->
+<div class="version">
+  <div class="version-label orig">Original (sample-prep.html)</div>
+  <div class="slide-frame">
+    <div class="slide-inner">
+      <div class="s-topbar">Section 2: Sample Preparation</div>
+      <div class="s-title">Goal of Sample Preparation</div>
+      <div class="s-body" style="padding:40px 80px;gap:24px">
+        <p style="font-size:28px;font-weight:700">Goal of sample preparation</p>
+        <p style="font-size:24px;font-weight:700">Preserve the biological specimen in a native state such that it will give maximum contrast</p>
+        <p style="font-size:24px">To obtain a high resolution structure:</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:12px;padding-left:20px">
+          <li style="font-size:22px;color:#333">• Best specimen</li>
+          <li style="font-size:22px;color:#333">• Use optimal magnification</li>
+          <li style="font-size:22px;color:#333">• Use detector with best DQE possible</li>
+          <li style="font-size:22px;color:#333">• Obtain best micrographs possible</li>
+          <li style="font-size:22px;color:#333;font-weight:700">• Leading to highest resolution structure with least data</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- V1 (current) -->
+<div class="version">
+  <div class="version-label v1">V1 (현재 sample-prep-new.html)</div>
+  <div class="slide-frame">
+    <div class="slide-inner">
+      <div class="s-topbar">Section 2: Sample Preparation</div>
+      <div class="s-title">Goal of Sample Preparation</div>
+      <div class="s-subtitle">Preserve the biological specimen in a native state for maximum contrast</div>
+      <div class="s-body" style="justify-content:center">
+        <div style="display:flex;gap:24px;flex:0 0 auto;padding:20px 60px;align-items:flex-start">
+          <div class="topic-card green" style="flex:1">
+            <h3>The Goal</h3>
+            <ul>
+              <li><strong>Native state</strong> — Preserve biological structure without artifacts</li>
+              <li><strong>Maximum contrast</strong> — Embed in thin vitreous ice for optimal imaging</li>
+              <li><strong>Homogeneity</strong> — Uniform, monodisperse particles in solution</li>
+              <li><strong>Reproducibility</strong> — Consistent grid quality across preparations</li>
+            </ul>
+          </div>
+          <div class="topic-card blue" style="flex:1">
+            <h3>For High Resolution</h3>
+            <ul>
+              <li><strong>Best specimen</strong> — Pure, stable, well-behaved protein</li>
+              <li><strong>Optimal magnification</strong> — Balance pixel size vs. field of view</li>
+              <li><strong>Best detector</strong> — High DQE for maximum signal capture</li>
+              <li><strong>Best micrographs</strong> — Thin ice, no drift, proper defocus</li>
+              <li><strong>Ultimate goal</strong> — Highest resolution structure with least data</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- V2 (디자인 원칙) -->
+<div class="version">
+  <div class="version-label v2">V2 (디자인 원칙 적용)</div>
+  <div class="slide-frame">
+    <div class="slide-inner">
+      <div class="s-topbar">Section 2: Sample Preparation</div>
+      <div class="s-title">Goal of Sample Preparation</div>
+      <div class="s-subtitle">Preserve the biological specimen in a native state for maximum contrast</div>
+      <div class="s-body" style="justify-content:center">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;padding:0 60px">
+          <div class="topic-card green" style="justify-content:center">
+            <h3>The Goal</h3>
+            <ul>
+              <li><strong>Native state</strong> — Preserve biological structure without artifacts</li>
+              <li><strong>Maximum contrast</strong> — Embed in thin vitreous ice for optimal imaging</li>
+              <li><strong>Homogeneity</strong> — Uniform, monodisperse particles in solution</li>
+              <li><strong>Reproducibility</strong> — Consistent grid quality across preparations</li>
+            </ul>
+          </div>
+          <div class="topic-card blue" style="justify-content:center">
+            <h3>For High Resolution</h3>
+            <ul>
+              <li><strong>Best specimen</strong> — Pure, stable, well-behaved protein</li>
+              <li><strong>Optimal magnification</strong> — Balance pixel size vs. field of view</li>
+              <li><strong>Best detector</strong> — High DQE for maximum signal capture</li>
+              <li><strong>Best micrographs</strong> — Thin ice, no drift, proper defocus</li>
+              <li><strong>Ultimate goal</strong> — Highest resolution structure with least data</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- V3 (V1+V2 혼합) -->
+<div class="version">
+  <div class="version-label" style="background:#7c3aed">V3 (V1+V2 혼합)</div>
+  <div class="slide-frame">
+    <div class="slide-inner">
+      <div class="s-topbar">Section 2: Sample Preparation</div>
+      <div class="s-title" style="padding-top:16px;padding-bottom:8px">Goal of Sample Preparation</div>
+      <div class="s-subtitle">Preserve the biological specimen in a native state for maximum contrast</div>
+      <div class="s-body" style="padding:20px 60px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1;min-height:0">
+          <div class="topic-card green">
+            <h3>The Goal</h3>
+            <ul>
+              <li><strong>Native state</strong> — Preserve biological structure without artifacts</li>
+              <li><strong>Maximum contrast</strong> — Embed in thin vitreous ice for optimal imaging</li>
+              <li><strong>Homogeneity</strong> — Uniform, monodisperse particles in solution</li>
+              <li><strong>Reproducibility</strong> — Consistent grid quality across preparations</li>
+            </ul>
+          </div>
+          <div class="topic-card blue">
+            <h3>For High Resolution</h3>
+            <ul>
+              <li><strong>Best specimen</strong> — Pure, stable, well-behaved protein</li>
+              <li><strong>Optimal magnification</strong> — Balance pixel size vs. field of view</li>
+              <li><strong>Best detector</strong> — High DQE for maximum signal capture</li>
+              <li><strong>Best micrographs</strong> — Thin ice, no drift, proper defocus</li>
+              <li><strong>Ultimate goal</strong> — Highest resolution structure with least data</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- V4 (같은 높이 + 큰 폰트 + 적절한 여백) -->
+<div class="version">
+  <div class="version-label" style="background:#d97706">V4 (균형잡힌 버전)</div>
+  <div class="slide-frame">
+    <div class="slide-inner">
+      <div class="s-topbar">Section 2: Sample Preparation</div>
+      <div class="s-title" style="padding-top:20px;padding-bottom:6px;font-size:40px">Goal of Sample Preparation</div>
+      <div class="s-subtitle" style="font-size:24px">Preserve the biological specimen in a native state for maximum contrast</div>
+      <div class="s-body" style="justify-content:center;padding:16px 60px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;flex:0 0 auto">
+          <div class="topic-card green" style="padding:44px 42px;gap:26px">
+            <h3 style="font-size:36px">The Goal</h3>
+            <ul style="gap:18px">
+              <li style="font-size:25px"><strong>Native state</strong> — Preserve biological structure without artifacts</li>
+              <li style="font-size:25px"><strong>Maximum contrast</strong> — Embed in thin vitreous ice for optimal imaging</li>
+              <li style="font-size:25px"><strong>Homogeneity</strong> — Uniform, monodisperse particles in solution</li>
+              <li style="font-size:25px"><strong>Reproducibility</strong> — Consistent grid quality across preparations</li>
+            </ul>
+          </div>
+          <div class="topic-card blue" style="padding:44px 42px;gap:26px">
+            <h3 style="font-size:36px">For High Resolution</h3>
+            <ul style="gap:18px">
+              <li style="font-size:25px"><strong>Best specimen</strong> — Pure, stable, well-behaved protein</li>
+              <li style="font-size:25px"><strong>Optimal magnification</strong> — Balance pixel size vs. field of view</li>
+              <li style="font-size:25px"><strong>Best detector</strong> — High DQE for maximum signal capture</li>
+              <li style="font-size:25px"><strong>Best micrographs</strong> — Thin ice, no drift, proper defocus</li>
+              <li style="font-size:25px"><strong>Ultimate goal</strong> — Highest resolution structure with least data</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
