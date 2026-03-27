@@ -40,6 +40,16 @@ body {
   --bl-content-height: 634px;
   --bl-margin-x: 75px;
   --bl-ref-top: 990px;
+
+  /* Font size system (프로젝터 기준 최소 가독성) */
+  --fs-chapter: 18px;
+  --fs-title: 42px;
+  --fs-subtitle: 22px;
+  --fs-card-title: 26px;
+  --fs-body: 20px;
+  --fs-caption: 16px;
+  --fs-insight: 16px;
+  --fs-ref: 14px;
 }
 
 /* --- Slide Container --- */
@@ -64,7 +74,7 @@ body {
 }
 
 .bl-chapter {
-  font-size: 18px;
+  font-size: var(--fs-chapter);
   font-weight: 600;
   color: #e74c3c;
   letter-spacing: 1.5px;
@@ -73,7 +83,7 @@ body {
 }
 
 .bl-title {
-  font-size: 42px;
+  font-size: var(--fs-title);
   font-weight: 800;
   color: #1a1a2e;
   line-height: 1.2;
@@ -81,7 +91,7 @@ body {
 }
 
 .bl-subtitle {
-  font-size: 20px;
+  font-size: var(--fs-subtitle);
   font-weight: 400;
   color: #666;
   line-height: 1.4;
@@ -102,7 +112,7 @@ body {
   top: var(--bl-ref-top);
   left: var(--bl-margin-x);
   right: var(--bl-margin-x);
-  font-size: 14px;
+  font-size: var(--fs-ref);
   color: #999;
   text-align: center;
 }
@@ -177,7 +187,7 @@ body {
 .bl-ps-card.problem .ps-icon { background: rgba(231,76,60,0.3); }
 .bl-ps-card.solution .ps-icon { background: rgba(39,174,96,0.2); }
 .bl-ps-card .ps-title {
-  font-size: 26px;
+  font-size: var(--fs-card-title);
   font-weight: 800;
   margin-bottom: 20px;
 }
@@ -189,7 +199,7 @@ body {
   flex: 1;
 }
 .bl-ps-card .ps-list li {
-  font-size: 16px;
+  font-size: var(--fs-body);
   line-height: 1.5;
   padding: 8px 0;
   border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -240,7 +250,7 @@ body {
   display: inline-block;
   padding: 6px 16px;
   border-radius: 20px;
-  font-size: 13px;
+  font-size: var(--fs-caption);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -250,7 +260,7 @@ body {
 .bl-compare-side.left .compare-badge { background: #e67e22; color: #fff; }
 .bl-compare-side.right .compare-badge { background: #2980b9; color: #fff; }
 .bl-compare-side .compare-title {
-  font-size: 24px;
+  font-size: var(--fs-card-title);
   font-weight: 800;
   margin-bottom: 16px;
 }
@@ -281,7 +291,7 @@ body {
 }
 .bl-compare-table td {
   padding: 7px 0;
-  font-size: 15px;
+  font-size: var(--fs-body);
   line-height: 1.4;
   color: #333;
   border-bottom: 1px solid rgba(0,0,0,0.08);
@@ -332,7 +342,7 @@ body {
   border-top: 3px solid #e0e0e8;
 }
 .bl-feature-item .feature-body h3 {
-  font-size: 18px;
+  font-size: var(--fs-card-title);
   font-weight: 800;
   color: #1a1a2e;
   margin-bottom: 8px;
@@ -343,7 +353,7 @@ body {
   flex: 1;
 }
 .bl-feature-item .feature-body li {
-  font-size: 14px;
+  font-size: var(--fs-body);
   color: #555;
   line-height: 1.45;
   padding: 3px 0 3px 12px;
@@ -397,7 +407,7 @@ body {
 .bl-journey-text .era-card.before { border-color: #e74c3c; }
 .bl-journey-text .era-card.after { border-color: #27ae60; }
 .bl-journey-text .era-card h4 {
-  font-size: 18px;
+  font-size: var(--fs-card-title);
   font-weight: 800;
   margin-bottom: 8px;
 }
@@ -408,7 +418,7 @@ body {
   padding: 0;
 }
 .bl-journey-text .era-card li {
-  font-size: 15px;
+  font-size: var(--fs-body);
   color: #444;
   line-height: 1.45;
   padding: 3px 0;
@@ -493,14 +503,14 @@ body {
   margin-bottom: 6px;
 }
 .bl-timeline-bottom .tl-title {
-  font-size: 16px;
+  font-size: var(--fs-body);
   font-weight: 700;
   color: #1a1a2e;
   margin-bottom: 8px;
   line-height: 1.3;
 }
 .bl-timeline-bottom .tl-desc {
-  font-size: 13px;
+  font-size: var(--fs-caption);
   color: #555;
   line-height: 1.45;
 }
@@ -509,7 +519,7 @@ body {
   margin-top: 6px;
   padding: 3px 10px;
   border-radius: 10px;
-  font-size: 11px;
+  font-size: var(--fs-caption);
   font-weight: 700;
   background: #fef3c7;
   color: #92400e;
@@ -589,7 +599,7 @@ body {
 /* Image label overlays */
 .bl-rich-timeline .rt-img-label {
   position: absolute;
-  font-size: 10px;
+  font-size: var(--fs-caption);
   font-weight: 700;
   padding: 2px 6px;
   border-radius: 4px;
@@ -634,7 +644,7 @@ body {
 }
 
 .bl-rich-timeline .rt-card-title {
-  font-size: 15px;
+  font-size: var(--fs-body);
   font-weight: 800;
   color: #1a1a2e;
   line-height: 1.25;
@@ -642,7 +652,7 @@ body {
 }
 
 .bl-rich-timeline .rt-card-author {
-  font-size: 11px;
+  font-size: var(--fs-caption);
   color: #888;
   line-height: 1.3;
   margin-bottom: 4px;
@@ -661,7 +671,7 @@ body {
   margin: 0;
 }
 .bl-rich-timeline .rt-detail-list li {
-  font-size: 12px;
+  font-size: var(--fs-caption);
   color: #555;
   line-height: 1.4;
   padding: 1px 0 1px 10px;
@@ -680,7 +690,7 @@ body {
   border-radius: 6px;
   background: #fffbeb;
   border-left: 3px solid #d97706;
-  font-size: 11px;
+  font-size: var(--fs-insight);
   line-height: 1.4;
   color: #92400e;
 }
@@ -690,7 +700,7 @@ body {
   margin-top: 4px;
   padding: 2px 8px;
   border-radius: 8px;
-  font-size: 10px;
+  font-size: var(--fs-caption);
   font-weight: 700;
 }
 
@@ -750,13 +760,13 @@ body {
   margin-bottom: 3px;
 }
 .bl-gallery-item .gal-caption .gal-title {
-  font-size: 15px;
+  font-size: var(--fs-body);
   font-weight: 700;
   color: #1a1a2e;
   margin-bottom: 4px;
 }
 .bl-gallery-item .gal-caption .gal-desc {
-  font-size: 13px;
+  font-size: var(--fs-caption);
   color: #666;
   line-height: 1.4;
 }
@@ -765,7 +775,7 @@ body {
   margin-top: 6px;
   padding: 3px 10px;
   border-radius: 10px;
-  font-size: 11px;
+  font-size: var(--fs-caption);
   font-weight: 700;
 }
 
@@ -801,11 +811,11 @@ body {
   color: #fff;
 }
 .bl-struct-item .struct-overlay .so-title {
-  font-size: 15px;
+  font-size: var(--fs-body);
   font-weight: 700;
 }
 .bl-struct-item .struct-overlay .so-desc {
-  font-size: 12px;
+  font-size: var(--fs-caption);
   color: rgba(255,255,255,0.8);
   margin-top: 2px;
 }
@@ -850,19 +860,19 @@ body {
   padding-top: 14px;
 }
 .bl-cover-item .cover-info .cover-title {
-  font-size: 17px;
+  font-size: var(--fs-body);
   font-weight: 700;
   color: #1a1a2e;
   line-height: 1.3;
   margin-bottom: 4px;
 }
 .bl-cover-item .cover-info .cover-desc {
-  font-size: 13px;
+  font-size: var(--fs-caption);
   color: #666;
   line-height: 1.4;
 }
 .bl-cover-item .cover-info .cover-cite {
-  font-size: 12px;
+  font-size: var(--fs-caption);
   font-weight: 600;
   margin-top: 6px;
 }
@@ -890,7 +900,7 @@ body {
   padding: 16px 20px;
   color: #fff;
   font-weight: 700;
-  font-size: 14px;
+  font-size: var(--fs-caption);
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -919,23 +929,23 @@ body {
   flex-direction: column;
 }
 .bl-profile-body .pname {
-  font-size: 22px;
+  font-size: var(--fs-card-title);
   font-weight: 800;
   color: #1a1a2e;
   margin-bottom: 4px;
 }
 .bl-profile-body .prole {
-  font-size: 14px;
+  font-size: var(--fs-caption);
   font-weight: 700;
   margin-bottom: 4px;
 }
 .bl-profile-body .paffil {
-  font-size: 12px;
+  font-size: var(--fs-caption);
   color: #888;
   margin-bottom: 10px;
 }
 .bl-profile-body .pcontrib {
-  font-size: 13px;
+  font-size: var(--fs-caption);
   color: #555;
   line-height: 1.5;
   flex: 1;
@@ -944,7 +954,7 @@ body {
   flex-shrink: 0;
   padding: 10px 20px;
   text-align: center;
-  font-size: 13px;
+  font-size: var(--fs-caption);
   font-weight: 700;
   border-top: 1px solid #f0f0f0;
 }
@@ -1041,12 +1051,12 @@ body {
   flex-shrink: 0;
 }
 .bl-cinema-item .ci-text h4 {
-  font-size: 16px;
+  font-size: var(--fs-body);
   font-weight: 700;
   margin-bottom: 4px;
 }
 .bl-cinema-item .ci-text p {
-  font-size: 14px;
+  font-size: var(--fs-caption);
   color: #555;
   line-height: 1.45;
 }
@@ -1088,17 +1098,17 @@ body {
   border-left: 4px solid;
 }
 .bl-workflow-step h4 {
-  font-size: 15px;
+  font-size: var(--fs-body);
   font-weight: 800;
   margin-bottom: 4px;
 }
 .bl-workflow-step p {
-  font-size: 12px;
+  font-size: var(--fs-caption);
   color: #555;
   line-height: 1.4;
 }
 .bl-workflow-step .step-time {
-  font-size: 11px;
+  font-size: var(--fs-caption);
   font-weight: 700;
   margin-top: 4px;
 }
@@ -1133,7 +1143,7 @@ body {
   right: 18px;
 }
 .bl-step-card .step-title {
-  font-size: 22px;
+  font-size: var(--fs-card-title);
   font-weight: 800;
   margin-bottom: 12px;
 }
@@ -1143,7 +1153,7 @@ body {
   flex: 1;
 }
 .bl-step-card .step-list li {
-  font-size: 15px;
+  font-size: var(--fs-body);
   color: #444;
   line-height: 1.45;
   padding: 5px 0;
@@ -1154,7 +1164,7 @@ body {
 .bl-step-card .step-time {
   margin-top: auto;
   font-weight: 700;
-  font-size: 14px;
+  font-size: var(--fs-caption);
   padding-top: 8px;
 }
 /* Flow arrows */
@@ -1220,7 +1230,7 @@ body {
   margin-bottom: 4px;
 }
 .bl-stat-label {
-  font-size: 14px;
+  font-size: var(--fs-caption);
   color: #666;
   font-weight: 600;
 }
@@ -1232,7 +1242,7 @@ body {
   border-left: 5px solid;
 }
 .bl-info-card h4 {
-  font-size: 18px;
+  font-size: var(--fs-card-title);
   font-weight: 800;
   margin-bottom: 8px;
 }
@@ -1241,7 +1251,7 @@ body {
   padding: 0;
 }
 .bl-info-card li {
-  font-size: 15px;
+  font-size: var(--fs-body);
   color: #444;
   line-height: 1.5;
   padding: 3px 0;
@@ -1279,7 +1289,7 @@ body {
   margin-bottom: 14px;
 }
 .bl-problem-card .prob-title {
-  font-size: 22px;
+  font-size: var(--fs-card-title);
   font-weight: 800;
   margin-bottom: 14px;
 }
@@ -1289,7 +1299,7 @@ body {
   flex: 1;
 }
 .bl-problem-card .prob-list li {
-  font-size: 15px;
+  font-size: var(--fs-body);
   color: #444;
   line-height: 1.45;
   padding: 6px 0;
@@ -1304,12 +1314,12 @@ body {
   text-align: center;
 }
 .bl-callout h4 {
-  font-size: 22px;
+  font-size: var(--fs-card-title);
   font-weight: 800;
   margin-bottom: 6px;
 }
 .bl-callout p {
-  font-size: 17px;
+  font-size: var(--fs-body);
   line-height: 1.5;
 }
 
@@ -1349,7 +1359,7 @@ body {
   padding: 16px 22px 20px;
 }
 .bl-reality-card .rc-body h3 {
-  font-size: 20px;
+  font-size: var(--fs-card-title);
   font-weight: 800;
   margin-bottom: 12px;
 }
@@ -1358,7 +1368,7 @@ body {
   padding: 0;
 }
 .bl-reality-card .rc-body li {
-  font-size: 15px;
+  font-size: var(--fs-body);
   color: #444;
   line-height: 1.45;
   padding: 5px 0;
@@ -1373,7 +1383,7 @@ body {
 .bl-insight {
   padding: 14px 20px;
   border-radius: 8px;
-  font-size: 15px;
+  font-size: var(--fs-insight);
   line-height: 1.5;
 }
 .bl-insight.purple { background: #f5f3ff; color: #7c3aed; border-left: 4px solid #7c3aed; }
@@ -1455,7 +1465,7 @@ body {
    ============================================================ */
 .text-center { text-align: center; }
 .text-muted  { color: #999; }
-.text-sm     { font-size: 14px; }
+.text-sm     { font-size: var(--fs-ref); }
 .mt-auto     { margin-top: auto; }
 </style>
 </head>
@@ -2287,15 +2297,15 @@ body {
       </div>
       <div class="bl-chart-insights">
         <div class="bl-insight purple">
-          <div style="font-weight:700;font-size:18px;margin-bottom:6px">2013 — Resolution Revolution</div>
+          <div style="font-weight:700;font-size:var(--fs-card-title);margin-bottom:6px">2013 — Resolution Revolution</div>
           <div>Direct electron detectors replaced film/CCDs, enabling near-atomic resolution for the first time.</div>
         </div>
         <div class="bl-insight orange">
-          <div style="font-weight:700;font-size:18px;margin-bottom:6px">2017 — Nobel Prize in Chemistry</div>
+          <div style="font-weight:700;font-size:var(--fs-card-title);margin-bottom:6px">2017 — Nobel Prize in Chemistry</div>
           <div>Henderson, Frank &amp; Dubochet recognized for cryo-EM of biomolecules in solution.</div>
         </div>
         <div class="bl-insight blue">
-          <div style="font-weight:700;font-size:18px;margin-bottom:6px">2025 — 41% of New Depositions</div>
+          <div style="font-weight:700;font-size:var(--fs-card-title);margin-bottom:6px">2025 — 41% of New Depositions</div>
           <div>7,240 cryo-EM structures. No crystallization, ug samples, multiple conformational states.</div>
         </div>
       </div>
@@ -2322,21 +2332,21 @@ body {
       <div style="position:relative;background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center">
         <img src="../cryo-slides-img/s014_pdb_mw_kde.png" alt="MW distribution" style="width:100%;height:auto;max-height:100%;object-fit:contain">
         <!-- Annotations overlaid on image -->
-        <div style="position:absolute;top:40%;left:18%;background:rgba(22,163,74,0.9);color:#fff;padding:6px 14px;border-radius:6px;font-size:13px;font-weight:700">NMR peak</div>
-        <div style="position:absolute;top:30%;left:45%;background:rgba(220,38,38,0.9);color:#fff;padding:6px 14px;border-radius:6px;font-size:13px;font-weight:700">X-ray peak</div>
-        <div style="position:absolute;top:50%;right:12%;background:rgba(37,99,235,0.9);color:#fff;padding:6px 14px;border-radius:6px;font-size:13px;font-weight:700">Cryo-EM peak</div>
+        <div style="position:absolute;top:40%;left:18%;background:rgba(22,163,74,0.9);color:#fff;padding:6px 14px;border-radius:6px;font-size:var(--fs-caption);font-weight:700">NMR peak</div>
+        <div style="position:absolute;top:30%;left:45%;background:rgba(220,38,38,0.9);color:#fff;padding:6px 14px;border-radius:6px;font-size:var(--fs-caption);font-weight:700">X-ray peak</div>
+        <div style="position:absolute;top:50%;right:12%;background:rgba(37,99,235,0.9);color:#fff;padding:6px 14px;border-radius:6px;font-size:var(--fs-caption);font-weight:700">Cryo-EM peak</div>
       </div>
       <div style="display:flex;flex-direction:column;justify-content:center;gap:24px">
         <div class="bl-insight green">
-          <div style="font-weight:700;font-size:18px;margin-bottom:6px">NMR — Small Proteins</div>
+          <div style="font-weight:700;font-size:var(--fs-card-title);margin-bottom:6px">NMR — Small Proteins</div>
           <div>Peak at ~10-25 kDa. Solution-state technique limited by tumbling rate.</div>
         </div>
         <div class="bl-insight red">
-          <div style="font-weight:700;font-size:18px;margin-bottom:6px">X-ray — Mid-Range</div>
+          <div style="font-weight:700;font-size:var(--fs-card-title);margin-bottom:6px">X-ray — Mid-Range</div>
           <div>Peak at ~25-50 kDa. Requires crystallization, harder for large complexes.</div>
         </div>
         <div class="bl-insight blue">
-          <div style="font-weight:700;font-size:18px;margin-bottom:6px">Cryo-EM — Large Complexes</div>
+          <div style="font-weight:700;font-size:var(--fs-card-title);margin-bottom:6px">Cryo-EM — Large Complexes</div>
           <div>Peak at ~200-500 kDa. No crystallization needed. Dominates above ~300 kDa.</div>
         </div>
       </div>
@@ -2378,7 +2388,7 @@ body {
           <img src="../cryo-slides-img/s020_zoom_row.jpg" alt="Biological length scales" style="width:100%;height:100%;object-fit:contain;object-position:center bottom">
         </div>
         <!-- Category labels -->
-        <div style="position:absolute;top:38%;left:16px;right:16px;display:flex;font:700 20px sans-serif;color:#1e3a5f;text-align:center">
+        <div style="position:absolute;top:38%;left:16px;right:16px;display:flex;font-weight:700;font-size:var(--fs-body);font-family:sans-serif;color:#1e3a5f;text-align:center">
           <span style="flex:3">Cells</span>
           <span style="flex:2">Viruses</span>
           <span style="flex:1">Proteins</span>
@@ -2386,31 +2396,31 @@ body {
         </div>
         <!-- Technique bars -->
         <div style="position:absolute;top:44%;left:60%;width:26%;height:5%;background:#eab308;border-radius:5px;display:flex;align-items:center;justify-content:center">
-          <span style="font:700 16px sans-serif;color:#fff">Single Particle Cryo-TEM</span>
+          <span style="font-weight:700;font-size:var(--fs-caption);font-family:sans-serif;color:#fff">Single Particle Cryo-TEM</span>
         </div>
         <div style="position:absolute;top:51%;left:45%;width:33%;height:5%;background:#eab308;border-radius:5px;display:flex;align-items:center;justify-content:center">
-          <span style="font:700 16px sans-serif;color:#fff">Cryo-ET</span>
+          <span style="font-weight:700;font-size:var(--fs-caption);font-family:sans-serif;color:#fff">Cryo-ET</span>
         </div>
         <div style="position:absolute;top:58%;left:85%;width:14%;height:5%;background:#eab308;border-radius:5px;display:flex;align-items:center;justify-content:center">
-          <span style="font:700 14px sans-serif;color:#fff">microED</span>
+          <span style="font-weight:700;font-size:var(--fs-ref);font-family:sans-serif;color:#fff">microED</span>
         </div>
         <div style="position:absolute;top:58%;left:78%;width:20%;height:5%;background:#f59e0b;border-radius:5px;display:flex;align-items:center;justify-content:center">
-          <span style="font:700 16px sans-serif;color:#fff">NMR</span>
+          <span style="font-weight:700;font-size:var(--fs-caption);font-family:sans-serif;color:#fff">NMR</span>
         </div>
         <div style="position:absolute;top:65%;left:50%;width:35%;height:5%;background:#16a34a;border-radius:5px;display:flex;align-items:center;justify-content:center">
-          <span style="font:700 16px sans-serif;color:#fff">Small Angle X-ray Scattering</span>
+          <span style="font-weight:700;font-size:var(--fs-caption);font-family:sans-serif;color:#fff">Small Angle X-ray Scattering</span>
         </div>
         <div style="position:absolute;top:72%;left:68%;width:30%;height:5%;background:#16a34a;border-radius:5px;display:flex;align-items:center;justify-content:center">
-          <span style="font:700 16px sans-serif;color:#fff">X-ray Crystallography</span>
+          <span style="font-weight:700;font-size:var(--fs-caption);font-family:sans-serif;color:#fff">X-ray Crystallography</span>
         </div>
         <div style="position:absolute;top:72%;left:20%;width:37%;height:5%;background:#16a34a;border-radius:5px;display:flex;align-items:center;justify-content:center">
-          <span style="font:700 16px sans-serif;color:#fff">X-ray Microscopy</span>
+          <span style="font-weight:700;font-size:var(--fs-caption);font-family:sans-serif;color:#fff">X-ray Microscopy</span>
         </div>
         <div style="position:absolute;top:79%;left:0%;width:57%;height:5%;background:#78716c;border-radius:5px;display:flex;align-items:center;padding-left:16px">
-          <span style="font:700 16px sans-serif;color:#fff">Light Microscopy</span>
+          <span style="font-weight:700;font-size:var(--fs-caption);font-family:sans-serif;color:#fff">Light Microscopy</span>
         </div>
         <!-- Scale axis -->
-        <div style="position:absolute;bottom:30px;left:16px;right:16px;display:flex;justify-content:space-between;font:500 14px sans-serif;color:#6b7280">
+        <div style="position:absolute;bottom:30px;left:16px;right:16px;display:flex;justify-content:space-between;font-weight:500;font-size:var(--fs-ref);font-family:sans-serif;color:#6b7280">
           <span>1 mm</span><span>100 um</span><span>10 um</span><span>1 um</span><span>100 nm</span><span>10 nm</span><span>1 nm</span><span>1 A</span>
         </div>
         <div style="position:absolute;bottom:48px;left:16px;right:16px;height:2px;background:#374151"></div>
@@ -2456,8 +2466,8 @@ body {
           </div>
         </div>
         <div style="background:linear-gradient(135deg,#065f46,#059669);border-radius:14px;padding:20px 22px;color:#fff">
-          <div style="font-weight:800;font-size:17px;margin-bottom:6px">&#127775; Future: Cellular Cryo-EM</div>
-          <div style="font-size:14px;line-height:1.5;color:rgba(255,255,255,0.9)">FIB-SEM milling + cryo-ET enables imaging within intact cells at ~15-30 A, with subtomogram averaging pushing toward near-atomic detail.</div>
+          <div style="font-weight:800;font-size:var(--fs-body);margin-bottom:6px">&#127775; Future: Cellular Cryo-EM</div>
+          <div style="font-size:var(--fs-caption);line-height:1.5;color:rgba(255,255,255,0.9)">FIB-SEM milling + cryo-ET enables imaging within intact cells at ~15-30 A, with subtomogram averaging pushing toward near-atomic detail.</div>
         </div>
       </div>
     </div>
