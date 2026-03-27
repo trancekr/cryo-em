@@ -85,9 +85,9 @@ body { width:1920px; height:1080px; overflow:hidden; font-family:'Inter',-apple-
   </div>
   <div class="content">
     <div style="position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center">
-      <img src="../cryo-slides-img/krios_g4.webp" alt="Titan Krios G4" style="position:absolute;left:0px;top:50%;transform:translateY(-50%);height:110%;width:auto;object-fit:contain;z-index:0;opacity:0.25">
+      <img src="../cryo-slides-img/krios_g4.webp" alt="Titan Krios G4" style="position:absolute;left:-63px;top:298px;width:652px;height:830px;object-fit:contain;z-index:0;opacity:0.25">
       <div style="display:grid;grid-template-columns:1fr 120px 1fr;align-items:stretch;gap:0;width:1300px;margin-left:200px;z-index:1">
-      <div class="card problem" style="backdrop-filter:blur(10px)">
+      <div class="card problem" style="backdrop-filter:blur(10px);position:relative;left:98px;top:-3px">
         <h3>⚠ The Problem</h3>
         <ul>
           <li><strong>Vacuum damage</strong> — Water evaporates instantly</li>
@@ -98,7 +98,7 @@ body { width:1920px; height:1080px; overflow:hidden; font-family:'Inter',-apple-
         </ul>
       </div>
       <div class="arrow">➔</div>
-      <div class="card solution" style="backdrop-filter:blur(10px)">
+      <div class="card solution" style="backdrop-filter:blur(10px);position:relative;left:85px;top:-3px">
         <h3>✔ The Cryo Solution</h3>
         <ul>
           <li><strong>Vitreous ice</strong> — Rapid cooling in liquid ethane</li>
@@ -329,7 +329,7 @@ function updateInfo(name, el) {
   for (const [n, v] of Object.entries(changes)) {
     html += `<span style="color:#ff0">${n}</span>: left:${v.left}px top:${v.top}px w:${v.width} h:${v.height} op:${v.opacity}<br>`;
   }
-  html += '<br><span style="color:#aaa">Drag=move | Shift+scroll=size | Alt+scroll=opacity</span>';
+  html += '<br><span style="color:#aaa">Drag=move | Ctrl+scroll=size | Alt+scroll=opacity | G=grid</span>';
   infoPanel.innerHTML = html;
   infoPanel.style.display = 'block';
 }
@@ -373,9 +373,9 @@ document.querySelectorAll('img, .card, .arrow').forEach(el => {
   });
 });
 
-// Shift+scroll = resize
+// Ctrl+scroll = resize (Shift triggers horizontal scroll on macOS)
 document.addEventListener('wheel', e => {
-  if (!e.shiftKey) return;
+  if (!e.ctrlKey && !e.metaKey) return;
   const el = document.elementFromPoint(e.clientX, e.clientY);
   if (el && el.tagName === 'IMG') {
     e.preventDefault();
@@ -400,6 +400,24 @@ document.addEventListener('wheel', e => {
     updateInfo(getName(el), el);
   }
 }, {passive: false});
+
+// S key = save all positions to clipboard
+document.addEventListener('keydown', e => {
+  if (e.key === 's' || e.key === 'S') {
+    if (Object.keys(changes).length === 0) { alert('변경된 요소 없음'); return; }
+    let out = `/* Slide 3 — 수정 수치 */\n`;
+    for (const [n, v] of Object.entries(changes)) {
+      out += `/* ${n} */ left:${v.left}px; top:${v.top}px; width:${v.width}px; height:${v.height}px; opacity:${v.opacity};\n`;
+    }
+    navigator.clipboard.writeText(out).then(() => {
+      const msg = document.createElement('div');
+      msg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#0a0;color:#fff;font-size:24px;padding:20px 40px;border-radius:12px;z-index:999999';
+      msg.textContent = '✅ 클립보드에 복사됨';
+      document.body.appendChild(msg);
+      setTimeout(() => msg.remove(), 1500);
+    });
+  }
+});
 
 function applyZoom() {
   const z = Math.min(window.innerWidth/1920, window.innerHeight/1080);
