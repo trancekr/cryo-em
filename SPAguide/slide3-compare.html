@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slide 3 — Design Comparison</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:#000; }
+body { width:1920px; height:1080px; overflow:hidden; font-family:'Inter',-apple-system,sans-serif; color:#1a1a2e; }
+
+.version { position:absolute; inset:0; display:none; background:#f5f5f5; }
+.version.active { display:block; }
+.version-label { position:absolute; top:16px; right:20px; color:#fff; background:rgba(0,0,0,0.7); padding:10px 20px; border-radius:10px; font-size:20px; font-weight:700; z-index:100; }
+.nav-info { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); color:#fff; background:rgba(0,0,0,0.6); padding:10px 24px; border-radius:20px; font-size:18px; z-index:100; }
+
+/* Shared */
+.header { position:absolute; top:44px; left:75px; }
+.chapter { font-size:20px; color:#e74c3c; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:12px; }
+.title { font-size:48px; font-weight:800; color:#1a1a2e; line-height:1.2; margin-bottom:10px; }
+.subtitle { font-size:26px; font-weight:400; color:#666; }
+.content { position:absolute; top:318px; left:75px; right:75px; height:634px; display:flex; align-items:center; justify-content:center; }
+.ref { position:absolute; top:990px; left:75px; right:75px; font-size:16px; color:#999; text-align:center; }
+
+/* Cards — auto height, no stretch */
+.card { border-radius:26px; padding:36px 32px; box-shadow:0 8px 40px rgba(0,0,0,0.15); display:flex; flex-direction:column; border:1px solid rgba(255,255,255,1); }
+.card.problem { background:rgba(255,245,245,0.9); }
+.card.solution { background:rgba(240,253,244,0.9); }
+.card h3 { font-size:32px; font-weight:800; margin-bottom:20px; }
+.card.problem h3 { color:#e74c3c; }
+.card.solution h3 { color:#059669; }
+.card ul { list-style:none; padding:0; }
+.card ul li { font-size:24px; line-height:1.5; padding:10px 0; border-bottom:1px solid rgba(0,0,0,0.06); color:#333; }
+.card ul li:last-child { border-bottom:none; }
+.card ul li strong { font-weight:700; }
+.card.problem li strong { color:#dc2626; }
+.card.solution li strong { color:#059669; }
+.arrow { display:flex; align-items:center; justify-content:center; font-size:64px; color:#9b59b6; font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- VERSION A: 2 Cards Only -->
+<div class="version active" id="v-a">
+  <div class="version-label">A: 2 Cards Only (no image)</div>
+  <div class="header">
+    <div class="chapter">Section 1: Cryo-EM Overview</div>
+    <div class="title">Electron Microscopy &amp; Biological Samples</div>
+    <div class="subtitle">Why do we need cryo-EM?</div>
+  </div>
+  <div class="content">
+    <div style="display:grid;grid-template-columns:1fr 60px 1fr;align-items:center;gap:0;width:1400px">
+      <div class="card problem">
+        <h3>⚠ The Problem</h3>
+        <ul>
+          <li><strong>Vacuum damage</strong> — Water evaporates instantly in EM column vacuum</li>
+          <li><strong>Radiation damage</strong> — High-energy electrons break chemical bonds</li>
+          <li><strong>Fixation artifacts</strong> — Chemical fixation alters native conformation</li>
+          <li><strong>Low contrast</strong> — Light atoms scatter electrons weakly</li>
+          <li><strong>Charging</strong> — Non-conductive specimens accumulate charge</li>
+        </ul>
+      </div>
+      <div class="arrow">➔</div>
+      <div class="card solution">
+        <h3>✔ The Cryo Solution</h3>
+        <ul>
+          <li><strong>Vitreous ice</strong> — Rapid cooling (~10⁴ C/s) in liquid ethane</li>
+          <li><strong>Native state</strong> — Proteins remain in solution-like conformation</li>
+          <li><strong>Reduced damage</strong> — Imaging at -196°C slows radiation damage</li>
+          <li><strong>Low-dose imaging</strong> — 20-60 e⁻/Å²; compensated by averaging</li>
+          <li><strong>No staining</strong> — Flash-freeze preserves native hydrated state</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="ref">Dubochet et al., Q Rev Biophys (1988) · Glaeser, J Ultrastruct Res (1971) · Taylor &amp; Glaeser, Science (1974)</div>
+</div>
+
+<!-- VERSION B: Krios Left + 2 Cards -->
+<div class="version" id="v-b">
+  <div class="version-label">B: Krios Left + 2 Cards</div>
+  <div class="header">
+    <div class="chapter">Section 1: Cryo-EM Overview</div>
+    <div class="title">Electron Microscopy &amp; Biological Samples</div>
+    <div class="subtitle">Why do we need cryo-EM?</div>
+  </div>
+  <div class="content">
+    <div style="position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center">
+      <img src="../cryo-slides-img/krios_g4.webp" alt="Titan Krios G4" style="position:absolute;left:0px;top:50%;transform:translateY(-50%);height:110%;width:auto;object-fit:contain;z-index:0;opacity:0.25">
+      <div style="display:grid;grid-template-columns:1fr 120px 1fr;align-items:stretch;gap:0;width:1300px;margin-left:200px;z-index:1">
+      <div class="card problem" style="backdrop-filter:blur(10px)">
+        <h3>⚠ The Problem</h3>
+        <ul>
+          <li><strong>Vacuum damage</strong> — Water evaporates instantly</li>
+          <li><strong>Radiation damage</strong> — Electrons break bonds</li>
+          <li><strong>Fixation artifacts</strong> — Alters native conformation</li>
+          <li><strong>Low contrast</strong> — Light atoms scatter weakly</li>
+          <li><strong>Charging</strong> — Non-conductive specimens</li>
+        </ul>
+      </div>
+      <div class="arrow">➔</div>
+      <div class="card solution" style="backdrop-filter:blur(10px)">
+        <h3>✔ The Cryo Solution</h3>
+        <ul>
+          <li><strong>Vitreous ice</strong> — Rapid cooling in liquid ethane</li>
+          <li><strong>Native state</strong> — Solution-like conformation</li>
+          <li><strong>Reduced damage</strong> — Imaging at -196°C</li>
+          <li><strong>Low-dose imaging</strong> — 20-60 e⁻/Å²</li>
+          <li><strong>No staining</strong> — Native hydrated state</li>
+        </ul>
+      </div>
+      </div>
+    </div>
+  </div>
+  <div class="ref">Dubochet et al., Q Rev Biophys (1988) · Glaeser, J Ultrastruct Res (1971) · Taylor &amp; Glaeser, Science (1974)</div>
+</div>
+
+<!-- VERSION C: Krios background watermark -->
+<div class="version" id="v-c">
+  <div class="version-label">C: Krios Watermark Background</div>
+  <div class="header">
+    <div class="chapter">Section 1: Cryo-EM Overview</div>
+    <div class="title">Electron Microscopy &amp; Biological Samples</div>
+    <div class="subtitle">Why do we need cryo-EM?</div>
+  </div>
+  <img src="../cryo-slides-img/krios_g4.webp" alt="Krios" style="position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);height:75%;width:auto;opacity:0.08;pointer-events:none;z-index:0">
+  <div class="content" style="z-index:1">
+    <div style="display:grid;grid-template-columns:1fr 60px 1fr;align-items:center;gap:0;width:1400px">
+      <div class="card problem" style="backdrop-filter:blur(8px)">
+        <h3>⚠ The Problem</h3>
+        <ul>
+          <li><strong>Vacuum damage</strong> — Water evaporates instantly in EM column vacuum</li>
+          <li><strong>Radiation damage</strong> — High-energy electrons break chemical bonds</li>
+          <li><strong>Fixation artifacts</strong> — Chemical fixation alters native conformation</li>
+          <li><strong>Low contrast</strong> — Light atoms scatter electrons weakly</li>
+          <li><strong>Charging</strong> — Non-conductive specimens accumulate charge</li>
+        </ul>
+      </div>
+      <div class="arrow">➔</div>
+      <div class="card solution" style="backdrop-filter:blur(8px)">
+        <h3>✔ The Cryo Solution</h3>
+        <ul>
+          <li><strong>Vitreous ice</strong> — Rapid cooling (~10⁴ C/s) in liquid ethane</li>
+          <li><strong>Native state</strong> — Proteins remain in solution-like conformation</li>
+          <li><strong>Reduced damage</strong> — Imaging at -196°C slows radiation damage</li>
+          <li><strong>Low-dose imaging</strong> — 20-60 e⁻/Å²; compensated by averaging</li>
+          <li><strong>No staining</strong> — Flash-freeze preserves native hydrated state</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="ref">Dubochet et al., Q Rev Biophys (1988) · Glaeser, J Ultrastruct Res (1971) · Taylor &amp; Glaeser, Science (1974)</div>
+</div>
+
+<!-- VERSION D: Central Krios connector -->
+<div class="version" id="v-d">
+  <div class="version-label">D: Central Krios Connector</div>
+  <div class="header">
+    <div class="chapter">Section 1: Cryo-EM Overview</div>
+    <div class="title">Electron Microscopy &amp; Biological Samples</div>
+    <div class="subtitle">Why do we need cryo-EM?</div>
+  </div>
+  <div class="content">
+    <div style="display:grid;grid-template-columns:1fr 200px 1fr;gap:0;align-items:center;width:100%">
+      <div class="card problem" style="border-radius:26px 0 0 26px;border-right:none">
+        <h3>⚠ The Problem</h3>
+        <ul>
+          <li><strong>Vacuum damage</strong> — Water evaporates</li>
+          <li><strong>Radiation damage</strong> — Breaks bonds</li>
+          <li><strong>Fixation artifacts</strong> — Alters structure</li>
+          <li><strong>Low contrast</strong> — Weak scattering</li>
+          <li><strong>Charging</strong> — Non-conductive</li>
+        </ul>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#1a1a2e,#2d3a5c);padding:24px 16px;border-radius:0;align-self:stretch">
+        <img src="../cryo-slides-img/krios_g4.webp" alt="Krios" style="max-height:300px;width:auto;object-fit:contain;filter:brightness(1.3)">
+        <div style="color:#fff;font-size:18px;margin-top:16px;text-align:center;font-weight:700;letter-spacing:1px">TITAN KRIOS</div>
+      </div>
+      <div class="card solution" style="border-radius:0 26px 26px 0;border-left:none">
+        <h3>✔ The Cryo Solution</h3>
+        <ul>
+          <li><strong>Vitreous ice</strong> — Rapid cooling</li>
+          <li><strong>Native state</strong> — Solution-like</li>
+          <li><strong>Reduced damage</strong> — -196°C imaging</li>
+          <li><strong>Low-dose</strong> — 20-60 e⁻/Å²</li>
+          <li><strong>No staining</strong> — Flash-freeze</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="ref">Dubochet et al., Q Rev Biophys (1988) · Glaeser, J Ultrastruct Res (1971) · Taylor &amp; Glaeser, Science (1974)</div>
+</div>
+
+<!-- VERSION E: Krios overlapping left card -->
+<div class="version" id="v-e">
+  <div class="version-label">E: Krios Overlapping Cards</div>
+  <div class="header">
+    <div class="chapter">Section 1: Cryo-EM Overview</div>
+    <div class="title">Electron Microscopy &amp; Biological Samples</div>
+    <div class="subtitle">Why do we need cryo-EM?</div>
+  </div>
+  <div class="content" style="position:relative">
+    <img src="../cryo-slides-img/krios_g4.webp" alt="Krios" style="position:absolute;left:-20px;top:50%;transform:translateY(-50%);height:80%;width:auto;object-fit:contain;z-index:2;opacity:0.9">
+    <div style="display:grid;grid-template-columns:1fr 50px 1fr;align-items:center;gap:0;width:100%;margin-left:200px">
+      <div class="card problem" style="z-index:1">
+        <h3>⚠ The Problem</h3>
+        <ul>
+          <li><strong>Vacuum damage</strong> — Water evaporates instantly</li>
+          <li><strong>Radiation damage</strong> — Electrons break bonds</li>
+          <li><strong>Fixation artifacts</strong> — Alters conformation</li>
+          <li><strong>Low contrast</strong> — Weak scattering</li>
+          <li><strong>Charging</strong> — Non-conductive</li>
+        </ul>
+      </div>
+      <div class="arrow" style="z-index:1">➔</div>
+      <div class="card solution" style="z-index:1">
+        <h3>✔ The Cryo Solution</h3>
+        <ul>
+          <li><strong>Vitreous ice</strong> — Rapid cooling in ethane</li>
+          <li><strong>Native state</strong> — Solution-like conformation</li>
+          <li><strong>Reduced damage</strong> — -196°C imaging</li>
+          <li><strong>Low-dose</strong> — 20-60 e⁻/Å²</li>
+          <li><strong>No staining</strong> — Flash-freeze</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="ref">Dubochet et al., Q Rev Biophys (1988) · Glaeser, J Ultrastruct Res (1971) · Taylor &amp; Glaeser, Science (1974)</div>
+</div>
+
+<!-- VERSION F: A cards + large Krios -->
+<div class="version" id="v-f">
+  <div class="version-label">F: A Cards + Large Krios</div>
+  <div class="header">
+    <div class="chapter">Section 1: Cryo-EM Overview</div>
+    <div class="title">Electron Microscopy &amp; Biological Samples</div>
+    <div class="subtitle">Why do we need cryo-EM?</div>
+  </div>
+  <div class="content" style="position:relative">
+    <img src="../cryo-slides-img/krios_g4.webp" alt="Krios" style="position:absolute;left:-40px;top:50%;transform:translateY(-50%);height:95%;width:auto;object-fit:contain;z-index:0;opacity:0.85">
+    <div style="display:grid;grid-template-columns:1fr 50px 1fr;align-items:center;gap:0;width:1200px;margin-left:250px;z-index:1;position:relative">
+      <div class="card problem">
+        <h3>⚠ The Problem</h3>
+        <ul>
+          <li><strong>Vacuum damage</strong> — Water evaporates instantly in EM column vacuum</li>
+          <li><strong>Radiation damage</strong> — High-energy electrons break chemical bonds</li>
+          <li><strong>Fixation artifacts</strong> — Chemical fixation alters native conformation</li>
+          <li><strong>Low contrast</strong> — Light atoms scatter electrons weakly</li>
+          <li><strong>Charging</strong> — Non-conductive specimens accumulate charge</li>
+        </ul>
+      </div>
+      <div class="arrow">➔</div>
+      <div class="card solution">
+        <h3>✔ The Cryo Solution</h3>
+        <ul>
+          <li><strong>Vitreous ice</strong> — Rapid cooling (~10⁴ C/s) in liquid ethane</li>
+          <li><strong>Native state</strong> — Proteins remain in solution-like conformation</li>
+          <li><strong>Reduced damage</strong> — Imaging at -196°C slows radiation damage</li>
+          <li><strong>Low-dose imaging</strong> — 20-60 e⁻/Å²; compensated by averaging</li>
+          <li><strong>No staining</strong> — Flash-freeze preserves native hydrated state</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="ref">Dubochet et al., Q Rev Biophys (1988) · Glaeser, J Ultrastruct Res (1971) · Taylor &amp; Glaeser, Science (1974)</div>
+</div>
+
+<div class="nav-info">← → 방향키로 버전 전환 (1/6)</div>
+
+<script>
+const versions = ['v-a','v-b','v-c','v-d','v-e','v-f'];
+let cur = 0;
+function showV(n) {
+  versions.forEach(v => document.getElementById(v).classList.remove('active'));
+  document.getElementById(versions[n]).classList.add('active');
+  document.querySelector('.nav-info').textContent = `← → 방향키로 버전 전환 (${n+1}/${versions.length})`;
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') { cur = (cur+1) % versions.length; showV(cur); }
+  if (e.key === 'ArrowLeft') { cur = (cur-1+versions.length) % versions.length; showV(cur); }
+});
+// Grid overlay toggle (G key)
+let gridOn = false;
+const gridEl = document.createElement('div');
+gridEl.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9999;display:none';
+gridEl.innerHTML = `
+  <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="g50" width="50" height="50" patternUnits="userSpaceOnUse">
+        <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(0,150,255,0.15)" stroke-width="0.5"/>
+      </pattern>
+      <pattern id="g10" width="10" height="10" patternUnits="userSpaceOnUse">
+        <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(0,150,255,0.07)" stroke-width="0.5"/>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#g10)"/>
+    <rect width="100%" height="100%" fill="url(#g50)"/>
+    <!-- Brandlogy boundaries -->
+    <line x1="75" y1="0" x2="75" y2="1080" stroke="red" stroke-width="1" opacity="0.3"/>
+    <line x1="1845" y1="0" x2="1845" y2="1080" stroke="red" stroke-width="1" opacity="0.3"/>
+    <line x1="0" y1="318" x2="1920" y2="318" stroke="blue" stroke-width="1" opacity="0.3"/>
+    <line x1="0" y1="952" x2="1920" y2="952" stroke="blue" stroke-width="1" opacity="0.3"/>
+    <line x1="0" y1="990" x2="1920" y2="990" stroke="green" stroke-width="1" opacity="0.3"/>
+    <line x1="960" y1="0" x2="960" y2="1080" stroke="orange" stroke-width="1" opacity="0.2"/>
+    <line x1="0" y1="540" x2="1920" y2="540" stroke="orange" stroke-width="1" opacity="0.2"/>
+  </svg>`;
+document.body.appendChild(gridEl);
+document.addEventListener('keydown', e => {
+  if (e.key === 'g' || e.key === 'G') {
+    gridOn = !gridOn;
+    gridEl.style.display = gridOn ? 'block' : 'none';
+  }
+});
+
+// Info panel
+const infoPanel = document.createElement('div');
+infoPanel.style.cssText = 'position:fixed;top:10px;left:10px;background:rgba(0,0,0,0.85);color:#0f0;font-family:monospace;font-size:14px;padding:12px 16px;border-radius:8px;z-index:99999;min-width:320px;line-height:1.6;pointer-events:none;display:none';
+document.body.appendChild(infoPanel);
+
+const changes = {};
+function updateInfo(name, el) {
+  const cs = getComputedStyle(el);
+  const left = parseInt(cs.left) || 0;
+  const top = parseInt(cs.top) || 0;
+  const w = el.offsetWidth;
+  const h = el.offsetHeight;
+  const op = parseFloat(cs.opacity).toFixed(2);
+  changes[name] = {left, top, width:w, height:h, opacity:op};
+  let html = '<b>== Element Positions ==</b><br>';
+  for (const [n, v] of Object.entries(changes)) {
+    html += `<span style="color:#ff0">${n}</span>: left:${v.left}px top:${v.top}px w:${v.width} h:${v.height} op:${v.opacity}<br>`;
+  }
+  html += '<br><span style="color:#aaa">Drag=move | Shift+scroll=size | Alt+scroll=opacity</span>';
+  infoPanel.innerHTML = html;
+  infoPanel.style.display = 'block';
+}
+
+function getName(el) {
+  if (el.tagName === 'IMG') return el.alt || 'IMG';
+  if (el.classList.contains('problem')) return 'Problem Card';
+  if (el.classList.contains('solution')) return 'Solution Card';
+  if (el.classList.contains('arrow')) return 'Arrow';
+  return el.tagName + '.' + el.className;
+}
+
+// Drag any image or card
+document.querySelectorAll('img, .card, .arrow').forEach(el => {
+  el.style.cursor = 'move';
+  let startX, startY, origLeft, origTop;
+  el.addEventListener('mousedown', e => {
+    e.preventDefault();
+    const z = parseFloat(document.body.style.zoom) || 1;
+    startX = e.clientX / z;
+    startY = e.clientY / z;
+    const cs = getComputedStyle(el);
+    origLeft = parseInt(cs.left) || 0;
+    origTop = parseInt(cs.top) || 0;
+    if (cs.position === 'static') el.style.position = 'relative';
+    const name = getName(el);
+
+    function onMove(ev) {
+      const dx = ev.clientX / z - startX;
+      const dy = ev.clientY / z - startY;
+      el.style.left = (origLeft + dx) + 'px';
+      el.style.top = (origTop + dy) + 'px';
+      updateInfo(name, el);
+    }
+    function onUp() {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    }
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+});
+
+// Shift+scroll = resize
+document.addEventListener('wheel', e => {
+  if (!e.shiftKey) return;
+  const el = document.elementFromPoint(e.clientX, e.clientY);
+  if (el && el.tagName === 'IMG') {
+    e.preventDefault();
+    const curr = parseInt(el.style.height) || el.offsetHeight;
+    const delta = e.deltaY > 0 ? -20 : 20;
+    el.style.height = (curr + delta) + 'px';
+    el.style.width = 'auto';
+    updateInfo(getName(el), el);
+  }
+}, {passive: false});
+
+// Alt+scroll = opacity
+document.addEventListener('wheel', e => {
+  if (!e.altKey) return;
+  const el = document.elementFromPoint(e.clientX, e.clientY);
+  if (el && el.tagName === 'IMG') {
+    e.preventDefault();
+    let op = parseFloat(el.style.opacity) || 1;
+    op += e.deltaY > 0 ? -0.05 : 0.05;
+    op = Math.max(0.05, Math.min(1, op));
+    el.style.opacity = op;
+    updateInfo(getName(el), el);
+  }
+}, {passive: false});
+
+function applyZoom() {
+  const z = Math.min(window.innerWidth/1920, window.innerHeight/1080);
+  document.body.style.zoom = z;
+}
+applyZoom();
+window.addEventListener('resize', applyZoom);
+</script>
+</body>
+</html>
