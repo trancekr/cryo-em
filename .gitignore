@@ -1,4 +1,6 @@
 .DS_Store
+references/*.pdf
+references/*.pptx
 screenshots/
 **/editor.js
 **/slide-editor.html
