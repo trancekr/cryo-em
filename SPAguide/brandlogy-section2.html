@@ -82,12 +82,30 @@
     <div class="bl-title">Sample and Grid Preparation</div>
     <div class="bl-subtitle">3-Year Data Aggregation from NanoImaging Services</div>
   </div>
-  <div class="bl-content" style="top:260px;height:740px;display:flex;align-items:center;justify-content:center">
-    <div style="display:inline-block;background:#fff;border-radius:16px;padding:20px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-      <img src="../cryo-slides-img/s039_81.png" alt="NIS 3-year sample data: only 7.6% well-behaved" style="display:block;max-height:640px;width:auto;border-radius:8px">
+  <div class="bl-content" style="top:260px;height:740px;position:relative;cursor:pointer;padding:0" id="s4-content">
+    <!-- Pie Chart image: starts centered, moves left on click -->
+    <div id="s4-chart" style="position:absolute;left:810px;top:50%;transform:translate(-50%,-50%);transition:left 0.5s ease;width:1100px;height:690px">
+      <canvas id="s4-pie" width="640" height="640" style="position:absolute;left:280px;top:40px;width:640px;height:640px"></canvas>
+      <!-- Labels — positions from editor 12:17 -->
+      <div id="s4-wb-label" style="position:absolute;left:702px;top:32px;font:bold 30px Pretendard,sans-serif;color:#1a2744;transition:all 0.4s ease">Well Behaved<br><span style="font-weight:700;font-size:24px">7.6%</span></div>
+      <div style="position:absolute;left:877px;top:264px;width:216px;height:70px;font:bold 30px Pretendard,sans-serif;color:#1a2744">Preferred Orientation<br><span style="font-weight:700;font-size:24px">29.1%</span></div>
+      <div style="position:absolute;left:715px;top:608px;font:bold 30px Pretendard,sans-serif;color:#1a2744">Heterogeneity<br><span style="font-weight:700;font-size:24px">16.5%</span></div>
+      <div style="position:absolute;left:261px;top:590px;width:189px;height:70px;font:bold 30px Pretendard,sans-serif;color:#1a2744;text-align:right">Particle Size<br><span style="font-weight:700;font-size:24px">10.1%</span></div>
+      <div style="position:absolute;left:173px;top:376px;width:153px;height:70px;font:bold 30px Pretendard,sans-serif;color:#1a2744;text-align:right">Instability<br><span style="font-weight:700;font-size:24px">21.5%</span></div>
+      <div style="position:absolute;left:111px;top:131px;width:274px;height:70px;font:bold 30px Pretendard,sans-serif;color:#1a2744;text-align:right">Low Concentration<br><span style="font-weight:700;font-size:24px">3.8%</span></div>
+      <div style="position:absolute;left:311px;top:56px;width:156px;height:70px;font:bold 30px Pretendard,sans-serif;color:#1a2744;text-align:right">Flexibility<br><span style="font-weight:700;font-size:24px">8.9%</span></div>
+      <div style="position:absolute;left:483px;top:16px;font:bold 30px Pretendard,sans-serif;color:#1a2744;text-align:center">Aggregation<br><span style="font-weight:700;font-size:24px">2.5%</span></div>
+    </div>
+    <!-- Right Panel: card style -->
+    <div id="s4-panel" style="position:absolute;left:1150px;top:50%;transform:translateY(-50%);width:420px;opacity:0;transition:opacity 0.4s ease 0.15s;pointer-events:none">
+      <div style="font-size:34px;font-weight:700;color:#1a1a2e;line-height:1.4">Only <span style="color:#e74c3c;font-size:42px;font-weight:900">~8%</span> of samples were "well-behaved"</div>
+      <div style="font-size:18px;color:#999;font-style:italic;margin-top:6px;white-space:nowrap">≤ 3.5 Å resolution within 2 weeks from initial vitrification</div>
+      <div style="height:4px;width:100%;background:#e74c3c;border-radius:2px;margin:24px 0"></div>
+      <div style="font-size:22px;color:#444;line-height:1.6;margin-bottom:14px"><strong style="color:#333">The other 92%</strong> required extensive optimization of vitrification conditions and data collection parameters</div>
+      <div style="margin-top:24px;padding-top:16px;border-top:1.5px solid rgba(0,0,0,0.08);font-size:22px;color:#1a1a2e;font-weight:600">How do we optimize each step?</div>
     </div>
   </div>
-  <div class="bl-ref"><a href="https://nanoimagingservices.com" target="_blank">NanoImaging Services (nanoimagingservices.com)</a></div>
+  <div class="bl-ref"><a href="https://www.nanoimagingservices.com/about/blog/one-view-that-rules-them-all-and-other-vitrification-hurdles-in-cryo-em" target="_blank">Scapin, NanoImaging Services Blog (2023)</a></div>
 </div>
 
 <!-- ============================================================
@@ -99,11 +117,63 @@
     <div class="bl-title">The Circle of Cryo-EM Sample Preparation</div>
     <div class="bl-subtitle">Four key stages of sample preparation for cryo-EM</div>
   </div>
-  <div class="bl-content" style="top:260px;height:740px;display:flex;align-items:center;justify-content:center">
-    <div style="display:inline-block;background:#fff;border-radius:16px;padding:20px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-      <img src="../cryo-slides-img/s040_83.png" alt="Circle of cryo-EM sample preparation: optimization, carriers, deposition, vitrification" style="display:block;max-height:640px;width:auto;border-radius:8px">
+  <div class="bl-content" id="s5-content" style="top:260px;height:740px;position:relative;margin-left:0;margin-right:0;left:0;width:1920px;cursor:pointer">
+    <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(0.90)">
+      <div style="position:relative">
+        <div style="background:#fff;border-radius:300px;padding:75px;box-shadow:0 6px 24px rgba(0,0,0,0.15);width:fit-content">
+          <img src="../cryo-slides-img/s040_83_oval.png" alt="Circle of cryo-EM sample preparation: optimization, carriers, deposition, vitrification" style="display:block;max-height:640px;width:auto;position:relative;left:-5px;top:0">
+        </div>
+        <!-- 1. Sample Optimization — 좌측 상단 (9시) -->
+        <div id="s5-card1" style="position:absolute;left:-390px;top:13%;transform:translateY(-50%);width:340px;background:#fff;border-radius:20px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.06);opacity:0;transition:opacity 0.4s ease">
+          <div style="display:inline-block;background:#2dbcb0;color:#fff;font-size:22px;font-weight:700;padding:8px 20px;white-space:nowrap;border-radius:20px;margin-bottom:10px">Sample Optimization</div>
+          <div style="font-size:20px;color:#444;line-height:1.5">Maintain native state: pH, salt, detergents, cross-linking. Screen by negative stain before cryo-EM.</div>
+        </div>
+        <!-- 2. Sample Carriers & Treatments — 우측 상단 (3시) -->
+        <div id="s5-card2" style="position:absolute;right:-440px;top:13%;transform:translateY(-50%);width:390px;background:#fff;border-radius:20px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.06);opacity:0;transition:opacity 0.4s ease">
+          <div style="display:inline-block;background:#e07b20;color:#fff;font-size:22px;font-weight:700;padding:8px 20px;white-space:nowrap;border-radius:20px;margin-bottom:10px">Sample Carriers & Treatments</div>
+          <div style="font-size:20px;color:#444;line-height:1.5">3mm grid (Cu/Au mesh + holey foil). Plasma clean for wettability. Continuous film for particle distribution.</div>
+        </div>
+        <!-- 3. Deposition — 우측 하단 (6시) -->
+        <div id="s5-card3" style="position:absolute;right:-390px;top:87%;transform:translateY(-50%);width:340px;background:#fff;border-radius:20px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.06);opacity:0;transition:opacity 0.4s ease">
+          <div style="display:inline-block;background:#c99520;color:#fff;font-size:22px;font-weight:700;padding:8px 20px;white-space:nowrap;border-radius:20px;margin-bottom:10px">Deposition</div>
+          <div style="font-size:20px;color:#444;line-height:1.5">Form 10–100 nm thin film on grid. Air-water interface causes denaturation — minimize deposition-to-freezing time.</div>
+        </div>
+        <!-- 4. Vitrification — 좌측 하단 (7~8시) -->
+        <div id="s5-card4" style="position:absolute;left:-390px;top:87%;transform:translateY(-50%);width:340px;background:#fff;border-radius:20px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.06);opacity:0;transition:opacity 0.4s ease">
+          <div style="display:inline-block;background:#4a80b4;color:#fff;font-size:22px;font-weight:700;padding:8px 20px;white-space:nowrap;border-radius:20px;margin-bottom:10px">Vitrification</div>
+          <div style="font-size:20px;color:#444;line-height:1.5">Flash-freeze in liquid ethane (&gt;10⁵ K/s) to form vitreous ice. Store below −137°C to prevent devitrification.</div>
+        </div>
+      </div>
     </div>
   </div>
+  <script>
+  (function(){
+    var step = 0;
+    var cards = ['s5-card1','s5-card2','s5-card3','s5-card4'];
+    var content = document.getElementById('s5-content');
+    content.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(step < 4){
+        document.getElementById(cards[step]).style.opacity = '1';
+        step++;
+      }
+    });
+    // show() 리셋용
+    var slide5 = document.querySelector('[data-n="5"]');
+    var origShow = slide5._show;
+    slide5._show = function(){
+      step = 0;
+      cards.forEach(function(id){ document.getElementById(id).style.opacity = '0'; });
+      if(origShow) origShow.call(slide5);
+    };
+    // show 함수 훅
+    var _origShowFn = window.show;
+    window.show = function(n){
+      if(n === 5){ slide5._show(); }
+      _origShowFn(n);
+    };
+  })();
+  </script>
   <div class="bl-ref"><a href="https://doi.org/10.1038/s41592-021-01130-6" target="_blank">Weissenberger et al., Nat. Methods (2021)</a></div>
 </div>
 
@@ -903,6 +973,16 @@ function show(n) {
   document.getElementById('page-info').textContent = cur + ' / ' + N;
   document.getElementById('prev-btn').disabled = (cur === 1);
   document.getElementById('next-btn').disabled = (cur === N);
+  /* Reset slide 4 interaction */
+  var s4chart = document.getElementById('s4-chart');
+  var s4panel = document.getElementById('s4-panel');
+  if (s4chart && s4panel) {
+    s4chart.style.left = '810px';
+    s4panel.style.opacity = '0';
+    if (typeof s4pie !== 'undefined') s4pie.draw(false);
+    var wbl = document.getElementById('s4-wb-label');
+    if (wbl) { wbl.style.textShadow = 'none'; wbl.style.color = '#1a2744'; wbl.style.transform = 'none'; }
+  }
 }
 
 function go(d) { show(cur + d); }
@@ -942,6 +1022,134 @@ document.getElementById('s2-img-wrap')?.addEventListener('click', function(e) {
   hl.style.opacity = on ? '1' : '0';
   pn.style.opacity = on ? '1' : '0';
 });
+
+/* Slide 4: click to reveal */
+document.getElementById('s4-content')?.addEventListener('click', function(e) {
+  e.stopPropagation();
+  var chart = document.getElementById('s4-chart');
+  var panel = document.getElementById('s4-panel');
+  if (panel.style.opacity === '1') return;
+  // 1. Chart moves left (0.5s ease from CSS transition)
+  chart.style.left = '580px';
+  // 2. After chart movement completes (~500ms), animate slice + label + panel
+  setTimeout(function() {
+    // Well Behaved slice floats up
+    var startTime = null;
+    var duration = 600;
+    function animateSlice(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var progress = Math.min((timestamp - startTime) / duration, 1);
+      var ease = 1 - Math.pow(1 - progress, 3);
+      s4pie.drawAnimated(ease);
+      if (progress < 1) requestAnimationFrame(animateSlice);
+    }
+    requestAnimationFrame(animateSlice);
+    // Well Behaved label: highlight + move up to avoid overlap
+    var wbLabel = document.getElementById('s4-wb-label');
+    wbLabel.style.textShadow = '0 2px 8px rgba(46,204,113,0.5)';
+    wbLabel.style.color = '#1a8a4a';
+    wbLabel.style.transform = 'scale(1.08) translateY(-20px)';
+    wbLabel.style.transition = 'all 0.5s ease';
+    // Right panel appears
+    panel.style.opacity = '1';
+  }, 500);
+});
+
+/* Slide 4: NIS Pie Chart */
+var s4pie = {
+  cx: 320, cy: 320, r: 265,
+  data: [
+    {name: 'Well Behaved', pct: 7.6, color: '#2ecc71'},
+    {name: 'Preferred Orientation', pct: 29.1, color: '#1a2744'},
+    {name: 'Heterogeneity', pct: 16.5, color: '#1e5f7a'},
+    {name: 'Particle Size', pct: 10.1, color: '#2a4a6b'},
+    {name: 'Instability', pct: 21.5, color: '#243b6e'},
+    {name: 'Low Concentration', pct: 3.8, color: '#c24b8a'},
+    {name: 'Flexibility', pct: 8.9, color: '#3a6fa0'},
+    {name: 'Aggregation', pct: 2.5, color: '#4a8db5'},
+  ],
+  draw: function(highlight) {
+    var c = document.getElementById('s4-pie');
+    if (!c) return;
+    var ctx = c.getContext('2d');
+    var cx = this.cx, cy = this.cy, r = this.r;
+    ctx.clearRect(0, 0, c.width, c.height);
+    var startAngle = -Math.PI / 2;
+    // First pass: draw all slices normally (no offset)
+    var slices = [];
+    this.data.forEach(function(d, i) {
+      var sa = (d.pct / 100) * 2 * Math.PI;
+      var ea = startAngle + sa;
+      var mid = startAngle + sa / 2;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, r, startAngle, ea);
+      ctx.closePath();
+      ctx.fillStyle = d.color;
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      slices.push({start: startAngle, end: ea, mid: mid});
+      startAngle = ea;
+    });
+    if (highlight) {
+      var s = slices[0], d = this.data[0];
+      var popR = r + 18;
+      ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,0.5)';
+      ctx.shadowBlur = 30;
+      ctx.shadowOffsetX = 4;
+      ctx.shadowOffsetY = 12;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, popR, s.start, s.end);
+      ctx.closePath();
+      ctx.fillStyle = d.color;
+      ctx.fill();
+      ctx.restore();
+    }
+  },
+  drawAnimated: function(t) {
+    var c = document.getElementById('s4-pie');
+    if (!c) return;
+    var ctx = c.getContext('2d');
+    var cx = this.cx, cy = this.cy, r = this.r;
+    ctx.clearRect(0, 0, c.width, c.height);
+    var startAngle = -Math.PI / 2;
+    var slices = [];
+    this.data.forEach(function(d, i) {
+      var sa = (d.pct / 100) * 2 * Math.PI;
+      var ea = startAngle + sa;
+      slices.push({start: startAngle, end: ea});
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, r, startAngle, ea);
+      ctx.closePath();
+      ctx.fillStyle = d.color;
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      startAngle = ea;
+    });
+    var s = slices[0], d = this.data[0];
+    var popR = r + 18 * t;
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,' + (0.5 * t) + ')';
+    ctx.shadowBlur = 30 * t;
+    ctx.shadowOffsetX = 4 * t;
+    ctx.shadowOffsetY = 12 * t;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, popR, s.start, s.end);
+    ctx.closePath();
+    ctx.fillStyle = d.color;
+    ctx.fill();
+    ctx.restore();
+  }
+};
+s4pie.draw(false);
 
 </script>
 <script src="bl-editor.js?v=5"></script>
