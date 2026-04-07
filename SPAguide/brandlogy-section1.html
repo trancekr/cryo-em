@@ -1071,46 +1071,16 @@
     <div class="bl-title">Where Does the Time &amp; Money Go?</div>
     <div class="bl-subtitle">Resource analysis of the single particle cryo-EM pipeline</div>
   </div>
-  <div class="bl-content" style="top:260px;height:740px;display:flex;flex-direction:column;gap:20px">
-    <!-- Top: figure -->
-    <div style="display:flex;justify-content:center;flex-shrink:0">
-      <div style="background:#fff;border-radius:16px;padding:20px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-        <img src="../cryo-slides-img/s024_41.png" alt="SPA pipeline — time and cost per stage (Halfon et al. 2022)" style="display:block;max-height:440px;width:auto;border-radius:8px">
-      </div>
+  <div class="bl-content" style="top:260px;height:740px;display:flex;align-items:center;justify-content:center">
+    <div style="display:inline-block;background:#fff;border-radius:16px;padding:20px;box-shadow:0 6px 24px rgba(0,0,0,0.15);position:relative;cursor:pointer" id="s21-img-wrap">
+      <img src="../cryo-slides-img/s024_41.png" alt="SPA pipeline — time and cost per stage (Halfon et al. 2022)" style="display:block;max-height:660px;width:auto;border-radius:8px">
     </div>
-    <!-- Bottom: 3 insight columns -->
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;padding:0 120px">
-      <!-- col 1: Time -->
-      <div style="background:#fff;border-radius:12px;padding:22px 24px;box-shadow:0 6px 24px rgba(0,0,0,0.15);border-top:4px solid #D55E00;display:flex;flex-direction:column">
-        <div style="font-size:20px;font-weight:700;margin-bottom:14px;color:#1a1a2e">⏱ Time Investment</div>
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;font-size:18px;color:#374151">
-          <li><span style="color:#D55E00;font-weight:600">Sample prep</span> — protein production &amp; optimization: days to weeks per iteration</li>
-          <li><span style="color:#D55E00;font-weight:600">Grid screening</span> — iterative grid evaluation: day(s) per iteration</li>
-          <li><span style="color:#D55E00;font-weight:600">Data processing</span> — motion correction → CTF → 3D: days to weeks</li>
-        </ul>
-        <div style="margin-top:auto;padding-top:14px;font-size:14px;color:#9ca3af;border-top:1px solid #f0f0f0;font-style:italic">Early-stage sample prep dominates total turnaround time</div>
-      </div>
-      <!-- col 2: Cost -->
-      <div style="background:#fff;border-radius:12px;padding:22px 24px;box-shadow:0 6px 24px rgba(0,0,0,0.15);border-top:4px solid #0072B2;display:flex;flex-direction:column">
-        <div style="font-size:20px;font-weight:700;margin-bottom:14px;color:#1a1a2e">💰 Direct Costs</div>
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;font-size:18px;color:#374151">
-          <li><span style="color:#0072B2;font-weight:600">Acquisition</span> — hourly beam time dominates: $$$</li>
-          <li><span style="color:#0072B2;font-weight:600">Processing</span> — GPU cluster compute at scale: $–$$</li>
-          <li><span style="color:#0072B2;font-weight:600">Sample prep</span> — reagents and consumables: $$</li>
-        </ul>
-        <div style="margin-top:auto;padding-top:14px;font-size:14px;color:#9ca3af;border-top:1px solid #f0f0f0;font-style:italic">Microscope time is the single largest direct cost per dataset</div>
-      </div>
-      <!-- col 3: Solutions -->
-      <div style="background:#fff;border-radius:12px;padding:22px 24px;box-shadow:0 6px 24px rgba(0,0,0,0.15);border-top:4px solid #009E73;display:flex;flex-direction:column">
-        <div style="font-size:20px;font-weight:700;margin-bottom:14px;color:#1a1a2e">⚡ What's Improving</div>
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;font-size:18px;color:#374151">
-          <li><span style="color:#009E73;font-weight:600">Vitrification</span> — Chameleon (~ms), VitroJet (~s): eliminates manual blotting</li>
-          <li><span style="color:#009E73;font-weight:600">AI picking</span> — crYOLO, TOPAZ: unsupervised, replaces manual selection</li>
-          <li><span style="color:#009E73;font-weight:600">Live processing</span> — on-the-fly CTF &amp; motion correction during collection</li>
-        </ul>
-        <div style="margin-top:auto;padding-top:14px;font-size:14px;color:#9ca3af;border-top:1px solid #f0f0f0;font-style:italic">Automation is targeting the highest-impact bottlenecks first</div>
-      </div>
-    </div>
+  </div>
+  <!-- Takeaway: light gray card overlay on image, hidden until clicked -->
+  <div id="s21-panel" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#e8e8e8;color:#1a1a2e;text-align:center;padding:56px 80px;border-radius:16px;box-shadow:0 14px 40px rgba(0,0,0,0.25);opacity:0;transition:opacity 0.35s;pointer-events:none">
+    <div style="font-size:34px;font-weight:500;line-height:1.3;white-space:nowrap;opacity:0.95">Sample prep &amp; processing consume most <strong style="color:#0072B2">time</strong>; microscope time drives most <strong style="color:#c0392b">cost</strong>.</div>
+    <div style="height:1px;background:rgba(0,0,0,0.2);margin:20px auto 20px;width:60%"></div>
+    <div style="font-size:40px;font-weight:800;line-height:1.2;white-space:nowrap;letter-spacing:0.3px">Plan all three together — not just beam time.</div>
   </div>
   <div class="bl-ref">
     <a href="https://doi.org/10.1039/d2fd00129b" target="_blank">Halfon et al., Faraday Discuss. (2022)</a> &middot;
@@ -1120,81 +1090,114 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 23: Problems & Limitations (Problem cards with icons) — KEEP AS-IS
+     SLIDE 22: Challenges & Improvements — Sample Preparation
      ============================================================ -->
-<div class="bl-slide" data-n="22" style="--fs-card-title:22px;--fs-body:17px">
+<div class="bl-slide" data-n="22">
   <div class="bl-header">
     <div class="bl-chapter">Section 1: Cryo-EM Overview</div>
     <div class="bl-title">Challenges and Limitations of Cryo-EM</div>
-    <div class="bl-subtitle">Three areas where cryo-EM still demands substantial expertise</div>
+    <div class="bl-subtitle">Grid preparation and vitrification remain the primary bottleneck</div>
   </div>
-  <div class="bl-content" style="top:260px;height:740px;display:flex;flex-direction:column;gap:12px">
-    <!-- Row 1: Challenges -->
-    <div class="bl-problems-grid" style="flex:3">
-      <div class="bl-problem-card" style="border-color:#D55E00">
-        <div class="prob-title" style="color:#D55E00">Sample Preparation</div>
-        <ul class="prob-list">
-          <li><strong>Slow</strong> — Production → grid prep → screening cycles repeat; retrograde steps common</li>
-          <li><strong>Manual</strong> — Vitrification largely manual; requires technical skill to master</li>
-          <li><strong>Non-reproducible</strong> — Same params → different ice quality grid-to-grid</li>
-          <li><strong>AWI</strong> — Denaturation, preferred orientation, complex disassembly at the air-water interface</li>
-          <li><strong>Size limitation</strong> — Proteins &lt;150 kDa have low contrast, difficult to align</li>
-        </ul>
-      </div>
-      <div class="bl-problem-card" style="border-color:#0072B2">
-        <div class="prob-title" style="color:#0072B2">Microscopy</div>
-        <ul class="prob-list">
-          <li><strong>Slow</strong> — 5k–10k micrographs per structure; days of collection per dataset</li>
-          <li><strong>Manual (mostly)</strong> — Target selection, grid screening, and parameter setup need operator judgment</li>
-          <li><strong>Grid dependent</strong> — Ice quality directly determines data quality</li>
-          <li><strong>Beam effects</strong> — Low dose (30–60 e⁻/Å²) yields noisy images; beam also induces specimen motion</li>
-          <li><strong>Aberrations</strong> — CTF, beam tilt, coma, spherical/chromatic aberration limit resolution</li>
-          <li><strong>Cost</strong> — 300 keV: $4–10 M; weeks-long beam access queues</li>
-        </ul>
-      </div>
-      <div class="bl-problem-card" style="border-color:#e74c3c">
-        <div class="prob-title" style="color:#c0392b">Data Processing</div>
-        <ul class="prob-list">
-          <li><strong>Slow</strong> — Millions of particles; iterative 3D classification; GPU clusters needed</li>
-          <li><strong>Manual (mostly)</strong> — 2D class selection subjective; parameter tuning at each step</li>
-          <li><strong>Heterogeneity</strong> — Conformational and compositional variation complicate classification</li>
-          <li><strong>Wasted particles</strong> — Valid particles including rare conformations routinely discarded alongside junk during classification</li>
-          <li><strong>Data management</strong> — TB-scale data per day; storage and transfer increasingly a bottleneck</li>
-        </ul>
-      </div>
+  <div class="bl-content" style="top:300px;height:700px;display:flex;align-items:center;justify-content:center;gap:30px">
+    <div class="bl-problem-card" style="border-color:#D55E00;border-radius:20px;padding:32px;width:680px;height:680px">
+      <div class="prob-title" style="color:#D55E00">Sample Preparation</div>
+      <ul class="prob-list">
+        <li><strong>Slow</strong> — Production → grid prep → screening cycles repeat; retrograde steps common</li>
+        <li><strong>Manual</strong> — Vitrification largely manual; requires technical skill to master</li>
+        <li><strong>Non-reproducible</strong> — Same params → different ice quality grid-to-grid</li>
+        <li><strong>AWI</strong> — Denaturation, preferred orientation, complex disassembly at the air-water interface</li>
+        <li><strong>Size limitation</strong> — Proteins &lt;150 kDa have low contrast, difficult to align</li>
+      </ul>
     </div>
-    <!-- Arrows -->
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;flex-shrink:0;padding:6px 0">
-      <div style="text-align:center"><svg width="70" height="44" viewBox="0 0 70 44"><defs><linearGradient id="ag1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2cb88a"/><stop offset="100%" stop-color="#00664a"/></linearGradient></defs><path d="M25 0 L45 0 L45 20 L62 20 L35 42 L8 20 L25 20 Z" fill="url(#ag1)"/></svg></div>
-      <div style="text-align:center"><svg width="70" height="44" viewBox="0 0 70 44"><path d="M25 0 L45 0 L45 20 L62 20 L35 42 L8 20 L25 20 Z" fill="url(#ag1)"/></svg></div>
-      <div style="text-align:center"><svg width="70" height="44" viewBox="0 0 70 44"><path d="M25 0 L45 0 L45 20 L62 20 L35 42 L8 20 L25 20 Z" fill="url(#ag1)"/></svg></div>
+    <svg width="150" height="100" viewBox="0 0 150 100" style="flex-shrink:0"><defs><linearGradient id="bl-arrow22" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#c0111a" stop-opacity="0"/><stop offset="50%" stop-color="#c0111a" stop-opacity="0.55"/><stop offset="100%" stop-color="#c0111a" stop-opacity="1"/></linearGradient></defs><path d="M0 22 L70 22 L70 0 L150 50 L70 100 L70 78 L0 78 Z" fill="url(#bl-arrow22)"/></svg>
+    <div class="bl-problem-card" style="border-color:#009E73;border-radius:20px;padding:32px;width:680px;height:680px">
+      <div class="prob-title" style="color:#009E73">What's Improving</div>
+      <ul class="prob-list">
+        <li><strong>Blotting-free devices</strong> — <a href="https://www.sptlabtech.com/products/chameleon/chameleon" target="_blank">Chameleon</a>, <a href="https://cryosol-world.com/" target="_blank">VitroJet</a>, <a href="https://www.cryowrite.ch/" target="_blank">cryoWriter</a>: sub-second dispense + real-time ice thickness feedback reduce AWI exposure</li>
+        <li><strong>Affinity grids</strong> — Ni-NTA, His-tag, and streptavidin supports capture target directly from solution, bypassing the air-water interface</li>
+        <li><strong>Graphene supports</strong> — Graphene and graphene oxide coatings suppress particle adsorption and denaturation at the AWI</li>
+        <li><strong>Rapid plunge methods</strong> — Spotiton and 6-ms plunge shorten AWI exposure to milliseconds before vitrification</li>
+      </ul>
     </div>
-    <!-- Row 2: Improvements -->
-    <div class="bl-problems-grid" style="flex:2">
-      <div class="bl-problem-card" style="border-color:#009E73">
-        <div class="prob-title" style="color:#009E73">What's Improving</div>
-        <ul class="prob-list">
-          <li><strong>Blotting-free</strong> — <a href="https://www.sptlabtech.com/products/chameleon/chameleon" target="_blank">Chameleon</a>, <a href="https://cryosol-world.com/" target="_blank">VitroJet</a>, <a href="https://www.cryowrite.ch/" target="_blank">cryoWriter</a> among growing number of automated devices with real-time ice monitoring</li>
-          <li><strong>Grids</strong> — Graphene supports and functionalized coatings (Ni-NTA, streptavidin) reduce AWI effects</li>
-        </ul>
-      </div>
-      <div class="bl-problem-card" style="border-color:#009E73">
-        <div class="prob-title" style="color:#009E73">What's Improving</div>
-        <ul class="prob-list">
-          <li><strong>Cold FEG</strong> — 0.3 eV spread → better coherence, SNR</li>
-          <li><strong>AFIS</strong> — ~40 exposures per stage move</li>
-          <li><strong>Compact TEMs</strong> — 100–200 keV; lower-cost alternative to 300 keV</li>
-          <li><strong>Automated screening</strong> — AI-assisted grid evaluation emerging (e.g. Smart EPU); full automation not yet achieved</li>
-        </ul>
-      </div>
-      <div class="bl-problem-card" style="border-color:#009E73">
-        <div class="prob-title" style="color:#009E73">What's Improving</div>
-        <ul class="prob-list">
-          <li><strong>Live processing</strong> — On-the-fly CTF &amp; motion correction during collection</li>
-          <li><strong>AI across pipeline</strong> — Picking (crYOLO, TOPAZ), denoising (Blush), model building (ModelAngelo)</li>
-          <li><strong>Heterogeneity analysis</strong> — 3DVA, cryoDRGN, DynaMight resolve conformational landscapes and recover discarded particles</li>
-        </ul>
-      </div>
+  </div>
+  <div class="bl-ref">
+    <a href="https://doi.org/10.1042/BST20231553" target="_blank">Hirst et al., Biochem Soc Trans (2024)</a> &middot;
+    <a href="https://doi.org/10.1146/annurev-biochem-032620-110705" target="_blank">Chua et al., Annu Rev Biochem (2022)</a> &middot;
+    <a href="https://doi.org/10.1021/acs.chemrev.1c00850" target="_blank">Vilas et al., Chem Rev (2022)</a>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 23: Challenges & Improvements — Microscopy
+     ============================================================ -->
+<div class="bl-slide" data-n="23">
+  <div class="bl-header">
+    <div class="bl-chapter">Section 1: Cryo-EM Overview</div>
+    <div class="bl-title">Challenges and Limitations of Cryo-EM</div>
+    <div class="bl-subtitle">Cost, throughput, and optical limits of cryo-EM imaging</div>
+  </div>
+  <div class="bl-content" style="top:300px;height:700px;display:flex;align-items:center;justify-content:center;gap:30px">
+    <div class="bl-problem-card" style="border-color:#0072B2;border-radius:20px;padding:32px;width:680px;height:680px">
+      <div class="prob-title" style="color:#0072B2">Microscopy</div>
+      <ul class="prob-list">
+        <li><strong>Slow &amp; manual</strong> — 5k–10k micrographs per structure; target selection and parameter setup need operator judgment</li>
+        <li><strong>Low-dose noise</strong> — 30–60 e⁻/Å² yields noisy images; beam-induced motion further degrades signal</li>
+        <li><strong>Optical aberrations</strong> — CTF, beam tilt, coma, spherical/chromatic aberration limit resolution</li>
+        <li><strong>Grid dependent</strong> — Ice quality directly determines data quality</li>
+        <li><strong>Cost</strong> — 300 keV: $4–10 M; weeks-long beam access queues</li>
+      </ul>
+    </div>
+    <svg width="150" height="100" viewBox="0 0 150 100" style="flex-shrink:0"><defs><linearGradient id="bl-arrow23" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#c0111a" stop-opacity="0"/><stop offset="50%" stop-color="#c0111a" stop-opacity="0.55"/><stop offset="100%" stop-color="#c0111a" stop-opacity="1"/></linearGradient></defs><path d="M0 22 L70 22 L70 0 L150 50 L70 100 L70 78 L0 78 Z" fill="url(#bl-arrow23)"/></svg>
+    <div class="bl-problem-card" style="border-color:#009E73;border-radius:20px;padding:32px;width:680px;height:680px">
+      <div class="prob-title" style="color:#009E73">What's Improving</div>
+      <ul class="prob-list">
+        <li><strong>Cold FEG</strong> — 0.3 eV energy spread → better coherence and SNR</li>
+        <li><strong>Direct detectors</strong> — K3, Falcon 4: single-electron counting enables sub-Å resolution</li>
+        <li><strong>Energy filters</strong> — Post-column omega filters remove inelastic scattering; especially helpful for thicker ice</li>
+        <li><strong>AFIS</strong> — ~40 exposures per stage move; faster collection without compromising data quality</li>
+        <li><strong>Compact TEMs</strong> — 100–200 keV (e.g. Tundra, Glacios): lower-cost alternative to 300 keV</li>
+        <li><strong>Automated screening</strong> — AI-assisted grid evaluation emerging (e.g. Smart EPU); full automation not yet achieved</li>
+      </ul>
+    </div>
+  </div>
+  <div class="bl-ref">
+    <a href="https://doi.org/10.1042/BST20231553" target="_blank">Hirst et al., Biochem Soc Trans (2024)</a> &middot;
+    <a href="https://doi.org/10.1146/annurev-biochem-032620-110705" target="_blank">Chua et al., Annu Rev Biochem (2022)</a> &middot;
+    <a href="https://doi.org/10.1021/acs.chemrev.1c00850" target="_blank">Vilas et al., Chem Rev (2022)</a>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 24: Challenges & Improvements — Data Processing
+     ============================================================ -->
+<div class="bl-slide" data-n="24">
+  <div class="bl-header">
+    <div class="bl-chapter">Section 1: Cryo-EM Overview</div>
+    <div class="bl-title">Challenges and Limitations of Cryo-EM</div>
+    <div class="bl-subtitle">Computational demands and subjective decisions in reconstruction</div>
+  </div>
+  <div class="bl-content" style="top:300px;height:700px;display:flex;align-items:center;justify-content:center;gap:30px">
+    <div class="bl-problem-card" style="border-color:#e74c3c;border-radius:20px;padding:32px;width:680px;height:680px">
+      <div class="prob-title" style="color:#c0392b">Data Processing</div>
+      <ul class="prob-list">
+        <li><strong>Slow</strong> — Millions of particles; iterative 3D classification; GPU clusters needed</li>
+        <li><strong>Manual (mostly)</strong> — 2D class selection subjective; parameter tuning at each step</li>
+        <li><strong>Heterogeneity</strong> — Conformational and compositional variation complicate classification</li>
+        <li><strong>Wasted particles</strong> — Valid particles including rare conformations routinely discarded alongside junk during classification</li>
+        <li><strong>Data management</strong> — TB-scale data per day; storage and transfer increasingly a bottleneck</li>
+      </ul>
+    </div>
+    <svg width="150" height="100" viewBox="0 0 150 100" style="flex-shrink:0"><defs><linearGradient id="bl-arrow24" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#c0111a" stop-opacity="0"/><stop offset="50%" stop-color="#c0111a" stop-opacity="0.55"/><stop offset="100%" stop-color="#c0111a" stop-opacity="1"/></linearGradient></defs><path d="M0 22 L70 22 L70 0 L150 50 L70 100 L70 78 L0 78 Z" fill="url(#bl-arrow24)"/></svg>
+    <div class="bl-problem-card" style="border-color:#009E73;border-radius:20px;padding:32px;width:680px;height:680px">
+      <div class="prob-title" style="color:#009E73">What's Improving</div>
+      <ul class="prob-list">
+        <li><strong>Live processing</strong> — CryoSPARC Live, RELION on-the-fly: CTF &amp; motion correction during collection</li>
+        <li><strong>AI particle picking</strong> — crYOLO, TOPAZ neural networks pick particles automatically with high recall</li>
+        <li><strong>Neural denoising</strong> — Topaz-Denoise, Warp, Noise2Noise boost SNR of low-dose micrographs</li>
+        <li><strong>Heterogeneity analysis</strong> — 3DVA, cryoDRGN, DynaMight resolve conformational landscapes and recover discarded particles</li>
+        <li><strong>Map sharpening &amp; validation</strong> — DeepEMhancer, LocScale sharpen maps; EMRinger, Q-score validate model quality</li>
+        <li><strong>Automated model building</strong> — ModelAngelo, Buccaneer trace atomic models from maps with minimal manual input</li>
+      </ul>
     </div>
   </div>
   <div class="bl-ref">
@@ -1210,7 +1213,7 @@
 <div class="bl-nav">
   <a class="home-btn" href="./index.html">Home</a>
   <button id="prev-btn" onclick="go(-1)">&lsaquo;</button>
-  <span class="page-info" id="page-info" onclick="jumpToSlide()" title="Click to jump">1 / 23</span>
+  <span class="page-info" id="page-info" onclick="jumpToSlide()" title="Click to jump">1 / 24</span>
   <button id="next-btn" onclick="go(1)">&rsaquo;</button>
 </div>
 
@@ -1231,7 +1234,7 @@ function toggleImg() {
   }
 }
 
-const N = 22;
+const N = 24;
 let cur = 1;
 
 /* Zoom */
@@ -1289,6 +1292,14 @@ document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
 document.addEventListener('touchend', e => {
   const dx = e.changedTouches[0].clientX - tx;
   if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+});
+
+/* Slide 21: click image to reveal takeaway panel */
+document.getElementById('s21-img-wrap')?.addEventListener('click', function(e) {
+  e.stopPropagation();
+  var pn = document.getElementById('s21-panel');
+  if (!pn) return;
+  pn.style.opacity = pn.style.opacity === '1' ? '0' : '1';
 });
 
 /* Slide 19: Hover-to-highlight interaction (V2 preserved) */
