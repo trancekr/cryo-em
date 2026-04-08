@@ -59,16 +59,18 @@
     <div class="bl-title">Goal of Sample Preparation</div>
   </div>
   <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <div style="max-width:900px;background:#fff;border-radius:20px;padding:36px 40px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-      <ul style="list-style:none;padding:0;margin:0">
-        <li style="font-size:var(--fs-body);line-height:1.5;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#333"><strong style="color:#e74c3c">Preserve</strong> the biological specimen in a <strong>native state</strong> such that it will give <strong>maximum contrast</strong></li>
-        <li style="font-size:var(--fs-body);line-height:1.5;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#333">To obtain a high resolution structure:</li>
-        <li style="font-size:24px;line-height:1.5;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#555;padding-left:40px">Best specimen</li>
-        <li style="font-size:24px;line-height:1.5;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#555;padding-left:40px">Use optimal magnification</li>
-        <li style="font-size:24px;line-height:1.5;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#555;padding-left:40px">Use detector with best DQE possible</li>
-        <li style="font-size:24px;line-height:1.5;padding:8px 0;color:#555;padding-left:40px">Obtain best micrographs possible</li>
-        <li style="font-size:var(--fs-body);line-height:1.5;padding:14px 0 0;color:#e74c3c;font-weight:700;border-top:2px solid rgba(231,76,60,0.3);margin-top:8px">Leading to highest resolution structure with least data</li>
+    <div class="s3-card">
+      <div class="top">
+        <b class="hl">Preserve</b> the biological specimen in a <b>native state</b> such that it will give <b>maximum contrast</b>
+      </div>
+      <div class="header">To obtain a high-resolution structure</div>
+      <ul class="list">
+        <li class="primary">Best specimen</li>
+        <li>Use optimal magnification</li>
+        <li>Use detector with best DQE possible</li>
+        <li>Obtain best micrographs possible</li>
       </ul>
+      <div class="bottom">Leading to highest resolution structure with least data</div>
     </div>
   </div>
 </div>
@@ -166,32 +168,59 @@
 <div class="bl-slide" data-n="6">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
-    <div class="bl-title">Homogenous Sample</div>
+    <div class="bl-title">Homogeneity Analysis</div>
+    <div class="bl-subtitle">Representative biophysical techniques to verify protein monodispersity before vitrification</div>
   </div>
-  <div class="bl-content">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:1600px;margin:0 auto">
-      <div style="text-align:center">
-        <img src="../cryo-slides-img/s041_86.png" alt="SEC" style="max-width:100%;max-height:210px;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-        <div style="font-size:var(--fs-caption);font-weight:700;color:#1a1a2e;margin-top:12px">Size Exclusion Chromatography</div>
-        <div style="font-size:14px;color:#555;margin-top:4px">Separate by size — single symmetric peak = good homogeneity</div>
+  <div class="bl-content" style="top:280px;height:730px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:28px 36px;width:100%;max-width:1700px;height:100%;margin:0 auto">
+
+      <div class="homo-card c-blue">
+        <div class="img-box"><img src="../cryo-slides-img/s041_86.png" alt="SEC"></div>
+        <div class="text-side">
+          <div class="title-block">
+            <div class="acronym">SEC</div>
+            <div class="fullname">Size Exclusion Chromatography</div>
+          </div>
+          <div class="desc">Separates particles by size — a single symmetric peak indicates <b>monodispersity</b></div>
+        </div>
       </div>
-      <div style="text-align:center">
-        <img src="../cryo-slides-img/s041_87.jpg" alt="SEC-MALS" style="max-width:100%;max-height:210px;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-        <div style="font-size:var(--fs-caption);font-weight:700;color:#1a1a2e;margin-top:12px">SEC-MALS</div>
-        <div style="font-size:14px;color:#555;margin-top:4px">UV + MW overlay for absolute molecular weight verification</div>
+
+      <div class="homo-card c-orange">
+        <div class="img-box"><img src="../cryo-slides-img/s041_87.jpg" alt="SEC-MALS"></div>
+        <div class="text-side">
+          <div class="title-block">
+            <div class="acronym">SEC-MALS</div>
+            <div class="fullname">+ Multi-Angle Light Scattering</div>
+          </div>
+          <div class="desc">Couples SEC with light scattering to give <b>absolute molecular weight</b></div>
+        </div>
       </div>
-      <div style="text-align:center">
-        <img src="../cryo-slides-img/s041_88.png" alt="DLS" style="max-width:100%;max-height:210px;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-        <div style="font-size:var(--fs-caption);font-weight:700;color:#1a1a2e;margin-top:12px">Dynamic Light Scattering</div>
-        <div style="font-size:14px;color:#555;margin-top:4px">Hydrodynamic radius — narrow distribution = monodisperse</div>
+
+      <div class="homo-card c-green">
+        <div class="img-box"><img src="../cryo-slides-img/s041_88_dls_swabian_trim.png" alt="DLS"></div>
+        <div class="text-side">
+          <div class="title-block">
+            <div class="acronym">DLS</div>
+            <div class="fullname">Dynamic Light Scattering</div>
+          </div>
+          <div class="desc">Hydrodynamic radius from intensity fluctuations — <b>narrow distribution</b> = monodisperse</div>
+        </div>
       </div>
-      <div style="text-align:center">
-        <img src="../cryo-slides-img/s041_89.jpg" alt="Mass Photometry" style="max-width:100%;max-height:210px;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-        <div style="font-size:var(--fs-caption);font-weight:700;color:#1a1a2e;margin-top:12px">Mass Photometry</div>
-        <div style="font-size:14px;color:#555;margin-top:4px">Single-molecule MW from light scattering on coverslip</div>
+
+      <div class="homo-card c-pink">
+        <div class="img-box"><img src="../cryo-slides-img/s041_89.jpg" alt="Mass Photometry"></div>
+        <div class="text-side">
+          <div class="title-block">
+            <div class="acronym">Mass Photometry</div>
+            <div class="fullname">Single-molecule iSCAT</div>
+          </div>
+          <div class="desc">Single-molecule mass from interferometric scattering — resolves <b>oligomeric states</b> at picomolar</div>
+        </div>
       </div>
+
     </div>
   </div>
+  <div class="bl-ref">Images: Swabian Instruments · Refeyn — refeyn.com</div>
 </div>
 
 <!-- ============================================================
@@ -260,7 +289,7 @@
       </ul>
     </div>
   </div>
-  <div class="bl-ref">Wentinck et al., 2022, <em>Curr Res Struct Biol.</em></div>
+  <div class="bl-ref"><a href="https://doi.org/10.1016/j.crstbi.2022.09.005" target="_blank">Wentinck et al., Curr Res Struct Biol. (2022)</a></div>
 </div>
 
 <!-- ============================================================
@@ -275,7 +304,7 @@
   <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
     <img src="../cryo-slides-img/s045_92.jpg" alt="Small protein strategies" style="max-width:80%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
   </div>
-  <div class="bl-ref">Wentinck et al., 2022, <em>Curr Res Struct Biol.</em></div>
+  <div class="bl-ref"><a href="https://doi.org/10.1016/j.crstbi.2022.09.005" target="_blank">Wentinck et al., Curr Res Struct Biol. (2022)</a></div>
 </div>
 
 <!-- ============================================================
@@ -290,7 +319,7 @@
   <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
     <img src="../cryo-slides-img/s046_93.png" alt="Small protein advances" style="max-width:80%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
   </div>
-  <div class="bl-ref">Wentinck et al., 2022, <em>Curr Res Struct Biol.</em></div>
+  <div class="bl-ref"><a href="https://doi.org/10.1016/j.crstbi.2022.09.005" target="_blank">Wentinck et al., Curr Res Struct Biol. (2022)</a></div>
 </div>
 
 <!-- ============================================================
@@ -320,6 +349,7 @@
       </div>
     </div>
   </div>
+  <div class="bl-ref"><a href="https://doi.org/10.1038/s41467-025-63766-8" target="_blank">Kung et al., Nat. Commun. (2025)</a></div>
 </div>
 
 <!-- ============================================================
@@ -380,7 +410,7 @@
       <div style="font-size:36px;font-weight:700;color:#e74c3c;margin-top:8px">38 kDa</div>
     </div>
   </div>
-  <div class="bl-ref">R. Henderson, 1995, <em>Q. Rev. Biophys.</em></div>
+  <div class="bl-ref"><a href="https://doi.org/10.1017/s003358350000305x" target="_blank">Henderson, Q. Rev. Biophys. (1995)</a></div>
 </div>
 
 <!-- ============================================================
@@ -400,7 +430,7 @@
       Future SNR improvement by a factor of 3–4 seems possible, making practical the structure determination of some proteins <strong style="color:#e74c3c">below 50 kDa</strong> in size.
     </div>
   </div>
-  <div class="bl-ref">Fred J. Sigworth, 2016, Vol.65, No.1, 57-67, <em>Microscopy</em></div>
+  <div class="bl-ref"><a href="https://doi.org/10.1093/jmicro/dfv370" target="_blank">Sigworth, Microscopy (2016)</a></div>
 </div>
 
 <!-- ============================================================
@@ -414,7 +444,7 @@
   <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
     <img src="../cryo-slides-img/s053_105.gif" alt="Molecular mass identification in situ" style="max-width:75%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
   </div>
-  <div class="bl-ref">Russo et al., 2022, <em>Faraday Discuss.</em></div>
+  <div class="bl-ref"><a href="https://doi.org/10.1039/d2fd00076h" target="_blank">Russo et al., Faraday Discuss. (2022)</a></div>
 </div>
 
 <!-- ============================================================
@@ -435,7 +465,7 @@
       </div>
     </div>
   </div>
-  <div class="bl-ref">Wu et al., 2020, <em>Curr Opin Struct Biol.</em></div>
+  <div class="bl-ref"><a href="https://doi.org/10.1016/j.sbi.2020.05.007" target="_blank">Wu &amp; Lander, Curr Opin Struct Biol. (2020)</a></div>
 </div>
 
 <!-- ============================================================
@@ -689,10 +719,10 @@
     <div class="bl-title">Hole View — Particle Aggregation</div>
     <div class="bl-subtitle">Clumped particles at AWI or due to sample instability — check buffer, concentration, additives</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <div style="font-size:36px;font-weight:600;color:#999;text-align:center">
-      [Images to be extracted from PDF p66]
-    </div>
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center;gap:16px">
+    <img src="../cryo-slides-img/s065_140.png" alt="Particle aggregation 1" style="max-width:30%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+    <img src="../cryo-slides-img/s065_141.png" alt="Particle aggregation 2" style="max-width:30%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+    <img src="../cryo-slides-img/s065_142.png" alt="Particle aggregation 3" style="max-width:30%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
   </div>
 </div>
 
@@ -811,7 +841,7 @@
       <img src="../cryo-slides-img/s071_144.png" alt="Insulin receptor time series" style="max-width:70%;max-height:280px;object-fit:contain">
     </div>
   </div>
-  <div class="bl-ref">Noble, A.J. et al., 2018, <em>Nat. Methods</em></div>
+  <div class="bl-ref"><a href="https://doi.org/10.1038/s41592-018-0139-3" target="_blank">Noble et al., Nat. Methods (2018)</a></div>
 </div>
 
 <!-- ============================================================
@@ -829,7 +859,7 @@
       Once adsorbed, denaturation may follow in as little as a few ns.
     </div>
   </div>
-  <div class="bl-ref">Noble, A.J. et al., 2018, <em>Nat. Methods</em></div>
+  <div class="bl-ref"><a href="https://doi.org/10.1038/s41592-018-0139-3" target="_blank">Noble et al., Nat. Methods (2018)</a></div>
 </div>
 
 <!-- ============================================================
@@ -873,7 +903,7 @@
       </ul>
     </div>
   </div>
-  <div class="bl-ref">Domen, K. et al., 2021, <em>iScience</em></div>
+  <div class="bl-ref"><a href="https://doi.org/10.1016/j.isci.2021.102139" target="_blank">Kampjut, D. et al., iScience (2021)</a></div>
 </div>
 
 <!-- ============================================================
@@ -917,7 +947,7 @@
   <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
     <img src="../cryo-slides-img/s037_80.png" alt="SPA pipeline — imaging highlighted" style="max-width:90%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
   </div>
-  <div class="bl-ref">Halfon et al., 2022, <em>Faraday Discuss.</em></div>
+  <div class="bl-ref"><a href="https://doi.org/10.1039/d2fd00129b" target="_blank">Halfon et al., Faraday Discuss. (2022)</a></div>
 </div>
 
 <!-- ============================================================
