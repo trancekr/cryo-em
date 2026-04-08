@@ -230,10 +230,26 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Negative Staining vs. Vitrification</div>
+    <div class="bl-subtitle">Why only vitrification preserves the native, hydrated protein structure</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <img src="../cryo-slides-img/s042_90.png" alt="Negative staining vs vitrification diagram" style="max-width:85%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+  <div class="bl-content" style="top:300px;height:700px;display:flex;align-items:center;justify-content:center">
+    <div class="s7-card">
+      <div class="s7-side stain">
+        <div class="kicker">Negative stain</div>
+        <div class="title">Dried · distorted · surface-only</div>
+        <div class="desc">Heavy-metal salt surrounds the protein and the specimen is air-dried before imaging — you see the <b>stain envelope</b>, not the molecule itself.</div>
+      </div>
+      <div class="s7-img-wrap">
+        <img src="../cryo-slides-img/s042_90.png" alt="Negative staining vs vitrification diagram">
+      </div>
+      <div class="s7-side cryo">
+        <div class="kicker">Vitrified for cryo-EM</div>
+        <div class="title">Native · hydrated · 3D preserved</div>
+        <div class="desc">Rapid plunge freezing traps the protein in <b>vitreous ice</b> in its full aqueous environment — the entire 3D structure is visible.</div>
+      </div>
+    </div>
   </div>
+  <div class="bl-ref"><a href="https://doi.org/10.1107/s0907444900010787" target="_blank">Saibil, Acta Crystallogr. D (2000)</a></div>
 </div>
 
 <!-- ============================================================
@@ -243,29 +259,30 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Negative Staining vs. Cryo-EM</div>
+    <div class="bl-subtitle">Trade-offs between speed, cost, and structural fidelity</div>
   </div>
-  <div class="bl-content">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;max-width:1500px;margin:0 auto;align-items:start">
-      <div style="border-radius:20px;padding:36px 32px;background:#fff;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-        <h3 style="font-size:var(--fs-card-title);font-weight:800;color:#D55E00;margin-bottom:20px">Negative Staining</h3>
-        <ul style="list-style:none;padding:0">
-          <li style="font-size:var(--fs-body);line-height:1.5;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#333">Faster &amp; easier</li>
-          <li style="font-size:var(--fs-body);line-height:1.5;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#333">Less expensive</li>
-          <li style="font-size:var(--fs-body);line-height:1.5;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#333">Higher contrast / low resolution</li>
-          <li style="font-size:var(--fs-body);line-height:1.5;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#333">Artifacts from the staining</li>
-          <li style="font-size:var(--fs-body);line-height:1.5;padding:10px 0;color:#333">Can be done at room temp.</li>
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-compare-2col">
+      <div class="col c-orange">
+        <h3>Negative Staining</h3>
+        <ul>
+          <li>Faster &amp; easier</li>
+          <li>Less expensive</li>
+          <li>Higher contrast, lower resolution</li>
+          <li>Artifacts from the staining</li>
+          <li>Can be done at room temperature</li>
         </ul>
-        <div style="margin-top:16px;font-size:var(--fs-caption);color:#555;border-top:2px solid #D55E00;padding-top:12px">Useful for QC of the sample<br>(aggregation, dissociation, heterogeneity)</div>
+        <div class="footnote">Useful for QC of the sample — aggregation, dissociation, heterogeneity.</div>
       </div>
-      <div style="border-radius:20px;padding:36px 32px;background:#fff;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-        <h3 style="font-size:var(--fs-card-title);font-weight:800;color:#0072B2;margin-bottom:20px">Cryo-EM (Vitrification)</h3>
-        <ul style="list-style:none;padding:0">
-          <li style="font-size:var(--fs-body);line-height:1.5;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#333">Slower &amp; difficult</li>
-          <li style="font-size:var(--fs-body);line-height:1.5;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#333">Expensive</li>
-          <li style="font-size:var(--fs-body);line-height:1.5;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#333">Lower contrast / high resolution</li>
-          <li style="font-size:var(--fs-body);line-height:1.5;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#333">Retain almost native state</li>
-          <li style="font-size:var(--fs-body);line-height:1.5;padding:10px 0;color:#333">&nbsp;</li>
+      <div class="col c-blue">
+        <h3>Cryo-EM (Vitrification)</h3>
+        <ul>
+          <li>Slower &amp; more difficult</li>
+          <li>Expensive (instrument &amp; consumables)</li>
+          <li>Lower contrast, higher resolution</li>
+          <li>Retains nearly native state</li>
         </ul>
+        <div class="footnote">Required for high-resolution structure determination.</div>
       </div>
     </div>
   </div>
@@ -278,15 +295,20 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Small Proteins and Cryo-EM</div>
+    <div class="bl-subtitle">Why are small proteins a fundamental challenge for SPA</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center;gap:40px">
-    <img src="../cryo-slides-img/s044_91.jpg" alt="Small proteins cryo-EM challenges" style="max-width:65%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-    <div style="max-width:350px">
-      <ul style="list-style:none;padding:0">
-        <li style="font-size:var(--fs-caption);line-height:1.6;padding:8px 0;color:#555">Low signal-to-noise ratio</li>
-        <li style="font-size:var(--fs-caption);line-height:1.6;padding:8px 0;color:#555">Radiation sensitivity</li>
-        <li style="font-size:var(--fs-caption);line-height:1.6;padding:8px 0;color:#555">Few morphological features</li>
-      </ul>
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-list">
+      <div class="img-side">
+        <img src="../cryo-slides-img/s044_91.jpg" alt="Small proteins cryo-EM challenges">
+      </div>
+      <div class="text-side">
+        <ul>
+          <li><strong>Low signal-to-noise ratio</strong> — Few electrons scattered, dominated by ice background</li>
+          <li><strong>Radiation sensitivity</strong> — Limited dose before structural damage</li>
+          <li><strong>Few morphological features</strong> — Hard to align particles in 2D classification</li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="bl-ref"><a href="https://doi.org/10.1016/j.crstbi.2022.09.005" target="_blank">Wentinck et al., Curr Res Struct Biol. (2022)</a></div>
@@ -302,7 +324,9 @@
     <div class="bl-subtitle">Target binding &amp; fusion strategies</div>
   </div>
   <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <img src="../cryo-slides-img/s045_92.jpg" alt="Small protein strategies" style="max-width:80%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+    <div class="s2-figure">
+      <img src="../cryo-slides-img/s045_92.jpg" alt="Small protein strategies">
+    </div>
   </div>
   <div class="bl-ref"><a href="https://doi.org/10.1016/j.crstbi.2022.09.005" target="_blank">Wentinck et al., Curr Res Struct Biol. (2022)</a></div>
 </div>
@@ -317,7 +341,9 @@
     <div class="bl-subtitle">DARPin cage &amp; Apoferritin strategies</div>
   </div>
   <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <img src="../cryo-slides-img/s046_93.png" alt="Small protein advances" style="max-width:80%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+    <div class="s2-figure">
+      <img src="../cryo-slides-img/s046_93.png" alt="DARPin cage and Apoferritin scaffolds">
+    </div>
   </div>
   <div class="bl-ref"><a href="https://doi.org/10.1016/j.crstbi.2022.09.005" target="_blank">Wentinck et al., Curr Res Struct Biol. (2022)</a></div>
 </div>
@@ -328,24 +354,25 @@
 <div class="bl-slide" data-n="12">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
-    <div class="bl-title">Rigid Fab (as a Structural Chaperone)</div>
+    <div class="bl-title">Rigid Fab as a Structural Chaperone</div>
+    <div class="bl-subtitle">Fab fragments add ordered mass to small targets, enabling cryo-EM</div>
   </div>
-  <div class="bl-content">
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;max-width:1500px;margin:0 auto;align-items:start">
-      <div style="text-align:center">
-        <div style="font-size:36px;font-weight:700;color:#1a1a2e;margin-bottom:8px">Total 74 kDa</div>
-        <div style="font-size:var(--fs-caption);color:#555;margin-bottom:12px">SP26 (26 kDa)</div>
-        <img src="../cryo-slides-img/s047_97.png" alt="74 kDa structure" style="max-width:100%;max-height:400px;object-fit:contain">
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-grid cols-3">
+      <div class="cell">
+        <div style="font-size:32px;font-weight:800;color:#1a1a2e;margin-bottom:4px">Total 74 kDa</div>
+        <div style="font-size:15px;font-weight:600;color:#888;margin-bottom:14px;letter-spacing:0.2px">SP26 (26 kDa)</div>
+        <div class="img-wrap"><img src="../cryo-slides-img/s047_97.png" alt="74 kDa structure"></div>
       </div>
-      <div style="text-align:center">
-        <div style="font-size:36px;font-weight:700;color:#1a1a2e;margin-bottom:8px">Total 69 kDa</div>
-        <div style="font-size:var(--fs-caption);color:#555;margin-bottom:12px">SP21 (21 kDa)</div>
-        <img src="../cryo-slides-img/s047_96.png" alt="69 kDa structure" style="max-width:100%;max-height:400px;object-fit:contain">
+      <div class="cell">
+        <div style="font-size:32px;font-weight:800;color:#1a1a2e;margin-bottom:4px">Total 69 kDa</div>
+        <div style="font-size:15px;font-weight:600;color:#888;margin-bottom:14px;letter-spacing:0.2px">SP21 (21 kDa)</div>
+        <div class="img-wrap"><img src="../cryo-slides-img/s047_96.png" alt="69 kDa structure"></div>
       </div>
-      <div style="text-align:center">
-        <div style="font-size:36px;font-weight:700;color:#1a1a2e;margin-bottom:8px">Total 54 kDa</div>
-        <div style="font-size:var(--fs-caption);color:#555;margin-bottom:12px">Ligand (6 kDa)</div>
-        <img src="../cryo-slides-img/s047_95.png" alt="54 kDa structure" style="max-width:100%;max-height:400px;object-fit:contain">
+      <div class="cell">
+        <div style="font-size:32px;font-weight:800;color:#1a1a2e;margin-bottom:4px">Total 54 kDa</div>
+        <div style="font-size:15px;font-weight:600;color:#888;margin-bottom:14px;letter-spacing:0.2px">Ligand (6 kDa)</div>
+        <div class="img-wrap"><img src="../cryo-slides-img/s047_95.png" alt="54 kDa structure"></div>
       </div>
     </div>
   </div>
@@ -359,10 +386,17 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Ordered Mass, Not MW</div>
+    <div class="bl-subtitle">The key insight for small-protein cryo-EM</div>
   </div>
   <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <div style="font-size:56px;font-weight:800;color:#1a1a2e;text-align:center;line-height:1.3;max-width:1200px">
-      What matters is the<br><span style="color:#e74c3c">ordered mass</span>,<br>not the molecular weight
+    <div style="text-align:center;max-width:1500px">
+      <div style="font-size:18px;font-weight:800;color:#888;letter-spacing:3px;text-transform:uppercase;margin-bottom:30px">The key insight</div>
+      <div style="font-size:72px;font-weight:900;color:#1a1a2e;line-height:1.1;letter-spacing:-2px">
+        What matters is the<br><span style="color:#e74c3c">ordered mass</span>,<br>not the molecular weight
+      </div>
+      <div style="font-size:22px;color:#555;margin-top:36px;line-height:1.5;max-width:1100px;margin-left:auto;margin-right:auto">
+        Flexible regions average out during reconstruction. Only the rigid, well-ordered core contributes to high-resolution density.
+      </div>
     </div>
   </div>
 </div>
@@ -374,10 +408,12 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Ordered Mass, Not MW</div>
-    <div class="bl-subtitle">hSAGA activator complex</div>
+    <div class="bl-subtitle">hSAGA activator complex — large MW, small ordered core</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center;gap:40px">
-    <img src="../cryo-slides-img/s049_98.png" alt="hSAGA activator complex" style="max-width:55%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-figure">
+      <img src="../cryo-slides-img/s049_98.png" alt="hSAGA activator complex">
+    </div>
   </div>
 </div>
 
@@ -388,10 +424,12 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Ordered Mass, Not MW</div>
-    <div class="bl-subtitle">Cadherin ectodomains with 67G8 Fab</div>
+    <div class="bl-subtitle">Cadherin ectodomains with 67G8 Fab — Fab adds rigid ordered mass</div>
   </div>
   <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <img src="../cryo-slides-img/s050_99.jpg" alt="Cadherin ordered mass example" style="max-width:55%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+    <div class="s2-figure">
+      <img src="../cryo-slides-img/s050_99.jpg" alt="Cadherin ordered mass example">
+    </div>
   </div>
 </div>
 
@@ -402,12 +440,18 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">How Low Can We Go for Single Particle Cryo-EM?</div>
+    <div class="bl-subtitle">Henderson's 1995 theoretical limit</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center;gap:32px">
-    <img src="../cryo-slides-img/s051_100.png" alt="Size distribution" style="max-width:40%;max-height:100%;object-fit:contain">
-    <div style="text-align:center">
-      <img src="../cryo-slides-img/s051_101.png" alt="Henderson limit" style="max-width:100%;max-height:500px;object-fit:contain">
-      <div style="font-size:36px;font-weight:700;color:#e74c3c;margin-top:8px">38 kDa</div>
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-list">
+      <div class="img-side">
+        <img src="../cryo-slides-img/s051_101.png" alt="Henderson limit calculation">
+      </div>
+      <div class="text-side" style="text-align:center;align-items:center">
+        <img src="../cryo-slides-img/s051_100.png" alt="Size distribution" style="max-width:100%;max-height:240px;object-fit:contain;margin-bottom:18px">
+        <div style="font-size:18px;font-weight:800;color:#888;letter-spacing:2px;text-transform:uppercase">Theoretical floor</div>
+        <div style="font-size:64px;font-weight:900;color:#e74c3c;line-height:1;margin-top:6px;letter-spacing:-1.5px">38 kDa</div>
+      </div>
     </div>
   </div>
   <div class="bl-ref"><a href="https://doi.org/10.1017/s003358350000305x" target="_blank">Henderson, Q. Rev. Biophys. (1995)</a></div>
@@ -420,14 +464,15 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">How Low Can We Go for Single Particle Cryo-EM?</div>
+    <div class="bl-subtitle">Sigworth's 2016 update — projected SNR improvements push the limit lower</div>
   </div>
-  <div class="bl-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
-    <div style="display:flex;gap:24px;align-items:center;justify-content:center">
-      <img src="../cryo-slides-img/s052_102.png" alt="Sigworth analysis 1" style="max-width:42%;max-height:400px;object-fit:contain">
-      <img src="../cryo-slides-img/s052_103.png" alt="Sigworth analysis 2" style="max-width:42%;max-height:400px;object-fit:contain">
+  <div class="bl-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px">
+    <div class="s2-img-grid cols-2" style="max-width:1500px">
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s052_102.png" alt="Sigworth analysis — projected SNR"></div></div>
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s052_103.png" alt="Sigworth analysis — particle count"></div></div>
     </div>
-    <div style="background:#fff;border-radius:12px;padding:16px 24px;box-shadow:0 6px 24px rgba(0,0,0,0.15);max-width:900px;font-size:var(--fs-caption);color:#333;line-height:1.6;text-align:center;font-style:italic">
-      Future SNR improvement by a factor of 3–4 seems possible, making practical the structure determination of some proteins <strong style="color:#e74c3c">below 50 kDa</strong> in size.
+    <div class="s2-insight" style="max-width:1200px;text-align:center;border-left:none;border-top:4px solid #e74c3c;padding:22px 32px">
+      <div class="text" style="font-size:21px;font-style:italic">Future SNR improvement by a factor of <b>3–4×</b> seems possible, making practical the structure determination of some proteins <b style="color:#e74c3c">below 50 kDa</b> in size.</div>
     </div>
   </div>
   <div class="bl-ref"><a href="https://doi.org/10.1093/jmicro/dfv370" target="_blank">Sigworth, Microscopy (2016)</a></div>
@@ -440,9 +485,12 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Minimum Molecular Mass Identifiable In Situ</div>
+    <div class="bl-subtitle">In-cell tomography — size floor for particle identification</div>
   </div>
   <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <img src="../cryo-slides-img/s053_105.gif" alt="Molecular mass identification in situ" style="max-width:75%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+    <div class="s2-figure">
+      <img src="../cryo-slides-img/s053_105.gif" alt="Molecular mass identification in situ">
+    </div>
   </div>
   <div class="bl-ref"><a href="https://doi.org/10.1039/d2fd00076h" target="_blank">Russo et al., Faraday Discuss. (2022)</a></div>
 </div>
@@ -454,14 +502,19 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Are We There Yet?</div>
+    <div class="bl-subtitle">Reaching the sub-100 kDa regime with cryo-EM</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center;gap:32px">
-    <img src="../cryo-slides-img/s054_106.png" alt="MW vs resolution" style="max-width:55%;max-height:100%;object-fit:contain">
-    <div>
-      <img src="../cryo-slides-img/s054_107.png" alt="Recent structures" style="max-width:100%;max-height:300px;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-      <div style="text-align:center;margin-top:16px">
-        <img src="../cryo-slides-img/s054_108.png" alt="HSA" style="height:60px;object-fit:contain">
-        <div style="font-size:var(--fs-caption);color:#555;margin-top:4px">HSA — 65 kDa (3.2 Å)</div>
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-list">
+      <div class="img-side">
+        <img src="../cryo-slides-img/s054_106.png" alt="MW vs resolution distribution">
+      </div>
+      <div class="text-side" style="text-align:center;align-items:center">
+        <img src="../cryo-slides-img/s054_107.png" alt="Recent sub-100 kDa structures" style="max-width:100%;max-height:240px;object-fit:contain;margin-bottom:18px">
+        <img src="../cryo-slides-img/s054_108.png" alt="HSA structure" style="max-height:80px;object-fit:contain">
+        <div style="font-size:18px;font-weight:800;color:#888;letter-spacing:2px;text-transform:uppercase;margin-top:14px">Latest milestone</div>
+        <div style="font-size:32px;font-weight:900;color:#e74c3c;line-height:1.1;margin-top:6px">HSA — 65 kDa</div>
+        <div style="font-size:18px;color:#555;margin-top:4px">3.2 Å resolution</div>
       </div>
     </div>
   </div>
@@ -475,30 +528,23 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Cryo-EM Grid</div>
+    <div class="bl-subtitle">Grid materials, mesh, foil patterns, and support films</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;gap:40px">
-    <img src="../cryo-slides-img/s055_109.png" alt="Cryo-EM grid structure" style="max-width:48%;max-height:100%;object-fit:contain">
-    <div>
-      <div style="margin-bottom:20px">
-        <div style="font-size:var(--fs-body);font-weight:700;color:#1a1a2e;margin-bottom:8px">Grid : Cu, Au, Ni, Ti</div>
-        <div style="font-size:var(--fs-body);font-weight:700;color:#1a1a2e">(Mesh : 200, 300, 400, hexagonal)</div>
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-list">
+      <div class="img-side">
+        <img src="../cryo-slides-img/s055_109.png" alt="Cryo-EM grid structure">
       </div>
-      <div style="margin-bottom:20px">
-        <div style="font-size:var(--fs-body);font-weight:700;color:#1a1a2e">Foil : amorphous C, Au, Ni/Ti</div>
-        <div style="font-size:var(--fs-body);font-weight:700;color:#1a1a2e">Continuous or holey</div>
-        <div style="font-size:var(--fs-body);font-weight:700;color:#1a1a2e">Hole size/spacing (µm)</div>
-        <div style="font-size:var(--fs-body);font-weight:700;color:#1a1a2e">1.2/1.3, 2/1, 1/1, 0.6/1</div>
-        <div style="font-size:var(--fs-body);font-weight:700;color:#1a1a2e">HexAuFoil 0.3/0.3</div>
-        <div style="font-size:var(--fs-body);font-weight:700;color:#1a1a2e">Lacey carbon</div>
+      <div class="text-side">
+        <ul>
+          <li><strong>Grid</strong> — Cu, Au, Ni, Ti · mesh 200/300/400 or hexagonal</li>
+          <li><strong>Foil</strong> — amorphous C, Au, Ni/Ti · continuous or holey · hole/spacing 1.2/1.3, 2/1, 1/1, 0.6/1 µm · HexAuFoil 0.3/0.3 · lacey carbon</li>
+          <li><strong>Support film</strong> — amorphous carbon, graphene, GO</li>
+        </ul>
       </div>
-      <div>
-        <div style="font-size:var(--fs-body);font-weight:700;color:#1a1a2e">Support film</div>
-        <div style="font-size:var(--fs-body);font-weight:700;color:#1a1a2e">: amorphous carbon, Graphene, GO</div>
-      </div>
-      <div style="margin-top:16px;font-size:var(--fs-caption);color:#555;font-weight:700">hydrophobic</div>
     </div>
   </div>
-  <div class="bl-ref">https://www.nanoimagingservices.com</div>
+  <div class="bl-ref"><a href="https://www.nanoimagingservices.com" target="_blank">NanoImaging Services</a></div>
 </div>
 
 <!-- ============================================================
@@ -508,9 +554,12 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Grid Handling</div>
+    <div class="bl-subtitle">Tweezers, positioning, and avoiding contamination</div>
   </div>
   <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <img src="../cryo-slides-img/s056_112.png" alt="Grid handling" style="max-width:70%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+    <div class="s2-figure">
+      <img src="../cryo-slides-img/s056_112.png" alt="Grid handling">
+    </div>
   </div>
 </div>
 
@@ -521,41 +570,43 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Grid Preparation (Vitrification)</div>
+    <div class="bl-subtitle">Three key steps: hydrophilicity, vitrification, and contamination control</div>
   </div>
-  <div class="bl-content">
-    <div style="display:grid;grid-template-columns:240px 1fr 320px;gap:20px 24px;max-width:1500px;margin:0 auto;align-items:center;grid-template-rows:auto auto auto">
-      <!-- Row 1: Increase Hydrophilicity -->
-      <div style="background:#8b7d6b;color:#fff;border-radius:12px;padding:16px 20px;font-size:var(--fs-caption);font-weight:700;text-align:center">Increase<br>hydrophilicity</div>
-      <div style="display:flex;gap:16px;justify-content:center;align-items:center">
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div style="display:grid;grid-template-columns:240px 1fr 320px;gap:24px 28px;max-width:1640px;margin:0 auto;align-items:center;grid-template-rows:1fr 1fr 1fr;width:100%">
+
+      <div style="background:#0072B2;color:#fff;border-radius:14px;padding:20px 22px;font-size:18px;font-weight:800;text-align:center;letter-spacing:0.3px">Increase<br>hydrophilicity</div>
+      <div style="background:#fff;border-radius:14px;box-shadow:0 6px 22px rgba(0,0,0,0.10);padding:18px 22px;display:flex;gap:24px;justify-content:center;align-items:center">
         <img src="../cryo-slides-img/s057_119.png" alt="Glow discharge" style="height:130px;object-fit:contain">
         <img src="../cryo-slides-img/s057_118.png" alt="Plasma cleaner" style="height:130px;object-fit:contain">
       </div>
-      <div style="background:#f5f0e0;border-radius:12px;padding:16px 20px;font-size:var(--fs-caption);color:#333">
+      <div style="background:#fff;border-left:4px solid #0072B2;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.08);padding:18px 22px;font-size:17px;color:#333;line-height:1.6">
         <div>✓ Ice thickness</div>
         <div>✓ Particle behavior</div>
       </div>
-      <!-- Row 2: Vitrification -->
-      <div style="background:#8b7d6b;color:#fff;border-radius:12px;padding:16px 20px;font-size:var(--fs-caption);font-weight:700;text-align:center">Vitrification</div>
-      <div style="display:flex;gap:16px;justify-content:center;align-items:center">
+
+      <div style="background:#D55E00;color:#fff;border-radius:14px;padding:20px 22px;font-size:18px;font-weight:800;text-align:center;letter-spacing:0.3px">Vitrification</div>
+      <div style="background:#fff;border-radius:14px;box-shadow:0 6px 22px rgba(0,0,0,0.10);padding:18px 22px;display:flex;gap:24px;justify-content:center;align-items:center">
         <img src="../cryo-slides-img/s057_113.png" alt="Vitrobot" style="height:140px;object-fit:contain">
         <img src="../cryo-slides-img/s057_114.jpg" alt="Chameleon" style="height:120px;object-fit:contain">
         <img src="../cryo-slides-img/s057_116.png" alt="VitroJet" style="height:130px;object-fit:contain">
       </div>
-      <div style="background:#f5f0e0;border-radius:12px;padding:16px 20px;font-size:var(--fs-caption);color:#333">
-        <div>✓ Blotting vs. Spraying vs. Drawing</div>
+      <div style="background:#fff;border-left:4px solid #D55E00;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.08);padding:18px 22px;font-size:17px;color:#333;line-height:1.6">
+        <div>✓ Blotting · spraying · drawing</div>
         <div>✓ Time to freeze</div>
-        <div>✓ Reproducibility</div>
-        <div>✓ Speed</div>
+        <div>✓ Reproducibility · speed</div>
       </div>
-      <!-- Row 3: Ice contamination -->
-      <div style="background:#8b7d6b;color:#fff;border-radius:12px;padding:16px 20px;font-size:var(--fs-caption);font-weight:700;text-align:center">Ice<br>contamination</div>
-      <div style="display:flex;gap:16px;justify-content:center;align-items:center">
+
+      <div style="background:#009E73;color:#fff;border-radius:14px;padding:20px 22px;font-size:18px;font-weight:800;text-align:center;letter-spacing:0.3px">Ice<br>contamination</div>
+      <div style="background:#fff;border-radius:14px;box-shadow:0 6px 22px rgba(0,0,0,0.10);padding:18px 22px;display:flex;gap:24px;justify-content:center;align-items:center">
         <img src="../cryo-slides-img/s057_115.png" alt="Dehumidifier" style="height:130px;object-fit:contain">
         <img src="../cryo-slides-img/s057_117.png" alt="Cleanroom" style="height:130px;object-fit:contain">
       </div>
-      <div style="background:#f5f0e0;border-radius:12px;padding:16px 20px;font-size:var(--fs-caption);color:#333">
-        <div>✓ Humidity (&lt; 20%)</div>
+      <div style="background:#fff;border-left:4px solid #009E73;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.08);padding:18px 22px;font-size:17px;color:#333;line-height:1.6">
+        <div>✓ Humidity &lt; 20%</div>
+        <div>✓ Cleanroom protocols</div>
       </div>
+
     </div>
   </div>
 </div>
@@ -569,17 +620,22 @@
     <div class="bl-title">Automated Grid Preparation</div>
     <div class="bl-subtitle">Chameleon (SPT Labtech)</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center;gap:48px">
-    <img src="../cryo-slides-img/s058_120.png" alt="Chameleon product" style="max-width:42%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-    <div style="max-width:420px">
-      <ul style="list-style:none;padding:0">
-        <li style="font-size:var(--fs-caption);line-height:1.7;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#333"><strong>Dispensing</strong> — Piezo inkjet, no blotting</li>
-        <li style="font-size:var(--fs-caption);line-height:1.7;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#333"><strong>Sample volume</strong> — ~3 nL per stripe</li>
-        <li style="font-size:var(--fs-caption);line-height:1.7;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#333"><strong>Spot-to-plunge</strong> — ~100–200 ms</li>
-        <li style="font-size:var(--fs-caption);line-height:1.7;padding:8px 0;color:#333"><strong>Advantage</strong> — Minimal AWI exposure</li>
-      </ul>
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-list">
+      <div class="img-side">
+        <img src="../cryo-slides-img/s058_120.png" alt="Chameleon product">
+      </div>
+      <div class="text-side">
+        <ul>
+          <li><strong>Dispensing</strong> — Piezo inkjet, no blotting</li>
+          <li><strong>Sample volume</strong> — ~3 nL per stripe</li>
+          <li><strong>Spot-to-plunge</strong> — ~100–200 ms</li>
+          <li><strong>Advantage</strong> — Minimal AWI exposure</li>
+        </ul>
+      </div>
     </div>
   </div>
+  <div class="bl-ref"><a href="https://www.sptlabtech.com/products/sample-preparation/cryo-em/chameleon" target="_blank">SPT Labtech — Chameleon</a></div>
 </div>
 
 <!-- ============================================================
@@ -591,17 +647,22 @@
     <div class="bl-title">Automated Grid Preparation</div>
     <div class="bl-subtitle">Vitrojet (CryoSol)</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center;gap:48px">
-    <img src="../cryo-slides-img/s059_121.jpg" alt="Vitrojet product" style="max-width:42%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-    <div style="max-width:420px">
-      <ul style="list-style:none;padding:0">
-        <li style="font-size:var(--fs-caption);line-height:1.7;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#333"><strong>Dispensing</strong> — Pin-printing (jet-free)</li>
-        <li style="font-size:var(--fs-caption);line-height:1.7;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#333"><strong>Sample volume</strong> — ~1 nL per droplet</li>
-        <li style="font-size:var(--fs-caption);line-height:1.7;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.06);color:#333"><strong>Spot-to-plunge</strong> — ~100 ms</li>
-        <li style="font-size:var(--fs-caption);line-height:1.7;padding:8px 0;color:#333"><strong>Advantage</strong> — Sub-nL volume, no blotting, fast freeze</li>
-      </ul>
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-list">
+      <div class="img-side">
+        <img src="../cryo-slides-img/s059_121.jpg" alt="Vitrojet product">
+      </div>
+      <div class="text-side">
+        <ul>
+          <li><strong>Dispensing</strong> — Pin-printing (jet-free)</li>
+          <li><strong>Sample volume</strong> — ~1 nL per droplet</li>
+          <li><strong>Spot-to-plunge</strong> — ~100 ms</li>
+          <li><strong>Advantage</strong> — Sub-nL volume, no blotting, fast freeze</li>
+        </ul>
+      </div>
     </div>
   </div>
+  <div class="bl-ref"><a href="https://cryosol-world.com/vitrojet/" target="_blank">CryoSol — Vitrojet</a></div>
 </div>
 
 <!-- ============================================================
@@ -611,27 +672,37 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Grid Preparation and Screening Time</div>
+    <div class="bl-subtitle">Multiple iterations are the practical bottleneck</div>
   </div>
-  <div class="bl-content">
-    <div style="max-width:1400px;margin:0 auto">
-      <div style="font-size:var(--fs-caption);color:#1a1a2e;line-height:1.8;margin-bottom:24px">
-        <div><strong>Step 1</strong> : Make 3× grids for every condition (reproducibility issue) → 3× sample &amp; 3× time in the lab</div>
-        <div><strong>Step 2</strong> : Need to screen all the grids → 3× screening time + data collection</div>
-        <div><strong>Step 3</strong> : The samples may have issues → back to step 1 &amp; 2 for repeating (multiple times)</div>
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div style="max-width:1500px;display:flex;flex-direction:column;gap:32px;width:100%">
+
+      <div style="background:#fff;border-radius:18px;box-shadow:0 6px 24px rgba(0,0,0,0.12);padding:28px 36px;border-left:5px solid #e74c3c">
+        <div style="font-size:14px;font-weight:800;color:#e74c3c;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px">The screening loop</div>
+        <div style="font-size:19px;color:#2a2a3a;line-height:1.7">
+          <div><strong style="color:#1a1a2e">Step 1</strong> — Make 3× grids per condition (reproducibility) → 3× sample &amp; 3× lab time</div>
+          <div><strong style="color:#1a1a2e">Step 2</strong> — Screen every grid → 3× screening time + data collection</div>
+          <div><strong style="color:#1a1a2e">Step 3</strong> — If samples have issues → back to Step 1 &amp; 2, repeat multiple times</div>
+        </div>
       </div>
+
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
-        <div style="background:#fff;border-radius:16px;padding:24px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-          <div style="font-size:var(--fs-caption);font-weight:700;color:#555">1 sample × 2 conc. × 2 grid types × 3 =</div>
-          <div style="font-size:var(--fs-body);font-weight:700;color:#e74c3c;margin-top:8px">12 grids</div>
+        <div style="background:#fff;border-radius:14px;padding:26px 28px;box-shadow:0 6px 22px rgba(0,0,0,0.10);border-top:4px solid #D55E00">
+          <div style="font-size:14px;font-weight:700;color:#888;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Initial sweep</div>
+          <div style="font-size:17px;font-weight:600;color:#555;line-height:1.5">1 sample × 2 conc. × 2 grid types × 3</div>
+          <div style="font-size:32px;font-weight:900;color:#D55E00;margin-top:14px">= 12 grids</div>
         </div>
-        <div style="background:#fff;border-radius:16px;padding:24px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-          <div style="font-size:var(--fs-caption);font-weight:700;color:#555">1 conc. × 4 grid types × 3 = 12 grids<br>or<br>1 conc. × 1 grid × 4 additives × 3 = 12<br>or ……</div>
+        <div style="background:#fff;border-radius:14px;padding:26px 28px;box-shadow:0 6px 22px rgba(0,0,0,0.10);border-top:4px solid #CC79A7">
+          <div style="font-size:14px;font-weight:700;color:#888;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Refinement</div>
+          <div style="font-size:17px;font-weight:600;color:#555;line-height:1.5">1 conc. × 4 grid types × 3 → 12<br>or 1 conc. × 1 grid × 4 additives × 3 → 12</div>
         </div>
-        <div style="background:#fff;border-radius:16px;padding:24px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-          <div style="font-size:var(--fs-caption);font-weight:700;color:#555">1 conc. × 1 grid × 1 additive =</div>
-          <div style="font-size:var(--fs-body);font-weight:700;color:#0072B2;margin-top:8px">1 final grid (data collection)</div>
+        <div style="background:#fff;border-radius:14px;padding:26px 28px;box-shadow:0 6px 22px rgba(0,0,0,0.10);border-top:4px solid #0072B2">
+          <div style="font-size:14px;font-weight:700;color:#888;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Final</div>
+          <div style="font-size:17px;font-weight:600;color:#555;line-height:1.5">1 conc. × 1 grid × 1 additive</div>
+          <div style="font-size:32px;font-weight:900;color:#0072B2;margin-top:14px">= 1 grid</div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
@@ -643,11 +714,13 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Atlas View</div>
-    <div class="bl-subtitle">General ice quality of the specimen</div>
+    <div class="bl-subtitle">Low-magnification overview — first check of overall ice quality</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center;gap:24px">
-    <img src="../cryo-slides-img/s061_122.png" alt="Atlas view 1" style="max-width:45%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-    <img src="../cryo-slides-img/s061_123.png" alt="Atlas view 2" style="max-width:45%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-grid cols-2">
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s061_122.png" alt="Atlas view example 1"></div></div>
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s061_123.png" alt="Atlas view example 2"></div></div>
+    </div>
   </div>
 </div>
 
@@ -658,16 +731,16 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Square View</div>
-    <div class="bl-subtitle">Confirming ice quality of the grid</div>
+    <div class="bl-subtitle">Mid-magnification — confirming ice quality square by square</div>
   </div>
   <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <div>
-      <img src="../cryo-slides-img/s062_124.png" alt="Square view examples" style="max-width:100%;max-height:350px;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-      <div style="display:flex;justify-content:space-around;margin-top:16px;font-size:var(--fs-caption);font-weight:700;color:#555">
-        <span>Good looking</span>
-        <span>Cracked</span>
-        <span>Contaminated</span>
-        <span>Small, thick ice</span>
+    <div class="s2-figure" style="flex-direction:column;gap:18px;max-width:1500px">
+      <img src="../cryo-slides-img/s062_124.png" alt="Square view examples" style="max-height:480px;width:100%;object-fit:contain">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;width:100%;font-size:18px;font-weight:700;color:#555;text-align:center;padding:0 12px">
+        <span style="color:#009E73">Good looking</span>
+        <span style="color:#D55E00">Cracked</span>
+        <span style="color:#CC79A7">Contaminated</span>
+        <span style="color:#0072B2">Small, thick ice</span>
       </div>
     </div>
   </div>
@@ -682,10 +755,12 @@
     <div class="bl-title">Hole View — Ideal</div>
     <div class="bl-subtitle">Even particle distribution, thin vitreous ice, good contrast</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center;gap:16px">
-    <img src="../cryo-slides-img/s063_125.png" alt="Ideal hole view 1" style="max-width:30%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-    <img src="../cryo-slides-img/s063_126.png" alt="Ideal hole view 2" style="max-width:30%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-    <img src="../cryo-slides-img/s063_127.png" alt="Ideal hole view 3" style="max-width:30%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-grid cols-3">
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s063_125.png" alt="Ideal hole view 1"></div></div>
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s063_126.png" alt="Ideal hole view 2"></div></div>
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s063_127.png" alt="Ideal hole view 3"></div></div>
+    </div>
   </div>
 </div>
 
@@ -698,14 +773,14 @@
     <div class="bl-title">Hole View — Crystalline Ice</div>
     <div class="bl-subtitle">Ice rings visible in FFT — indicates devitrification from slow cooling or warming</div>
   </div>
-  <div class="bl-content">
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;max-width:1400px;margin:0 auto">
-      <img src="../cryo-slides-img/s064_128.png" alt="" style="width:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-      <img src="../cryo-slides-img/s064_129.png" alt="" style="width:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-      <img src="../cryo-slides-img/s064_131.png" alt="" style="width:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-      <img src="../cryo-slides-img/s064_133.png" alt="" style="width:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-      <img src="../cryo-slides-img/s064_130.png" alt="" style="width:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-      <img src="../cryo-slides-img/s064_132.png" alt="" style="width:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-grid cols-3-2rows">
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s064_128.png" alt="Crystalline ice example"></div></div>
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s064_129.png" alt="Crystalline ice example"></div></div>
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s064_131.png" alt="Crystalline ice example"></div></div>
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s064_133.png" alt="Crystalline ice example"></div></div>
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s064_130.png" alt="Crystalline ice example"></div></div>
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s064_132.png" alt="Crystalline ice example"></div></div>
     </div>
   </div>
 </div>
@@ -719,10 +794,12 @@
     <div class="bl-title">Hole View — Particle Aggregation</div>
     <div class="bl-subtitle">Clumped particles at AWI or due to sample instability — check buffer, concentration, additives</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center;gap:16px">
-    <img src="../cryo-slides-img/s065_140.png" alt="Particle aggregation 1" style="max-width:30%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-    <img src="../cryo-slides-img/s065_141.png" alt="Particle aggregation 2" style="max-width:30%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-    <img src="../cryo-slides-img/s065_142.png" alt="Particle aggregation 3" style="max-width:30%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-grid cols-3">
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s065_140.png" alt="Particle aggregation 1"></div></div>
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s065_141.png" alt="Particle aggregation 2"></div></div>
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s065_142.png" alt="Particle aggregation 3"></div></div>
+    </div>
   </div>
 </div>
 
@@ -735,10 +812,12 @@
     <div class="bl-title">Hole View — Concentration Issue</div>
     <div class="bl-subtitle">Too dense, too sparse, or uneven — optimize concentration and blotting</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center;gap:16px">
-    <img src="../cryo-slides-img/s066_134.png" alt="" style="max-width:30%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-    <img src="../cryo-slides-img/s066_135.png" alt="" style="max-width:30%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-    <img src="../cryo-slides-img/s066_136.png" alt="" style="max-width:30%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-grid cols-3">
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s066_134.png" alt="Concentration issue 1"></div></div>
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s066_135.png" alt="Concentration issue 2"></div></div>
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s066_136.png" alt="Concentration issue 3"></div></div>
+    </div>
   </div>
 </div>
 
@@ -751,10 +830,12 @@
     <div class="bl-title">Hole View — Contamination</div>
     <div class="bl-subtitle">Ice crystal contamination from humidity or improper handling/transfer</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center;gap:16px">
-    <img src="../cryo-slides-img/s067_137.png" alt="" style="max-width:30%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-    <img src="../cryo-slides-img/s067_138.png" alt="" style="max-width:30%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-    <img src="../cryo-slides-img/s067_139.png" alt="" style="max-width:30%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-grid cols-3">
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s067_137.png" alt="Contamination 1"></div></div>
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s067_138.png" alt="Contamination 2"></div></div>
+      <div class="cell"><div class="img-wrap"><img src="../cryo-slides-img/s067_139.png" alt="Contamination 3"></div></div>
+    </div>
   </div>
 </div>
 
@@ -767,9 +848,11 @@
     <div class="bl-title">Hole View — Other Ice Issues</div>
     <div class="bl-subtitle">Too thin (empty holes, no particles) or too thick (poor contrast, high background)</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center;gap:32px">
-    <img src="../cryo-slides-img/s068_140.png" alt="" style="max-width:40%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-    <img src="../cryo-slides-img/s068_141.png" alt="" style="max-width:40%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-grid cols-2">
+      <div class="cell"><div class="caption" style="margin-top:0;margin-bottom:10px;font-size:18px;color:#1a1a2e;font-weight:800">Too thin</div><div class="img-wrap"><img src="../cryo-slides-img/s068_140.png" alt="Too thin ice"></div></div>
+      <div class="cell"><div class="caption" style="margin-top:0;margin-bottom:10px;font-size:18px;color:#1a1a2e;font-weight:800">Too thick</div><div class="img-wrap"><img src="../cryo-slides-img/s068_141.png" alt="Too thick ice"></div></div>
+    </div>
   </div>
 </div>
 
@@ -780,24 +863,39 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Grid Screening</div>
+    <div class="bl-subtitle">Four criteria to evaluate a cryo-EM grid before data collection</div>
   </div>
   <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:0;width:900px;height:500px;border-radius:20px;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-      <div style="background:#e8e4d0;display:flex;align-items:center;justify-content:center;padding:24px">
-        <div style="font-size:var(--fs-body);font-weight:700;color:#1a1a2e;text-align:center">Imaging area<br>available</div>
+    <div style="position:relative;width:1100px;height:560px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:18px;width:100%;height:100%">
+        <div style="background:#fff;border-left:6px solid #D55E00;border-radius:18px;display:flex;align-items:center;justify-content:center;padding:36px;box-shadow:0 6px 24px rgba(0,0,0,0.12)">
+          <div style="text-align:center">
+            <div style="font-size:14px;font-weight:800;color:#D55E00;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Criterion 1</div>
+            <div style="font-size:26px;font-weight:800;color:#1a1a2e;line-height:1.2">Imaging area<br>available</div>
+          </div>
+        </div>
+        <div style="background:#fff;border-left:6px solid #0072B2;border-radius:18px;display:flex;align-items:center;justify-content:center;padding:36px;box-shadow:0 6px 24px rgba(0,0,0,0.12)">
+          <div style="text-align:center">
+            <div style="font-size:14px;font-weight:800;color:#0072B2;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Criterion 2</div>
+            <div style="font-size:26px;font-weight:800;color:#1a1a2e;line-height:1.2">Quality &amp; thickness<br>of the ice</div>
+          </div>
+        </div>
+        <div style="background:#fff;border-left:6px solid #009E73;border-radius:18px;display:flex;align-items:center;justify-content:center;padding:36px;box-shadow:0 6px 24px rgba(0,0,0,0.12)">
+          <div style="text-align:center">
+            <div style="font-size:14px;font-weight:800;color:#009E73;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Criterion 3</div>
+            <div style="font-size:26px;font-weight:800;color:#1a1a2e;line-height:1.2">Sample<br>appearance</div>
+          </div>
+        </div>
+        <div style="background:#fff;border-left:6px solid #CC79A7;border-radius:18px;display:flex;align-items:center;justify-content:center;padding:36px;box-shadow:0 6px 24px rgba(0,0,0,0.12)">
+          <div style="text-align:center">
+            <div style="font-size:14px;font-weight:800;color:#CC79A7;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Criterion 4</div>
+            <div style="font-size:26px;font-weight:800;color:#1a1a2e;line-height:1.2">Particle concentration<br>and distribution</div>
+          </div>
+        </div>
       </div>
-      <div style="background:#8b7d6b;display:flex;align-items:center;justify-content:center;padding:24px">
-        <div style="font-size:var(--fs-body);font-weight:700;color:#fff;text-align:center">Quality and thickness<br>of the ice</div>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#1a1a2e;color:#fff;border-radius:50%;width:160px;height:160px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(0,0,0,0.25);border:6px solid #f5f5f5">
+        <div style="font-size:18px;font-weight:800;text-align:center;letter-spacing:0.3px;line-height:1.2">Evaluate<br>Grid<br>Quality</div>
       </div>
-      <div style="background:#4caf50;display:flex;align-items:center;justify-content:center;padding:24px">
-        <div style="font-size:var(--fs-body);font-weight:700;color:#fff;text-align:center">Sample<br>appearance</div>
-      </div>
-      <div style="background:#757575;display:flex;align-items:center;justify-content:center;padding:24px">
-        <div style="font-size:var(--fs-body);font-weight:700;color:#fff;text-align:center">Particle concentration<br>and distribution</div>
-      </div>
-    </div>
-    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(200,200,210,0.9);border-radius:12px;padding:16px 28px;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
-      <div style="font-size:var(--fs-body);font-weight:700;color:#1a1a2e;text-align:center">Evaluate<br>Grid Quality</div>
     </div>
   </div>
 </div>
@@ -830,15 +928,18 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Spot-to-Plunge Time Effect (with Chameleon)</div>
+    <div class="bl-subtitle">Faster freezing reduces preferred orientation and AWI denaturation</div>
   </div>
-  <div class="bl-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
-    <div style="display:flex;align-items:center;gap:16px">
-      <div style="font-size:var(--fs-body);font-weight:700;color:#1a1a2e;min-width:140px">Hemagglutinin</div>
-      <img src="../cryo-slides-img/s071_143.png" alt="Hemagglutinin time series" style="max-width:70%;max-height:280px;object-fit:contain">
-    </div>
-    <div style="display:flex;align-items:center;gap:16px">
-      <div style="font-size:var(--fs-body);font-weight:700;color:#1a1a2e;min-width:140px">Insulin receptor</div>
-      <img src="../cryo-slides-img/s071_144.png" alt="Insulin receptor time series" style="max-width:70%;max-height:280px;object-fit:contain">
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-figure" style="flex-direction:column;gap:18px">
+      <div style="display:flex;align-items:center;gap:24px;width:100%">
+        <div style="font-size:22px;font-weight:800;color:#1a1a2e;min-width:180px">Hemagglutinin</div>
+        <img src="../cryo-slides-img/s071_143.png" alt="Hemagglutinin time series" style="flex:1;max-height:230px;object-fit:contain">
+      </div>
+      <div style="display:flex;align-items:center;gap:24px;width:100%">
+        <div style="font-size:22px;font-weight:800;color:#1a1a2e;min-width:180px">Insulin receptor</div>
+        <img src="../cryo-slides-img/s071_144.png" alt="Insulin receptor time series" style="flex:1;max-height:230px;object-fit:contain">
+      </div>
     </div>
   </div>
   <div class="bl-ref"><a href="https://doi.org/10.1038/s41592-018-0139-3" target="_blank">Noble et al., Nat. Methods (2018)</a></div>
@@ -851,12 +952,20 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Spot-to-Plunge Time Effect (with Chameleon)</div>
+    <div class="bl-subtitle">Nanosecond-scale denaturation at the air-water interface</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center;gap:40px">
-    <img src="../cryo-slides-img/s072_145.png" alt="Spot-to-plunge analysis" style="max-width:55%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-    <div style="max-width:400px;font-size:var(--fs-caption);font-weight:700;color:#1a1a2e;line-height:1.8">
-      Particles can move 100 nm within 1 ms or less.<br><br>
-      Once adsorbed, denaturation may follow in as little as a few ns.
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-list">
+      <div class="img-side">
+        <img src="../cryo-slides-img/s072_145.png" alt="Spot-to-plunge analysis">
+      </div>
+      <div class="text-side">
+        <ul>
+          <li>Particles can move <b>100 nm within 1 ms</b> or less</li>
+          <li>Once adsorbed at the AWI, denaturation may follow in as little as a <b>few nanoseconds</b></li>
+          <li>Sub-100 ms spot-to-plunge times are needed to outrun this damage</li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="bl-ref"><a href="https://doi.org/10.1038/s41592-018-0139-3" target="_blank">Noble et al., Nat. Methods (2018)</a></div>
@@ -871,17 +980,21 @@
     <div class="bl-title">Continuous Support Films</div>
     <div class="bl-subtitle">Reduce AWI effects by keeping particles off the air-water interface</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center;gap:32px">
-    <img src="../cryo-slides-img/s073_146.png" alt="Continuous support films" style="max-width:58%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-    <div style="max-width:380px">
-      <div style="font-size:var(--fs-caption);color:#333;line-height:1.7">
-        <div style="margin-bottom:12px"><strong style="color:#4caf50">Single-Layer Graphene</strong> — Lowest background, best for small proteins</div>
-        <div style="margin-bottom:12px"><strong style="color:#2196f3">Graphene Oxide (GO)</strong> — Easier to prepare, reduces AWI, adds slight background</div>
-        <div><strong style="color:#8b7d6b">Amorphous Carbon</strong> — Most accessible, higher background, proven workflow</div>
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-list">
+      <div class="img-side">
+        <img src="../cryo-slides-img/s073_146.png" alt="Continuous support films">
+      </div>
+      <div class="text-side">
+        <ul>
+          <li><strong style="color:#009E73">Single-Layer Graphene</strong> — Lowest background, best for small proteins</li>
+          <li><strong style="color:#0072B2">Graphene Oxide (GO)</strong> — Easier to prepare, reduces AWI, adds slight background</li>
+          <li><strong style="color:#D55E00">Amorphous Carbon</strong> — Most accessible, higher background, proven workflow</li>
+        </ul>
       </div>
     </div>
   </div>
-  <div class="bl-ref">https://www.nanoimagingservices.com</div>
+  <div class="bl-ref"><a href="https://www.nanoimagingservices.com" target="_blank">NanoImaging Services</a></div>
 </div>
 
 <!-- ============================================================
@@ -891,19 +1004,24 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Grid Optimization</div>
+    <div class="bl-subtitle">Practical strategies when standard protocols fail</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center;gap:40px">
-    <img src="../cryo-slides-img/s074_147.jpg" alt="Grid optimization strategies" style="max-width:50%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-    <div style="max-width:400px">
-      <ul style="list-style:none;padding:0">
-        <li style="font-size:var(--fs-caption);line-height:1.6;padding:8px 0;color:#1a1a2e">Different vitrification procedures</li>
-        <li style="font-size:var(--fs-caption);line-height:1.6;padding:8px 0;color:#1a1a2e">Functionalized grids</li>
-        <li style="font-size:var(--fs-caption);line-height:1.6;padding:8px 0;color:#1a1a2e">Longer data collection</li>
-        <li style="font-size:var(--fs-caption);line-height:1.6;padding:8px 0;color:#1a1a2e">Tilted data collection</li>
-      </ul>
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-list">
+      <div class="img-side">
+        <img src="../cryo-slides-img/s074_147.jpg" alt="Grid optimization strategies">
+      </div>
+      <div class="text-side">
+        <ul>
+          <li><strong>Different vitrification procedures</strong> — Vitrobot vs Chameleon vs Vitrojet</li>
+          <li><strong>Functionalized grids</strong> — Affinity tags, lipid monolayers, charged surfaces</li>
+          <li><strong>Longer data collection</strong> — More movies to compensate for low yields</li>
+          <li><strong>Tilted data collection</strong> — Recover missing views, reduce orientation bias</li>
+        </ul>
+      </div>
     </div>
   </div>
-  <div class="bl-ref"><a href="https://doi.org/10.1016/j.isci.2021.102139" target="_blank">Kampjut, D. et al., iScience (2021)</a></div>
+  <div class="bl-ref"><a href="https://doi.org/10.1016/j.isci.2021.102139" target="_blank">Kampjut et al., iScience (2021)</a></div>
 </div>
 
 <!-- ============================================================
@@ -913,23 +1031,24 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Sample Requirements for SPA</div>
+    <div class="bl-subtitle">Size, quantity, and buffer at a glance</div>
   </div>
-  <div class="bl-content">
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;max-width:1500px;margin:0 auto">
-      <div style="text-align:center;background:#fff;border-radius:20px;padding:32px 24px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-        <div style="font-size:var(--fs-caption);font-weight:700;color:#555;margin-bottom:16px">Size</div>
-        <img src="../cryo-slides-img/s075_148.png" alt="Size" style="max-width:100%;max-height:200px;object-fit:contain;margin-bottom:16px">
-        <div style="font-size:var(--fs-caption);font-weight:700;color:#555">&gt; 80 kDa of ordered mass</div>
+  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
+    <div class="s2-img-grid cols-3">
+      <div class="cell" style="border-top:4px solid #0072B2">
+        <div style="font-size:14px;font-weight:800;color:#0072B2;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px">Size</div>
+        <div class="img-wrap"><img src="../cryo-slides-img/s075_148.png" alt="Size requirement icon"></div>
+        <div style="font-size:20px;font-weight:800;color:#1a1a2e;margin-top:14px;text-align:center;line-height:1.3">&gt; 80 kDa<br><span style="font-size:15px;font-weight:600;color:#888">of ordered mass</span></div>
       </div>
-      <div style="text-align:center;background:#fff;border-radius:20px;padding:32px 24px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-        <div style="font-size:var(--fs-caption);font-weight:700;color:#555;margin-bottom:16px">Quantity (concentration)</div>
-        <img src="../cryo-slides-img/s075_149.jpg" alt="Concentration" style="max-width:100%;max-height:200px;object-fit:contain;margin-bottom:16px">
-        <div style="font-size:var(--fs-caption);font-weight:700;color:#555">0.5–1 mg protein<br>50 nM – 5 µM concentration</div>
+      <div class="cell" style="border-top:4px solid #D55E00">
+        <div style="font-size:14px;font-weight:800;color:#D55E00;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px">Quantity</div>
+        <div class="img-wrap"><img src="../cryo-slides-img/s075_149.jpg" alt="Concentration requirement icon"></div>
+        <div style="font-size:20px;font-weight:800;color:#1a1a2e;margin-top:14px;text-align:center;line-height:1.3">0.5–1 mg protein<br><span style="font-size:15px;font-weight:600;color:#888">50 nM – 5 µM</span></div>
       </div>
-      <div style="text-align:center;background:#fff;border-radius:20px;padding:32px 24px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
-        <div style="font-size:var(--fs-caption);font-weight:700;color:#555;margin-bottom:16px">Reagents (Buffer)</div>
-        <img src="../cryo-slides-img/s075_150.png" alt="Buffer" style="max-width:100%;max-height:200px;object-fit:contain;margin-bottom:16px">
-        <div style="font-size:var(--fs-caption);font-weight:700;color:#555">Most buffers are fine.<br>But DMSO &gt; 0.5%, high carbon chemicals, cryoprotectants are exceptions.</div>
+      <div class="cell" style="border-top:4px solid #009E73">
+        <div style="font-size:14px;font-weight:800;color:#009E73;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px">Buffer</div>
+        <div class="img-wrap"><img src="../cryo-slides-img/s075_150.png" alt="Buffer requirement icon"></div>
+        <div style="font-size:17px;color:#333;margin-top:14px;text-align:center;line-height:1.5">Most buffers OK<br><span style="font-size:14px;color:#888">avoid DMSO &gt; 0.5%, cryoprotectants, high-carbon chemicals</span></div>
       </div>
     </div>
   </div>
@@ -942,10 +1061,12 @@
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Time &amp; Cost of a Single Particle Cryo-EM Pipeline</div>
-    <div class="bl-subtitle">Next: Imaging...</div>
+    <div class="bl-subtitle">Sample preparation done — next: Imaging</div>
   </div>
   <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <img src="../cryo-slides-img/s037_80.png" alt="SPA pipeline — imaging highlighted" style="max-width:90%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15)">
+    <div class="s2-figure tall">
+      <img src="../cryo-slides-img/s037_80.png" alt="SPA pipeline — imaging highlighted">
+    </div>
   </div>
   <div class="bl-ref"><a href="https://doi.org/10.1039/d2fd00129b" target="_blank">Halfon et al., Faraday Discuss. (2022)</a></div>
 </div>
