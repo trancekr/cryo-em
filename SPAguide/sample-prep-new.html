@@ -83,7 +83,7 @@ body {
 .hero img { width: 100%; height: 100%; object-fit: cover; }
 .hero-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(5,150,105,0.72) 0%, rgba(16,185,129,0.35) 100%);
+  background: linear-gradient(135deg, rgba(5,150,105,0.45) 0%, rgba(16,185,129,0.18) 100%);
   display: flex; flex-direction: column; justify-content: center; align-items: center;
   padding: clamp(16px, 3vw, 48px); text-align: center;
 }
@@ -288,10 +288,11 @@ body {
 
 <!-- ======== Slide 2: Goal of Sample Preparation ======== -->
 <div class="slide" data-n="2">
-  <div class="slide-title" style="padding-top:20px">Goal of Sample Preparation</div>
-  <div class="slide-body" style="justify-content:center;gap:clamp(16px,2vh,28px)">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,1.5vw,24px);flex:0 0 auto;padding:0 clamp(24px,3vw,60px)">
-      <div class="topic-card green">
+  <div class="slide-title">Goal of Sample Preparation</div>
+  <div class="slide-body" style="gap:clamp(24px,3vh,40px);padding:0 clamp(60px,6vw,100px)">
+    <!-- 2컬럼 카드: stretch로 같은 높이 -->
+    <div style="display:flex;gap:clamp(20px,2.5vw,36px);flex:1;min-height:0;align-items:stretch">
+      <div class="topic-card green" style="flex:1;display:flex;flex-direction:column">
         <h3>The Goal</h3>
         <ul>
           <li><strong>Native state</strong> &mdash; Preserve biological structure without artifacts</li>
@@ -300,16 +301,21 @@ body {
           <li><strong>Reproducibility</strong> &mdash; Consistent grid quality across preparations</li>
         </ul>
       </div>
-      <div class="topic-card blue">
+      <div class="topic-card blue" style="flex:1;display:flex;flex-direction:column">
         <h3>For High Resolution</h3>
         <ul>
           <li><strong>Best specimen</strong> &mdash; Pure, stable, well-behaved protein</li>
           <li><strong>Optimal magnification</strong> &mdash; Balance pixel size vs. field of view</li>
           <li><strong>Best detector</strong> &mdash; High DQE for maximum signal capture</li>
           <li><strong>Best micrographs</strong> &mdash; Thin ice, no drift, proper defocus</li>
-          <li><strong>Ultimate goal</strong> &mdash; Highest resolution structure with least data</li>
         </ul>
       </div>
+    </div>
+    <!-- 대결론: 하단 독립 배치 -->
+    <div style="flex:0 0 auto;text-align:center;margin-bottom:clamp(8px,1vh,16px)">
+      <p style="font-size:clamp(24px,3vh,36px);color:#c00;font-weight:700">
+        &#10148; Leading to <strong>highest resolution structure</strong> with <strong>least data</strong>
+      </p>
     </div>
   </div>
 </div>
@@ -317,34 +323,10 @@ body {
 <!-- ======== Slide 3: The Circle of Sample Preparation ======== -->
 <div class="slide" data-n="3">
   <div class="slide-title">The Circle of Cryo-EM Sample Preparation</div>
-  <div class="slide-subtitle">An iterative process of optimization</div>
-  <div class="slide-body">
-    <div class="layout-split">
-      <div class="split-img" style="flex:1.2">
-        <img src="../cryo-slides-img/s040_83.png" alt="Circle of sample preparation" style="padding:8px;background:#fff;border:1px solid #e8e8ee">
-      </div>
-      <div class="split-text" style="flex:0.8;justify-content:center">
-        <div class="info-panel green">
-          <h3>Key Steps</h3>
-          <ul>
-            <li><strong>Protein expression &amp; purification</strong></li>
-            <li><strong>Quality assessment</strong> (SEC, DLS, mass photometry)</li>
-            <li><strong>Grid preparation</strong> (glow discharge, sample application, blotting)</li>
-            <li><strong>Vitrification</strong> (plunge freezing)</li>
-            <li><strong>Grid screening</strong> (atlas &rarr; square &rarr; hole view)</li>
-          </ul>
-        </div>
-        <div class="info-panel amber" style="margin-top:8px">
-          <h3>Reality</h3>
-          <ul>
-            <li>Multiple rounds of optimization are typical</li>
-            <li>Each variable affects the final result</li>
-            <li>3-year facility data shows iterative nature</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+  <div class="slide-body" style="align-items:center;justify-content:center">
+    <img src="../cryo-slides-img/s040_83.png" alt="Circle of sample preparation" style="max-height:92%;max-width:85%;object-fit:contain">
   </div>
+  <div class="slide-ref"><a href="https://doi.org/10.1038/s41594-019-0350-1" target="_blank" style="color:inherit">Zhou et al., Nat Struct Mol Biol (2019)</a></div>
 </div>
 
 <!-- ======== Slide 4: Sample Homogeneity Assessment ======== -->
@@ -366,7 +348,7 @@ body {
       <div class="cap-item">
         <img src="../cryo-slides-img/s041_88.png" alt="DLS">
         <div class="cap-label">Dynamic Light Scattering</div>
-        <div class="cap-desc">Polydispersity index &lt; 20% is ideal</div>
+        <div class="cap-desc">Polydispersity index &lt; 20% ideal</div>
       </div>
       <div class="cap-item">
         <img src="../cryo-slides-img/s041_89.jpg" alt="Mass photometry">
@@ -375,35 +357,43 @@ body {
       </div>
     </div>
   </div>
+  <div class="slide-ref"><a href="https://doi.org/10.1016/j.str.2020.11.001" target="_blank" style="color:inherit">Olinares et al., Structure (2021)</a> &middot; <a href="https://doi.org/10.1107/S2059798318006496" target="_blank" style="color:inherit">Drulyte et al., Acta Cryst D (2018)</a></div>
 </div>
 
 <!-- ======== Slide 5: Negative Staining vs. Cryo-EM ======== -->
 <div class="slide" data-n="5">
-  <div class="slide-title">Negative Staining vs. Vitrification</div>
-  <div class="slide-body">
-    <div style="display:flex;gap:clamp(12px,1.5vw,24px);flex:1;min-height:0;align-items:stretch">
-      <div style="flex:1;display:flex;align-items:center;justify-content:center">
-        <img src="../cryo-slides-img/s042_90.png" alt="Negative stain vs cryo-EM comparison" style="max-height:100%;max-width:100%;object-fit:contain;border-radius:10px">
+  <div class="slide-title">Negative Staining vs. Cryo-EM</div>
+  <div class="slide-body" style="gap:clamp(16px,2vh,28px)">
+    <!-- 상단: 이미지 -->
+    <div style="flex:0 0 auto;display:flex;justify-content:center">
+      <img src="../cryo-slides-img/s042_90.png" alt="Negative stain vs cryo-EM comparison" style="max-height:340px;object-fit:contain;border-radius:8px">
+    </div>
+    <!-- 하단: 2컬럼 비교표 (원본 p43 스타일) -->
+    <div style="display:flex;gap:clamp(24px,3vw,48px);flex:0 0 auto;padding:0 clamp(60px,6vw,120px)">
+      <div style="flex:1">
+        <h3 style="font-size:clamp(20px,2.5vh,28px);color:#1a5276;border-bottom:2px solid #1a5276;padding-bottom:8px;margin-bottom:12px">Negative staining</h3>
+        <ul style="font-size:clamp(15px,1.8vh,20px);line-height:1.8;list-style:none;padding:0">
+          <li>&#10003; Faster &amp; easier</li>
+          <li>&#10003; Less expensive</li>
+          <li>&#10003; Higher contrast / low resolution</li>
+          <li>&#10003; Artifacts from the staining</li>
+          <li>&#10003; Can be done at room temp.</li>
+        </ul>
       </div>
-      <div style="flex:1;display:flex;flex-direction:column;gap:clamp(8px,1vh,16px);justify-content:center">
-        <div class="topic-card amber" style="flex:0 0 auto">
-          <h3>Negative Staining</h3>
-          <ul>
-            <li>Faster &amp; easier preparation</li>
-            <li>Higher contrast, lower resolution (~15&ndash;25 &Aring;)</li>
-            <li>Staining artifacts (flattening, dehydration)</li>
-            <li>Excellent for <strong>QC</strong>: check aggregation, heterogeneity</li>
-          </ul>
-        </div>
-        <div class="topic-card blue" style="flex:0 0 auto">
-          <h3>Cryo-EM (Vitrification)</h3>
-          <ul>
-            <li>Near-native state preservation</li>
-            <li>Lower contrast, higher resolution (&lt;3 &Aring;)</li>
-            <li>Requires thin vitreous ice</li>
-            <li>More demanding: time, equipment, expertise</li>
-          </ul>
-        </div>
+      <div style="flex:1">
+        <h3 style="font-size:clamp(20px,2.5vh,28px);color:#1a5276;border-bottom:2px solid #1a5276;padding-bottom:8px;margin-bottom:12px">Cryo-EM (Vitrification)</h3>
+        <ul style="font-size:clamp(15px,1.8vh,20px);line-height:1.8;list-style:none;padding:0">
+          <li>&#10003; Slower &amp; difficult</li>
+          <li>&#10003; Expensive</li>
+          <li>&#10003; Lower contrast / high resolution</li>
+          <li>&#10003; Retain almost native state</li>
+        </ul>
+      </div>
+    </div>
+    <!-- 하단 메시지 -->
+    <div style="flex:0 0 auto;text-align:center;padding:12px clamp(60px,6vw,120px)">
+      <div style="display:inline-block;border:2px solid #1a5276;border-radius:8px;padding:10px 28px;font-size:clamp(15px,1.8vh,20px)">
+        Useful for <strong>QC</strong> of the sample (aggregation, dissociation, heterogeneity)
       </div>
     </div>
   </div>
@@ -439,64 +429,42 @@ body {
       </div>
     </div>
   </div>
-  <div class="slide-ref"><a href="https://doi.org/10.1016/j.crstbi.2022.09.001" target="_blank" style="color:inherit">Wentinck et al., Curr Res Struct Biol (2022)</a></div>
+  <div class="slide-ref"><a href="https://doi.org/10.1016/j.crstbi.2022.09.005" target="_blank" style="color:inherit">Wentinck et al., Curr Res Struct Biol (2022)</a></div>
 </div>
 
 <!-- ======== Slide 7: Size Augmentation Strategies ======== -->
 <div class="slide" data-n="7">
-  <div class="slide-title">Small Proteins &amp; Size Augmentation</div>
-  <div class="slide-subtitle">Strategies for imaging targets below the conventional size limit</div>
-  <div class="slide-body">
-    <div class="layout-split">
-      <div class="split-img" style="flex:1.3">
-        <div style="display:flex;flex-direction:column;gap:8px;height:100%">
-          <img src="../cryo-slides-img/s045_92.jpg" alt="Size augmentation examples" style="flex:1;min-height:0;object-fit:contain;border-radius:10px;background:#fff;border:1px solid #e8e8ee;padding:4px">
-          <img src="../cryo-slides-img/s046_93.png" alt="Size augmentation approaches" style="flex:1;min-height:0;object-fit:contain;border-radius:10px;background:#fff;border:1px solid #e8e8ee;padding:4px">
-        </div>
-      </div>
-      <div class="split-text" style="flex:0.7;justify-content:center">
-        <div class="info-panel green">
-          <h3>Augmentation Strategies</h3>
-          <ul>
-            <li><strong>Fab/Nanobody</strong> &mdash; Add mass as fiducial marker</li>
-            <li><strong>Megabody</strong> &mdash; Rigid scaffold increases ordered mass</li>
-            <li><strong>Symmetry</strong> &mdash; Natural oligomers give more signal</li>
-            <li><strong>Scaffold proteins</strong> &mdash; Fuse to large, rigid partner</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+  <div class="slide-title">Size-augmentation Strategies for Small-protein SPA</div>
+  <div class="slide-body" style="align-items:center;justify-content:center">
+    <img src="../cryo-slides-img/s046_93.png" alt="Size augmentation strategies overview" style="max-height:90%;max-width:90%;object-fit:contain">
   </div>
-  <div class="slide-ref"><a href="https://doi.org/10.1016/j.crstbi.2022.09.001" target="_blank" style="color:inherit">Wentinck et al., Curr Res Struct Biol (2022)</a></div>
+  <div class="slide-ref"><a href="https://doi.org/10.1016/j.crstbi.2022.09.005" target="_blank" style="color:inherit">Wentinck et al., Curr Res Struct Biol (2022)</a></div>
 </div>
 
-<!-- ======== Slide 8: Size Augmentation Examples ======== -->
+<!-- ======== Slide 8: Rigid Fab as Structural Chaperone ======== -->
 <div class="slide" data-n="8">
-  <div class="slide-title">Size Augmentation &mdash; Approaches</div>
-  <div class="slide-body">
-    <div class="cap-grid cg4">
-      <div class="cap-item">
-        <img src="../cryo-slides-img/s047_94.png" alt="Fab complex">
-        <div class="cap-label">Fab Fragment</div>
-        <div class="cap-desc">~50 kDa added mass, rigid binding</div>
+  <div class="slide-title">Rigid Fab (as a structural chaperone)</div>
+  <div class="slide-body" style="align-items:center;justify-content:center">
+    <!-- 3개 구조 나란히 (원본 p47) -->
+    <div style="display:flex;gap:clamp(16px,2vw,32px);align-items:flex-end;max-height:85%;padding:0 clamp(24px,3vw,60px)">
+      <div style="flex:1;text-align:center">
+        <img src="../cryo-slides-img/s047_96.png" alt="SP26:Fab complex" style="max-height:520px;width:100%;object-fit:contain">
+        <div style="margin-top:8px;font-size:clamp(18px,2.2vh,26px);font-weight:700">Total 74 kDa</div>
+        <div style="font-size:clamp(14px,1.6vh,18px);color:#555">SP26 (26 kDa)</div>
       </div>
-      <div class="cap-item">
-        <img src="../cryo-slides-img/s047_95.png" alt="Nanobody">
-        <div class="cap-label">Nanobody</div>
-        <div class="cap-desc">~15 kDa, can stabilize conformations</div>
+      <div style="flex:1;text-align:center">
+        <img src="../cryo-slides-img/s047_97.png" alt="SP21:Fab complex" style="max-height:520px;width:100%;object-fit:contain">
+        <div style="margin-top:8px;font-size:clamp(18px,2.2vh,26px);font-weight:700">Total 69 kDa</div>
+        <div style="font-size:clamp(14px,1.6vh,18px);color:#555">SP21 (21 kDa)</div>
       </div>
-      <div class="cap-item">
-        <img src="../cryo-slides-img/s047_96.png" alt="Megabody">
-        <div class="cap-label">Megabody</div>
-        <div class="cap-desc">Nanobody fused to rigid scaffold</div>
-      </div>
-      <div class="cap-item">
-        <img src="../cryo-slides-img/s047_97.png" alt="Legobody">
-        <div class="cap-label">Legobody / Scaffold</div>
-        <div class="cap-desc">Modular assembly for mass addition</div>
+      <div style="flex:1;text-align:center">
+        <img src="../cryo-slides-img/s047_94.png" alt="Ligand:Fab complex" style="max-height:520px;width:100%;object-fit:contain">
+        <div style="margin-top:8px;font-size:clamp(18px,2.2vh,26px);font-weight:700">Total 54 kDa</div>
+        <div style="font-size:clamp(14px,1.6vh,18px);color:#555">Ligand (6 kDa)</div>
       </div>
     </div>
   </div>
+  <div class="slide-ref" style="text-align:right;padding-right:24px"><span style="font-weight:700;color:#0066cc;font-size:clamp(14px,1.6vh,20px)">Genentech</span></div>
 </div>
 
 <!-- ======== Slide 9: Ordered Mass, Not MW ======== -->
@@ -570,29 +538,25 @@ body {
 
 <!-- ======== Slide 11: Sigworth 2016 Resolution Trends ======== -->
 <div class="slide" data-n="11">
-  <div class="slide-title">Resolution vs. Molecular Weight Trends</div>
-  <div class="slide-body">
-    <div class="layout-split">
-      <div class="split-img" style="flex:1.5">
-        <div style="display:flex;gap:8px;height:100%">
-          <img src="../cryo-slides-img/s052_102.png" alt="Resolution trends 1" style="flex:1;min-height:0;object-fit:contain;border-radius:10px;background:#fff;border:1px solid #e8e8ee;padding:4px">
-          <img src="../cryo-slides-img/s052_103.png" alt="Resolution trends 2" style="flex:1;min-height:0;object-fit:contain;border-radius:10px;background:#fff;border:1px solid #e8e8ee;padding:4px">
-          <img src="../cryo-slides-img/s052_104.png" alt="Resolution trends 3" style="flex:1;min-height:0;object-fit:contain;border-radius:10px;background:#fff;border:1px solid #e8e8ee;padding:4px">
-        </div>
+  <div class="slide-title">How Low Can We Go for Single Particle Cryo-EM?</div>
+  <div class="slide-body" style="gap:clamp(12px,1.5vh,20px)">
+    <div style="display:flex;gap:clamp(16px,2vw,32px);flex:1;min-height:0;padding:0 clamp(24px,3vw,48px);align-items:center">
+      <!-- 왼쪽: 논문 이미지 (원본 p52 스타일) -->
+      <div style="flex:1.2;display:flex;align-items:center;min-height:0">
+        <img src="../cryo-slides-img/s052_102.png" alt="Sigworth 2016 paper" style="max-height:100%;max-width:100%;object-fit:contain;border:1px solid #ddd;border-radius:6px">
       </div>
-      <div class="split-text" style="flex:0.5;justify-content:center">
-        <div class="info-panel green">
-          <h3>Sigworth 2016</h3>
-          <ul>
-            <li>Systematic analysis of EMDB entries</li>
-            <li>Resolution improves with particle size</li>
-            <li>DED cameras shifted the frontier</li>
-          </ul>
-        </div>
+      <!-- 오른쪽: 핵심 인용문 -->
+      <div style="flex:0.8;display:flex;flex-direction:column;justify-content:center;gap:clamp(20px,3vh,36px)">
+        <p style="font-size:clamp(16px,2vh,22px);line-height:1.7;color:#333;font-style:italic;border-left:4px solid #1a5276;padding-left:20px">
+          Future <strong>SNR improvement by a factor of 3&ndash;4</strong> seems possible, making practical the structure determination of some proteins <strong>below 50 kDa</strong> in size.
+        </p>
+        <p style="font-size:clamp(14px,1.6vh,18px);line-height:1.6;color:#555">
+          Contributing to these improvements will be advances in <strong>specimen preparation</strong>, instrumentation and algorithms for single-particle image processing.
+        </p>
       </div>
     </div>
   </div>
-  <div class="slide-ref"><a href="https://doi.org/10.1093/jmicro/dfw037" target="_blank" style="color:inherit">Sigworth, Microscopy (2016)</a></div>
+  <div class="slide-ref"><a href="https://doi.org/10.1093/jmicro/dfw037" target="_blank" style="color:inherit">Fred J. Sigworth, 2016, Vol.65, No.1, 57-67 Microscopy</a></div>
 </div>
 
 <!-- ======== Slide 12: Recent Size Limit Studies ======== -->
@@ -623,44 +587,39 @@ body {
       </div>
     </div>
   </div>
-  <div class="slide-ref"><a href="https://doi.org/10.1039/D1FD00076D" target="_blank" style="color:inherit">Russo et al., Faraday Discuss. (2022)</a> &middot; <a href="https://doi.org/10.1016/j.sbi.2020.05.007" target="_blank" style="color:inherit">Wu et al., Curr Opin Struct Biol (2020)</a></div>
+  <div class="slide-ref"><a href="https://doi.org/10.1039/D2FD00076H" target="_blank" style="color:inherit">Russo, Dickerson &amp; Naydenova, Faraday Discuss. (2022)</a> &middot; <a href="https://doi.org/10.1016/j.sbi.2020.05.007" target="_blank" style="color:inherit">Wu et al., Curr Opin Struct Biol (2020)</a></div>
 </div>
 
 <!-- ======== Slide 13: Cryo-EM Grid Anatomy ======== -->
 <div class="slide" data-n="13">
   <div class="slide-title">Anatomy of a Cryo-EM Grid</div>
   <div class="slide-body">
-    <div class="layout-split">
-      <div class="split-img" style="flex:1.2">
-        <img src="../cryo-slides-img/s055_109.png" alt="Grid anatomy diagram" style="padding:8px;background:#fff;border:1px solid #e8e8ee">
+    <div style="display:flex;gap:clamp(24px,3vw,48px);flex:1;min-height:0;padding:0 clamp(16px,2vw,32px)">
+      <!-- 좌측: 다이어그램 크게 -->
+      <div style="flex:1.1;display:flex;align-items:center;min-height:0">
+        <img src="../cryo-slides-img/s055_109.png" alt="Grid anatomy diagram" style="max-height:100%;max-width:100%;object-fit:contain">
       </div>
-      <div class="split-text" style="flex:0.8;justify-content:center">
-        <div class="info-panel green">
-          <h3>Grid Base</h3>
-          <ul>
-            <li><strong>Material</strong>: Cu, Au, Ni, Ti (3 mm diameter)</li>
-            <li><strong>Mesh</strong>: 200, 300, 400, or hexagonal</li>
-            <li>Gold grids reduce beam-induced motion</li>
-          </ul>
+      <!-- 우측: 텍스트 라벨 (카드 없이, 원본 p55 스타일) -->
+      <div style="flex:0.9;display:flex;flex-direction:column;justify-content:center;gap:clamp(16px,2vh,28px);font-size:clamp(16px,1.9vh,22px);line-height:1.6">
+        <div>
+          <h3 style="font-size:clamp(18px,2.2vh,24px);color:#1a5276;margin-bottom:4px">Grid : Cu, Au, Ni, Ti</h3>
+          <p style="color:#555">(<strong style="color:#c00">Mesh</strong> : 200, 300, 400, hexagonal)</p>
         </div>
-        <div class="info-panel blue" style="margin-top:8px">
-          <h3>Foil</h3>
-          <ul>
-            <li><strong>Material</strong>: Amorphous carbon, gold (UltrAuFoil)</li>
-            <li><strong>Type</strong>: Continuous or holey</li>
-            <li><strong>Hole size</strong>: 1.2/1.3, 2/1, 0.6/1 &micro;m</li>
-          </ul>
+        <div>
+          <h3 style="font-size:clamp(18px,2.2vh,24px);color:#1a5276;margin-bottom:4px">Foil : amorphous C, Au, Ni/Ti</h3>
+          <p>Continuous or holey</p>
+          <p>Hole size/spacing (um): 1.2/1.3, 2/1, 1/1, 0.6/1</p>
+          <p><strong style="color:#c00">HexAuFoil 0.3/0.3</strong></p>
+          <p>Lacey carbon</p>
         </div>
-        <div class="info-panel amber" style="margin-top:8px">
-          <h3>Support Film (Optional)</h3>
-          <ul>
-            <li>Amorphous carbon, graphene, graphene oxide</li>
-            <li>Helps with preferred orientation &amp; small proteins</li>
-          </ul>
+        <div>
+          <h3 style="font-size:clamp(18px,2.2vh,24px);color:#1a5276;margin-bottom:4px">Support film</h3>
+          <p>: amorphous carbon, Graphene, GO</p>
         </div>
       </div>
     </div>
   </div>
+  <div class="slide-ref"><a href="https://doi.org/10.1016/j.sbi.2015.12.007" target="_blank" style="color:inherit">Russo &amp; Passmore, Curr Opin Struct Biol (2016)</a> &middot; <a href="https://doi.org/10.3389/fmolb.2022.912363" target="_blank" style="color:inherit">Hagen, Front Mol Biosci (2022)</a></div>
 </div>
 
 <!-- ======== Slide 14: Grid Handling ======== -->
@@ -678,37 +637,39 @@ body {
 
 <!-- ======== Slide 15: Vitrification Process ======== -->
 <div class="slide" data-n="15">
-  <div class="slide-title">Vitrification &mdash; Plunge Freezing</div>
-  <div class="slide-subtitle">Converting liquid water to vitreous ice in milliseconds</div>
-  <div class="slide-body">
-    <div class="layout-split">
-      <div class="split-img" style="flex:1.5">
-        <div style="display:flex;flex-wrap:wrap;gap:6px;height:100%;align-content:center;justify-content:center">
-          <img src="../cryo-slides-img/s057_113.png" alt="Glow discharge" style="max-height:45%;max-width:30%;object-fit:contain;border-radius:8px;background:#fff;border:1px solid #e8e8ee;padding:3px">
-          <img src="../cryo-slides-img/s057_114.jpg" alt="Vitrobot" style="max-height:45%;max-width:30%;object-fit:contain;border-radius:8px;background:#fff;border:1px solid #e8e8ee;padding:3px">
-          <img src="../cryo-slides-img/s057_115.png" alt="Blotting" style="max-height:45%;max-width:30%;object-fit:contain;border-radius:8px;background:#fff;border:1px solid #e8e8ee;padding:3px">
-          <img src="../cryo-slides-img/s057_116.png" alt="Plunge" style="max-height:45%;max-width:30%;object-fit:contain;border-radius:8px;background:#fff;border:1px solid #e8e8ee;padding:3px">
-          <img src="../cryo-slides-img/s057_117.png" alt="Ice thickness" style="max-height:45%;max-width:30%;object-fit:contain;border-radius:8px;background:#fff;border:1px solid #e8e8ee;padding:3px">
-        </div>
+  <div class="slide-title">Grid Preparation (Vitrification)</div>
+  <div class="slide-body" style="gap:clamp(12px,1.5vh,20px);padding:0 clamp(24px,3vw,48px)">
+    <!-- Row 1: Increase hydrophilicity -->
+    <div style="display:flex;align-items:center;gap:clamp(16px,2vw,28px);flex:1;min-height:0">
+      <div style="flex:0 0 180px;background:#8fbc8f;color:#fff;font-weight:700;font-size:clamp(15px,1.8vh,20px);text-align:center;padding:12px 16px;border-radius:8px">Increase<br>hydrophilicity</div>
+      <div style="flex:1;display:flex;gap:clamp(8px,1vw,16px);align-items:center;justify-content:center;min-height:0">
+        <img src="../cryo-slides-img/s057_113.png" alt="Glow discharge unit" style="max-height:100%;max-width:30%;object-fit:contain">
+        <img src="../cryo-slides-img/s057_114.jpg" alt="Plasma cleaner" style="max-height:100%;max-width:30%;object-fit:contain">
       </div>
-      <div class="split-text" style="flex:0.5;justify-content:center">
-        <div class="info-panel green">
-          <h3>Steps</h3>
-          <ul>
-            <li><strong>1.</strong> Glow discharge (hydrophilize)</li>
-            <li><strong>2.</strong> Apply sample (2&ndash;4 &micro;L)</li>
-            <li><strong>3.</strong> Blot excess liquid</li>
-            <li><strong>4.</strong> Plunge into liquid ethane</li>
-          </ul>
-        </div>
-        <div class="info-panel rose" style="margin-top:8px">
-          <h3>Critical Variables</h3>
-          <ul>
-            <li>Blot time &amp; force</li>
-            <li>Humidity (&gt;90%)</li>
-            <li>Temperature (4&deg;C typical)</li>
-          </ul>
-        </div>
+      <div style="flex:0 0 280px;font-size:clamp(14px,1.6vh,18px);line-height:1.6">
+        &#10003; Ice thickness<br>&#10003; Particle behavior
+      </div>
+    </div>
+    <!-- Row 2: Vitrification -->
+    <div style="display:flex;align-items:center;gap:clamp(16px,2vw,28px);flex:1;min-height:0">
+      <div style="flex:0 0 180px;background:#8fbc8f;color:#fff;font-weight:700;font-size:clamp(15px,1.8vh,20px);text-align:center;padding:12px 16px;border-radius:8px">Vitrification</div>
+      <div style="flex:1;display:flex;gap:clamp(8px,1vw,16px);align-items:center;justify-content:center;min-height:0">
+        <img src="../cryo-slides-img/s057_116.png" alt="Vitrobot" style="max-height:100%;max-width:25%;object-fit:contain">
+        <img src="../cryo-slides-img/s057_115.png" alt="Cryoplunge" style="max-height:100%;max-width:25%;object-fit:contain">
+      </div>
+      <div style="flex:0 0 280px;font-size:clamp(14px,1.6vh,18px);line-height:1.6">
+        &#10003; Blotting vs. Spraying vs. drawing<br>&#10003; Time to freeze<br>&#10003; Reproducibility<br>&#10003; Speed
+      </div>
+    </div>
+    <!-- Row 3: Ice contamination -->
+    <div style="display:flex;align-items:center;gap:clamp(16px,2vw,28px);flex:1;min-height:0">
+      <div style="flex:0 0 180px;background:#8fbc8f;color:#fff;font-weight:700;font-size:clamp(15px,1.8vh,20px);text-align:center;padding:12px 16px;border-radius:8px">Ice<br>contamination</div>
+      <div style="flex:1;display:flex;gap:clamp(8px,1vw,16px);align-items:center;justify-content:center;min-height:0">
+        <img src="../cryo-slides-img/s057_117.png" alt="Dehumidifier" style="max-height:100%;max-width:25%;object-fit:contain">
+        <img src="../cryo-slides-img/s057_118.jpg" alt="Cold room storage" style="max-height:100%;max-width:35%;object-fit:contain">
+      </div>
+      <div style="flex:0 0 280px;font-size:clamp(14px,1.6vh,18px);line-height:1.6">
+        <span style="border:2px solid #c00;border-radius:6px;padding:4px 12px;display:inline-block">&#10003; Humidity (&lt; 20%)</span>
       </div>
     </div>
   </div>
@@ -748,33 +709,37 @@ body {
 
 <!-- ======== Slide 17: Grid Screening Time ======== -->
 <div class="slide" data-n="17">
-  <div class="slide-title">Grid Preparation &amp; Screening Time</div>
-  <div class="slide-subtitle">Why sample prep is the bottleneck</div>
-  <div class="slide-body" style="justify-content:center;padding:0 clamp(40px,5vw,100px)">
-    <div class="info-panel green" style="margin-bottom:16px">
-      <h3>Typical Screening Matrix</h3>
-      <p style="font-size:clamp(16px,2vh,24px);font-weight:700;color:#059669;margin:8px 0">1 sample &times; 2 concentrations &times; 2 grid types &times; 3 replicates = 12 grids</p>
+  <div class="slide-title">Grid Preparation and Screening Time</div>
+  <div class="slide-body" style="justify-content:center;gap:clamp(20px,2.5vh,32px);padding:0 clamp(48px,5vw,80px)">
+    <!-- 상단: Steps 박스 (원본 p60) -->
+    <div style="border:2px solid #ccc;border-radius:10px;padding:clamp(16px,2vh,24px) clamp(24px,3vw,36px);background:#fff;font-size:clamp(15px,1.8vh,20px);line-height:1.8">
+      <p><strong>Step 1</strong> : Make 3 &times; grids for every condition (reproducibility issue) &rarr; 3 &times; sample &amp; 3 &times; time in the lab</p>
+      <p><strong>Step 2</strong> : Need to Screen all the grids &rarr; 3 &times; screening time + data collection</p>
+      <p><strong>Step 3</strong> : The samples may have issues &rarr; back to step 1 &amp; 2 for repeating (multiple times)</p>
     </div>
-    <div style="display:flex;gap:12px">
-      <div class="stat-card" style="flex:1">
-        <div class="stat-num">Step 1</div>
-        <div class="stat-label">Make 3&times; grids per condition<br>(reproducibility)</div>
+    <!-- 하단: 플로우 다이어그램 (원본 p60 하단) -->
+    <div style="display:flex;align-items:center;gap:clamp(12px,1.5vw,24px)">
+      <!-- 왼쪽: 초기 조합 -->
+      <div style="flex:0 0 auto;border:2px solid #999;border-radius:8px;padding:16px 20px;font-size:clamp(15px,1.8vh,20px);line-height:1.6;text-align:center">
+        <strong>1 sample</strong> x 2<br>conc. x 2 grid<br>types x 3 =<br><strong>12 grids</strong>
       </div>
-      <div class="stat-card" style="flex:1">
-        <div class="stat-num">Step 2</div>
-        <div class="stat-label">Screen all grids<br>(microscope time)</div>
+      <!-- 화살표 -->
+      <div style="font-size:32px;color:#1a5276">&#9654;</div>
+      <!-- 중앙: 다양한 조합 -->
+      <div style="flex:1;border:2px solid #ddd;border-radius:8px;padding:14px 20px;font-size:clamp(13px,1.5vh,17px);line-height:1.7;background:#fafafa">
+        1 conc. x 4 grid types &times; 3 = 12 grids<br>
+        <span style="color:#888">or</span><br>
+        1 conc. X 1 grid &times; 4 additives &times; 3 = 12 grids<br>
+        <span style="color:#888">or</span><br>
+        1 conc. X 2 grid types &times; 3 additives &times; 2 = 12 grids<br>
+        <span style="color:#888">or &hellip;&hellip;</span>
       </div>
-      <div class="stat-card" style="flex:1">
-        <div class="stat-num">Step 3</div>
-        <div class="stat-label">Sample issues?<br>Back to Step 1</div>
+      <!-- 화살표 -->
+      <div style="font-size:32px;color:#1a5276">&#9654;</div>
+      <!-- 오른쪽: 최종 목표 (녹색) -->
+      <div style="flex:0 0 auto;background:#d4edda;border:2px solid #28a745;border-radius:8px;padding:16px 20px;font-size:clamp(15px,1.8vh,20px);line-height:1.6;text-align:center">
+        1 conc. X 1 grid<br>types x 1 additive<br>= <strong>1 final grid</strong><br>(data collection)
       </div>
-    </div>
-    <div class="info-panel rose" style="margin-top:16px">
-      <h3>Optimization Variables</h3>
-      <ul>
-        <li>Concentration, grid type, additives, blot time, blot force, humidity, temperature&hellip;</li>
-        <li>Each combination requires multiple replicates for statistical validity</li>
-      </ul>
     </div>
   </div>
 </div>
@@ -964,34 +929,21 @@ body {
 
 <!-- ======== Slide 25: Air-Water Interface (AWI) ======== -->
 <div class="slide" data-n="25">
-  <div class="slide-title">The Air-Water Interface Problem</div>
-  <div class="slide-subtitle">The #1 enemy of cryo-EM sample preparation</div>
-  <div class="slide-body">
-    <div class="layout-split">
-      <div class="split-img">
-        <img src="../cryo-slides-img/s070_142.png" alt="AWI diagram" style="padding:8px;background:#fff;border:1px solid #e8e8ee">
-      </div>
-      <div class="split-text" style="justify-content:center">
-        <div class="info-panel rose">
-          <h3>What Happens at the AWI</h3>
-          <ul>
-            <li><strong>Adsorption</strong> &mdash; Proteins migrate to the interface within milliseconds</li>
-            <li><strong>Denaturation</strong> &mdash; Hydrophobic regions unfold at the interface</li>
-            <li><strong>Preferred orientation</strong> &mdash; Particles adopt limited viewing angles</li>
-            <li><strong>Aggregation</strong> &mdash; Concentrated at thin film surfaces</li>
-          </ul>
-        </div>
-        <div class="info-panel blue" style="margin-top:8px">
-          <h3>Ice Film Dimensions</h3>
-          <ul>
-            <li>Total thickness: ~100&ndash;150 nm</li>
-            <li>Particle diameter: ~10&ndash;15 nm</li>
-            <li>Two AWIs sandwich the thin film</li>
-          </ul>
-        </div>
-      </div>
+  <div class="slide-title">Air-Water Interface (AWI)</div>
+  <div class="slide-body" style="gap:clamp(12px,1.5vh,20px)">
+    <!-- 상단: AWI 다이어그램 크게 (원본 p70 스타일) -->
+    <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:0 clamp(24px,3vw,60px)">
+      <img src="../cryo-slides-img/s070_142.png" alt="AWI diagram" style="max-height:100%;max-width:100%;object-fit:contain">
+    </div>
+    <!-- 하단: 핵심 텍스트 (원본처럼 간결하게) -->
+    <div style="flex:0 0 auto;text-align:center;padding:0 clamp(60px,6vw,120px) clamp(8px,1vh,16px)">
+      <p style="font-size:clamp(18px,2.2vh,26px);line-height:1.6">
+        At the AWI, proteins can undergo <strong style="color:#c00">denaturation</strong>, <strong style="color:#c00">aggregation</strong> or <strong style="color:#1a5276">preferred orientation</strong>
+      </p>
+      <p style="font-size:clamp(15px,1.8vh,20px);color:#555;margin-top:6px">Negatively impacts the final image quality</p>
     </div>
   </div>
+  <div class="slide-ref"><a href="https://doi.org/10.1016/j.cocis.2017.12.009" target="_blank" style="color:inherit">Glaeser, Curr Opin Colloid Interface Sci (2018)</a></div>
 </div>
 
 <!-- ======== Slide 26: Spot-to-Plunge Time Effect ======== -->
@@ -1011,17 +963,19 @@ body {
       </div>
       <div class="split-text" style="flex:0.7;justify-content:center">
         <div class="info-panel green">
-          <h3>Key Finding</h3>
+          <h3>Key Finding (Chameleon)</h3>
           <ul>
-            <li>Particles reach AWI in <strong>&lt;1 ms</strong></li>
-            <li>Denaturation begins in <strong>nanoseconds</strong></li>
-            <li>Faster freezing preserves more native structure</li>
+            <li>Particles can move 100 nm within <strong>&lt;1 ms</strong></li>
+            <li>Denaturation follows in as little as <strong>nanoseconds</strong></li>
+            <li><strong>Hemagglutinin</strong>: ~1 s, 500 ms, 100 ms</li>
+            <li><strong>Insulin receptor</strong>: 600 ms, 200 ms</li>
           </ul>
         </div>
         <div class="info-panel amber" style="margin-top:8px">
           <h3>Implications</h3>
           <ul>
-            <li>Traditional blotting (~3&ndash;5 s) allows extensive AWI damage</li>
+            <li>Longer blotting time &rarr; more AWI damage</li>
+            <li>Traditional blotting (~3&ndash;5 s) allows extensive damage</li>
             <li>Spray/jet devices minimize exposure time</li>
           </ul>
         </div>
@@ -1084,43 +1038,42 @@ body {
       </div>
     </div>
   </div>
-  <div class="slide-ref"><a href="https://doi.org/10.1016/j.isci.2021.102439" target="_blank" style="color:inherit">Drulyte et al., iScience (2021)</a></div>
+  <div class="slide-ref"><a href="https://doi.org/10.1016/j.isci.2021.102139" target="_blank" style="color:inherit">Kampjut et al., iScience (2021)</a></div>
 </div>
 
 <!-- ======== Slide 29: Sample Requirements Summary ======== -->
 <div class="slide" data-n="29">
-  <div class="slide-title">Sample Requirements Summary</div>
-  <div class="slide-body">
-    <div style="display:flex;gap:clamp(12px,1.5vw,24px);flex:1;min-height:0;padding:clamp(8px,1.5vh,20px) clamp(24px,3vw,60px);align-items:stretch">
-      <div class="topic-card green" style="flex:1">
-        <h3>Size &amp; Mass</h3>
-        <ul>
-          <li>&gt;80 kDa of <strong>ordered mass</strong> (routine)</li>
-          <li>40&ndash;80 kDa possible with optimization</li>
-          <li>&lt;40 kDa requires augmentation strategies</li>
-        </ul>
+  <div class="slide-title">Sample Requirements for SPA</div>
+  <div class="slide-body" style="justify-content:center;padding:0 clamp(40px,5vw,80px)">
+    <!-- 3컬럼: 각 컬럼에 제목 + 이미지 + 텍스트 (원본 p75) -->
+    <div style="display:flex;gap:clamp(16px,2vw,32px);flex:1;min-height:0;align-items:stretch">
+      <!-- Size -->
+      <div style="flex:1;border:2px solid #1a5276;border-radius:10px;padding:clamp(16px,2vh,24px);display:flex;flex-direction:column;background:#fff">
+        <h3 style="font-size:clamp(20px,2.5vh,28px);color:#1a5276;text-align:center;margin-bottom:12px">Size</h3>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;min-height:0">
+          <img src="../cryo-slides-img/s075_148.png" alt="Size examples" style="max-height:100%;max-width:100%;object-fit:contain">
+        </div>
+        <p style="font-size:clamp(16px,1.8vh,20px);margin-top:12px;text-align:center;font-weight:600">&gt; 80 kDa of ordered mass</p>
       </div>
-      <div class="topic-card blue" style="flex:1">
-        <h3>Quantity &amp; Concentration</h3>
-        <ul>
-          <li>0.5&ndash;1 mg protein per session</li>
-          <li>50 nM &ndash; 5 &micro;M concentration</li>
-          <li>Buffer: avoid glycerol, sucrose, high salt</li>
-        </ul>
+      <!-- Quantity -->
+      <div style="flex:1;border:2px solid #1a5276;border-radius:10px;padding:clamp(16px,2vh,24px);display:flex;flex-direction:column;background:#fff">
+        <h3 style="font-size:clamp(20px,2.5vh,28px);color:#1a5276;text-align:center;margin-bottom:12px">Quantity (concentration)</h3>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;min-height:0">
+          <img src="../cryo-slides-img/s075_149.jpg" alt="Concentration range" style="max-height:100%;max-width:100%;object-fit:contain">
+        </div>
+        <p style="font-size:clamp(16px,1.8vh,20px);margin-top:12px;text-align:center"><strong>0.5~1 mg</strong> protein<br>50 nM ~ 5 &micro;M concentration</p>
       </div>
-      <div class="topic-card amber" style="flex:1">
-        <h3>Quality</h3>
-        <ul>
-          <li>&gt;90% purity (SDS-PAGE)</li>
-          <li>Monodisperse (SEC, DLS)</li>
-          <li>Stable at 4&deg;C during preparation</li>
-          <li>No aggregation tendency</li>
-        </ul>
+      <!-- Reagents -->
+      <div style="flex:1;border:2px solid #1a5276;border-radius:10px;padding:clamp(16px,2vh,24px);display:flex;flex-direction:column;background:#fff">
+        <h3 style="font-size:clamp(20px,2.5vh,28px);color:#c00;text-align:center;margin-bottom:12px">Reagents (Buffer)</h3>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;min-height:0">
+          <img src="../cryo-slides-img/s075_150.png" alt="Buffer reagents" style="max-height:100%;max-width:100%;object-fit:contain">
+        </div>
+        <div style="font-size:clamp(14px,1.6vh,18px);margin-top:12px;text-align:center;line-height:1.5">
+          Most buffers are fine.<br>
+          <strong>But</strong> DMSO &gt; 0.5 %, high carbon chemicals, cryoprotectants are exceptions.
+        </div>
       </div>
-    </div>
-    <div style="flex-shrink:0;margin:0 clamp(40px,5vw,100px);background:rgba(5,150,105,0.12);border:2px solid #059669;border-radius:12px;padding:clamp(16px,2vh,28px) clamp(24px,3vw,40px);text-align:center">
-      <div style="font-size:clamp(18px,2.5vh,30px);font-weight:800;color:#059669;margin-bottom:8px">The Bottom Line</div>
-      <div style="font-size:clamp(14px,1.8vh,20px);line-height:1.5;color:#1a1a2e"><strong>Good sample = good data.</strong> No amount of microscope time or data processing can fix a bad sample.</div>
     </div>
   </div>
 </div>

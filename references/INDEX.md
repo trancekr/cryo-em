@@ -1,7 +1,9 @@
 # References Index
 
-fact-checker가 참조할 때 이 인덱스를 먼저 읽고, 필요한 PDF의 해당 페이지만 선택적으로 읽을 것.
-PDF는 Read 도구의 `pages` 파라미터로 최대 20페이지씩 읽기 가능.
+fact-checker가 참조할 때 이 인덱스를 먼저 읽고 관련 파일 선별 후, **`parsed/*.md`를 Grep으로 직접 검색** (가장 빠르고 토큰 저렴).
+매치된 마크다운을 Read로 확인. 페이지/bbox 필요 시 동명 `.json` 참조. 마크다운 품질 부족 시에만 원본 PDF를 `Read(pages: "N-N+5")`로 fallback.
+
+> 41개 PDF는 모두 `parsed/`에 MD+JSON+이미지 형태로 변환됨 (2026-04-15, OpenDataLoader PDF).
 
 ## Sample Preparation — 논문/리뷰 (Section 2 핵심)
 
