@@ -495,7 +495,6 @@ body {
 /* ============================================================
    LAYOUT: V6 Timeline (slides 7–11)
    ============================================================ */
-.content-bg { background:#fff; border-radius:16px; box-shadow:0 6px 24px rgba(0,0,0,0.15); }
 .text-col { position:absolute; width:480px; }
 .year { font-size:36px; font-weight:900; color:#e74c3c; display:inline; margin-right:8px; }
 .col-title { font-size:22px; font-weight:800; color:#1a1a2e; display:inline; }
