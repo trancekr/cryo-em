@@ -343,128 +343,577 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 9: Size-Augmentation Strategies (Wentinck Fig.2)
+     SLIDE 9: Ordered mass, not molecular weight (concept + NIS 3-pattern diagram)
      ============================================================ -->
+<style>
+  [data-n="9"] .e1-wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;   /* lead 제거 후 다이어그램 수직 중앙 */
+    height: 100%;
+    padding: 0 72px;
+  }
+  [data-n="9"] .e1-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 48px;
+    min-height: 0;
+  }
+  [data-n="9"] .e1-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    min-height: 0;
+  }
+  [data-n="9"] .e1-panel-title {
+    /* pill bar: 둥근 배경에 제목 삽입 — e1-lead 설명과 확실히 차별화 */
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    line-height: 1.2;
+    padding: 12px 32px;
+    border-radius: 999px;
+    white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(192, 57, 43, 0.25);
+  }
+  [data-n="9"] .e1-panel-svg {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  [data-n="9"] .e1-panel-svg svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  [data-n="9"] .e1-panel-caption {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a2e;
+    text-align: center;
+    line-height: 1.35;
+  }
+  [data-n="9"] .e1-panel-sub {
+    font-size: 19px;
+    color: #666;
+    text-align: center;
+    font-style: italic;
+    line-height: 1.3;
+  }
+
+  /* Panels A & B: animation driven by inline JS (see end of slide 9) —
+     endpoints must stay attached to circles, so CSS keyframes alone can't do it. */
+
+  /* ===== Panel C: ribbons wave around core attachment points ===== */
+  [data-n="9"] .ribbon-ul {
+    transform-box: fill-box;
+    transform-origin: 100% 100%;
+    animation: waveUL 2.0s ease-in-out infinite;
+  }
+  [data-n="9"] .ribbon-ur {
+    transform-box: fill-box;
+    transform-origin: 0% 100%;
+    animation: waveUR 2.4s ease-in-out infinite;
+  }
+  /* .ribbon-lr is a two-anchored disordered loop; breathes via SMIL `<animate>` on path `d` */
+  @keyframes waveUL {
+    0%, 100% { transform: rotate(0deg); }
+    50%      { transform: rotate(-7deg); }
+  }
+  @keyframes waveUR {
+    0%, 100% { transform: rotate(0deg); }
+    50%      { transform: rotate(7deg); }
+  }
+</style>
 <div class="bl-slide" data-n="9">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
-    <div class="bl-title">Size-Augmentation Strategies for Small-Protein SPA</div>
-    <div class="bl-subtitle">Target binding &amp; fusion strategies</div>
+    <div class="bl-title">Ordered mass, not molecular weight</div>
+    <div class="bl-subtitle">What cryo-EM aligns is a contiguous rigid region, not total MW</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <div class="s2-figure">
-      <img src="../cryo-slides-img/s045_92.jpg" alt="Small protein strategies">
+
+  <div class="bl-content">
+    <div class="e1-wrap">
+      <div class="e1-grid">
+
+        <!-- ========= Panel A: BEADS ON A STRING ========= -->
+        <div class="e1-panel">
+          <div class="e1-panel-title">BEADS ON A STRING</div>
+          <div class="e1-panel-svg">
+            <svg viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" overflow="visible" font-family="Pretendard, -apple-system, sans-serif">
+              <g transform="translate(200,170)">
+                <!-- flexible linkers between beads (shortened to keep beads inside viewBox during animation) -->
+                <path class="linker-ab" d="M -150 20 Q -120 -40 -90 -28 Q -65 -10 -48 -35"
+                      stroke="#b0c4de" stroke-width="6" fill="none" stroke-linecap="round"/>
+                <path class="linker-bc" d="M 48 -32 Q 68 15 95 2 Q 125 -10 152 22"
+                      stroke="#b0c4de" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+                <!-- A: small — tumbles -->
+                <g class="bead-a">
+                  <circle cx="-168" cy="24" r="26" fill="#3498db"/>
+                  <text x="-168" y="34" font-size="28" font-weight="800" fill="#fff" text-anchor="middle">A</text>
+                </g>
+
+                <!-- B: large (the only one cryo-EM sees) -->
+                <circle cx="0" cy="-38" r="56" fill="#16a085"/>
+                <text x="0" y="-26" font-size="36" font-weight="800" fill="#fff" text-anchor="middle">B</text>
+
+                <!-- C: medium — tumbles -->
+                <g class="bead-c">
+                  <circle cx="168" cy="30" r="36" fill="#e67e22"/>
+                  <text x="168" y="42" font-size="30" font-weight="800" fill="#fff" text-anchor="middle">C</text>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <div class="e1-panel-caption">Long linkers; domains tumble independently</div>
+          <div class="e1-panel-sub">Only the largest rigid domain is observed</div>
+        </div>
+
+        <!-- ========= Panel B: STRINGS OR PAIRS OF PEARLS ========= -->
+        <div class="e1-panel">
+          <div class="e1-panel-title">STRINGS OR PAIRS OF PEARLS</div>
+          <div class="e1-panel-svg">
+            <svg viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" overflow="visible" font-family="Pretendard, -apple-system, sans-serif">
+              <g transform="translate(200,170)">
+                <!-- pearls arranged on a C-shape arc (opening to the right); linkers follow the curve -->
+                <path class="pearl-link l1" d="M 64 -53 Q 35 -61 14 -82" stroke="#b0c4de" stroke-width="5" fill="none" stroke-linecap="round"/>
+                <path class="pearl-link l2" d="M -14 -82 Q -35 -61 -64 -53" stroke="#b0c4de" stroke-width="5" fill="none" stroke-linecap="round"/>
+                <path class="pearl-link l3" d="M -78 -29 Q -70 0 -78 29" stroke="#b0c4de" stroke-width="5" fill="none" stroke-linecap="round"/>
+                <path class="pearl-link l4" d="M -64 53 Q -35 61 -14 82" stroke="#b0c4de" stroke-width="5" fill="none" stroke-linecap="round"/>
+                <path class="pearl-link l5" d="M 14 82 Q 35 61 64 53" stroke="#b0c4de" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+                <!-- 6 similarly-small domains in C-shape (top-right → top → upper-left → lower-left → bottom → bottom-right) -->
+                <g class="pearl p1"><circle cx="78" cy="-45" r="20" fill="#3498db"/></g>
+                <g class="pearl p2"><circle cx="0" cy="-90" r="20" fill="#9b59b6"/></g>
+                <g class="pearl p3"><circle cx="-78" cy="-45" r="20" fill="#e67e22"/></g>
+                <g class="pearl p4"><circle cx="-78" cy="45" r="20" fill="#2ecc71"/></g>
+                <g class="pearl p5"><circle cx="0" cy="90" r="20" fill="#f1c40f"/></g>
+                <g class="pearl p6"><circle cx="78" cy="45" r="20" fill="#3498db"/></g>
+              </g>
+            </svg>
+          </div>
+          <div class="e1-panel-caption">Short linkers; each domain too small</div>
+          <div class="e1-panel-sub">None alone meets the mass threshold</div>
+        </div>
+
+        <!-- ========= Panel C: WAVING FLAGS ========= -->
+        <div class="e1-panel">
+          <div class="e1-panel-title">WAVING FLAGS</div>
+          <div class="e1-panel-svg">
+            <svg viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" overflow="visible" font-family="Pretendard, -apple-system, sans-serif">
+<g transform="translate(200,170)">
+                <!-- ONE large rigid core (the only part observed) -->
+                <ellipse cx="0" cy="0" rx="72" ry="58" fill="#16a085"/>
+                <text x="0" y="12" font-size="26" font-weight="800" fill="#fff" text-anchor="middle">core</text>
+
+                <!-- upper-left wavy tail: thick near core, tapers/fades out.
+                     Start anchored INSIDE core ellipse (rx=72, ry=58) so rotation
+                     pivot (bbox corner at start) stays inside — no detach gap. -->
+                <g class="ribbon-ul">
+                  <path d="M -54 -34 Q -85 -72 -110 -55 Q -130 -45 -145 -80 Q -160 -105 -178 -95"
+                        stroke="#b0c4de" stroke-width="10" fill="none" stroke-linecap="round"/>
+                </g>
+
+                <!-- upper-right LOOP: path curls around on itself then continues out.
+                     Clear loop around the point (~140, -55), exits to tip. -->
+                <g class="ribbon-ur">
+                  <path d="M 54 -32
+                           Q 80 -60 108 -68
+                           C 145 -82 175 -72 160 -48
+                           C 145 -28 115 -40 120 -62
+                           C 125 -80 150 -78 160 -68
+                           Q 178 -80 190 -95"
+                        stroke="#b0c4de" stroke-width="10" fill="none" stroke-linecap="round"/>
+                </g>
+
+                <!-- lower-right DISORDERED LOOP: exits core at one anchor,
+                     swings out to the right/below, returns to core at a
+                     different anchor. Both endpoints stay on core surface;
+                     middle breathes via SMIL animate on `d`. -->
+                <g class="ribbon-lr">
+                  <path stroke="#b0c4de" stroke-width="10" fill="none" stroke-linecap="round"
+                        d="M 62 29 C 108 58 148 88 132 118 C 116 146 70 142 44 114 C 28 96 22 72 22 54">
+                    <animate attributeName="d"
+                             dur="2.8s"
+                             repeatCount="indefinite"
+                             values="M 62 29 C 108 58 148 88 132 118 C 116 146 70 142 44 114 C 28 96 22 72 22 54;
+                                     M 62 29 C 98 52 156 96 140 126 C 124 154 72 150 40 118 C 26 100 22 74 22 54;
+                                     M 62 29 C 108 58 148 88 132 118 C 116 146 70 142 44 114 C 28 96 22 72 22 54"/>
+                  </path>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <div class="e1-panel-caption">Rigid core with mobile accessories</div>
+          <div class="e1-panel-sub">Only the rigid core is observed</div>
+        </div>
+
+      </div>
     </div>
   </div>
-  <div class="bl-ref"><a href="https://doi.org/10.1016/j.crstbi.2022.09.005" target="_blank">Wentinck et al., Curr Res Struct Biol. (2022)</a></div>
+
+  <div class="bl-ref">
+    Concept: <a href="https://www.nanoimagingservices.com/about/blog/ordered-mass-in-target-selection-protein-engineering" target="_blank">Nano Imaging Services &mdash; Ordered mass in target selection</a> &middot; SNR floor: Henderson 1995, Sigworth 2016
+  </div>
 </div>
+<script>
+(function(){
+  const slide = document.querySelector('.bl-slide[data-n="9"]');
+  if (!slide) return;
+
+  // -------- Panel A: bead A & C tumble, linkers track their moving endpoint --------
+  const beadA = slide.querySelector('.bead-a');
+  const beadC = slide.querySelector('.bead-c');
+  const linkAB = slide.querySelector('.linker-ab');
+  const linkBC = slide.querySelector('.linker-bc');
+
+  // -------- Panel B: 6 pearls + 5 linkers; overall chain shape morphs through poses --------
+  const pearls = slide.querySelectorAll('.pearl');
+  const pearlLinks = slide.querySelectorAll('.pearl-link');
+  // HTML-embedded baseline centers (used as rotate origin for each bead).
+  const pearlCtr = [[78,-45],[0,-90],[-78,-45],[-78,45],[0,90],[78,45]];
+  // Shape keyframes — chain smoothly interpolates through these ("beads move freely → varied overall shape").
+  // Each array is 6 pearl centers in chain order (p1..p6).
+  // All keyframes designed so every consecutive chord ≈ 60 (linker length is bounded).
+  // Horizontal: straight line, 5 × 60 = 300 total.
+  // U-shape: half-circle r≈97, 5 × 36° arc, chord = 2r sin(18°) ≈ 60.
+  // C-shape: 3/4-circle r≈66, 5 × 54° arc, chord = 2r sin(27°) ≈ 60.
+  const SHAPES = [
+    // Horizontal rod
+    [[-150,   0], [ -90,   0], [ -30,   0], [  30,   0], [  90,   0], [ 150,   0]],
+    // U-shape (opening up, centered; tips at top, bottom-middle below)
+    [[ -97, -46], [ -78,  11], [ -30,  46], [  30,  46], [  78,  11], [  97, -46]],
+    // C-shape (opening right; tips at right, back curves around left)
+    [[  47, -47], [ -10, -65], [ -59, -30], [ -59,  30], [ -10,  65], [  47,  47]]
+  ];
+
+  // Periods (ms) — desync each so motion looks organic
+  const T_A = 2200, T_C = 2600, T_P = 2300, T_noise = 2900, T_SHAPE = 11000;
+  // Per-pearl phase offsets (fraction of cycle)
+  const pearlPhase = [0, 0.17, 0.33, 0.51, 0.68, 0.84];
+
+  function easeInOut(x){ return 0.5 - 0.5*Math.cos(Math.PI*x); }
+
+  // Interpolated base center for pearl i at time t (cycles through SHAPES with cosine ease-in/out).
+  function shapeCenter(i, t){
+    const phase = ((t % T_SHAPE) / T_SHAPE) * SHAPES.length;   // 0..N
+    const seg   = Math.floor(phase) % SHAPES.length;
+    const next  = (seg + 1) % SHAPES.length;
+    const local = phase - Math.floor(phase);
+    const k     = easeInOut(local);
+    const a = SHAPES[seg][i], b = SHAPES[next][i];
+    return [a[0] + (b[0]-a[0])*k, a[1] + (b[1]-a[1])*k];
+  }
+
+  function wobble(phase, amp){
+    // phase: 0..1. Multi-harmonic for organic motion.
+    const θ = 2*Math.PI*phase;
+    return {
+      dx: (Math.sin(θ)*2.4 + Math.cos(θ*2.3 + 0.6)*0.9 + Math.sin(θ*3.1)*0.4) * amp,
+      dy: (Math.cos(θ)*2.0 + Math.sin(θ*1.7 - 0.3)*0.9 + Math.cos(θ*2.9)*0.35) * amp,
+      rot: Math.sin(θ*0.9)*9 + Math.cos(θ*2.1 + 0.4)*3
+    };
+  }
+  function tumble(phase, amp){
+    const θ = 2*Math.PI*phase;
+    return {
+      dx: (Math.sin(θ)*4.5 + Math.cos(θ*1.3)*1.4 + Math.sin(θ*2.7)*0.7) * amp,
+      dy: (Math.cos(θ*1.1)*3.5 + Math.sin(θ*2.1 - 0.5)*1.3 + Math.cos(θ*3.3)*0.5) * amp,
+      rot: Math.sin(θ*0.85)*12 + Math.cos(θ*1.9)*4
+    };
+  }
+
+  // Compute linker path between pearls i and i+1 given their *actual* centers this frame.
+  // Retracts 16 units into each bead (radius 20) and offsets control point perpendicular
+  // to the segment, choosing direction that bulges AWAY from origin for coherent chain look.
+  function linkerPath(i, positions, t){
+    const p1 = positions[i], p2 = positions[i+1];
+    const dx = p2[0] - p1[0], dy = p2[1] - p1[1];
+    const len = Math.hypot(dx, dy);
+    if (len < 1) return `M ${p1[0].toFixed(2)} ${p1[1].toFixed(2)}`;
+    const ux = dx/len, uy = dy/len;
+    const retract = 16;
+    const sx = p1[0] + ux*retract, sy = p1[1] + uy*retract;
+    const ex = p2[0] - ux*retract, ey = p2[1] - uy*retract;
+    const mx = (sx+ex)/2, my = (sy+ey)/2;
+    // Perpendicular to chain direction (CCW rotate by 90°).
+    const perpX = -uy, perpY = ux;
+    // Bulge AWAY from origin → sign matches sign of (mid · perp).
+    const dotMP = mx*perpX + my*perpY;
+    let sign;
+    if (Math.abs(dotMP) < 2){
+      sign = (i % 2 === 0) ? 1 : -1;   // chain near origin → alternating wave
+    } else {
+      sign = dotMP > 0 ? 1 : -1;
+    }
+    const n   = wobble(((t + i*230) % T_noise) / T_noise, 1);
+    const amp = 9;
+    const cx = mx + perpX*sign*amp + n.dx*0.6;
+    const cy = my + perpY*sign*amp + n.dy*0.6;
+    return `M ${sx.toFixed(2)} ${sy.toFixed(2)} Q ${cx.toFixed(2)} ${cy.toFixed(2)} ${ex.toFixed(2)} ${ey.toFixed(2)}`;
+  }
+
+  function frame(t){
+    // Panel A — bead A
+    if (beadA){
+      const w = tumble(((t % T_A) / T_A), 1);
+      beadA.setAttribute('transform', `translate(${w.dx.toFixed(2)} ${w.dy.toFixed(2)}) rotate(${w.rot.toFixed(2)} -168 24)`);
+    }
+    // Panel A — bead C (reverse phase for variety)
+    let wC = {dx:0,dy:0,rot:0};
+    if (beadC){
+      wC = tumble(1 - ((t % T_C) / T_C), 1);
+      beadC.setAttribute('transform', `translate(${wC.dx.toFixed(2)} ${wC.dy.toFixed(2)}) rotate(${wC.rot.toFixed(2)} 168 30)`);
+    }
+    // Panel A — linker AB: A-end tracks bead A, B-end fixed at (-48,-35).
+    // Control points wobble with independent noise for varied curve.
+    if (linkAB){
+      const wA = tumble(((t % T_A) / T_A), 1);
+      const n = wobble(((t % T_noise) / T_noise), 1);
+      const ax = (-150 + wA.dx).toFixed(2), ay = (20 + wA.dy).toFixed(2);
+      const c1x = (-120 + wA.dx*0.4 + n.dx*1.2).toFixed(2);
+      const c1y = (-40  + wA.dy*0.4 + n.dy*1.2).toFixed(2);
+      const c2x = (-65  + n.dx*0.9).toFixed(2);
+      const c2y = (-10  + n.dy*0.9).toFixed(2);
+      linkAB.setAttribute('d', `M ${ax} ${ay} Q ${c1x} ${c1y} -90 -28 Q ${c2x} ${c2y} -48 -35`);
+    }
+    // Panel A — linker BC: B-end fixed at (48,-32), C-end tracks bead C.
+    if (linkBC){
+      const n = wobble(((t + 700) % T_noise) / T_noise, 1);
+      const cx = (152 + wC.dx).toFixed(2), cy = (22 + wC.dy).toFixed(2);
+      const q1x = (68  + n.dx*0.9).toFixed(2);
+      const q1y = (15  + n.dy*0.9).toFixed(2);
+      const q2x = (125 + wC.dx*0.4 + n.dx*1.2).toFixed(2);
+      const q2y = (-10 + wC.dy*0.4 + n.dy*1.2).toFixed(2);
+      linkBC.setAttribute('d', `M 48 -32 Q ${q1x} ${q1y} 95 2 Q ${q2x} ${q2y} ${cx} ${cy}`);
+    }
+
+    // Panel B — pearls: base = interpolated shape center, + individual wobble.
+    // Actual positions collected so linkers can track them exactly.
+    const pearlActual = [];
+    pearls.forEach((el, i) => {
+      const base = shapeCenter(i, t);
+      const p    = ((t % T_P) / T_P + pearlPhase[i]) % 1;
+      const w    = wobble(p, 1.2);
+      const ax   = base[0] + w.dx;
+      const ay   = base[1] + w.dy;
+      pearlActual.push([ax, ay]);
+      // transform offset from HTML-embedded center (pearlCtr[i]) so rotate origin stays at center
+      const dx = ax - pearlCtr[i][0];
+      const dy = ay - pearlCtr[i][1];
+      el.setAttribute('transform',
+        `translate(${dx.toFixed(2)} ${dy.toFixed(2)}) rotate(${w.rot.toFixed(2)} ${pearlCtr[i][0]} ${pearlCtr[i][1]})`);
+    });
+    // Panel B — linkers computed algorithmically from actual pearl positions each frame.
+    pearlLinks.forEach((el, i) => {
+      el.setAttribute('d', linkerPath(i, pearlActual, t));
+    });
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
 
 <!-- ============================================================
-     SLIDE 10: Target Proteins on Large Symmetric Scaffolds (Wentinck Fig.3)
+     SLIDE 10: Two Paradigms of Size Augmentation
+     (was s11; prior s10 "Ordered mass in practice" archived 2026-04-22
+      → slide-archive/s10-ordered-mass-in-practice-2026-04-22.html)
      ============================================================ -->
+<style>
+  /* s9-local: Brandlogy P12 two-card layout */
+  [data-n="10"] .p12-card {
+    position: absolute;
+    background: #f7f7f7;
+    border-radius: 24px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.9);
+  }
+  [data-n="10"] .p12-pill {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 26px;
+    border-radius: 999px;
+    color: #fff;
+    white-space: nowrap;
+  }
+  [data-n="10"] .p12-pill.mono {
+    background: linear-gradient(135deg, #3b9ef5 0%, #1c6bb8 100%);
+    box-shadow: 0 3px 10px rgba(46,134,222,0.35);
+  }
+  [data-n="10"] .p12-pill.scaffold {
+    background: linear-gradient(135deg, #8a64d4 0%, #4e3391 100%);
+    box-shadow: 0 3px 10px rgba(108,74,182,0.35);
+  }
+  [data-n="10"] .p12-ratio { font-size: 30px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
+  [data-n="10"] .p12-label { font-size: 15px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; line-height: 1; }
+  [data-n="10"] .p12-fig {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  [data-n="10"] .p12-fig img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+  }
+  [data-n="10"] .p12-cap {
+    position: absolute;
+    font-size: 17px;
+    line-height: 1.5;
+    color: #333;
+    text-align: center;
+  }
+  [data-n="10"] .p12-cap b { color: #1a1a2e; font-weight: 700; }
+</style>
 <div class="bl-slide" data-n="10">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
-    <div class="bl-title">Target Proteins on Large Symmetric Scaffolds</div>
-    <div class="bl-subtitle">DARPin cage &amp; Apoferritin strategies</div>
+    <div class="bl-title">Two Paradigms of Size Augmentation</div>
+    <div class="bl-subtitle">Raising effective molecular weight for small-protein SPA</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <div class="s2-figure">
-      <img src="../cryo-slides-img/s046_93.png" alt="DARPin cage and Apoferritin scaffolds">
+
+  <div class="bl-content" style="top:260px;height:700px">
+
+    <!-- LEFT CARD: 1:1 Monomeric partners -->
+    <div class="p12-card" style="left:0px;top:9px;width:870px;height:700px;"></div>
+    <div class="p12-pill mono" style="left:275px;top:39px;">
+      <span class="p12-ratio">1 : 1</span>
+      <span class="p12-label">Monomeric partners</span>
     </div>
+    <div class="p12-fig" style="top:102px;left:32px;width:806px;height:495px;">
+      <img src="../cryo-slides-img/s045_92.jpg" alt="Monomeric augmentation strategies" style="margin-left:-1px;margin-top:28px;">
+    </div>
+    <div class="p12-cap" style="left:31px;top:630px;width:806px;">
+      Auxiliary protein (<b>Nb, Fab, megabody, BRIL</b>&hellip;) binds or fuses to the target &mdash;<br>
+      raising effective mass and adding asymmetric features for alignment.
+    </div>
+
+    <!-- RIGHT CARD: 1:n Symmetric scaffolds -->
+    <div class="p12-card" style="left:900px;top:10px;width:870px;height:700px;"></div>
+    <div class="p12-pill scaffold" style="left:1170px;top:38px;">
+      <span class="p12-ratio">1 : n</span>
+      <span class="p12-label">Symmetric scaffolds</span>
+    </div>
+    <div class="p12-fig" style="top:102px;left:932px;width:806px;height:495px;">
+      <img src="../cryo-slides-img/s046_93.png" alt="Scaffold-assisted SPA" style="margin-left:-10px;">
+    </div>
+    <div class="p12-cap" style="left:933px;top:630px;width:806px;">
+      Target fused to a large symmetric scaffold (<b>DARPin cage, apoferritin</b>).<br>
+      Higher total MW plus symmetry-assisted reconstruction.
+    </div>
+
   </div>
-  <div class="bl-ref"><a href="https://doi.org/10.1016/j.crstbi.2022.09.005" target="_blank">Wentinck et al., Curr Res Struct Biol. (2022)</a></div>
+
+  <div class="bl-ref"><a href="https://doi.org/10.1016/j.crstbi.2022.09.005" target="_blank">Wentinck, Gogou &amp; Meijer. Curr Res Struct Biol. 4:332&ndash;337 (2022)</a></div>
 </div>
 
 <!-- ============================================================
-     SLIDE 11: Rigid Fab (as a Structural Chaperone)
+     SLIDE 11: Rigid Fab — structural chaperone (Kung 2025) (was s10)
+     Two panels (Ang2 / KRAS G12C), Fab-aligned bottom
      ============================================================ -->
+<style>
+  [data-n="11"] .s10-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    column-gap: 80px; padding: 0 120px;
+    height: 100%; align-items: end;
+  }
+  [data-n="11"] .s10-panel {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 24px;
+  }
+  [data-n="11"] .s10-image {
+    width: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  [data-n="11"] .s10-image img {
+    height: 500px; width: auto; display: block;
+  }
+  [data-n="11"] .s10-panel:nth-of-type(2) .s10-image img {
+    width: 648px; height: 458px;
+  }
+  [data-n="11"] .s10-cap {
+    font-size: 30px; font-weight: 800; color: #1a1a2e;
+    line-height: 1.3; text-align: center;
+  }
+  [data-n="11"] .s10-cap .target { font-weight: 900; color: #1a1a2e; }
+  [data-n="11"] .s10-cap .res { font-weight: 800; color: #e74c3c; }
+  [data-n="11"] .s10-cap .context {
+    display: block; margin-top: 10px;
+    font-size: 20px; font-weight: 500; color: #555;
+    font-style: italic;
+  }
+  [data-n="11"] .s10-cap .data {
+    display: block; margin-top: 8px;
+    font-size: 22px; font-weight: 700; color: #222;
+    font-style: normal;
+  }
+  [data-n="11"] .s10-cap .resline {
+    display: block; margin-top: 4px;
+    font-size: 22px; font-weight: 600; color: #333;
+  }
+</style>
 <div class="bl-slide" data-n="11">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
-    <div class="bl-title">Rigid Fab as a Structural Chaperone</div>
-    <div class="bl-subtitle">Fab fragments add ordered mass to small targets, enabling cryo-EM</div>
+    <div class="bl-title">Rigid Fab &mdash; a structural chaperone</div>
+    <div class="bl-subtitle">Genentech's Rigid Fab overcomes the &lt;50 kDa limit in cryo-EM</div>
   </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <div class="s2-img-grid cols-3">
-      <div class="cell">
-        <div style="font-size:32px;font-weight:800;color:#1a1a2e;margin-bottom:4px">Total 74 kDa</div>
-        <div style="font-size:15px;font-weight:600;color:#888;margin-bottom:14px;letter-spacing:0.2px">SP26 (26 kDa)</div>
-        <div class="img-wrap"><img src="../cryo-slides-img/s047_97.png" alt="74 kDa structure"></div>
+
+  <div class="bl-content">
+    <div class="s10-grid">
+
+      <div class="s10-panel">
+        <div class="s10-image">
+          <img src="../cryo-slides-img/s010_ang2_kung2025.png" alt="Ang2:5A12.6DS Fab complex cryo-EM map with local resolution">
+        </div>
+        <div class="s10-cap">
+          <span class="target">Ang2</span> &middot; <span class="res">26 kDa</span> cytokine
+          <span class="context">Angiopoietin-2 &mdash; antibody target for AMD &amp; cancer</span>
+          <span class="data">+ 5A12.6DS Rigid Fab &rarr; 74 kDa complex</span>
+          <span class="resline">Ang2 regions up to 2.3 &Aring; &middot; overall map 2.7 &Aring;</span>
+        </div>
       </div>
-      <div class="cell">
-        <div style="font-size:32px;font-weight:800;color:#1a1a2e;margin-bottom:4px">Total 69 kDa</div>
-        <div style="font-size:15px;font-weight:600;color:#888;margin-bottom:14px;letter-spacing:0.2px">SP21 (21 kDa)</div>
-        <div class="img-wrap"><img src="../cryo-slides-img/s047_96.png" alt="69 kDa structure"></div>
+
+      <div class="s10-panel">
+        <div class="s10-image">
+          <img src="../cryo-slides-img/s010_kras_kung2025.png" alt="KRAS G12C:GNE-1952:2H11.4DS Fab complex cryo-EM map with local resolution">
+        </div>
+        <div class="s10-cap">
+          <span class="target">KRAS<sup>G12C</sup></span> &middot; <span class="res">21 kDa</span> oncoprotein
+          <span class="context">Common oncogene &mdash; covalent inhibitor GNE-1952 (+ GDP&middot;Mg<sup>2+</sup>)</span>
+          <span class="data">+ GNE-1952 + 2H11.4DS Rigid Fab &rarr; 69 kDa complex</span>
+          <span class="resline">Ligand sites ~2.3 &Aring; &middot; overall map 2.8 &Aring;</span>
+        </div>
       </div>
-      <div class="cell">
-        <div style="font-size:32px;font-weight:800;color:#1a1a2e;margin-bottom:4px">Total 54 kDa</div>
-        <div style="font-size:15px;font-weight:600;color:#888;margin-bottom:14px;letter-spacing:0.2px">Ligand (6 kDa)</div>
-        <div class="img-wrap"><img src="../cryo-slides-img/s047_95.png" alt="54 kDa structure"></div>
-      </div>
+
     </div>
   </div>
-  <div class="bl-ref"><a href="https://doi.org/10.1038/s41467-025-63766-8" target="_blank">Kung et al., Nat. Commun. (2025)</a></div>
+
+  <div class="bl-ref">
+    Structures adapted from <a href="https://doi.org/10.1038/s41467-025-63766-8" target="_blank">Kung, Johnson, Tegunov, &hellip; Sudhamsu &middot; <em>Nat. Commun.</em> 16:8687 (2025) &middot; Genentech &amp; Denali Therapeutics</a>
+  </div>
 </div>
 
 <!-- ============================================================
-     SLIDE 12: Ordered Mass, Not MW (diagram only)
+     SLIDE 12: How Low Can We Go? (Henderson limit)
      ============================================================ -->
 <div class="bl-slide" data-n="12">
-  <div class="bl-header">
-    <div class="bl-chapter">Section 2: Sample Preparation</div>
-    <div class="bl-title">Ordered Mass, Not MW</div>
-    <div class="bl-subtitle">The key insight for small-protein cryo-EM</div>
-  </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <div style="text-align:center;max-width:1500px">
-      <div style="font-size:18px;font-weight:800;color:#888;letter-spacing:3px;text-transform:uppercase;margin-bottom:30px">The key insight</div>
-      <div style="font-size:72px;font-weight:900;color:#1a1a2e;line-height:1.1;letter-spacing:-2px">
-        What matters is the<br><span style="color:#e74c3c">ordered mass</span>,<br>not the molecular weight
-      </div>
-      <div style="font-size:22px;color:#555;margin-top:36px;line-height:1.5;max-width:1100px;margin-left:auto;margin-right:auto">
-        Flexible regions average out during reconstruction. Only the rigid, well-ordered core contributes to high-resolution density.
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================
-     SLIDE 13: Ordered Mass — hSAGA complex (diagram + example)
-     ============================================================ -->
-<div class="bl-slide" data-n="13">
-  <div class="bl-header">
-    <div class="bl-chapter">Section 2: Sample Preparation</div>
-    <div class="bl-title">Ordered Mass, Not MW</div>
-    <div class="bl-subtitle">hSAGA activator complex — large MW, small ordered core</div>
-  </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <div class="s2-figure">
-      <img src="../cryo-slides-img/s049_98.png" alt="hSAGA activator complex">
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================
-     SLIDE 14: Ordered Mass — Cadherin + Fab example
-     ============================================================ -->
-<div class="bl-slide" data-n="14">
-  <div class="bl-header">
-    <div class="bl-chapter">Section 2: Sample Preparation</div>
-    <div class="bl-title">Ordered Mass, Not MW</div>
-    <div class="bl-subtitle">Cadherin ectodomains with 67G8 Fab — Fab adds rigid ordered mass</div>
-  </div>
-  <div class="bl-content" style="display:flex;align-items:center;justify-content:center">
-    <div class="s2-figure">
-      <img src="../cryo-slides-img/s050_99.jpg" alt="Cadherin ordered mass example">
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================
-     SLIDE 15: How Low Can We Go? (Henderson limit)
-     ============================================================ -->
-<div class="bl-slide" data-n="15">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">How Low Can We Go for Single Particle Cryo-EM?</div>
@@ -486,9 +935,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 16: How Low Can We Go? (Sigworth 2016)
+     SLIDE 14: How Low Can We Go? (Sigworth 2016)
      ============================================================ -->
-<div class="bl-slide" data-n="16">
+<div class="bl-slide" data-n="13">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">How Low Can We Go for Single Particle Cryo-EM?</div>
@@ -507,9 +956,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 17: Minimum Molecular Mass Identifiable In Situ
+     SLIDE 15: Minimum Molecular Mass Identifiable In Situ
      ============================================================ -->
-<div class="bl-slide" data-n="17">
+<div class="bl-slide" data-n="14">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Minimum Molecular Mass Identifiable In Situ</div>
@@ -524,9 +973,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 18: Are We There Yet?
+     SLIDE 16: Are We There Yet?
      ============================================================ -->
-<div class="bl-slide" data-n="18">
+<div class="bl-slide" data-n="15">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Are We There Yet?</div>
@@ -550,9 +999,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 19: Cryo-EM Grid
+     SLIDE 17: Cryo-EM Grid
      ============================================================ -->
-<div class="bl-slide" data-n="19">
+<div class="bl-slide" data-n="16">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Cryo-EM Grid</div>
@@ -576,9 +1025,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 20: Grid Handling
+     SLIDE 18: Grid Handling
      ============================================================ -->
-<div class="bl-slide" data-n="20">
+<div class="bl-slide" data-n="17">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Grid Handling</div>
@@ -592,9 +1041,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 21: Grid Preparation (Vitrification) — 3-row equipment layout
+     SLIDE 19: Grid Preparation (Vitrification) — 3-row equipment layout
      ============================================================ -->
-<div class="bl-slide" data-n="21">
+<div class="bl-slide" data-n="18">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Grid Preparation (Vitrification)</div>
@@ -640,9 +1089,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 22: Automated Grid Preparation — Chameleon (product + install)
+     SLIDE 20: Automated Grid Preparation — Chameleon (product + install)
      ============================================================ -->
-<div class="bl-slide" data-n="22">
+<div class="bl-slide" data-n="19">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Automated Grid Preparation</div>
@@ -667,9 +1116,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 23: Automated Grid Preparation — Vitrojet (product + install)
+     SLIDE 21: Automated Grid Preparation — Vitrojet (product + install)
      ============================================================ -->
-<div class="bl-slide" data-n="23">
+<div class="bl-slide" data-n="20">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Automated Grid Preparation</div>
@@ -694,9 +1143,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 24: Grid Preparation and Screening Time
+     SLIDE 22: Grid Preparation and Screening Time
      ============================================================ -->
-<div class="bl-slide" data-n="24">
+<div class="bl-slide" data-n="21">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Grid Preparation and Screening Time</div>
@@ -736,9 +1185,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 25: Atlas View
+     SLIDE 23: Atlas View
      ============================================================ -->
-<div class="bl-slide" data-n="25">
+<div class="bl-slide" data-n="22">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Atlas View</div>
@@ -753,9 +1202,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 26: Square View
+     SLIDE 24: Square View
      ============================================================ -->
-<div class="bl-slide" data-n="26">
+<div class="bl-slide" data-n="23">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Square View</div>
@@ -775,9 +1224,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 27: Hole View — Ideal
+     SLIDE 25: Hole View — Ideal
      ============================================================ -->
-<div class="bl-slide" data-n="27">
+<div class="bl-slide" data-n="24">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Hole View — Ideal</div>
@@ -793,9 +1242,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 28: Hole View — Crystalline Ice
+     SLIDE 26: Hole View — Crystalline Ice
      ============================================================ -->
-<div class="bl-slide" data-n="28">
+<div class="bl-slide" data-n="25">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Hole View — Crystalline Ice</div>
@@ -814,9 +1263,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 29: Hole View — Particle Aggregation
+     SLIDE 27: Hole View — Particle Aggregation
      ============================================================ -->
-<div class="bl-slide" data-n="29">
+<div class="bl-slide" data-n="26">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Hole View — Particle Aggregation</div>
@@ -832,9 +1281,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 30: Hole View — Concentration Issue
+     SLIDE 28: Hole View — Concentration Issue
      ============================================================ -->
-<div class="bl-slide" data-n="30">
+<div class="bl-slide" data-n="27">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Hole View — Concentration Issue</div>
@@ -850,9 +1299,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 31: Hole View — Contamination
+     SLIDE 29: Hole View — Contamination
      ============================================================ -->
-<div class="bl-slide" data-n="31">
+<div class="bl-slide" data-n="28">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Hole View — Contamination</div>
@@ -868,9 +1317,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 32: Hole View — Other Ice Issues
+     SLIDE 30: Hole View — Other Ice Issues
      ============================================================ -->
-<div class="bl-slide" data-n="32">
+<div class="bl-slide" data-n="29">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Hole View — Other Ice Issues</div>
@@ -885,9 +1334,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 33: Grid Screening — 4-quadrant (Evaluate Grid Quality)
+     SLIDE 31: Grid Screening — 4-quadrant (Evaluate Grid Quality)
      ============================================================ -->
-<div class="bl-slide" data-n="33">
+<div class="bl-slide" data-n="30">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Grid Screening</div>
@@ -929,9 +1378,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 34: Air-Water Interface (AWI)
+     SLIDE 32: Air-Water Interface (AWI)
      ============================================================ -->
-<div class="bl-slide" data-n="34">
+<div class="bl-slide" data-n="31">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Air-Water Interface (AWI)</div>
@@ -950,9 +1399,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 35: Spot-to-Plunge Time Effect (Noble 2018)
+     SLIDE 33: Spot-to-Plunge Time Effect (Noble 2018)
      ============================================================ -->
-<div class="bl-slide" data-n="35">
+<div class="bl-slide" data-n="32">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Spot-to-Plunge Time Effect (with Chameleon)</div>
@@ -974,9 +1423,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 36: Spot-to-Plunge Time Effect (cont.)
+     SLIDE 34: Spot-to-Plunge Time Effect (cont.)
      ============================================================ -->
-<div class="bl-slide" data-n="36">
+<div class="bl-slide" data-n="33">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Spot-to-Plunge Time Effect (with Chameleon)</div>
@@ -1000,9 +1449,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 37: Continuous Support Films
+     SLIDE 35: Continuous Support Films
      ============================================================ -->
-<div class="bl-slide" data-n="37">
+<div class="bl-slide" data-n="34">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Continuous Support Films</div>
@@ -1026,9 +1475,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 38: Grid Optimization
+     SLIDE 36: Grid Optimization
      ============================================================ -->
-<div class="bl-slide" data-n="38">
+<div class="bl-slide" data-n="35">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Grid Optimization</div>
@@ -1053,9 +1502,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 39: Sample Requirements for SPA
+     SLIDE 37: Sample Requirements for SPA
      ============================================================ -->
-<div class="bl-slide" data-n="39">
+<div class="bl-slide" data-n="36">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Sample Requirements for SPA</div>
@@ -1083,9 +1532,9 @@
 </div>
 
 <!-- ============================================================
-     SLIDE 40: Transition — Imaging (same Halfon diagram, red box on Imaging)
+     SLIDE 39: Transition — Imaging (same Halfon diagram, red box on Imaging)
      ============================================================ -->
-<div class="bl-slide" data-n="40">
+<div class="bl-slide" data-n="37">
   <div class="bl-header">
     <div class="bl-chapter">Section 2: Sample Preparation</div>
     <div class="bl-title">Time &amp; Cost of a Single Particle Cryo-EM Pipeline</div>
@@ -1105,7 +1554,7 @@
 <div class="bl-nav">
   <a class="home-btn" href="./index.html">Home</a>
   <button id="prev-btn" onclick="go(-1)">&lsaquo;</button>
-  <span class="page-info" id="page-info" onclick="jumpToSlide()" title="Click to jump">1 / 41</span>
+  <span class="page-info" id="page-info" onclick="jumpToSlide()" title="Click to jump">1 / 37</span>
   <button id="next-btn" onclick="go(1)">&rsaquo;</button>
 </div>
 
@@ -1113,7 +1562,7 @@
      JAVASCRIPT
      ============================================================ -->
 <script>
-const N = 40;
+const N = 37;
 let cur = 1;
 
 /* Zoom */

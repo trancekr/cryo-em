@@ -55,3 +55,13 @@ SPAguide/bl-editor.js
 SPAguide/fetch_em_by_year.py
 SPAguide/generate_em_year_chart.py
 SPAguide/generate_mw_chart.py
+
+# 작업 중 산출물, incident 로그, meta 로그 — 로컬 전용
+SPAguide/slide-work/
+SPAguide/incident-*.md
+SPAguide/slide-operations-log.md
+SPAguide/*.bak-*
+SPAguide/brandlogy-section*.html.bak*
+
+# 임시 다운로드 파일
+SPAguide/*.avif

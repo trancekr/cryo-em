@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ARCHIVED — s10 Ordered mass in practice (2026-04-22 removed from section 2)</title>
+<!--
+  ============================================================
+  ARCHIVED SLIDE — s10 of brandlogy-section2.html
+  Removed from main deck: 2026-04-22
+  Reason: redundant with new s10 (Two Paradigms of Size Augmentation,
+          was s11) + new s11 (Rigid Fab Kung 2025, was s12). hSAGA
+          example was a dead-end (BEADS pattern not revisited in
+          following slides); Cadherin+Fab example absorbed by
+          s10/s11 (new numbering).
+
+  To restore:
+    1) Paste the <style> block + <div class="bl-slide"> block back
+       into brandlogy-section2.html at the slot between new s9 and
+       new s10.
+    2) Bump all subsequent data-n by +1 (current s10 → s11, ...,
+       current s37 → s38).
+    3) Bump `const N = 37` → 38 in the nav script.
+  ============================================================
+-->
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<!-- ============================================================
+     SLIDE 10: Ordered mass in practice (hSAGA + Cadherin+Fab examples)
+     ============================================================ -->
+<style>
+  [data-n="10"] .e2-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 60px;
+    padding: 0 80px;
+    height: 100%;
+    align-items: stretch;
+  }
+  [data-n="10"] .e2-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  [data-n="10"] .e2-label {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1a1a2e;
+    line-height: 1.3;
+  }
+  [data-n="10"] .e2-label .tag-neu { color: #6c5ce7; font-size: 18px; font-weight: 700; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+  [data-n="10"] .e2-label .tag-pos { color: #16a085; font-size: 18px; font-weight: 700; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+  [data-n="10"] .e2-sub {
+    font-size: 18px;
+    color: #666;
+    font-weight: 500;
+    line-height: 1.45;
+  }
+  [data-n="10"] .e2-img {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  [data-n="10"] .e2-img img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+</style>
+<div class="bl-slide active" data-n="10">
+  <div class="bl-header">
+    <div class="bl-chapter">Section 2: Sample Preparation</div>
+    <div class="bl-title">Ordered mass in practice</div>
+    <div class="bl-subtitle">Multi-domain complex with rigid core &mdash; vs. small target with Fab-added ordered mass</div>
+  </div>
+
+  <div class="bl-content">
+    <div class="e2-grid">
+
+      <div class="e2-card">
+        <div class="e2-label">
+          <span class="tag-neu">BEADS ON A STRING</span>
+          hSAGA activator complex
+        </div>
+        <div class="e2-sub">
+          ~1.3&nbsp;MDa total &mdash; ordered core resolves to high resolution,
+          while peripheral modules on flexible linkers stay low-res.
+          Total MW overstates what cryo-EM actually sees.
+        </div>
+        <div class="e2-img">
+          <img src="../../cryo-slides-img/s049_98.png" alt="hSAGA activator complex cryo-EM maps — ordered core in large multi-domain assembly">
+        </div>
+      </div>
+
+      <div class="e2-card">
+        <div class="e2-label">
+          <span class="tag-pos">+~50 kDa ORDERED MASS</span>
+          Cadherin EC1-5 + 67G8 Fab
+        </div>
+        <div class="e2-sub">
+          Cadherin repeats are small "strings of pearls."
+          67G8 Fab binding adds ~52&nbsp;kDa of rigid, detectable mass &mdash;
+          enough to anchor alignment.
+        </div>
+        <div class="e2-img">
+          <img src="../../cryo-slides-img/s050_99.jpg" alt="Cadherin EC1-5 with 67G8 Fab — 2D classes showing Fab-anchored rigid core">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bl-ref">
+    Strategy source: <a href="https://www.nanoimagingservices.com/about/blog/ordered-mass-in-target-selection-protein-engineering" target="_blank">NIS &mdash; Ordered mass in target selection &amp; protein engineering</a> &middot; hSAGA: Wang et&nbsp;al. &middot; Cadherin: Brasch et&nbsp;al.
+  </div>
+</div>
+
+<script>
+  // Minimal zoom-to-fit so the archived slide renders correctly on its own.
+  function setZoom() {
+    const z = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    document.body.style.zoom = z;
+  }
+  setZoom();
+  window.addEventListener('resize', setZoom);
+</script>
+</body>
+</html>
