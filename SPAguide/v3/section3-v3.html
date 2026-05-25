@@ -438,7 +438,7 @@
 <div class="viewport">
 <div class="deck">
 
-  <button class="deck-label deck-home" type="button" aria-label="Go to first slide"><span class="dot"></span><span>Home</span></button>
+  <button class="deck-label deck-home" type="button" aria-label="Go to main page"><span class="dot"></span><span>Home</span></button>
   <div class="deck-counter"><span class="cur">01</span><span class="sep">/</span><span class="total">12</span></div>
   <div class="deck-hint">← → keys · I for index</div>
 
@@ -995,7 +995,7 @@
   const home = document.querySelector('.deck-home');
   if (!home) return;
   home.addEventListener('click', () => {
-    location.hash = '#1';
+    window.location.href = '../index.html';
   });
 })();
 

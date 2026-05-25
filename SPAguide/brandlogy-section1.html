@@ -7,6 +7,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700;8..60,800&family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<script>
+if (new URLSearchParams(location.search).has('thumb')) {
+  document.documentElement.dataset.captureThumb = '1';
+}
+</script>
 </head>
 <body>
 
@@ -1283,15 +1288,148 @@
   </div>
 </div>
 
+
 <!-- ============================================================
-     NAVIGATION
+     V3 NAVIGATION OVERLAY
      ============================================================ -->
-<div class="bl-nav">
-  <a class="home-btn" href="./index.html">Home</a>
-  <button id="prev-btn">&lsaquo;</button>
-  <span class="page-info" id="page-info" title="Click to jump">1 / 25</span>
-  <button id="next-btn">&rsaquo;</button>
-  <button class="theme-btn" id="theme-btn" onclick="cycleTheme()" title="Cycle theme (T)">Brand</button>
+<a class="deck-label deck-home" href="./index.html" aria-label="Go to main page"><span class="dot"></span><span>Home</span></a>
+<div class="deck-counter"><span class="cur">01</span><span class="sep">/</span><span class="total">25</span></div>
+<div class="deck-hint">← → keys · I for index</div>
+
+<div class="nav-arrow prev" role="button" aria-label="Previous slide">&#8249;</div>
+<div class="nav-arrow next" role="button" aria-label="Next slide">&#8250;</div>
+<div class="deck-progress"><div class="deck-progress-fill"></div></div>
+
+<div class="index-overlay" role="dialog" aria-label="Slide index">
+  <div class="index-close" role="button" aria-label="Close index">×</div>
+  <h1>Section 1 · Cryo-EM Overview <span class="accent">· Index</span></h1>
+  <div class="index-grid">
+    <div class="index-card" data-target="0">
+      <img class="thumb" src="thumbs/section1/slide-01.jpg" alt="Slide 01 thumbnail" loading="lazy">
+      <div class="index-title">Cryo-EM</div>
+      <div class="meta"><span class="num">01</span><span class="pdf">slide 1</span></div>
+    </div>
+    <div class="index-card" data-target="1">
+      <img class="thumb" src="thumbs/section1/slide-02.jpg" alt="Slide 02 thumbnail" loading="lazy">
+      <div class="index-title">What is Cryo-EM?</div>
+      <div class="meta"><span class="num">02</span><span class="pdf">slide 2</span></div>
+    </div>
+    <div class="index-card" data-target="2">
+      <img class="thumb" src="thumbs/section1/slide-03.jpg" alt="Slide 03 thumbnail" loading="lazy">
+      <div class="index-title">Electron Microscopy &amp; Biological Samples</div>
+      <div class="meta"><span class="num">03</span><span class="pdf">slide 3</span></div>
+    </div>
+    <div class="index-card" data-target="3">
+      <img class="thumb" src="thumbs/section1/slide-04.jpg" alt="Slide 04 thumbnail" loading="lazy">
+      <div class="index-title">Negative Stain TEM vs Cryo-EM</div>
+      <div class="meta"><span class="num">04</span><span class="pdf">slide 4</span></div>
+    </div>
+    <div class="index-card" data-target="4">
+      <img class="thumb" src="thumbs/section1/slide-05.jpg" alt="Slide 05 thumbnail" loading="lazy">
+      <div class="index-title">Key Components of Modern Cryo-TEM</div>
+      <div class="meta"><span class="num">05</span><span class="pdf">slide 5</span></div>
+    </div>
+    <div class="index-card" data-target="5">
+      <img class="thumb" src="thumbs/section1/slide-06.jpg" alt="Slide 06 thumbnail" loading="lazy">
+      <div class="index-title">From Blobs to High Resolution</div>
+      <div class="meta"><span class="num">06</span><span class="pdf">slide 6</span></div>
+    </div>
+    <div class="index-card" data-target="6">
+      <img class="thumb" src="thumbs/section1/slide-07.jpg" alt="Slide 07 thumbnail" loading="lazy">
+      <div class="index-title">From Blobs to High Resolution</div>
+      <div class="meta"><span class="num">07</span><span class="pdf">slide 7</span></div>
+    </div>
+    <div class="index-card" data-target="7">
+      <img class="thumb" src="thumbs/section1/slide-08.jpg" alt="Slide 08 thumbnail" loading="lazy">
+      <div class="index-title">From Blobs to High Resolution</div>
+      <div class="meta"><span class="num">08</span><span class="pdf">slide 8</span></div>
+    </div>
+    <div class="index-card" data-target="8">
+      <img class="thumb" src="thumbs/section1/slide-09.jpg" alt="Slide 09 thumbnail" loading="lazy">
+      <div class="index-title">The Resolution Revolution</div>
+      <div class="meta"><span class="num">09</span><span class="pdf">slide 9</span></div>
+    </div>
+    <div class="index-card" data-target="9">
+      <img class="thumb" src="thumbs/section1/slide-10.jpg" alt="Slide 10 thumbnail" loading="lazy">
+      <div class="index-title">The Resolution Revolution</div>
+      <div class="meta"><span class="num">10</span><span class="pdf">slide 10</span></div>
+    </div>
+    <div class="index-card" data-target="10">
+      <img class="thumb" src="thumbs/section1/slide-11.jpg" alt="Slide 11 thumbnail" loading="lazy">
+      <div class="index-title">Breaking the 3 Å Barrier</div>
+      <div class="meta"><span class="num">11</span><span class="pdf">slide 11</span></div>
+    </div>
+    <div class="index-card" data-target="11">
+      <img class="thumb" src="thumbs/section1/slide-12.jpg" alt="Slide 12 thumbnail" loading="lazy">
+      <div class="index-title">The Resolution Revolution</div>
+      <div class="meta"><span class="num">12</span><span class="pdf">slide 12</span></div>
+    </div>
+    <div class="index-card" data-target="12">
+      <img class="thumb" src="thumbs/section1/slide-13.jpg" alt="Slide 13 thumbnail" loading="lazy">
+      <div class="index-title">Nobel Prize in Chemistry 2017</div>
+      <div class="meta"><span class="num">13</span><span class="pdf">slide 13</span></div>
+    </div>
+    <div class="index-card" data-target="13">
+      <img class="thumb" src="thumbs/section1/slide-14.jpg" alt="Slide 14 thumbnail" loading="lazy">
+      <div class="index-title">Structural Biology Methods in the PDB</div>
+      <div class="meta"><span class="num">14</span><span class="pdf">slide 14</span></div>
+    </div>
+    <div class="index-card" data-target="14">
+      <img class="thumb" src="thumbs/section1/slide-15.jpg" alt="Slide 15 thumbnail" loading="lazy">
+      <div class="index-title">Each Method Has Its Sweet Spot</div>
+      <div class="meta"><span class="num">15</span><span class="pdf">slide 15</span></div>
+    </div>
+    <div class="index-card" data-target="15">
+      <img class="thumb" src="thumbs/section1/slide-16.jpg" alt="Slide 16 thumbnail" loading="lazy">
+      <div class="index-title">Cryo-EM: Growing Access to Smaller Proteins</div>
+      <div class="meta"><span class="num">16</span><span class="pdf">slide 16</span></div>
+    </div>
+    <div class="index-card" data-target="16">
+      <img class="thumb" src="thumbs/section1/slide-17.jpg" alt="Slide 17 thumbnail" loading="lazy">
+      <div class="index-title">Slide 17</div>
+      <div class="meta"><span class="num">17</span><span class="pdf">slide 17</span></div>
+    </div>
+    <div class="index-card" data-target="17">
+      <img class="thumb" src="thumbs/section1/slide-18.jpg" alt="Slide 18 thumbnail" loading="lazy">
+      <div class="index-title">Sizing Up Cryo-EM</div>
+      <div class="meta"><span class="num">18</span><span class="pdf">slide 18</span></div>
+    </div>
+    <div class="index-card" data-target="18">
+      <img class="thumb" src="thumbs/section1/slide-19.jpg" alt="Slide 19 thumbnail" loading="lazy">
+      <div class="index-title">A Structural Biologist&#x27;s Dream</div>
+      <div class="meta"><span class="num">19</span><span class="pdf">slide 19</span></div>
+    </div>
+    <div class="index-card" data-target="19">
+      <img class="thumb" src="thumbs/section1/slide-20.jpg" alt="Slide 20 thumbnail" loading="lazy">
+      <div class="index-title">Single Particle Analysis (SPA) Workflow</div>
+      <div class="meta"><span class="num">20</span><span class="pdf">slide 20</span></div>
+    </div>
+    <div class="index-card" data-target="20">
+      <img class="thumb" src="thumbs/section1/slide-21.jpg" alt="Slide 21 thumbnail" loading="lazy">
+      <div class="index-title">Where Does the Time &amp; Money Go?</div>
+      <div class="meta"><span class="num">21</span><span class="pdf">slide 21</span></div>
+    </div>
+    <div class="index-card" data-target="21">
+      <img class="thumb" src="thumbs/section1/slide-22.jpg" alt="Slide 22 thumbnail" loading="lazy">
+      <div class="index-title">Challenges and Limitations of Cryo-EM</div>
+      <div class="meta"><span class="num">22</span><span class="pdf">slide 22</span></div>
+    </div>
+    <div class="index-card" data-target="22">
+      <img class="thumb" src="thumbs/section1/slide-23.jpg" alt="Slide 23 thumbnail" loading="lazy">
+      <div class="index-title">Challenges and Limitations of Cryo-EM</div>
+      <div class="meta"><span class="num">23</span><span class="pdf">slide 23</span></div>
+    </div>
+    <div class="index-card" data-target="23">
+      <img class="thumb" src="thumbs/section1/slide-24.jpg" alt="Slide 24 thumbnail" loading="lazy">
+      <div class="index-title">Challenges and Limitations of Cryo-EM</div>
+      <div class="meta"><span class="num">24</span><span class="pdf">slide 24</span></div>
+    </div>
+    <div class="index-card" data-target="24">
+      <img class="thumb" src="thumbs/section1/slide-25.jpg" alt="Slide 25 thumbnail" loading="lazy">
+      <div class="index-title">Cryo-EM Infrastructure in Korea</div>
+      <div class="meta"><span class="num">25</span><span class="pdf">slide 25</span></div>
+    </div>
+  </div>
 </div>
 
 <!-- ============================================================
