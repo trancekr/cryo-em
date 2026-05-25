@@ -4464,9 +4464,9 @@
      ============================================================ -->
 <div class="bl-nav">
   <a class="home-btn" href="./index.html">Home</a>
-  <button id="prev-btn" onclick="go(-1)">&lsaquo;</button>
-  <span class="page-info" id="page-info" onclick="jumpToSlide()" title="Click to jump">1 / 36</span>
-  <button id="next-btn" onclick="go(1)">&rsaquo;</button>
+  <button id="prev-btn">&lsaquo;</button>
+  <span class="page-info" id="page-info" title="Click to jump">1 / 36</span>
+  <button id="next-btn">&rsaquo;</button>
   <button class="theme-btn" id="theme-btn" onclick="cycleTheme()" title="Cycle theme (T)">Brand</button>
 </div>
 
@@ -4474,28 +4474,7 @@
      JAVASCRIPT
      ============================================================ -->
 <script>
-const N = 36;
-let cur = 1;
-
-/* Zoom */
-function setZoom() {
-  const z = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
-  document.body.style.zoom = z;
-}
-setZoom();
-window.addEventListener('resize', setZoom);
-
-/* Navigation */
-function show(n) {
-  n = Math.max(1, Math.min(N, n));
-  const prev = document.querySelector('.bl-slide.active');
-  if (prev) prev.classList.remove('active');
-  const next = document.querySelector('[data-n="' + n + '"]');
-  if (next) next.classList.add('active');
-  cur = n;
-  document.getElementById('page-info').textContent = cur + ' / ' + N;
-  document.getElementById('prev-btn').disabled = (cur === 1);
-  document.getElementById('next-btn').disabled = (cur === N);
+window.onBrandlogySlideChange = function() {
   /* Reset slide 4 interaction */
   var s4chart = document.getElementById('s4-chart');
   var s4panel = document.getElementById('s4-panel');
@@ -4514,32 +4493,7 @@ function show(n) {
       if (el) el.style.opacity = '0';
     });
   }
-}
-
-function go(d) { show(cur + d); }
-
-function jumpToSlide() {
-  var input = prompt('Go to slide (1-' + N + '):', cur);
-  if (input === null) return;
-  var n = parseInt(input, 10);
-  if (!isNaN(n) && n >= 1 && n <= N) show(n);
-}
-
-/* URL param */
-const slideParam = new URLSearchParams(location.search).get('slide');
-show(slideParam ? +slideParam : 1);
-
-/* Keyboard */
-document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowLeft')  { go(-1); e.preventDefault(); }
-  if (e.key === 'ArrowRight') { go(1);  e.preventDefault(); }
-  if (e.key === 'Home')       { show(1); e.preventDefault(); }
-  if (e.key === 'End')        { show(N); e.preventDefault(); }
-  if (e.key === 't' || e.key === 'T') {
-    if (document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
-    cycleTheme(); e.preventDefault();
-  }
-});
+};
 
 /* Theme cycle: brandlogy → science-journal → museum-plaque → brandlogy */
 const THEMES = [
@@ -4767,6 +4721,7 @@ s4pie.draw(false);
 })();
 
 </script>
+<script src="v3/nav.js?v=20260525section12"></script>
 <script src="bl-editor.js?v=5"></script>
 
 </body>

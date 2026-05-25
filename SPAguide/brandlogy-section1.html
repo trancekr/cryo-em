@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="brandlogy">
 <head>
 <meta charset="UTF-8">
 <title>Cryo-EM Overview — Section 1 (Brandlogy)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700;8..60,800&family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -1285,9 +1288,10 @@
      ============================================================ -->
 <div class="bl-nav">
   <a class="home-btn" href="./index.html">Home</a>
-  <button id="prev-btn" onclick="go(-1)">&lsaquo;</button>
-  <span class="page-info" id="page-info" onclick="jumpToSlide()" title="Click to jump">1 / 25</span>
-  <button id="next-btn" onclick="go(1)">&rsaquo;</button>
+  <button id="prev-btn">&lsaquo;</button>
+  <span class="page-info" id="page-info" title="Click to jump">1 / 25</span>
+  <button id="next-btn">&rsaquo;</button>
+  <button class="theme-btn" id="theme-btn" onclick="cycleTheme()" title="Cycle theme (T)">Brand</button>
 </div>
 
 <!-- ============================================================
@@ -1307,29 +1311,7 @@ function toggleImg() {
   }
 }
 
-const N = 25;
-let cur = 1;
-
-/* Zoom */
-function setZoom() {
-  const z = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
-  document.body.style.zoom = z;
-}
-setZoom();
-window.addEventListener('resize', setZoom);
-
-/* Navigation */
-function show(n) {
-  n = Math.max(1, Math.min(N, n));
-  const prev = document.querySelector('.bl-slide.active');
-  if (prev) prev.classList.remove('active');
-  const next = document.querySelector('[data-n="' + n + '"]');
-  if (next) next.classList.add('active');
-  cur = n;
-  document.getElementById('page-info').textContent = cur + ' / ' + N;
-  document.getElementById('prev-btn').disabled = (cur === 1);
-  document.getElementById('next-btn').disabled = (cur === N);
-
+window.onBrandlogySlideChange = function(n) {
   // Slide 21: sync card container width to image box
   if (n === 21) {
     var imgBox = document.getElementById('s21-img-box');
@@ -1346,28 +1328,32 @@ function show(n) {
       if (w > 0) mwrap.style.width = w + 'px';
     }
   }
+};
+
+/* Theme cycle: brandlogy → science-journal → museum-plaque → brandlogy */
+const THEMES = [
+  { id: 'brandlogy',       label: 'Brand' },
+  { id: 'science-journal', label: 'Journal' },
+  { id: 'museum-plaque',   label: 'Museum' }
+];
+function applyTheme(id) {
+  document.documentElement.setAttribute('data-theme', id);
+  const t = THEMES.find(x => x.id === id) || THEMES[0];
+  const btn = document.getElementById('theme-btn');
+  if (btn) btn.textContent = t.label;
+  try { localStorage.setItem('cryo-theme', id); } catch(e) {}
 }
-
-function go(d) { show(cur + d); }
-
-function jumpToSlide() {
-  var input = prompt('Go to slide (1-' + N + '):', cur);
-  if (input === null) return;
-  var n = parseInt(input, 10);
-  if (!isNaN(n) && n >= 1 && n <= N) show(n);
+function cycleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'brandlogy';
+  const i = THEMES.findIndex(x => x.id === cur);
+  applyTheme(THEMES[(i + 1) % THEMES.length].id);
 }
-
-/* URL param */
-const slideParam = new URLSearchParams(location.search).get('slide');
-show(slideParam ? +slideParam : 1);
-
-/* Keyboard */
-document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowLeft')  { go(-1); e.preventDefault(); }
-  if (e.key === 'ArrowRight') { go(1);  e.preventDefault(); }
-  if (e.key === 'Home')       { show(1); e.preventDefault(); }
-  if (e.key === 'End')        { show(N); e.preventDefault(); }
-});
+(function initTheme(){
+  let saved = null;
+  try { saved = localStorage.getItem('cryo-theme'); } catch(e) {}
+  if (saved && THEMES.some(x => x.id === saved)) applyTheme(saved);
+  else applyTheme('brandlogy');
+})();
 
 /* Touch */
 let tx = 0;
@@ -1683,6 +1669,7 @@ function showDesc(n) {
   panel.classList.add('visible');
 }
 </script>
+<script src="v3/nav.js?v=20260525section12"></script>
 <script src="bl-editor.js?v=5"></script>
 
 </body>

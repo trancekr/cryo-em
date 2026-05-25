@@ -9,25 +9,44 @@
 
 (function () {
   const deck = document.querySelector('.deck');
-  const slides = Array.from(document.querySelectorAll('.slide'));
+  const slides = Array.from(document.querySelectorAll('.slide, .bl-slide'));
   const counter = document.querySelector('.deck-counter');
   const counterCur = counter?.querySelector('.cur');
   const counterTotal = counter?.querySelector('.total');
+  const pageInfo = document.getElementById('page-info');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
   const progress = document.querySelector('.deck-progress-fill');
   const indexOverlay = document.querySelector('.index-overlay');
   const total = slides.length;
 
+  if (!total) return;
   if (counterTotal) counterTotal.textContent = String(total).padStart(2, '0');
 
   let current = 0;
 
-  function show(idx) {
+  function showIndex(idx) {
     current = ((idx % total) + total) % total;
     slides.forEach((s, i) => s.classList.toggle('active', i === current));
     if (counterCur) counterCur.textContent = String(current + 1).padStart(2, '0');
+    if (pageInfo) pageInfo.textContent = `${current + 1} / ${total}`;
+    if (prevBtn) prevBtn.disabled = current === 0;
+    if (nextBtn) nextBtn.disabled = current === total - 1;
     if (progress) progress.style.width = `${((current + 1) / total) * 100}%`;
     history.replaceState(null, '', `#${current + 1}`);
+    if (typeof window.onBrandlogySlideChange === 'function') {
+      window.onBrandlogySlideChange(current + 1);
+    }
   }
+
+  window.show = (n) => showIndex((parseInt(n, 10) || 1) - 1);
+  window.go = (d) => showIndex(current + d);
+  window.jumpToSlide = () => {
+    const input = prompt(`Go to slide (1-${total}):`, current + 1);
+    if (input === null) return;
+    const n = parseInt(input, 10);
+    if (Number.isFinite(n) && n >= 1 && n <= total) window.show(n);
+  };
 
   // Keyboard
   document.addEventListener('keydown', (e) => {
@@ -39,27 +58,33 @@
       return;
     }
     if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
-      show(current + 1); e.preventDefault();
+      showIndex(current + 1); e.preventDefault();
     } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-      show(current - 1); e.preventDefault();
+      showIndex(current - 1); e.preventDefault();
     } else if (e.key === 'Home') {
-      show(0); e.preventDefault();
+      showIndex(0); e.preventDefault();
     } else if (e.key === 'End') {
-      show(total - 1); e.preventDefault();
+      showIndex(total - 1); e.preventDefault();
     } else if (e.key === 'i' || e.key === 'I') {
       indexOverlay?.classList.add('open'); e.preventDefault();
+    } else if ((e.key === 't' || e.key === 'T') && typeof window.cycleTheme === 'function') {
+      if (document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+      window.cycleTheme(); e.preventDefault();
     }
   });
 
   // Buttons
-  document.querySelector('.nav-arrow.prev')?.addEventListener('click', () => show(current - 1));
-  document.querySelector('.nav-arrow.next')?.addEventListener('click', () => show(current + 1));
+  document.querySelector('.nav-arrow.prev')?.addEventListener('click', () => showIndex(current - 1));
+  document.querySelector('.nav-arrow.next')?.addEventListener('click', () => showIndex(current + 1));
+  prevBtn?.addEventListener('click', () => showIndex(current - 1));
+  nextBtn?.addEventListener('click', () => showIndex(current + 1));
+  pageInfo?.addEventListener('click', window.jumpToSlide);
 
   // Index card click
   if (indexOverlay) {
     indexOverlay.querySelectorAll('.index-card').forEach((card, i) => {
       card.addEventListener('click', () => {
-        show(i);
+        showIndex(i);
         indexOverlay.classList.remove('open');
       });
     });
@@ -70,10 +95,10 @@
 
   // Init from hash
   const hashIdx = parseInt(location.hash.slice(1), 10) - 1;
-  show(Number.isFinite(hashIdx) && hashIdx >= 0 ? hashIdx : 0);
+  showIndex(Number.isFinite(hashIdx) && hashIdx >= 0 ? hashIdx : 0);
   window.addEventListener('hashchange', () => {
     const idx = parseInt(location.hash.slice(1), 10) - 1;
-    if (Number.isFinite(idx) && idx >= 0 && idx < total) show(idx);
+    if (Number.isFinite(idx) && idx >= 0 && idx < total) showIndex(idx);
   });
 
   // Auto-fit zoom (preserves 1920×1080 layout for any viewport)
@@ -82,10 +107,14 @@
     const sx = window.innerWidth / 1920;
     const sy = window.innerHeight / 1080;
     const scale = Math.min(sx, sy);
-    deck.style.transform = `scale(${scale})`;
-    deck.style.transformOrigin = 'top left';
-    deck.style.width  = (1920 * scale) + 'px';
-    deck.style.height = (1080 * scale) + 'px';
+    if (deck) {
+      deck.style.transform = `scale(${scale})`;
+      deck.style.transformOrigin = 'top left';
+      deck.style.width  = (1920 * scale) + 'px';
+      deck.style.height = (1080 * scale) + 'px';
+    } else {
+      document.body.style.zoom = scale;
+    }
   }
   fit();
   window.addEventListener('resize', fit);
