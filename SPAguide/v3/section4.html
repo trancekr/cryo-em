@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 4 · Data Processing - Cryo-EM Workshop (Han Kim)</title>
+<meta name="description" content="Cryo-EM Workshop slide deck - Section 04 · Data Processing. Source: 서울대 기기원 cryoEM 워크샵, 김한성 (PDF). v3 build 2026-05-18.">
+  <link rel="stylesheet" href="styles3.css?v=20260525goal5">
+</head>
+<body>
+<div class="viewport">
+<div class="deck">
+
+  <button class="deck-label deck-home" type="button" aria-label="Go to first slide"><span class="dot"></span><span>Home</span></button>
+  <div class="deck-counter"><span class="cur">01</span><span class="sep">/</span><span class="total">37</span></div>
+  <div class="deck-hint">← → keys · I for index</div>
+
+  <div class="slide cover active" data-n="1" data-pdf="94">
+    <img class="pdf-bg" src="../../cryo-slides-img/cryo-em-compare.png" alt="[1] PDF p94 cover" loading="eager">
+    <div class="cover-overlay"></div>
+    <div class="cover-text">
+      <div class="cover-title">Data Processing</div>
+      <div class="cover-divider" style="width:750px"></div>
+      <div class="cover-subtitle">From Micrographs to 3D Maps</div>
+    </div>
+  </div>
+  <div class="slide s4-locator" data-n="2" data-pdf="95">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Time &amp; Cost of a Single Particle Cryo-EM Pipeline</div>
+      <div class="bl-subtitle">Imaging done - focus shifts to processing the movies into maps</div>
+    </div>
+    <div class="bl-content" style="top:260px;height:740px;display:flex;align-items:center;justify-content:center">
+      <div class="locator-card" id="loc-card-2">
+        <img src="../../cryo-slides-img/s037_80.png" alt="SPA pipeline time and cost (Halfon 2022)" loading="eager">
+      </div>
+    </div>
+    <div class="locator-highlight" id="loc-hl-2" style="left:1378px;top:304px;width:430px;height:656px"></div>
+    <div class="locator-panel" id="loc-panel-2" style="left:421px;top:400px;width:500px;height:450px">
+      <div>
+        <div class="loc-panel-title">Data Processing</div>
+        <div class="loc-panel-divider" style="width:300px"></div>
+        <div class="loc-bullet">&#x2022; Correct movies into usable micrographs, then estimate CTF for each image.</div>
+        <div class="loc-bullet">&#x2022; Pick particles, clean classes, reconstruct 3D maps, and refine the volume.</div>
+        <div class="loc-bullet">&#x2022; The goal is the computation-heavy path from <strong style="color:#e74c3c">raw movies to interpretable maps</strong>.</div>
+      </div>
+    </div>
+    <div class="ref"><a href="https://doi.org/10.1039/d2fd00129b" target="_blank">Halfon et al., <i>Faraday Discuss.</i> (2022)</a></div>
+  </div>
+  <div class="slide" data-n="3" data-pdf="96">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Single-particle analysis</div>
+      <div class="bl-subtitle">Raw image stacks become the starting point for computational reconstruction</div>
+    </div>
+    <div class="bl-content" style="top:300px;height:700px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:60px">
+      <div class="spa-scale-row">
+        <div class="spa-main-label"><span class="accent">10<sup>3</sup>-10<sup>4</sup></span> Micrographs</div>
+        <div class="spa-main-frame"><img src="pdf-images/p79/img-002.png" alt="cryo-EM micrograph" loading="lazy"></div>
+        <div class="spa-mid-frame"><img src="pdf-images/p79/img-003.png" alt="cryo-EM micrograph" loading="lazy"></div>
+        <div class="spa-small-frame"><img src="pdf-images/p79/img-004.png" alt="cryo-EM micrograph" loading="lazy"></div>
+        <span class="spa-dots">&middot;&nbsp;&middot;&nbsp;&middot;&nbsp;&middot;&nbsp;&middot;&nbsp;&middot;</span>
+      </div>
+      <div class="spa-context s4-s3-context">Micrographs become the input for particle picking, classification, and 3D reconstruction.</div>
+    </div>
+    <div class="ref"><a href="https://cryoem101.org/chapter-5/" target="_blank">cryoEM101 Chapter 5</a>&nbsp;&middot;&nbsp;<a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/particle-picking" target="_blank">CryoSPARC Guide, Particle Picking</a></div>
+  </div>
+  <div class="slide" data-n="4" data-pdf="97">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Single-particle analysis</div>
+      <div class="bl-subtitle">Particle picking marks candidate particles and extracts them as boxed images</div>
+    </div>
+    <div class="bl-content s4-particle-picking">
+      <div class="s4-pick-panel">
+        <div class="s4-pick-label"><span>10<sup>3</sup>-10<sup>4</sup></span> Micrographs</div>
+        <img src="imgs/s4-s4-picked-micrograph.png" alt="micrograph with picked particles" loading="lazy">
+      </div>
+      <div class="s4-pick-arrow" aria-hidden="true"></div>
+      <div class="s4-pick-panel">
+        <div class="s4-pick-label"><span>10<sup>4</sup>-10<sup>7</sup></span> Particle images</div>
+        <img src="imgs/s4-s4-particle-grid.png" alt="boxed particle image grid" loading="lazy">
+      </div>
+    </div>
+    <div class="spa-context s4-s4-context">Each picked coordinate becomes one boxed particle image for the 2D stack.</div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/particle-picking" target="_blank">CryoSPARC Guide, Particle Picking</a></div>
+  </div>
+  <div class="slide s4-reveal" data-n="5" data-pdf="98" data-s4-stage="1">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">From 2D particle images to a 3D map</div>
+      <div class="bl-subtitle">Reconstruction must infer orientation, suppress noise, and separate mixed particle states</div>
+    </div>
+    <div class="bl-content s4-recon-overview">
+      <div class="s4-flow-left">
+        <div class="s4-flow-label"><span>10<sup>4</sup>-10<sup>7</sup></span> Particle images</div>
+        <img class="s4-flow-stack" src="imgs/s4-s5-2d-grid.png" alt="particle image stack" loading="lazy">
+        <div class="s4-flow-2d">2D</div>
+      </div>
+      <div class="s4-flow-arrow" aria-hidden="true"></div>
+      <div class="s4-flow-right">
+        <div class="s4-flow-note">(Utilizing ~10% of particles)</div>
+        <div class="s4-flow-label">Cryo-EM map</div>
+        <img class="s4-flow-map" src="imgs/s4-s5-3d-004-clean.png" alt="cryo-EM density map" loading="lazy">
+        <div class="s4-flow-3d">3D</div>
+      </div>
+      <div class="s4-flow-challenges">
+        <div><span>1.</span> Unknown particle poses</div>
+        <div><span>2.</span> Low signal to noise ratio (SNR)</div>
+        <div><span>3.</span> Imperfect imaging (artifacts)</div>
+        <div><span>4.</span> Heterogeneous/dynamic nature</div>
+      </div>
+    </div>
+    <div class="ref"><a href="https://cryoem101.org/chapter-5/" target="_blank">cryoEM101 Chapter 5</a></div>
+  </div>
+  <div class="slide s4-power-spectrum" data-n="6" data-pdf="99">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Some terminology - Power spectrum</div>
+      <div class="bl-subtitle">Fourier-space view of spatial frequencies in the image</div>
+    </div>
+    <div class="bl-content s4-ps-layout">
+      <section class="s4-ps-card s4-term-card">
+        <div class="s4-term-card-title">Power spectrum</div>
+        <div class="s4-term-item">
+          <span class="s4-term-mark">✓</span>
+          <p>Fourier-space view of signal across spatial frequencies.</p>
+        </div>
+        <div class="s4-term-item">
+          <span class="s4-term-mark">✓</span>
+          <p>Center: low frequencies, large features, low resolution.</p>
+        </div>
+        <div class="s4-term-item">
+          <span class="s4-term-mark">✓</span>
+          <p>Edge: high frequencies, fine features, high resolution.</p>
+        </div>
+        <div class="s4-term-item">
+          <span class="s4-term-mark">✓</span>
+          <p>Shows Thon rings and artifacts such as astigmatism, drift, or crystalline ice.</p>
+        </div>
+      </section>
+      <section class="s4-ps-visuals" aria-label="micrograph and power spectrum comparison">
+        <figure class="s4-ps-figure">
+          <img src="imgs/s4-s6-micrograph.png" alt="Apoferritin micrograph on graphene grid" loading="lazy">
+          <figcaption>Micrograph</figcaption>
+        </figure>
+        <figure class="s4-ps-figure">
+          <img src="imgs/s4-s6-powerspectrum.png" alt="2D power spectrum of the micrograph" loading="lazy">
+          <figcaption>2D power spectrum</figcaption>
+        </figure>
+      </section>
+    </div>
+    <div class="ref"><a href="https://cryoem101.org/chapter-5" target="_blank">cryoEM101 Chapter 5</a>&nbsp;&middot;&nbsp;<a href="https://guide.cryosparc.com/cryo-em-foundations/image-formation/contrast-in-cryo-em" target="_blank">CryoSPARC Guide, Contrast in Cryo-EM</a></div>
+  </div>
+  <div class="slide s4-power-spectrum s4-power-diagnostics" data-n="7" data-pdf="100">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Some terminology - Power spectrum</div>
+      <div class="bl-subtitle">Artifacts and image-quality problems are often clearer in Fourier space</div>
+    </div>
+    <div class="bl-content s4-ps-layout s4-ps-diag-layout">
+      <section class="s4-ps-card s4-term-card">
+        <div class="s4-term-card-title">Power spectrum</div>
+        <div class="s4-term-item">
+          <span class="s4-term-mark">✓</span>
+          <p>Fourier-space view of signal across spatial frequencies.</p>
+        </div>
+        <div class="s4-term-item">
+          <span class="s4-term-mark">✓</span>
+          <p>Center: low frequencies, large features, low resolution.</p>
+        </div>
+        <div class="s4-term-item">
+          <span class="s4-term-mark">✓</span>
+          <p>Edge: high frequencies, fine features, high resolution.</p>
+        </div>
+        <div class="s4-term-item">
+          <span class="s4-term-mark">✓</span>
+          <p>Shows Thon rings and artifacts such as astigmatism, drift, or crystalline ice.</p>
+        </div>
+      </section>
+      <figure class="s4-ps-diag-figure">
+        <img src="imgs/s4-s7-powerspectrum-diagnostics-tight.png" alt="Power spectrum diagnostic examples for astigmatism, drift, ice rings, and CTF rings" loading="lazy">
+      </figure>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/ctf-estimation" target="_blank">CryoSPARC Guide, CTF Estimation</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1016/j.jsb.2015.08.008" target="_blank">Rohou &amp; Grigorieff, <i>J Struct Biol</i> (2015)</a></div>
+  </div>
+  <div class="slide s4-ctf-concept" data-n="8" data-pdf="101">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Some terminology - Contrast Transfer Function (CTF)</div>
+      <div class="bl-subtitle">How defocus transfers phase contrast across spatial frequency</div>
+    </div>
+    <div class="bl-content s4-ctf-layout">
+      <section class="s4-ps-card s4-term-card s4-ctf-term-card">
+        <div class="s4-term-card-title">CTF</div>
+        <div class="s4-term-item">
+          <span class="s4-term-mark">✓</span>
+          <p>CTF describes how phase contrast is transferred across spatial frequency.</p>
+        </div>
+        <div class="s4-term-item">
+          <span class="s4-term-mark">✓</span>
+          <p>Aberrations and the envelope damp high-frequency information.</p>
+        </div>
+        <div class="s4-term-item">
+          <span class="s4-term-mark">✓</span>
+          <p>Its oscillations appear as Thon rings in the power spectrum.</p>
+        </div>
+      </section>
+      <figure class="s4-ctf-figure">
+        <img class="s4-ctf-curve-img" src="imgs/s4-s8-ctf-curve-original.png" alt="Contrast transfer function curve showing envelope damping and high spatial frequency behavior" loading="lazy">
+        <img class="s4-ctf-defocus-img" src="imgs/s4-s8-ctf-defocus-original.png" alt="Contrast transfer curves and Thon-ring bands at different defocus values" loading="lazy">
+      </figure>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/cryo-em-foundations/image-formation/contrast-in-cryo-em" target="_blank">CryoSPARC Guide, Contrast in Cryo-EM</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1016/j.jsb.2015.08.008" target="_blank">Rohou &amp; Grigorieff, <i>J Struct Biol</i> (2015)</a></div>
+  </div>
+  <div class="slide s4-raw-movie" data-n="9" data-pdf="102">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Understanding raw cryo-EM data</div>
+      <div class="bl-subtitle">A movie stack is aligned and summed before downstream processing</div>
+    </div>
+    <div class="bl-content s4-raw-layout">
+      <figure class="s4-raw-figure">
+        <img class="s4-raw-composite" src="imgs/s4-s9-raw-panels-nocaptions.png" alt="Aligned summed micrograph, single movie frame, and magnified sparse frame" loading="lazy">
+        <div class="s4-raw-caption-row">
+          <figcaption>Aligned, summed micrograph</figcaption>
+          <figcaption>A single frame from input movie</figcaption>
+          <figcaption>Magnified region of single movie frame</figcaption>
+        </div>
+      </figure>
+      <div class="s4-raw-callout">
+        Raw data = movie stack of sparse electron-count frames.
+      </div>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/motion-correction" target="_blank">CryoSPARC Guide, Motion Correction</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1038/nmeth.4193" target="_blank">Zheng et al., <i>Nat Methods</i> (2017)</a></div>
+  </div>
+
+  <div class="slide s4-preprocess-overview" data-n="9b" data-pdf="102-103">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Pre-processing overview</div>
+      <div class="bl-subtitle">Convert raw movie frames into corrected micrographs ready for particle extraction</div>
+    </div>
+    <div class="bl-content s4-preprocess-flow-layout">
+      <div class="s4-preprocess-flow" aria-label="Pre-processing workflow overview">
+        <div class="s4-preprocess-step s4-preprocess-source">
+          <span class="s4-preprocess-kicker">Input</span>
+          <b>Raw movie stack</b>
+          <p>Sparse electron-count frames from each exposure.</p>
+        </div>
+        <div class="s4-preprocess-arrow" aria-hidden="true"></div>
+        <div class="s4-preprocess-step s4-preprocess-focus">
+          <span class="s4-preprocess-kicker">1</span>
+          <b>Motion correction</b>
+          <p>Align, dose-weight, and average movie frames into a corrected micrograph.</p>
+        </div>
+        <div class="s4-preprocess-arrow" aria-hidden="true"></div>
+        <div class="s4-preprocess-step">
+          <span class="s4-preprocess-kicker">2</span>
+          <b>CTF estimation</b>
+          <p>Estimate defocus and CTF-fit quality from corrected micrographs.</p>
+        </div>
+        <div class="s4-preprocess-arrow" aria-hidden="true"></div>
+        <div class="s4-preprocess-step s4-preprocess-output">
+          <span class="s4-preprocess-kicker">3</span>
+          <b>Particle picking / extraction</b>
+          <p>Pick particles and extract boxed images for classification.</p>
+        </div>
+      </div>
+      <div class="s4-preprocess-summary">
+        <b>Pre-processing makes raw cryo-EM movies usable for reconstruction.</b>
+      </div>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/get-started-with-cryosparc-introductory-tutorial" target="_blank">CryoSPARC Guide, Introductory Tutorial</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1038/nmeth.4193" target="_blank">Zheng et al., <i>Nat Methods</i> (2017)</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.7554/eLife.06980" target="_blank">Grant &amp; Grigorieff, <i>eLife</i> (2015)</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1016/j.jsb.2015.08.008" target="_blank">Rohou &amp; Grigorieff, <i>J Struct Biol</i> (2015)</a></div>
+  </div>
+  <div class="slide s4-motion-correction" data-n="10" data-pdf="103">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Pre-processing - Motion correction</div>
+      <div class="bl-subtitle">Correct beam-induced motion before CTF estimation and picking</div>
+    </div>
+    <div class="bl-content s4-two-panel-layout">
+      <section class="s4-ps-card s4-term-card s4-motion-term-card">
+        <div class="s4-term-card-title">Motion correction</div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Long exposure per image improves total signal.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>High total dose improves contrast.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Particles move because of stage drift and beam-induced motion.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Movie frames allow drift and motion to be corrected.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Aligned frames are summed into one de-blurred micrograph.</p></div>
+      </section>
+      <figure class="s4-two-panel-figure s4-motion-figure">
+        <div class="s4-motion-col-labels">
+          <span>Before correction</span>
+          <span>After correction</span>
+        </div>
+        <div class="s4-motion-side-label s4-motion-blur-label">Motion blur<br>between frames</div>
+        <div class="s4-motion-side-label s4-motion-sharp-label">Reduced blur<br>after alignment</div>
+        <div class="s4-motion-side-label s4-motion-thon-label">Directional / weak<br>Thon rings</div>
+        <div class="s4-motion-side-label s4-motion-clear-label">Clearer<br>Thon rings</div>
+        <img src="imgs/s4-s10-motion-clean.png" alt="Before and after motion correction comparison with power spectra" loading="lazy">
+      </figure>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/motion-correction" target="_blank">CryoSPARC Guide, Motion Correction</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1038/nmeth.4193" target="_blank">Zheng et al., <i>Nat Methods</i> (2017)</a></div>
+  </div>
+  <div class="slide s4-hexau-reveal" data-n="11" data-pdf="104" data-s4-hex-stage="1">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Pre-processing - Motion correction</div>
+      <div class="bl-subtitle">Small holes keep suspended ice in the stable no-buckling regime</div>
+    </div>
+    <div class="bl-content s4-hex-layout" aria-label="Click to step through suspended-ice buckling and HexAuFoil design">
+      <div class="s4-hex-left-wrap">
+        <figure class="s4-hex-left s4-hex-buckling">
+          <img src="imgs/s4-s11-ice-buckling.png" alt="Suspended vitreous ice buckling under electron irradiation" loading="lazy">
+        </figure>
+        <figure class="s4-hex-left s4-hex-design">
+          <img src="imgs/s4-s11-hexaufoil-design.png" alt="HexAuFoil grid design with small gold holes" loading="lazy">
+        </figure>
+      </div>
+      <figure class="s4-hex-plot">
+        <div class="s4-hex-plot-inner">
+          <img src="imgs/s4-s11-buckling-plot-base.png" alt="Hole diameter and ice thickness stability plot for vitreous ice buckling" loading="lazy">
+          <span class="s4-hex-dps-line" aria-hidden="true"></span>
+          <span class="s4-hex-dps-value" aria-hidden="true">0.3</span>
+        </div>
+      </figure>
+    </div>
+    <div class="ref"><a href="https://doi.org/10.1126/science.abb7927" target="_blank">Naydenova &amp; Russo, <i>Science</i> (2020)</a></div>
+  </div>
+  <div class="slide s4-image-note" data-n="12" data-pdf="105">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Pre-processing - Dose weighting</div>
+      <div class="bl-subtitle">Later frames lose high-frequency signal to radiation damage</div>
+    </div>
+    <div class="bl-content s4-note-image-layout">
+      <section class="s4-ps-card s4-term-card s4-dose-term-card">
+        <div class="s4-term-card-title">Dose weighting</div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Optimize signal-to-noise across all resolutions.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>The electron beam damages the sample during exposure.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Movie frames accumulate increasing electron dose.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Early frames keep high-resolution detail but have limited contrast.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Later frames add dose but lose high-frequency information.</p></div>
+      </section>
+      <figure class="s4-note-figure">
+        <img src="imgs/s4-s12-dose-frames-clean.png" alt="Dose-fractionated movie frames and radiation damage" loading="lazy">
+      </figure>
+    </div>
+    <div class="ref"><a href="https://doi.org/10.7554/eLife.06980" target="_blank">Grant &amp; Grigorieff, <i>eLife</i> (2015)</a></div>
+  </div>
+  <div class="slide s4-image-note" data-n="13" data-pdf="106">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Pre-processing - Dose weighting</div>
+      <div class="bl-subtitle">Apply a frequency-dependent dose filter before summing</div>
+    </div>
+    <div class="bl-content s4-note-image-layout s4-note-image-layout-wide">
+      <section class="s4-ps-card s4-term-card s4-dose-term-card">
+        <div class="s4-term-card-title">Dose weighting</div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Optimize signal-to-noise across all resolutions.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>The electron beam damages the sample during exposure.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Movie frames accumulate increasing electron dose.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Early frames keep high-resolution detail but have limited contrast.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Later frames add dose but lose high-frequency information.</p></div>
+      </section>
+      <figure class="s4-note-figure">
+        <img src="imgs/s4-s13-dose-weighting-tight.png" alt="Dose weighting concept diagram" loading="lazy">
+        <div class="s4-dose-process">
+          <div><b>Early</b><span>Contribute more high-frequency detail.</span></div>
+          <div><b>Late</b><span>Contribute mainly low-frequency contrast.</span></div>
+          <div><b>Sum</b><span>Down-weight damaged high-frequency signal.</span></div>
+        </div>
+      </figure>
+    </div>
+    <div class="ref"><a href="https://doi.org/10.7554/eLife.06980" target="_blank">Grant &amp; Grigorieff, <i>eLife</i> (2015)</a></div>
+  </div>
+  <div class="slide s4-image-note" data-n="14" data-pdf="107">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Pre-processing - CTF estimation</div>
+      <div class="bl-subtitle">The phase CTF model links defocus, aberration, and spatial frequency</div>
+    </div>
+    <div class="bl-content s4-note-image-layout s4-note-image-layout-wide">
+      <section class="s4-ps-card s4-term-card s4-ctf-est-term-card">
+        <div class="s4-term-card-title">CTF estimation</div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Estimate CTF parameters so each image can be corrected.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>The key task is determining the true defocus.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>CTF modeling also assesses micrograph quality.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Fit quality and resolution-limit metrics reject poor micrographs.</p></div>
+      </section>
+      <figure class="s4-note-figure s4-formula-figure">
+        <img class="s4-formula-eq" src="imgs/s4-lec4-phase-ctf-formula.png" alt="Phase CTF formula and parameter definitions" loading="lazy">
+        <img class="s4-formula-defocus" src="imgs/s4-lec4-ideal-ctf-curves.png" alt="Ideal CTF curves at different defocus values" loading="lazy">
+      </figure>
+    </div>
+    <div class="ref">Dan Clare, Image Formation lecture&nbsp;&middot;&nbsp;<a href="https://guide.cryosparc.com/cryo-em-foundations/image-formation/contrast-in-cryo-em" target="_blank">CryoSPARC Guide, Contrast in Cryo-EM</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1016/j.jsb.2015.08.008" target="_blank">Rohou &amp; Grigorieff, <i>J Struct Biol</i> (2015)</a></div>
+  </div>
+  <div class="slide s4-image-note" data-n="15" data-pdf="108">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Pre-processing - CTF estimation</div>
+      <div class="bl-subtitle">Simulated images illustrate how defocus changes contrast</div>
+    </div>
+    <div class="bl-content s4-note-image-layout">
+      <section class="s4-ps-card s4-term-card s4-ctf-est-term-card">
+        <div class="s4-term-card-title">CTF estimation</div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Estimate CTF parameters so each image can be corrected.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>The key task is determining the true defocus.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>CTF modeling also assesses micrograph quality.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Fit quality and resolution-limit metrics reject poor micrographs.</p></div>
+      </section>
+      <figure class="s4-note-figure">
+        <img src="imgs/s4-p108_ctfsim_crop.png" alt="CTF simulation comparing zero and two micrometer defocus" loading="lazy">
+        <figcaption>Defocus makes particles visible by changing contrast transfer</figcaption>
+      </figure>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/cryo-em-foundations/image-formation/contrast-in-cryo-em" target="_blank">CryoSPARC Guide, Contrast in Cryo-EM</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1016/j.jsb.2015.08.008" target="_blank">Rohou &amp; Grigorieff, <i>J Struct Biol</i> (2015)</a></div>
+  </div>
+  <div class="slide s4-image-note" data-n="16" data-pdf="109">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Pre-processing - CTF estimation</div>
+      <div class="bl-subtitle">Fit the theoretical CTF to the observed power spectrum</div>
+    </div>
+    <div class="bl-content s4-note-image-layout">
+      <section class="s4-ps-card s4-term-card s4-ctf-est-term-card">
+        <div class="s4-term-card-title">CTF estimation</div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Estimate CTF parameters so each image can be corrected.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>The key task is determining the true defocus.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>CTF modeling also assesses micrograph quality.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Fit quality and resolution-limit metrics reject poor micrographs.</p></div>
+      </section>
+      <figure class="s4-note-figure">
+        <img src="imgs/s4-p109_ctffit_clean.png" alt="Objective-function fitting and CTF fit diagnostic plot" loading="lazy">
+        <figcaption>A good CTF estimate matches the observed power-spectrum oscillations</figcaption>
+      </figure>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/ctf-estimation" target="_blank">CryoSPARC Guide, CTF Estimation</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1016/j.jsb.2015.08.008" target="_blank">Rohou &amp; Grigorieff, <i>J Struct Biol</i> (2015)</a></div>
+  </div>
+  <div class="slide s4-image-note" data-n="17" data-pdf="110">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Pre-processing - CTF estimation</div>
+      <div class="bl-subtitle">A successful fit overlays model rings on the experimental profile</div>
+    </div>
+    <div class="bl-content s4-note-image-layout">
+      <section class="s4-ps-card s4-term-card s4-ctf-est-term-card">
+        <div class="s4-term-card-title">CTF estimation</div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Estimate CTF parameters so each image can be corrected.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>The key task is determining the true defocus.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>CTF modeling also assesses micrograph quality.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Fit quality and resolution-limit metrics reject poor micrographs.</p></div>
+      </section>
+      <figure class="s4-note-figure">
+        <img src="imgs/s4-p110_ctffind_clean.png" alt="CTF fitting output with experimental and fitted curves" loading="lazy">
+        <figcaption>CTF-fit displays are used as micrograph-level quality control</figcaption>
+      </figure>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/ctf-estimation" target="_blank">CryoSPARC Guide, CTF Estimation</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1016/j.jsb.2015.08.008" target="_blank">Rohou &amp; Grigorieff, <i>J Struct Biol</i> (2015)</a></div>
+  </div>
+  <div class="slide s4-wide-image" data-n="18" data-pdf="111">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Particle selection and extraction</div>
+      <div class="bl-subtitle">Box particles from micrographs and export a stack</div>
+    </div>
+    <div class="bl-content s4-wide-image-layout">
+      <figure class="s4-wide-figure s4-original-baseline-figure">
+        <img src="imgs/s4-p111_content.png" alt="Particle picking and extraction from micrograph to stack" loading="lazy">
+      </figure>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/particle-picking" target="_blank">CryoSPARC Guide, Particle Picking</a></div>
+  </div>
+  <div class="slide s4-image-note" data-n="19" data-pdf="112">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Particle selection and extraction</div>
+      <div class="bl-subtitle">Filtering can make particles stand out before picking</div>
+    </div>
+    <div class="bl-content s4-note-image-layout">
+      <section class="s4-ps-card s4-term-card" data-card-title="Picking methods">
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Enhance particle signal before picking.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Manual picking provides trusted examples.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Blob picking detects simple particles automatically.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Template picking matches known particle views.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>ML pickers learn particles and reject false positives.</p></div>
+      </section>
+      <figure class="s4-note-figure">
+        <img src="imgs/s4-p112_filtering_tight.png" alt="Gaussian filtering and difference-of-Gaussians particle enhancement" loading="lazy">
+      </figure>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/particle-picking" target="_blank">CryoSPARC Guide, Particle Picking</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1038/s41592-019-0575-8" target="_blank">Bepler et al., <i>Nat Methods</i> (2019)</a></div>
+  </div>
+  <div class="slide s4-image-note" data-n="20" data-pdf="113">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Particle picking - template matching</div>
+      <div class="bl-subtitle">Cross-correlation maps locate particles matching known views</div>
+    </div>
+    <div class="bl-content s4-note-image-layout">
+      <section class="s4-ps-card s4-term-card" data-card-title="Picking methods">
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Enhance particle signal before picking.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Manual picking provides trusted examples.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Blob picking detects simple particles automatically.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Template picking matches known particle views.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>ML pickers learn particles and reject false positives.</p></div>
+      </section>
+      <figure class="s4-note-figure">
+        <img src="imgs/s4-p113_xcorr_clean.png" alt="Template matching cross-correlation map" loading="lazy">
+        <figcaption>Cross-correlation highlights positions that resemble the chosen template</figcaption>
+      </figure>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/particle-picking" target="_blank">CryoSPARC Guide, Particle Picking</a></div>
+  </div>
+  <div class="slide s4-method-list" data-n="21" data-pdf="114">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Particle picking - ML pickers</div>
+      <div class="bl-subtitle">Topaz, Warp, and crYOLO represent common automated picking strategies</div>
+    </div>
+    <div class="bl-content s4-note-image-layout s4-ml-picker-layout">
+      <section class="s4-ps-card s4-term-card" data-card-title="Picking methods">
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Enhance particle signal before picking.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Manual picking provides trusted examples.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Blob picking detects simple particles automatically.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>Template picking matches known particle views.</p></div>
+        <div class="s4-term-item"><span class="s4-term-mark">✓</span><p>ML pickers learn particles and reject false positives.</p></div>
+      </section>
+      <section class="s4-ml-note-panel">
+        <div><b>Topaz</b><span>No general model; usually needs training examples for each sample or dataset. Available standalone or inside RELION/cryoSPARC workflows.</span></div>
+        <div><b>Warp</b><span>General model available, but often benefits from sample-specific retraining. Integrated preprocessing plus junk detection tools.</span></div>
+        <div><b>crYOLO</b><span>General YOLO-style detector that works well for many samples. Available standalone or through the SPHIRE package.</span></div>
+      </section>
+    </div>
+    <div class="ref"><a href="https://doi.org/10.1038/s41592-019-0575-8" target="_blank">Bepler et al., <i>Nat Methods</i> (2019)</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1038/s42003-019-0437-z" target="_blank">Wagner et al., <i>Commun Biol</i> (2019)</a></div>
+  </div>
+  <div class="slide s4-wide-image" data-n="22" data-pdf="115">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">2D classification</div>
+      <div class="bl-subtitle">From raw stack to clean averages</div>
+    </div>
+    <div class="bl-content s4-wide-image-layout">
+      <figure class="s4-wide-figure s4-original-baseline-figure">
+        <img src="imgs/s4-p115_2dinput.png" alt="Particles from a raw stack before 2D classification" loading="lazy">
+      </figure>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/particle-curation/job-2d-classification" target="_blank">CryoSPARC Guide, 2D Classification</a></div>
+  </div>
+  <div class="slide s4-wide-image" data-n="23" data-pdf="116">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">2D classification</div>
+      <div class="bl-subtitle">Identify, sort, and average particle images</div>
+    </div>
+    <div class="bl-content s4-wide-image-layout">
+      <figure class="s4-wide-figure s4-original-baseline-figure">
+        <img src="imgs/s4-p116_2dflow.png" alt="2D classification flow from particle stack to class averages" loading="lazy">
+      </figure>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/particle-curation/job-2d-classification" target="_blank">CryoSPARC Guide, 2D Classification</a></div>
+  </div>
+  <div class="slide s4-wide-image" data-n="24" data-pdf="117">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">2D classification</div>
+      <div class="bl-subtitle">Class averages diagnose sample and processing quality</div>
+    </div>
+    <div class="bl-content s4-wide-image-layout">
+      <figure class="s4-wide-figure s4-original-baseline-figure">
+        <img src="imgs/s4-p117_2dgrid.png" alt="2D class averages showing different quality categories" loading="lazy">
+      </figure>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/particle-curation/job-2d-classification" target="_blank">CryoSPARC Guide, 2D Classification</a></div>
+  </div>
+  <div class="slide s4-fourier" data-n="25" data-pdf="118">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">3D reconstruction</div>
+      <div class="bl-subtitle">2D projections correspond to slices through 3D Fourier space</div>
+    </div>
+    <div class="bl-content s4-fourier-layout">
+      <section class="s4-fourier-notes">
+        <div>The Fourier transform of each 2D class average represents a central section through the Fourier transform of the initial object.</div>
+        <div>Different viewing directions fill the 3D Fourier volume, so orientation assignment determines where each slice is placed.</div>
+        <div>The inverse FT of the combined sections generates the initial object.</div>
+      </section>
+      <figure class="s4-fourier-figure">
+        <img src="imgs/s4-p118_3dconcept_tight.png?v=20260525s26tight" alt="Fourier section theorem concept for 3D reconstruction" loading="lazy">
+      </figure>
+    </div>
+    <div class="ref"><a href="https://cryoem101.org/chapter-5/" target="_blank">cryoEM101 Chapter 5</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1038/217130a0" target="_blank">De Rosier &amp; Klug, <i>Nature</i> (1968)</a></div>
+  </div>
+  <div class="slide s4-wide-image" data-n="26" data-pdf="119">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">3D reconstruction - initial map</div>
+      <div class="bl-subtitle">Ab initio reconstruction generates candidate starting volumes</div>
+    </div>
+    <div class="bl-content s4-wide-image-layout">
+      <figure class="s4-wide-figure s4-original-baseline-figure">
+        <img src="imgs/s4-p119_initmap_aligned_2x.png?v=20260525upscale" alt="Multiple ab initio reconstruction candidate volumes" loading="lazy">
+        <figcaption>Initial reconstruction tests whether particle images contain a consistent 3D signal</figcaption>
+      </figure>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/3d-reconstruction/job-ab-initio-reconstruction" target="_blank">CryoSPARC Guide, Ab-Initio Reconstruction</a></div>
+  </div>
+  <div class="slide s4-wide-image" data-n="27" data-pdf="120">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">3D reconstruction - initial map</div>
+      <div class="bl-subtitle">Choose the candidate with structure-like density</div>
+    </div>
+    <div class="bl-content s4-wide-image-layout">
+      <figure class="s4-wide-figure s4-original-baseline-figure">
+        <img src="imgs/s4-p120_initmap2_aligned_2x.png?v=20260525upscale" alt="Initial map candidates with selected best volume" loading="lazy">
+        <figcaption>The selected starting map should show coherent, structure-like density</figcaption>
+      </figure>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/3d-reconstruction/job-ab-initio-reconstruction" target="_blank">CryoSPARC Guide, Ab-Initio Reconstruction</a></div>
+  </div>
+  <div class="slide s4-wide-image" data-n="28" data-pdf="121">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Map optimization</div>
+      <div class="bl-subtitle">A linear refinement path from seed map to final map</div>
+    </div>
+    <div class="bl-content s4-mapopt-clean">
+      <figure class="s4-mapopt-pipeline">
+        <img src="imgs/s4-p121_mapopt_pipeline.png?v=20260525pipeline" alt="Linear map optimization workflow from ab initio to post-processing" loading="lazy">
+      </figure>
+      <div class="s4-mapopt-html-post" aria-label="Post-processing outputs">
+        <div>Map sharpening</div>
+        <div>Map enhancement</div>
+        <div>Validation</div>
+        <div>Analysis</div>
+      </div>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/3d-refinement/job-homogeneous-refinement" target="_blank">CryoSPARC Guide, Homogeneous Refinement</a>&nbsp;&middot;&nbsp;<a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/3d-refinement" target="_blank">Non-Uniform Refinement</a></div>
+  </div>
+  <div class="slide s4-wide-image" data-n="29" data-pdf="122">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Map optimization</div>
+      <div class="bl-subtitle">Refinement is usually iterative rather than strictly linear</div>
+    </div>
+    <div class="bl-content s4-wide-image-layout">
+      <figure class="s4-wide-figure s4-original-baseline-figure">
+        <img src="imgs/s4-p122_mapopt_full_tight.png?v=20260525rollback" alt="Full map optimization workflow with iterative branches" loading="lazy">
+      </figure>
+    </div>
+    <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/3d-refinement" target="_blank">CryoSPARC Guide, Non-Uniform Refinement</a>&nbsp;&middot;&nbsp;<a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/ctf-refinement" target="_blank">CTF Refinement</a></div>
+  </div>
+  <div class="slide s4-resolution" data-n="30" data-pdf="123">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Resolution</div>
+      <div class="bl-subtitle">X-ray crystallography and cryo-EM use different resolution criteria</div>
+    </div>
+    <div class="bl-content s4-resolution-layout">
+      <section class="s4-resolution-notes">
+        <article class="s4-resolution-note">
+          <h3>X-ray crystallography</h3>
+          <p>Resolution is calculated from diffraction geometry using Bragg's law. Higher-angle diffraction corresponds to smaller resolvable spacings.</p>
+        </article>
+        <article class="s4-resolution-note">
+          <h3>Cryo-EM</h3>
+          <p>Resolution is estimated from Fourier Shell Correlation between independently refined half-maps. The <strong>0.143 threshold</strong> is commonly used.</p>
+        </article>
+      </section>
+      <div class="s4-resolution-figures">
+        <figure>
+          <img src="imgs/s4-p123_xray_visual_full.png?v=20260525s31" alt="Diffraction geometry and resolution rings" loading="lazy">
+        </figure>
+        <figure>
+          <img src="imgs/s4-p123_fsc_visual_full.png?v=20260525s31" alt="FSC curves and cryo-EM map resolution examples" loading="lazy">
+        </figure>
+      </div>
+    </div>
+    <div class="ref"><a href="https://doi.org/10.1016/j.jmb.2003.07.013" target="_blank">Rosenthal &amp; Henderson, <i>J Mol Biol</i> (2003)</a></div>
+  </div>
+  <div class="slide s4-wide-image" data-n="31" data-pdf="124">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Resolution</div>
+      <div class="bl-subtitle">Cryo-EM and X-ray density maps can be compared at similar nominal resolution</div>
+    </div>
+    <div class="bl-content s4-wide-image-layout">
+      <figure class="s4-wide-figure s4-original-baseline-figure">
+        <img src="imgs/s4-p124_hsa_clean_tight_2x.png?v=20260525s32up" alt="HSA structural maps comparing cryo-EM and X-ray density" loading="lazy">
+      </figure>
+    </div>
+    <div class="ref"><a href="https://doi.org/10.1016/j.jsb.2024.108105" target="_blank">Catalano et al., <i>J Struct Biol</i> 216:108105 (2024)</a></div>
+  </div>
+  <div class="slide s4-wide-image" data-n="32" data-pdf="125">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Map resolution</div>
+      <div class="bl-subtitle">Resolution determines which structural features are interpretable</div>
+    </div>
+    <div class="bl-content s4-wide-image-layout">
+      <figure class="s4-wide-figure s4-original-baseline-figure">
+        <img src="imgs/s4-p125_mapres_clean_tight_2x.png?v=20260525s33up" alt="Map resolution ladder showing interpretable structural features" loading="lazy">
+      </figure>
+    </div>
+    <div class="ref"><a href="https://cryoem101.org/chapter-5/" target="_blank">cryoEM101 Chapter 5</a></div>
+  </div>
+  <div class="slide s4-wide-image" data-n="33" data-pdf="126">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Conformational variability</div>
+      <div class="bl-subtitle">A blurry map can be an average of multiple states</div>
+    </div>
+    <div class="bl-content s4-wide-image-layout">
+      <figure class="s4-wide-figure s4-original-baseline-figure">
+        <img src="imgs/s4-p126_conform_2x_matched.png?v=20260525s3435match" alt="Conformational variability concept diagram" loading="lazy">
+        <figcaption>Heterogeneous particles can average into one blurred reconstruction</figcaption>
+      </figure>
+    </div>
+    <div class="ref"><a href="https://doi.org/10.1038/s42004-024-01263-7" target="_blank">Hao et al., <i>Commun Chem</i> 7:183 (2024)</a>&nbsp;&middot;&nbsp;<a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/variability" target="_blank">CryoSPARC Guide, 3D Variability Analysis</a></div>
+  </div>
+  <div class="slide s4-wide-image" data-n="34" data-pdf="127">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Conformational variability</div>
+      <div class="bl-subtitle">Local refinement can sharpen individual conformational states</div>
+    </div>
+    <div class="bl-content s4-wide-image-layout">
+      <figure class="s4-wide-figure s4-original-baseline-figure">
+        <img src="imgs/s4-p127_content_2x.png?v=20260525s3435up" alt="3D variability and local refinement workflow" loading="lazy">
+        <figcaption>Variability analysis and focused refinement can recover sharper state-specific density</figcaption>
+      </figure>
+    </div>
+    <div class="ref"><a href="https://doi.org/10.1038/s42004-024-01263-7" target="_blank">Hao et al., <i>Commun Chem</i> 7:183 (2024)</a>&nbsp;&middot;&nbsp;<a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/local-refinement" target="_blank">CryoSPARC Guide, Local Refinement</a></div>
+  </div>
+  <div class="slide s4-limitations" data-n="37" data-pdf="130">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Problems &amp; limitations</div>
+      <div class="bl-subtitle">Sample, microscopy, and processing still limit cryo-EM</div>
+    </div>
+    <div class="bl-content s4-limitations-layout">
+      <section class="s4-limit-box sample">
+        <b>Sample</b>
+        <ol>
+          <li>Size limitation</li>
+          <li>Requires highly purified sample</li>
+          <li>Vitrification process</li>
+        </ol>
+      </section>
+      <section class="s4-limit-box microscopy">
+        <b>Microscopy</b>
+        <ol>
+          <li>Beam damage from the electron beam</li>
+          <li>Low dose imaging</li>
+          <li>Noisy images with low signal-to-noise ratio</li>
+          <li>Imperfect imaging artifacts</li>
+        </ol>
+      </section>
+      <section class="s4-limit-box processing">
+        <b>Data processing</b>
+        <ol>
+          <li>Complex image processing: particle picking, alignment, reconstruction</li>
+          <li>Heterogeneous, dynamic, and continuous conformations</li>
+          <li>Multiple possible interpretations of the data</li>
+          <li>Computing power!!!</li>
+        </ol>
+      </section>
+    </div>
+    <div class="ref"><a href="https://cryoem101.org/chapter-5/" target="_blank">cryoEM101 Chapter 5</a></div>
+  </div>
+  <div class="slide s4-wide-image" data-n="38" data-pdf="131">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Closing thought</div>
+      <div class="bl-subtitle">Cryo-EM as an imaging miracle</div>
+    </div>
+    <div class="bl-content s4-wide-image-layout s4-original-baseline-layout">
+      <figure class="s4-wide-figure s4-original-baseline-figure">
+        <img src="imgs/s4-p131_content.png" alt="Cryo-EM imaging miracle closing visual" loading="lazy">
+      </figure>
+    </div>
+    <div class="ref">Image credit: B. Forsberg, public post, 2024-09-13</div>
+  </div>
+
+  <div class="nav-arrow prev" role="button" aria-label="Previous slide">&#8249;</div>
+  <div class="nav-arrow next" role="button" aria-label="Next slide">&#8250;</div>
+
+  <div class="deck-progress"><div class="deck-progress-fill"></div></div>
+
+  <div class="index-overlay" role="dialog" aria-label="Slide index">
+    <div class="index-close" role="button" aria-label="Close index">×</div>
+    <h1>Section 4 · Data Processing <span class="accent">· Index</span></h1>
+    <div class="index-grid">
+      <div class="index-card" data-target="0">
+        <img class="thumb" src="pdf-pages/page-094.png" alt="Data Processing" loading="lazy">
+        <div class="meta">
+          <span class="num">01</span>
+          <span class="pdf">p94</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="1">
+        <img class="thumb" src="pdf-pages/page-095.png" alt="Time & cost of a single-particle cryo-EM pipeline" loading="lazy">
+        <div class="meta">
+          <span class="num">02</span>
+          <span class="pdf">p95</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="2">
+        <img class="thumb" src="pdf-pages/page-096.png" alt="Single-particle analysis" loading="lazy">
+        <div class="meta">
+          <span class="num">03</span>
+          <span class="pdf">p96</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="3">
+        <img class="thumb" src="pdf-pages/page-097.png" alt="Single-particle analysis" loading="lazy">
+        <div class="meta">
+          <span class="num">04</span>
+          <span class="pdf">p97</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="4">
+        <img class="thumb" src="pdf-pages/page-098.png" alt="From 2D images to a 3D map" loading="lazy">
+        <div class="meta">
+          <span class="num">05</span>
+          <span class="pdf">p98</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="5">
+        <img class="thumb" src="pdf-pages/page-099.png" alt="Some terminology – Power spectrum" loading="lazy">
+        <div class="meta">
+          <span class="num">06</span>
+          <span class="pdf">p99</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="6">
+        <img class="thumb" src="pdf-pages/page-100.png" alt="Some terminology – Power spectrum" loading="lazy">
+        <div class="meta">
+          <span class="num">07</span>
+          <span class="pdf">p100</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="7">
+        <img class="thumb" src="pdf-pages/page-101.png" alt="Some terminology – Contrast Transfer Function (CTF)" loading="lazy">
+        <div class="meta">
+          <span class="num">08</span>
+          <span class="pdf">p101</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="8">
+        <img class="thumb" src="pdf-pages/page-102.png" alt="Understanding raw cryo-EM data" loading="lazy">
+        <div class="meta">
+          <span class="num">09</span>
+          <span class="pdf">p102</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="9">
+        <div class="thumb s4-index-overview-thumb">
+          <span>Pre-processing</span>
+          <b>movie → motion → CTF → particles</b>
+        </div>
+        <div class="meta">
+          <span class="num">10</span>
+          <span class="pdf">overview</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="10">
+        <img class="thumb" src="pdf-pages/page-103.png" alt="Pre-processing – Motion correction" loading="lazy">
+        <div class="meta">
+          <span class="num">11</span>
+          <span class="pdf">p103</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="11">
+        <img class="thumb" src="pdf-pages/page-104.png" alt="Pre-processing – Motion correction" loading="lazy">
+        <div class="meta">
+          <span class="num">12</span>
+          <span class="pdf">p104</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="12">
+        <img class="thumb" src="pdf-pages/page-105.png" alt="Pre-processing – Dose weighting" loading="lazy">
+        <div class="meta">
+          <span class="num">13</span>
+          <span class="pdf">p105</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="13">
+        <img class="thumb" src="pdf-pages/page-106.png" alt="Pre-processing – Dose weighting" loading="lazy">
+        <div class="meta">
+          <span class="num">14</span>
+          <span class="pdf">p106</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="14">
+        <img class="thumb" src="pdf-pages/page-107.png" alt="Pre-processing – CTF estimation" loading="lazy">
+        <div class="meta">
+          <span class="num">15</span>
+          <span class="pdf">p107</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="15">
+        <img class="thumb" src="pdf-pages/page-108.png" alt="Pre-processing – CTF estimation" loading="lazy">
+        <div class="meta">
+          <span class="num">16</span>
+          <span class="pdf">p108</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="16">
+        <img class="thumb" src="pdf-pages/page-109.png" alt="Pre-processing – CTF estimation" loading="lazy">
+        <div class="meta">
+          <span class="num">17</span>
+          <span class="pdf">p109</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="17">
+        <img class="thumb" src="pdf-pages/page-110.png" alt="Pre-processing – CTF estimation" loading="lazy">
+        <div class="meta">
+          <span class="num">18</span>
+          <span class="pdf">p110</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="18">
+        <img class="thumb" src="pdf-pages/page-111.png" alt="Particle selection and extraction" loading="lazy">
+        <div class="meta">
+          <span class="num">19</span>
+          <span class="pdf">p111</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="19">
+        <img class="thumb" src="pdf-pages/page-112.png" alt="Particle selection and extraction" loading="lazy">
+        <div class="meta">
+          <span class="num">20</span>
+          <span class="pdf">p112</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="20">
+        <img class="thumb" src="pdf-pages/page-113.png" alt="Particle picking – template matching" loading="lazy">
+        <div class="meta">
+          <span class="num">21</span>
+          <span class="pdf">p113</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="21">
+        <img class="thumb" src="pdf-pages/page-114.png" alt="Particle picking – ML pickers" loading="lazy">
+        <div class="meta">
+          <span class="num">22</span>
+          <span class="pdf">p114</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="22">
+        <img class="thumb" src="pdf-pages/page-115.png" alt="2D classification" loading="lazy">
+        <div class="meta">
+          <span class="num">23</span>
+          <span class="pdf">p115</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="23">
+        <img class="thumb" src="pdf-pages/page-116.png" alt="2D classification" loading="lazy">
+        <div class="meta">
+          <span class="num">24</span>
+          <span class="pdf">p116</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="24">
+        <img class="thumb" src="pdf-pages/page-117.png" alt="2D classification" loading="lazy">
+        <div class="meta">
+          <span class="num">25</span>
+          <span class="pdf">p117</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="25">
+        <img class="thumb" src="pdf-pages/page-118.png" alt="3D reconstruction – Fourier section theorem" loading="lazy">
+        <div class="meta">
+          <span class="num">26</span>
+          <span class="pdf">p118</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="26">
+        <img class="thumb" src="pdf-pages/page-119.png" alt="3D reconstruction – initial map" loading="lazy">
+        <div class="meta">
+          <span class="num">27</span>
+          <span class="pdf">p119</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="27">
+        <img class="thumb" src="pdf-pages/page-120.png" alt="3D reconstruction – initial map" loading="lazy">
+        <div class="meta">
+          <span class="num">28</span>
+          <span class="pdf">p120</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="28">
+        <img class="thumb" src="pdf-pages/page-121.png" alt="Map optimization" loading="lazy">
+        <div class="meta">
+          <span class="num">29</span>
+          <span class="pdf">p121</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="29">
+        <img class="thumb" src="pdf-pages/page-122.png" alt="Map optimization" loading="lazy">
+        <div class="meta">
+          <span class="num">30</span>
+          <span class="pdf">p122</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="30">
+        <img class="thumb" src="pdf-pages/page-123.png" alt="Resolution" loading="lazy">
+        <div class="meta">
+          <span class="num">31</span>
+          <span class="pdf">p123</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="31">
+        <img class="thumb" src="pdf-pages/page-124.png" alt="Resolution" loading="lazy">
+        <div class="meta">
+          <span class="num">32</span>
+          <span class="pdf">p124</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="32">
+        <img class="thumb" src="pdf-pages/page-125.png" alt="Map resolution" loading="lazy">
+        <div class="meta">
+          <span class="num">33</span>
+          <span class="pdf">p125</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="33">
+        <img class="thumb" src="pdf-pages/page-126.png" alt="Conformational variability" loading="lazy">
+        <div class="meta">
+          <span class="num">34</span>
+          <span class="pdf">p126</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="34">
+        <img class="thumb" src="pdf-pages/page-127.png" alt="Conformational variability" loading="lazy">
+        <div class="meta">
+          <span class="num">35</span>
+          <span class="pdf">p127</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="35">
+        <img class="thumb" src="pdf-pages/page-130.png" alt="Problems & limitations" loading="lazy">
+        <div class="meta">
+          <span class="num">36</span>
+          <span class="pdf">p130</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="36">
+        <img class="thumb" src="pdf-pages/page-131.png" alt="Closing thought" loading="lazy">
+        <div class="meta">
+          <span class="num">37</span>
+          <span class="pdf">p131</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+<script src="nav.js?v=20260508c"></script>
+<script>
+  (() => {
+    const home = document.querySelector('.deck-home');
+    if (!home) return;
+    home.addEventListener('click', () => {
+      location.hash = '#1';
+    });
+  })();
+  (() => {
+    const slide = document.querySelector('.slide.s4-reveal[data-n="5"]');
+    const target = slide?.querySelector('.s4-recon-overview');
+    if (!slide || !target) return;
+
+    target.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const current = parseInt(slide.dataset.s4Stage || '1', 10);
+      slide.dataset.s4Stage = String(current >= 4 ? 1 : current + 1);
+    });
+  })();
+  (() => {
+    const slide = document.querySelector('.slide.s4-hexau-reveal[data-n="11"]');
+    const target = slide?.querySelector('.s4-hex-layout');
+    if (!slide || !target) return;
+
+    target.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const current = parseInt(slide.dataset.s4HexStage || '1', 10);
+      slide.dataset.s4HexStage = String(current >= 4 ? 1 : current + 1);
+    });
+  })();
+</script>
+</body>
+</html>
