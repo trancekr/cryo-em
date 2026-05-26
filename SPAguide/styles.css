@@ -12,6 +12,7 @@ html[data-theme="brandlogy"] {
   --theme-outer-bg: #000000;
   --theme-surface: #ffffff;
   --theme-accent: #e74c3c;
+  --overlay-accent: #f28c28;
   --theme-ink: #1a1a2e;
   --theme-muted: #666666;
   --theme-soft-muted: #bbbbbb;
@@ -46,6 +47,7 @@ html[data-theme="museum-plaque"] {
   --theme-outer-bg: #000000;
   --theme-surface: #ffffff;
   --theme-accent: #e74c3c;
+  --overlay-accent: #f28c28;
   --theme-ink: #1a1a2e;
   --theme-muted: #666666;
   --theme-soft-muted: #bbbbbb;
@@ -1262,15 +1264,15 @@ body {
 }
 .deck-label:hover { background: rgba(11,13,17,0.88); }
 .deck-label:focus-visible {
-  outline: 2px solid var(--theme-accent);
+  outline: 2px solid var(--overlay-accent);
   outline-offset: 3px;
 }
 .deck-label .dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--theme-accent);
-  box-shadow: 0 0 0 3px rgba(231,76,60,0.18);
+  background: var(--overlay-accent);
+  box-shadow: 0 0 0 3px rgba(242,140,40,0.20);
 }
 .deck-counter {
   position: absolute;
@@ -1292,7 +1294,7 @@ body {
   z-index: 80;
   pointer-events: none;
 }
-.deck-counter .cur { color: var(--theme-accent); font-size: 15px; }
+.deck-counter .cur { color: var(--overlay-accent); font-size: 15px; }
 .deck-counter .sep { opacity: 0.4; }
 .deck-counter .total { opacity: 0.7; }
 .deck-hint {
@@ -1353,9 +1355,9 @@ body:hover .nav-arrow { opacity: 0.85; }
   position: absolute;
   inset: 0;
   width: 0%;
-  background: linear-gradient(90deg, var(--theme-accent), #f4c84f);
+  background: linear-gradient(90deg, var(--overlay-accent), #f4c84f);
   transition: width 0.35s cubic-bezier(.2,.8,.2,1);
-  box-shadow: 0 0 12px rgba(231,76,60,0.35);
+  box-shadow: 0 0 12px rgba(242,140,40,0.35);
 }
 .index-overlay {
   position: absolute;
@@ -1376,7 +1378,7 @@ body:hover .nav-arrow { opacity: 0.85; }
   letter-spacing: 0.04em;
   color: #f5f5f7;
 }
-.index-overlay h1 .accent { color: var(--theme-accent); }
+.index-overlay h1 .accent { color: var(--overlay-accent); }
 .index-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -1396,8 +1398,8 @@ body:hover .nav-arrow { opacity: 0.85; }
 }
 .index-card:hover {
   transform: translateY(-2px);
-  border-color: var(--theme-accent);
-  background: rgba(231,76,60,0.08);
+  border-color: var(--overlay-accent);
+  background: rgba(242,140,40,0.08);
 }
 .index-card .thumb {
   width: 100%;
@@ -1420,7 +1422,7 @@ body:hover .nav-arrow { opacity: 0.85; }
   align-items: center;
   font-size: 11px;
 }
-.index-card .meta .num { color: var(--theme-accent); font-weight: 800; }
+.index-card .meta .num { color: var(--overlay-accent); font-weight: 800; }
 .index-card .meta .pdf { color: rgba(245,245,247,0.62); font-size: 10px; }
 .index-close {
   position: absolute;
