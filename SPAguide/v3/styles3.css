@@ -2889,8 +2889,8 @@ html.print-mode .s3-lightbox {
 }
 
 @page {
-  size: 16in 9in;
-  margin: 0;
+  size: landscape;
+  margin: 0.25in;
 }
 
 @media print {
@@ -2930,10 +2930,10 @@ html.print-mode .s3-lightbox {
     position: relative !important;
     width: 16in !important;
     height: 9in !important;
-    margin: 0 !important;
+    margin: 0 auto !important;
     overflow: hidden !important;
     transform: none !important;
-    zoom: 1 !important;
+    zoom: 0.62 !important;
     box-shadow: none !important;
     break-after: page;
     page-break-after: always;
