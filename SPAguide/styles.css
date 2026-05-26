@@ -1496,8 +1496,9 @@ html.print-mode body {
 html.print-mode .bl-slide {
   display: block !important;
   position: relative !important;
-  margin: 24px auto;
+  margin: calc(24px / var(--print-preview-scale, 1)) auto;
   box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  zoom: var(--print-preview-scale, 1);
 }
 html.print-mode .deck-label,
 html.print-mode .deck-counter,
@@ -1534,6 +1535,7 @@ html.print-mode .index-overlay {
     margin: 0 !important;
     overflow: hidden !important;
     transform: none !important;
+    zoom: 1 !important;
     box-shadow: none !important;
     break-after: page;
     page-break-after: always;

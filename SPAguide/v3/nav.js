@@ -33,6 +33,14 @@
   printButton.textContent = 'PDF';
   (deck || document.body).appendChild(printButton);
 
+  function setPrintPreviewScale() {
+    const margin = 48;
+    const sx = (window.innerWidth - margin) / 1920;
+    const sy = (window.innerHeight - margin) / 1080;
+    const scale = Math.max(0.1, Math.min(sx, sy, 1));
+    document.documentElement.style.setProperty('--print-preview-scale', String(scale));
+  }
+
   function enterPrintMode(openDialog = false) {
     document.documentElement.classList.add('print-mode');
     indexOverlay?.classList.remove('open');
@@ -42,6 +50,7 @@
       document.body.style.zoom = '';
     }
     slides.forEach((slide) => slide.classList.add('active'));
+    setPrintPreviewScale();
     if (openDialog) {
       setTimeout(() => window.print(), 120);
     }
@@ -146,6 +155,7 @@
   }
   if (printMode) {
     enterPrintMode(false);
+    window.addEventListener('resize', setPrintPreviewScale);
   } else {
     fit();
     window.addEventListener('resize', fit);

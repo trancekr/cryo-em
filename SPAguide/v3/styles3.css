@@ -2873,8 +2873,9 @@ html.print-mode .slide {
   position: relative !important;
   width: 1920px;
   height: 1080px;
-  margin: 24px auto;
+  margin: calc(24px / var(--print-preview-scale, 1)) auto;
   box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  zoom: var(--print-preview-scale, 1);
 }
 html.print-mode .deck-label,
 html.print-mode .deck-counter,
@@ -2932,6 +2933,7 @@ html.print-mode .s3-lightbox {
     margin: 0 !important;
     overflow: hidden !important;
     transform: none !important;
+    zoom: 1 !important;
     box-shadow: none !important;
     break-after: page;
     page-break-after: always;
