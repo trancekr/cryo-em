@@ -102,16 +102,18 @@
   });
 
   // Auto-fit zoom (preserves 1920×1080 layout for any viewport)
-  // — transform-origin top-left + shrink layout box so place-items:center works
   function fit() {
     const sx = window.innerWidth / 1920;
     const sy = window.innerHeight / 1080;
     const scale = Math.min(sx, sy);
     if (deck) {
-      deck.style.transform = `scale(${scale})`;
-      deck.style.transformOrigin = 'top left';
-      deck.style.width  = (1920 * scale) + 'px';
-      deck.style.height = (1080 * scale) + 'px';
+      deck.style.position = 'absolute';
+      deck.style.left = '50%';
+      deck.style.top = '50%';
+      deck.style.transform = `translate(-50%, -50%) scale(${scale})`;
+      deck.style.transformOrigin = 'center center';
+      deck.style.width  = '1920px';
+      deck.style.height = '1080px';
     } else {
       document.body.style.zoom = scale;
     }
