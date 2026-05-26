@@ -19,13 +19,38 @@
   const progress = document.querySelector('.deck-progress-fill');
   const indexOverlay = document.querySelector('.index-overlay');
   const total = slides.length;
+  const printMode = new URLSearchParams(location.search).has('print');
 
   if (!total) return;
   if (counterTotal) counterTotal.textContent = String(total).padStart(2, '0');
 
   let current = 0;
 
+  const printButton = document.createElement('button');
+  printButton.type = 'button';
+  printButton.className = 'deck-print';
+  printButton.setAttribute('aria-label', 'Print slides or save as PDF');
+  printButton.textContent = 'PDF';
+  (deck || document.body).appendChild(printButton);
+
+  function enterPrintMode(openDialog = false) {
+    document.documentElement.classList.add('print-mode');
+    indexOverlay?.classList.remove('open');
+    if (deck) {
+      deck.removeAttribute('style');
+    } else {
+      document.body.style.zoom = '';
+    }
+    slides.forEach((slide) => slide.classList.add('active'));
+    if (openDialog) {
+      setTimeout(() => window.print(), 120);
+    }
+  }
+
+  printButton.addEventListener('click', () => enterPrintMode(true));
+
   function showIndex(idx) {
+    if (document.documentElement.classList.contains('print-mode')) return;
     current = ((idx % total) + total) % total;
     slides.forEach((s, i) => s.classList.toggle('active', i === current));
     if (counterCur) counterCur.textContent = String(current + 1).padStart(2, '0');
@@ -103,6 +128,7 @@
 
   // Auto-fit zoom (preserves 1920×1080 layout for any viewport)
   function fit() {
+    if (document.documentElement.classList.contains('print-mode')) return;
     const sx = window.innerWidth / 1920;
     const sy = window.innerHeight / 1080;
     const scale = Math.min(sx, sy);
@@ -118,8 +144,12 @@
       document.body.style.zoom = scale;
     }
   }
-  fit();
-  window.addEventListener('resize', fit);
+  if (printMode) {
+    enterPrintMode(false);
+  } else {
+    fit();
+    window.addEventListener('resize', fit);
+  }
 
   // Click outside to close index
   indexOverlay?.addEventListener('click', (e) => {

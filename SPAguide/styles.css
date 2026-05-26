@@ -1274,6 +1274,35 @@ body {
   background: var(--overlay-accent);
   box-shadow: 0 0 0 3px rgba(242,140,40,0.20);
 }
+.deck-print {
+  position: absolute;
+  top: 22px;
+  right: 130px;
+  display: grid;
+  place-items: center;
+  min-width: 54px;
+  height: 32px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(11, 13, 17, 0.72);
+  color: #f5f5f7;
+  font-family: var(--theme-body-font);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 80;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+}
+.deck-print:hover { background: rgba(11,13,17,0.88); }
+.deck-print:focus-visible {
+  outline: 2px solid var(--overlay-accent);
+  outline-offset: 3px;
+}
 .deck-counter {
   position: absolute;
   bottom: 28px;
@@ -1448,8 +1477,80 @@ html[data-capture-thumb="1"] .deck-counter,
 html[data-capture-thumb="1"] .deck-hint,
 html[data-capture-thumb="1"] .nav-arrow,
 html[data-capture-thumb="1"] .deck-progress,
+html[data-capture-thumb="1"] .deck-print,
 html[data-capture-thumb="1"] .index-overlay {
   display: none !important;
+}
+
+html.print-mode,
+html.print-mode body {
+  width: auto;
+  height: auto;
+  min-height: 100%;
+  overflow: visible;
+  background: #e7e7e7;
+}
+html.print-mode body {
+  display: block;
+}
+html.print-mode .bl-slide {
+  display: block !important;
+  position: relative !important;
+  margin: 24px auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+html.print-mode .deck-label,
+html.print-mode .deck-counter,
+html.print-mode .deck-hint,
+html.print-mode .nav-arrow,
+html.print-mode .deck-progress,
+html.print-mode .deck-print,
+html.print-mode .index-overlay {
+  display: none !important;
+}
+
+@page {
+  size: 16in 9in;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body {
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .bl-slide {
+    display: block !important;
+    position: relative !important;
+    width: 16in !important;
+    height: 9in !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    transform: none !important;
+    box-shadow: none !important;
+    break-after: page;
+    page-break-after: always;
+  }
+  .bl-slide:last-of-type {
+    break-after: auto;
+    page-break-after: auto;
+  }
+  .deck-label,
+  .deck-counter,
+  .deck-hint,
+  .nav-arrow,
+  .deck-progress,
+  .deck-print,
+  .index-overlay {
+    display: none !important;
+  }
 }
 
 /* ============================================================
