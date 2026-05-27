@@ -2725,8 +2725,8 @@ html, body {
 
 .click-cue {
   position: absolute;
-  left: 80px;
-  bottom: 70px;
+  top: 68px;
+  right: 32px;
   display: inline-flex;
   align-items: center;
   gap: 9px;
