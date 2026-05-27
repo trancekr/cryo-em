@@ -33,6 +33,27 @@
   printButton.textContent = 'PDF';
   (deck || document.body).appendChild(printButton);
 
+  function addClickCues() {
+    const rules = [
+      { selector: '.s4-recon-overview, .s4-hex-layout', text: 'Click to step' },
+      { selector: '.locator-card', text: 'Click image' },
+      { selector: '.defx-series-img', text: 'Click image' },
+      { selector: '.s20-pill, #s2-img-wrap, #s4-content, #s5-content, #s21-img-wrap, #imgToggle, [onclick]', text: 'Click to reveal' },
+    ];
+
+    slides.forEach((slide) => {
+      if (slide.querySelector('.click-cue')) return;
+      const match = rules.find((rule) => slide.querySelector(rule.selector));
+      if (!match) return;
+      const cue = document.createElement('div');
+      cue.className = 'click-cue';
+      cue.setAttribute('aria-hidden', 'true');
+      cue.innerHTML = `<span class="click-cue-dot"></span><span>${match.text}</span>`;
+      slide.appendChild(cue);
+      slide.classList.add('has-click-cue');
+    });
+  }
+
   function setPrintPreviewScale() {
     const margin = 48;
     const sx = (window.innerWidth - margin) / 1920;
@@ -57,6 +78,7 @@
   }
 
   printButton.addEventListener('click', () => enterPrintMode(true));
+  addClickCues();
 
   function showIndex(idx) {
     if (document.documentElement.classList.contains('print-mode')) return;

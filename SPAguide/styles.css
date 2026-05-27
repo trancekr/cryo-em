@@ -1303,6 +1303,44 @@ body {
   outline: 2px solid var(--overlay-accent);
   outline-offset: 3px;
 }
+.click-cue {
+  position: absolute;
+  left: 80px;
+  bottom: 70px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  max-width: 280px;
+  padding: 9px 14px;
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 999px;
+  background: rgba(11, 13, 17, 0.72);
+  color: #f5f5f7;
+  font-family: var(--theme-body-font);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  z-index: 76;
+  pointer-events: none;
+}
+.click-cue-dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--overlay-accent);
+  animation: clickCuePulse 1.8s ease-out infinite;
+}
+@keyframes clickCuePulse {
+  0% { box-shadow: 0 0 0 0 rgba(242,140,40,0.44); }
+  70% { box-shadow: 0 0 0 9px rgba(242,140,40,0); }
+  100% { box-shadow: 0 0 0 0 rgba(242,140,40,0); }
+}
 .deck-counter {
   position: absolute;
   bottom: 28px;
@@ -1478,6 +1516,7 @@ html[data-capture-thumb="1"] .deck-hint,
 html[data-capture-thumb="1"] .nav-arrow,
 html[data-capture-thumb="1"] .deck-progress,
 html[data-capture-thumb="1"] .deck-print,
+html[data-capture-thumb="1"] .click-cue,
 html[data-capture-thumb="1"] .index-overlay {
   display: none !important;
 }
@@ -1506,6 +1545,7 @@ html.print-mode .deck-hint,
 html.print-mode .nav-arrow,
 html.print-mode .deck-progress,
 html.print-mode .deck-print,
+html.print-mode .click-cue,
 html.print-mode .index-overlay {
   display: none !important;
 }
@@ -1550,6 +1590,7 @@ html.print-mode .index-overlay {
   .nav-arrow,
   .deck-progress,
   .deck-print,
+  .click-cue,
   .index-overlay {
     display: none !important;
   }
