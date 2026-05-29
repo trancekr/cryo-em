@@ -1654,6 +1654,19 @@ html.print-mode .index-overlay {
   box-shadow: 0 6px 24px rgba(0,0,0,0.15);
   display: block;
 }
+.s20-desc-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(26,26,46,0.22);
+  font-size: 28px;
+  font-weight: 700;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.s20-desc.visible .s20-desc-hint { opacity: 0; }
 .s20-desc-stage { font-size: 16px; font-weight: 600; color: #e74c3c; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
 .s20-desc-title { font-size: 28px; font-weight: 800; color: #1a1a2e; margin-bottom: 10px; }
 .s20-desc-summary { font-size: 22px; font-weight: 400; color: #555; line-height: 1.5; margin-bottom: 24px; }
