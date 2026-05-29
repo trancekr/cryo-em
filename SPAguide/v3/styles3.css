@@ -1266,7 +1266,7 @@ html, body {
 }
 .slide.s4-processing-map .s4-processing-step {
   min-height: 238px;
-  padding: 28px 30px 26px;
+  padding: 26px 28px 24px;
   border-radius: 8px;
   background: #fff;
   box-shadow: 0 8px 24px rgba(26,26,46,0.08);
@@ -1294,14 +1294,14 @@ html, body {
 .slide.s4-processing-map .s4-processing-step b {
   margin-top: 18px;
   color: var(--theme-ink);
-  font-size: 27px;
-  line-height: 1.08;
+  font-size: 25px;
+  line-height: 1.06;
   font-weight: 830;
 }
 .slide.s4-processing-map .s4-processing-step p {
-  margin: 16px 0 0;
+  margin: 14px 0 0;
   color: #4b5563;
-  font-size: 21px;
+  font-size: 20px;
   line-height: 1.24;
   font-weight: 560;
 }
@@ -1315,7 +1315,7 @@ html, body {
   color: #fff;
 }
 .slide.s4-processing-map .s4-processing-banner {
-  width: 1280px;
+  width: 1370px;
   min-height: 86px;
   padding: 22px 46px;
   border-radius: 8px;
@@ -1325,7 +1325,7 @@ html, body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  font-size: 30px;
+  font-size: 27px;
   line-height: 1.16;
   font-weight: 800;
   box-shadow: 0 8px 24px rgba(26,26,46,0.14);

@@ -120,7 +120,7 @@
       <div class="bl-subtitle">From raw movies to an interpretable and validated map</div>
     </div>
     <div class="bl-content s4-processing-map-layout">
-      <div class="s4-processing-flow" aria-label="Data processing workflow decision map">
+      <div class="s4-processing-flow" aria-label="Single-particle analysis processing workflow decision map">
         <section class="s4-processing-step input">
           <span>Input</span>
           <b>Movies</b>
@@ -128,13 +128,13 @@
         </section>
         <section class="s4-processing-step">
           <span>01</span>
-          <b>Motion correction / Dose weighting</b>
-          <p>keep or reject micrographs</p>
+          <b>Motion correction &amp; dose weighting</b>
+          <p>correct frames and sum micrographs</p>
         </section>
         <section class="s4-processing-step">
           <span>02</span>
-          <b>CTF estimation</b>
-          <p>check fit quality and image limits</p>
+          <b>CTF estimation / curation</b>
+          <p>fit CTF and reject bad exposures</p>
         </section>
         <section class="s4-processing-step">
           <span>03</span>
@@ -143,26 +143,26 @@
         </section>
         <section class="s4-processing-step">
           <span>04</span>
-          <b>2D classification</b>
+          <b>2D classification / curation</b>
           <p>select useful particle classes</p>
         </section>
         <section class="s4-processing-step">
           <span>05</span>
-          <b>Initial 3D map</b>
+          <b>Initial model / 3D reconstruction</b>
           <p>choose a structure-like starting map</p>
         </section>
         <section class="s4-processing-step">
           <span>06</span>
-          <b>Refinement / heterogeneity</b>
-          <p>refine, split, or focus states</p>
+          <b>3D classification / heterogeneity</b>
+          <p>separate states, junk, or flexibility</p>
         </section>
         <section class="s4-processing-step output">
-          <span>Output</span>
-          <b>Resolution &amp; validation</b>
-          <p>decide what can be interpreted</p>
+          <span>07</span>
+          <b>Refinement &amp; postprocessing</b>
+          <p>produce and validate the final map</p>
         </section>
       </div>
-      <div class="s4-processing-banner">Each stage is both a computation step and a decision gate.</div>
+      <div class="s4-processing-banner">Final output: a refined map whose resolution and validation determine what can be interpreted.</div>
     </div>
     <div class="ref"><a href="https://cryoem101.org/chapter-5/" target="_blank" rel="noopener noreferrer">cryoEM101 Chapter 5</a>&nbsp;&middot;&nbsp;<a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, Processing Data</a></div>
   </div>
