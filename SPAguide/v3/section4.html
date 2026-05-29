@@ -12,7 +12,7 @@
 <div class="deck">
 
   <button class="deck-label deck-home" type="button" aria-label="Go to main page"><span class="dot"></span><span>Home</span></button>
-  <div class="deck-counter"><span class="cur">01</span><span class="sep">/</span><span class="total">37</span></div>
+  <div class="deck-counter"><span class="cur">01</span><span class="sep">/</span><span class="total">38</span></div>
   <div class="deck-hint">← → keys · I for index</div>
 
   <div class="slide cover active" data-n="1" data-pdf="94">
@@ -113,7 +113,60 @@
     </div>
     <div class="ref"><a href="https://cryoem101.org/chapter-5/" target="_blank" rel="noopener noreferrer">cryoEM101 Chapter 5</a></div>
   </div>
-  <div class="slide s4-power-spectrum" data-n="6" data-pdf="99">
+  <div class="slide s4-processing-map" data-n="6" data-pdf="workflow">
+    <div class="bl-header">
+      <div class="bl-chapter">Section 4: Data Processing</div>
+      <div class="bl-title">Data processing workflow</div>
+      <div class="bl-subtitle">From raw movies to an interpretable and validated map</div>
+    </div>
+    <div class="bl-content s4-processing-map-layout">
+      <div class="s4-processing-flow" aria-label="Data processing workflow decision map">
+        <section class="s4-processing-step input">
+          <span>Input</span>
+          <b>Movies</b>
+          <p>dose-fractionated raw frames</p>
+        </section>
+        <section class="s4-processing-step">
+          <span>01</span>
+          <b>Motion correction / Dose weighting</b>
+          <p>keep or reject micrographs</p>
+        </section>
+        <section class="s4-processing-step">
+          <span>02</span>
+          <b>CTF estimation</b>
+          <p>check fit quality and image limits</p>
+        </section>
+        <section class="s4-processing-step">
+          <span>03</span>
+          <b>Particle picking &amp; extraction</b>
+          <p>tune picking and box particles</p>
+        </section>
+        <section class="s4-processing-step">
+          <span>04</span>
+          <b>2D classification</b>
+          <p>select useful particle classes</p>
+        </section>
+        <section class="s4-processing-step">
+          <span>05</span>
+          <b>Initial 3D map</b>
+          <p>choose a structure-like starting map</p>
+        </section>
+        <section class="s4-processing-step">
+          <span>06</span>
+          <b>Refinement / heterogeneity</b>
+          <p>refine, split, or focus states</p>
+        </section>
+        <section class="s4-processing-step output">
+          <span>Output</span>
+          <b>Resolution &amp; validation</b>
+          <p>decide what can be interpreted</p>
+        </section>
+      </div>
+      <div class="s4-processing-banner">Each stage is both a computation step and a decision gate.</div>
+    </div>
+    <div class="ref"><a href="https://cryoem101.org/chapter-5/" target="_blank" rel="noopener noreferrer">cryoEM101 Chapter 5</a>&nbsp;&middot;&nbsp;<a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, Processing Data</a></div>
+  </div>
+  <div class="slide s4-power-spectrum" data-n="7" data-pdf="99">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Some terminology - Power spectrum</div>
@@ -152,7 +205,7 @@
     </div>
     <div class="ref"><a href="https://cryoem101.org/chapter-5" target="_blank" rel="noopener noreferrer">cryoEM101 Chapter 5</a>&nbsp;&middot;&nbsp;<a href="https://guide.cryosparc.com/cryo-em-foundations/image-formation/contrast-in-cryo-em" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, Contrast in Cryo-EM</a></div>
   </div>
-  <div class="slide s4-power-spectrum s4-power-diagnostics" data-n="7" data-pdf="100">
+  <div class="slide s4-power-spectrum s4-power-diagnostics" data-n="8" data-pdf="100">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Some terminology - Power spectrum</div>
@@ -184,7 +237,7 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/ctf-estimation" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, CTF Estimation</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1016/j.jsb.2015.08.008" target="_blank" rel="noopener noreferrer">Rohou &amp; Grigorieff, <i>J Struct Biol</i> (2015)</a></div>
   </div>
-  <div class="slide s4-ctf-concept" data-n="8" data-pdf="101">
+  <div class="slide s4-ctf-concept" data-n="9" data-pdf="101">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Some terminology - Contrast Transfer Function (CTF)</div>
@@ -213,7 +266,7 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/cryo-em-foundations/image-formation/contrast-in-cryo-em" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, Contrast in Cryo-EM</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1016/j.jsb.2015.08.008" target="_blank" rel="noopener noreferrer">Rohou &amp; Grigorieff, <i>J Struct Biol</i> (2015)</a></div>
   </div>
-  <div class="slide s4-raw-movie" data-n="9" data-pdf="102">
+  <div class="slide s4-raw-movie" data-n="10" data-pdf="102">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Understanding raw cryo-EM data</div>
@@ -235,7 +288,7 @@
     <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/motion-correction" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, Motion Correction</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1038/nmeth.4193" target="_blank" rel="noopener noreferrer">Zheng et al., <i>Nat Methods</i> (2017)</a></div>
   </div>
 
-  <div class="slide s4-preprocess-overview" data-n="9b" data-pdf="102-103">
+  <div class="slide s4-preprocess-overview" data-n="11" data-pdf="102-103">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Pre-processing overview</div>
@@ -273,7 +326,7 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/processing-data/get-started-with-cryosparc-introductory-tutorial" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, Introductory Tutorial</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1038/nmeth.4193" target="_blank" rel="noopener noreferrer">Zheng et al., <i>Nat Methods</i> (2017)</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.7554/eLife.06980" target="_blank" rel="noopener noreferrer">Grant &amp; Grigorieff, <i>eLife</i> (2015)</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1016/j.jsb.2015.08.008" target="_blank" rel="noopener noreferrer">Rohou &amp; Grigorieff, <i>J Struct Biol</i> (2015)</a></div>
   </div>
-  <div class="slide s4-motion-correction" data-n="10" data-pdf="103">
+  <div class="slide s4-motion-correction" data-n="12" data-pdf="103">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Pre-processing - Motion correction</div>
@@ -302,11 +355,11 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/motion-correction" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, Motion Correction</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1038/nmeth.4193" target="_blank" rel="noopener noreferrer">Zheng et al., <i>Nat Methods</i> (2017)</a></div>
   </div>
-  <div class="slide s4-hexau-reveal" data-n="11" data-pdf="104" data-s4-hex-stage="1">
+  <div class="slide s4-hexau-reveal" data-n="13" data-pdf="104" data-s4-hex-stage="1">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
-      <div class="bl-title">Pre-processing - Motion correction</div>
-      <div class="bl-subtitle">Small holes keep suspended ice in the stable no-buckling regime</div>
+      <div class="bl-title">Why motion correction is necessary</div>
+      <div class="bl-subtitle">Ice, support geometry, and beam exposure create motion that software must correct</div>
     </div>
     <div class="bl-content s4-hex-layout" aria-label="Click to step through suspended-ice buckling and HexAuFoil design">
       <div class="s4-hex-left-wrap">
@@ -327,7 +380,7 @@
     </div>
     <div class="ref"><a href="https://doi.org/10.1126/science.abb7927" target="_blank" rel="noopener noreferrer">Naydenova &amp; Russo, <i>Science</i> (2020)</a></div>
   </div>
-  <div class="slide s4-image-note" data-n="12" data-pdf="105">
+  <div class="slide s4-image-note" data-n="14" data-pdf="105">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Pre-processing - Dose weighting</div>
@@ -348,7 +401,7 @@
     </div>
     <div class="ref"><a href="https://doi.org/10.7554/eLife.06980" target="_blank" rel="noopener noreferrer">Grant &amp; Grigorieff, <i>eLife</i> (2015)</a></div>
   </div>
-  <div class="slide s4-image-note" data-n="13" data-pdf="106">
+  <div class="slide s4-image-note" data-n="15" data-pdf="106">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Pre-processing - Dose weighting</div>
@@ -374,7 +427,7 @@
     </div>
     <div class="ref"><a href="https://doi.org/10.7554/eLife.06980" target="_blank" rel="noopener noreferrer">Grant &amp; Grigorieff, <i>eLife</i> (2015)</a></div>
   </div>
-  <div class="slide s4-image-note" data-n="14" data-pdf="107">
+  <div class="slide s4-image-note" data-n="16" data-pdf="107">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Pre-processing - CTF estimation</div>
@@ -395,7 +448,7 @@
     </div>
     <div class="ref">Dan Clare, Image Formation lecture&nbsp;&middot;&nbsp;<a href="https://guide.cryosparc.com/cryo-em-foundations/image-formation/contrast-in-cryo-em" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, Contrast in Cryo-EM</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1016/j.jsb.2015.08.008" target="_blank" rel="noopener noreferrer">Rohou &amp; Grigorieff, <i>J Struct Biol</i> (2015)</a></div>
   </div>
-  <div class="slide s4-image-note" data-n="15" data-pdf="108">
+  <div class="slide s4-image-note" data-n="17" data-pdf="108">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Pre-processing - CTF estimation</div>
@@ -416,7 +469,7 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/cryo-em-foundations/image-formation/contrast-in-cryo-em" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, Contrast in Cryo-EM</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1016/j.jsb.2015.08.008" target="_blank" rel="noopener noreferrer">Rohou &amp; Grigorieff, <i>J Struct Biol</i> (2015)</a></div>
   </div>
-  <div class="slide s4-image-note" data-n="16" data-pdf="109">
+  <div class="slide s4-image-note" data-n="18" data-pdf="109">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Pre-processing - CTF estimation</div>
@@ -437,7 +490,7 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/ctf-estimation" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, CTF Estimation</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1016/j.jsb.2015.08.008" target="_blank" rel="noopener noreferrer">Rohou &amp; Grigorieff, <i>J Struct Biol</i> (2015)</a></div>
   </div>
-  <div class="slide s4-image-note" data-n="17" data-pdf="110">
+  <div class="slide s4-image-note" data-n="19" data-pdf="110">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Pre-processing - CTF estimation</div>
@@ -458,7 +511,7 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/ctf-estimation" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, CTF Estimation</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1016/j.jsb.2015.08.008" target="_blank" rel="noopener noreferrer">Rohou &amp; Grigorieff, <i>J Struct Biol</i> (2015)</a></div>
   </div>
-  <div class="slide s4-wide-image" data-n="18" data-pdf="111">
+  <div class="slide s4-wide-image" data-n="20" data-pdf="111">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Particle selection and extraction</div>
@@ -471,7 +524,7 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/particle-picking" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, Particle Picking</a></div>
   </div>
-  <div class="slide s4-image-note" data-n="19" data-pdf="112">
+  <div class="slide s4-image-note" data-n="21" data-pdf="112">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Particle selection and extraction</div>
@@ -491,7 +544,7 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/particle-picking" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, Particle Picking</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1038/s41592-019-0575-8" target="_blank" rel="noopener noreferrer">Bepler et al., <i>Nat Methods</i> (2019)</a></div>
   </div>
-  <div class="slide s4-image-note" data-n="20" data-pdf="113">
+  <div class="slide s4-image-note" data-n="22" data-pdf="113">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Particle picking - template matching</div>
@@ -512,7 +565,7 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/particle-picking" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, Particle Picking</a></div>
   </div>
-  <div class="slide s4-method-list" data-n="21" data-pdf="114">
+  <div class="slide s4-method-list" data-n="23" data-pdf="114">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Particle picking - ML pickers</div>
@@ -534,7 +587,7 @@
     </div>
     <div class="ref"><a href="https://doi.org/10.1038/s41592-019-0575-8" target="_blank" rel="noopener noreferrer">Bepler et al., <i>Nat Methods</i> (2019)</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1038/s42003-019-0437-z" target="_blank" rel="noopener noreferrer">Wagner et al., <i>Commun Biol</i> (2019)</a></div>
   </div>
-  <div class="slide s4-wide-image" data-n="22" data-pdf="115">
+  <div class="slide s4-wide-image" data-n="24" data-pdf="115">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">2D classification</div>
@@ -547,7 +600,7 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/particle-curation/job-2d-classification" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, 2D Classification</a></div>
   </div>
-  <div class="slide s4-wide-image" data-n="23" data-pdf="116">
+  <div class="slide s4-wide-image" data-n="25" data-pdf="116">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">2D classification</div>
@@ -560,7 +613,7 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/particle-curation/job-2d-classification" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, 2D Classification</a></div>
   </div>
-  <div class="slide s4-wide-image" data-n="24" data-pdf="117">
+  <div class="slide s4-wide-image" data-n="26" data-pdf="117">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">2D classification</div>
@@ -573,7 +626,7 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/particle-curation/job-2d-classification" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, 2D Classification</a></div>
   </div>
-  <div class="slide s4-fourier" data-n="25" data-pdf="118">
+  <div class="slide s4-fourier" data-n="27" data-pdf="118">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">3D reconstruction</div>
@@ -591,7 +644,7 @@
     </div>
     <div class="ref"><a href="https://cryoem101.org/chapter-5/" target="_blank" rel="noopener noreferrer">cryoEM101 Chapter 5</a>&nbsp;&middot;&nbsp;<a href="https://doi.org/10.1038/217130a0" target="_blank" rel="noopener noreferrer">De Rosier &amp; Klug, <i>Nature</i> (1968)</a></div>
   </div>
-  <div class="slide s4-wide-image" data-n="26" data-pdf="119">
+  <div class="slide s4-wide-image" data-n="28" data-pdf="119">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">3D reconstruction - initial map</div>
@@ -605,7 +658,7 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/3d-reconstruction/job-ab-initio-reconstruction" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, Ab-Initio Reconstruction</a></div>
   </div>
-  <div class="slide s4-wide-image" data-n="27" data-pdf="120">
+  <div class="slide s4-wide-image" data-n="29" data-pdf="120">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">3D reconstruction - initial map</div>
@@ -619,7 +672,7 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/3d-reconstruction/job-ab-initio-reconstruction" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, Ab-Initio Reconstruction</a></div>
   </div>
-  <div class="slide s4-wide-image" data-n="28" data-pdf="121">
+  <div class="slide s4-wide-image" data-n="30" data-pdf="121">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Map optimization</div>
@@ -638,7 +691,7 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/3d-refinement/job-homogeneous-refinement" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, Homogeneous Refinement</a>&nbsp;&middot;&nbsp;<a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/3d-refinement" target="_blank" rel="noopener noreferrer">Non-Uniform Refinement</a></div>
   </div>
-  <div class="slide s4-wide-image" data-n="29" data-pdf="122">
+  <div class="slide s4-wide-image" data-n="31" data-pdf="122">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Map optimization</div>
@@ -651,7 +704,7 @@
     </div>
     <div class="ref"><a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/3d-refinement" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, Non-Uniform Refinement</a>&nbsp;&middot;&nbsp;<a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/ctf-refinement" target="_blank" rel="noopener noreferrer">CTF Refinement</a></div>
   </div>
-  <div class="slide s4-resolution" data-n="30" data-pdf="123">
+  <div class="slide s4-resolution" data-n="32" data-pdf="123">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Resolution</div>
@@ -679,7 +732,7 @@
     </div>
     <div class="ref"><a href="https://doi.org/10.1016/j.jmb.2003.07.013" target="_blank" rel="noopener noreferrer">Rosenthal &amp; Henderson, <i>J Mol Biol</i> (2003)</a></div>
   </div>
-  <div class="slide s4-wide-image" data-n="31" data-pdf="124">
+  <div class="slide s4-wide-image" data-n="33" data-pdf="124">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Resolution</div>
@@ -692,7 +745,7 @@
     </div>
     <div class="ref"><a href="https://doi.org/10.1016/j.jsb.2024.108105" target="_blank" rel="noopener noreferrer">Catalano et al., <i>J Struct Biol</i> 216:108105 (2024)</a></div>
   </div>
-  <div class="slide s4-wide-image" data-n="32" data-pdf="125">
+  <div class="slide s4-wide-image" data-n="34" data-pdf="125">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Map resolution</div>
@@ -705,7 +758,7 @@
     </div>
     <div class="ref"><a href="https://cryoem101.org/chapter-5/" target="_blank" rel="noopener noreferrer">cryoEM101 Chapter 5</a></div>
   </div>
-  <div class="slide s4-wide-image" data-n="33" data-pdf="126">
+  <div class="slide s4-wide-image" data-n="35" data-pdf="126">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Conformational variability</div>
@@ -719,7 +772,7 @@
     </div>
     <div class="ref"><a href="https://doi.org/10.1038/s42004-024-01263-7" target="_blank" rel="noopener noreferrer">Hao et al., <i>Commun Chem</i> 7:183 (2024)</a>&nbsp;&middot;&nbsp;<a href="https://guide.cryosparc.com/processing-data/all-job-types-in-cryosparc/variability" target="_blank" rel="noopener noreferrer">CryoSPARC Guide, 3D Variability Analysis</a></div>
   </div>
-  <div class="slide s4-wide-image" data-n="34" data-pdf="127">
+  <div class="slide s4-wide-image" data-n="36" data-pdf="127">
     <div class="bl-header">
       <div class="bl-chapter">Section 4: Data Processing</div>
       <div class="bl-title">Conformational variability</div>
@@ -828,229 +881,239 @@
         </div>
       </div>
       <div class="index-card" data-target="5">
-        <img class="thumb" src="pdf-pages/page-099.png" alt="Some terminology – Power spectrum" loading="lazy">
+        <div class="thumb s4-index-workflow-thumb">
+          <span>Workflow</span>
+          <b>movies → particles → maps → validation</b>
+        </div>
         <div class="meta">
           <span class="num">06</span>
-          <span class="pdf">p99</span>
+          <span class="pdf">workflow</span>
         </div>
       </div>
       <div class="index-card" data-target="6">
-        <img class="thumb" src="pdf-pages/page-100.png" alt="Some terminology – Power spectrum" loading="lazy">
+        <img class="thumb" src="pdf-pages/page-099.png" alt="Some terminology – Power spectrum" loading="lazy">
         <div class="meta">
           <span class="num">07</span>
-          <span class="pdf">p100</span>
+          <span class="pdf">p99</span>
         </div>
       </div>
       <div class="index-card" data-target="7">
-        <img class="thumb" src="pdf-pages/page-101.png" alt="Some terminology – Contrast Transfer Function (CTF)" loading="lazy">
+        <img class="thumb" src="pdf-pages/page-100.png" alt="Some terminology – Power spectrum" loading="lazy">
         <div class="meta">
           <span class="num">08</span>
-          <span class="pdf">p101</span>
+          <span class="pdf">p100</span>
         </div>
       </div>
       <div class="index-card" data-target="8">
-        <img class="thumb" src="pdf-pages/page-102.png" alt="Understanding raw cryo-EM data" loading="lazy">
+        <img class="thumb" src="pdf-pages/page-101.png" alt="Some terminology – Contrast Transfer Function (CTF)" loading="lazy">
         <div class="meta">
           <span class="num">09</span>
-          <span class="pdf">p102</span>
+          <span class="pdf">p101</span>
         </div>
       </div>
       <div class="index-card" data-target="9">
+        <img class="thumb" src="pdf-pages/page-102.png" alt="Understanding raw cryo-EM data" loading="lazy">
+        <div class="meta">
+          <span class="num">10</span>
+          <span class="pdf">p102</span>
+        </div>
+      </div>
+      <div class="index-card" data-target="10">
         <div class="thumb s4-index-overview-thumb">
           <span>Pre-processing</span>
           <b>movie → motion → CTF → particles</b>
         </div>
         <div class="meta">
-          <span class="num">10</span>
+          <span class="num">11</span>
           <span class="pdf">overview</span>
         </div>
       </div>
-      <div class="index-card" data-target="10">
+      <div class="index-card" data-target="11">
         <img class="thumb" src="pdf-pages/page-103.png" alt="Pre-processing – Motion correction" loading="lazy">
         <div class="meta">
-          <span class="num">11</span>
+          <span class="num">12</span>
           <span class="pdf">p103</span>
         </div>
       </div>
-      <div class="index-card" data-target="11">
-        <img class="thumb" src="pdf-pages/page-104.png" alt="Pre-processing – Motion correction" loading="lazy">
+      <div class="index-card" data-target="12">
+        <img class="thumb" src="pdf-pages/page-104.png" alt="Why motion correction is necessary" loading="lazy">
         <div class="meta">
-          <span class="num">12</span>
+          <span class="num">13</span>
           <span class="pdf">p104</span>
         </div>
       </div>
-      <div class="index-card" data-target="12">
+      <div class="index-card" data-target="13">
         <img class="thumb" src="pdf-pages/page-105.png" alt="Pre-processing – Dose weighting" loading="lazy">
         <div class="meta">
-          <span class="num">13</span>
+          <span class="num">14</span>
           <span class="pdf">p105</span>
         </div>
       </div>
-      <div class="index-card" data-target="13">
+      <div class="index-card" data-target="14">
         <img class="thumb" src="pdf-pages/page-106.png" alt="Pre-processing – Dose weighting" loading="lazy">
         <div class="meta">
-          <span class="num">14</span>
+          <span class="num">15</span>
           <span class="pdf">p106</span>
         </div>
       </div>
-      <div class="index-card" data-target="14">
+      <div class="index-card" data-target="15">
         <img class="thumb" src="pdf-pages/page-107.png" alt="Pre-processing – CTF estimation" loading="lazy">
         <div class="meta">
-          <span class="num">15</span>
+          <span class="num">16</span>
           <span class="pdf">p107</span>
         </div>
       </div>
-      <div class="index-card" data-target="15">
+      <div class="index-card" data-target="16">
         <img class="thumb" src="pdf-pages/page-108.png" alt="Pre-processing – CTF estimation" loading="lazy">
         <div class="meta">
-          <span class="num">16</span>
+          <span class="num">17</span>
           <span class="pdf">p108</span>
         </div>
       </div>
-      <div class="index-card" data-target="16">
+      <div class="index-card" data-target="17">
         <img class="thumb" src="pdf-pages/page-109.png" alt="Pre-processing – CTF estimation" loading="lazy">
         <div class="meta">
-          <span class="num">17</span>
+          <span class="num">18</span>
           <span class="pdf">p109</span>
         </div>
       </div>
-      <div class="index-card" data-target="17">
+      <div class="index-card" data-target="18">
         <img class="thumb" src="pdf-pages/page-110.png" alt="Pre-processing – CTF estimation" loading="lazy">
         <div class="meta">
-          <span class="num">18</span>
+          <span class="num">19</span>
           <span class="pdf">p110</span>
         </div>
       </div>
-      <div class="index-card" data-target="18">
+      <div class="index-card" data-target="19">
         <img class="thumb" src="pdf-pages/page-111.png" alt="Particle selection and extraction" loading="lazy">
         <div class="meta">
-          <span class="num">19</span>
+          <span class="num">20</span>
           <span class="pdf">p111</span>
         </div>
       </div>
-      <div class="index-card" data-target="19">
+      <div class="index-card" data-target="20">
         <img class="thumb" src="pdf-pages/page-112.png" alt="Particle selection and extraction" loading="lazy">
         <div class="meta">
-          <span class="num">20</span>
+          <span class="num">21</span>
           <span class="pdf">p112</span>
         </div>
       </div>
-      <div class="index-card" data-target="20">
+      <div class="index-card" data-target="21">
         <img class="thumb" src="pdf-pages/page-113.png" alt="Particle picking – template matching" loading="lazy">
         <div class="meta">
-          <span class="num">21</span>
+          <span class="num">22</span>
           <span class="pdf">p113</span>
         </div>
       </div>
-      <div class="index-card" data-target="21">
+      <div class="index-card" data-target="22">
         <img class="thumb" src="pdf-pages/page-114.png" alt="Particle picking – ML pickers" loading="lazy">
         <div class="meta">
-          <span class="num">22</span>
+          <span class="num">23</span>
           <span class="pdf">p114</span>
         </div>
       </div>
-      <div class="index-card" data-target="22">
+      <div class="index-card" data-target="23">
         <img class="thumb" src="pdf-pages/page-115.png" alt="2D classification" loading="lazy">
         <div class="meta">
-          <span class="num">23</span>
+          <span class="num">24</span>
           <span class="pdf">p115</span>
         </div>
       </div>
-      <div class="index-card" data-target="23">
+      <div class="index-card" data-target="24">
         <img class="thumb" src="pdf-pages/page-116.png" alt="2D classification" loading="lazy">
         <div class="meta">
-          <span class="num">24</span>
+          <span class="num">25</span>
           <span class="pdf">p116</span>
         </div>
       </div>
-      <div class="index-card" data-target="24">
+      <div class="index-card" data-target="25">
         <img class="thumb" src="pdf-pages/page-117.png" alt="2D classification" loading="lazy">
         <div class="meta">
-          <span class="num">25</span>
+          <span class="num">26</span>
           <span class="pdf">p117</span>
         </div>
       </div>
-      <div class="index-card" data-target="25">
+      <div class="index-card" data-target="26">
         <img class="thumb" src="pdf-pages/page-118.png" alt="3D reconstruction – Fourier section theorem" loading="lazy">
         <div class="meta">
-          <span class="num">26</span>
+          <span class="num">27</span>
           <span class="pdf">p118</span>
         </div>
       </div>
-      <div class="index-card" data-target="26">
+      <div class="index-card" data-target="27">
         <img class="thumb" src="pdf-pages/page-119.png" alt="3D reconstruction – initial map" loading="lazy">
         <div class="meta">
-          <span class="num">27</span>
+          <span class="num">28</span>
           <span class="pdf">p119</span>
         </div>
       </div>
-      <div class="index-card" data-target="27">
+      <div class="index-card" data-target="28">
         <img class="thumb" src="pdf-pages/page-120.png" alt="3D reconstruction – initial map" loading="lazy">
         <div class="meta">
-          <span class="num">28</span>
+          <span class="num">29</span>
           <span class="pdf">p120</span>
         </div>
       </div>
-      <div class="index-card" data-target="28">
+      <div class="index-card" data-target="29">
         <img class="thumb" src="pdf-pages/page-121.png" alt="Map optimization" loading="lazy">
         <div class="meta">
-          <span class="num">29</span>
+          <span class="num">30</span>
           <span class="pdf">p121</span>
         </div>
       </div>
-      <div class="index-card" data-target="29">
+      <div class="index-card" data-target="30">
         <img class="thumb" src="pdf-pages/page-122.png" alt="Map optimization" loading="lazy">
         <div class="meta">
-          <span class="num">30</span>
+          <span class="num">31</span>
           <span class="pdf">p122</span>
         </div>
       </div>
-      <div class="index-card" data-target="30">
+      <div class="index-card" data-target="31">
         <img class="thumb" src="pdf-pages/page-123.png" alt="Resolution" loading="lazy">
         <div class="meta">
-          <span class="num">31</span>
+          <span class="num">32</span>
           <span class="pdf">p123</span>
         </div>
       </div>
-      <div class="index-card" data-target="31">
+      <div class="index-card" data-target="32">
         <img class="thumb" src="pdf-pages/page-124.png" alt="Resolution" loading="lazy">
         <div class="meta">
-          <span class="num">32</span>
+          <span class="num">33</span>
           <span class="pdf">p124</span>
         </div>
       </div>
-      <div class="index-card" data-target="32">
+      <div class="index-card" data-target="33">
         <img class="thumb" src="pdf-pages/page-125.png" alt="Map resolution" loading="lazy">
         <div class="meta">
-          <span class="num">33</span>
+          <span class="num">34</span>
           <span class="pdf">p125</span>
         </div>
       </div>
-      <div class="index-card" data-target="33">
+      <div class="index-card" data-target="34">
         <img class="thumb" src="pdf-pages/page-126.png" alt="Conformational variability" loading="lazy">
         <div class="meta">
-          <span class="num">34</span>
+          <span class="num">35</span>
           <span class="pdf">p126</span>
         </div>
       </div>
-      <div class="index-card" data-target="34">
+      <div class="index-card" data-target="35">
         <img class="thumb" src="pdf-pages/page-127.png" alt="Conformational variability" loading="lazy">
         <div class="meta">
-          <span class="num">35</span>
+          <span class="num">36</span>
           <span class="pdf">p127</span>
         </div>
       </div>
-      <div class="index-card" data-target="35">
+      <div class="index-card" data-target="36">
         <img class="thumb" src="pdf-pages/page-130.png" alt="Problems & limitations" loading="lazy">
         <div class="meta">
-          <span class="num">36</span>
+          <span class="num">37</span>
           <span class="pdf">p130</span>
         </div>
       </div>
-      <div class="index-card" data-target="36">
+      <div class="index-card" data-target="37">
         <img class="thumb" src="pdf-pages/page-131.png" alt="Closing thought" loading="lazy">
         <div class="meta">
-          <span class="num">37</span>
+          <span class="num">38</span>
           <span class="pdf">p131</span>
         </div>
       </div>
@@ -1080,7 +1143,7 @@
     });
   })();
   (() => {
-    const slide = document.querySelector('.slide.s4-hexau-reveal[data-n="11"]');
+    const slide = document.querySelector('.slide.s4-hexau-reveal[data-n="13"]');
     const target = slide?.querySelector('.s4-hex-layout');
     if (!slide || !target) return;
 
