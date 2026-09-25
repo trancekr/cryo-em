@@ -1,0 +1,190 @@
+{
+  "lab_additions": {
+    "structure": {
+      "title": "Structure",
+      "family": "Structural biology",
+      "issns": [
+        "0969-2126",
+        "1878-4186"
+      ],
+      "source_ids": []
+    },
+    "molecular cell": {
+      "title": "Molecular Cell",
+      "family": "Structural biology",
+      "issns": [
+        "1097-2765",
+        "1097-4164"
+      ],
+      "source_ids": []
+    },
+    "elife": {
+      "title": "eLife",
+      "family": "Structural biology",
+      "issns": [
+        "2050-084X"
+      ],
+      "source_ids": []
+    },
+    "proceedings of the national academy of sciences": {
+      "title": "Proceedings of the National Academy of Sciences",
+      "family": "Structural biology",
+      "issns": [
+        "0027-8424",
+        "1091-6490"
+      ],
+      "source_ids": []
+    },
+    "science advances": {
+      "title": "Science Advances",
+      "family": "Structural biology",
+      "issns": [
+        "2375-2548"
+      ],
+      "source_ids": []
+    },
+    "embo journal": {
+      "title": "The EMBO Journal",
+      "family": "Structural biology",
+      "issns": [
+        "0261-4189",
+        "1460-2075"
+      ],
+      "source_ids": []
+    },
+    "journal of molecular biology": {
+      "title": "Journal of Molecular Biology",
+      "family": "Structural biology",
+      "issns": [
+        "0022-2836",
+        "1089-8638"
+      ],
+      "source_ids": []
+    },
+    "nucleic acids research": {
+      "title": "Nucleic Acids Research",
+      "family": "Structural biology",
+      "issns": [
+        "0305-1048",
+        "1362-4962"
+      ],
+      "source_ids": []
+    },
+    "journal of biological chemistry": {
+      "title": "Journal of Biological Chemistry",
+      "family": "Structural biology",
+      "issns": [
+        "0021-9258",
+        "1083-351X"
+      ],
+      "source_ids": []
+    },
+    "journal of the american chemical society": {
+      "title": "Journal of the American Chemical Society",
+      "family": "Structural biology",
+      "issns": [
+        "0002-7863",
+        "1520-5126"
+      ],
+      "source_ids": []
+    },
+    "journal of structural biology": {
+      "title": "Journal of Structural Biology",
+      "family": "Structural methods",
+      "issns": [
+        "1047-8477",
+        "1095-8657"
+      ],
+      "source_ids": []
+    },
+    "iucrj": {
+      "title": "IUCrJ",
+      "family": "Structural methods",
+      "issns": [
+        "2052-2525"
+      ],
+      "source_ids": []
+    },
+    "acta crystallographica section d structural biology": {
+      "title": "Acta Crystallographica Section D Structural Biology",
+      "family": "Structural methods",
+      "issns": [
+        "2059-7983",
+        "0907-4449",
+        "1399-0047"
+      ],
+      "source_ids": []
+    },
+    "acta crystallographica section f structural biology communications": {
+      "title": "Acta Crystallographica Section F Structural Biology Communications",
+      "family": "Structural methods",
+      "issns": [
+        "2053-230X"
+      ],
+      "source_ids": []
+    },
+    "ultramicroscopy": {
+      "title": "Ultramicroscopy",
+      "family": "Structural methods",
+      "issns": [
+        "0304-3991",
+        "1879-2723"
+      ],
+      "source_ids": []
+    },
+    "microscopy and microanalysis": {
+      "title": "Microscopy and Microanalysis",
+      "family": "Structural methods",
+      "issns": [
+        "1431-9276",
+        "1435-8115"
+      ],
+      "source_ids": []
+    },
+    "protein science": {
+      "title": "Protein Science",
+      "family": "Structural methods",
+      "issns": [
+        "0961-8368",
+        "1469-896X"
+      ],
+      "source_ids": []
+    },
+    "biophysical journal": {
+      "title": "Biophysical Journal",
+      "family": "Structural methods",
+      "issns": [
+        "0006-3495",
+        "1542-0086"
+      ],
+      "source_ids": []
+    },
+    "current opinion in structural biology": {
+      "title": "Current Opinion in Structural Biology",
+      "family": "Structural reviews",
+      "issns": [
+        "0959-440X",
+        "1879-033X"
+      ],
+      "source_ids": []
+    },
+    "annual review of biophysics": {
+      "title": "Annual Review of Biophysics",
+      "family": "Structural reviews",
+      "issns": [
+        "1936-122X",
+        "1936-1238"
+      ],
+      "source_ids": []
+    },
+    "quarterly reviews of biophysics": {
+      "title": "Quarterly Reviews of Biophysics",
+      "family": "Structural reviews",
+      "issns": [
+        "0033-5835",
+        "1469-8994"
+      ],
+      "source_ids": []
+    }
+  }
+}
