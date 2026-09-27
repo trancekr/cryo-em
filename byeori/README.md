@@ -30,12 +30,17 @@ Nature Chemical Biology, bioRxiv.
 - **Scientific Reports, iScience**: 금지 목록.
 - 후보로 고려할 만한 것: Cell Reports, PLoS Biology, Bioinformatics, Journal of Chemical Information and Modeling.
 
-## 주의: OpenAlex source ID 한도
+## 머신러닝 학회 항목 제거
+
+Byeori가 기본으로 넣어 둔 `lab_additions` 중 family가 "Machine learning conference"인 6개
+(ICLR, NeurIPS, ICML, PMLR, AISTATS, COLT; OpenAlex ID 7개)는 `--merge` 때 함께 지운다
+(`fill_openalex_ids.py`의 `DROP_FAMILIES`). Journal of Data Science는 학회가 아니라 남겨 두었다.
+지우려면 `journals.json`의 `lab_additions`에서 그 항목을 직접 삭제하면 된다.
+
+## OpenAlex source ID 한도
 
 Byeori의 주제 검색은 목록의 모든 OpenAlex source ID를 하나의 필터로 보내는데, OpenAlex는
-필터당 100개까지만 받는다. 현재 73개 + 이 초안 21~22개 ≈ **94~95개**로 여유가 거의 없다.
-기본 목록의 머신러닝 학회 항목(ICLR, NeurIPS, ICML, PMLR, AISTATS, COLT, J Data Science; 8개 ID)
-이 필요 없으면 지워서 자리를 확보할 수 있다.
+필터당 100개까지만 받는다. 기존 73개 − 머신러닝 학회 7개 + 이 초안 21~22개 ≈ **87~88개**.
 
 ## 사용법 (맥미니에서)
 
@@ -51,6 +56,15 @@ python3 fill_openalex_ids.py --no-lookup --merge ~/byeori/src/byeori/policies/jo
 ```
 
 `--merge`는 이미 있는 키·금지 저널은 건너뛰고, ID가 100개를 넘으면 거부하며, 원본을
-`journals.json.bak`으로 남긴다. 병합 후 Byeori 저장소에서 `uv run pytest tests/test_journal_policy*.py`
-로 확인하고, Lambda에 반영하려면 `uv run byeori deploy`를 다시 실행한다.
+`journals.json.bak`으로 남긴다. Lambda에 반영하려면 `uv run byeori deploy`를 다시 실행한다 (배포는 작업 트리를 그대로
+패키징하므로 로컬 수정이 올라간다).
+
+병합 후 Byeori 자체 테스트 중 `tests/test_journal_policy.py`, `tests/test_journal_policy_file.py`의
+15개가 실패한다. 개발 연구실의 목록을 그대로 적어 둔 테스트(머신러닝 학회가 있어야 함, eLife·PNAS·
+NAR은 목록 밖이어야 함 등)라서 목록을 바꾸면 실패하는 것이 정상이며, 배포는 테스트를 실행하지 않는다.
+대신 다음으로 확인한다:
+
+```bash
+uv run python -c "from byeori import journal_policy as j; print(len(j.SOURCE_IDS), j.journal_verdict('Structure', ['0969-2126']))"
+```
 (맥미니의 CLI만 시험하려면 `BYEORI_JOURNAL_POLICY=<병합한 파일>`로 원본을 건드리지 않고 확인할 수 있다. AWS 쪽 함수는 배포된 `journals.json`을 쓰므로 재배포가 필요하다.)
