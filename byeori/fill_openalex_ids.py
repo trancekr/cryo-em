@@ -11,8 +11,8 @@ that can reach api.openalex.org (the office Mac mini):
 The lookup matches by ISSN, adds any ISSN OpenAlex knows that the draft lacks, and drops sources
 with fewer than --min-works works (duplicate or stub records that would waste the search filter).
 The merge removes the machine-learning conferences Byeori ships in ``lab_additions`` (ICLR,
-NeurIPS, ICML, PMLR, AISTATS, COLT; family "Machine learning conference"), which a structural-
-biology lab does not collect from, adds only keys not already in ``journals`` or
+NeurIPS, ICML, PMLR, AISTATS, COLT; family "Machine learning conference") and Journal of Data
+Science, which a structural-biology lab does not collect from, adds only keys not already in ``journals`` or
 ``lab_additions``, refuses to go past
 OpenAlex's cap of 100 source ids per filter (Byeori's search filter uses every id on its lists),
 and keeps a .bak copy of the file it changes.
@@ -35,7 +35,9 @@ HERE = Path(__file__).resolve().parent
 DRAFT = HERE / "lab_additions_structural_biology.json"
 FILLED = HERE / "lab_additions_structural_biology.filled.json"
 SOURCE_ID_CAP = 100  # OpenAlex's limit of values per filter
-DROP_FAMILIES = ("Machine learning conference",)  # Byeori's shipped additions this lab does not want
+# Byeori's shipped additions this lab does not want: the ML conferences and Journal of Data Science.
+DROP_FAMILIES = ("Machine learning conference",)
+DROP_KEYS = ("journal of data science",)
 
 
 def lookup(issns: list[str], api_key: str | None, mailto: str | None) -> list[dict]:
@@ -80,7 +82,8 @@ def fill(min_works: int) -> dict:
 
 def merge(additions: dict, policy_path: Path) -> None:
     policy = json.loads(policy_path.read_text(encoding="utf-8"))
-    for k in [k for k, row in policy["lab_additions"].items() if row["family"] in DROP_FAMILIES]:
+    for k in [k for k, row in policy["lab_additions"].items()
+              if row["family"] in DROP_FAMILIES or k in DROP_KEYS]:
         del policy["lab_additions"][k]
         print(f"remove {k}")
     taken = set(policy["journals"]) | set(policy["lab_additions"])

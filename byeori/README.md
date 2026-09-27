@@ -30,17 +30,16 @@ Nature Chemical Biology, bioRxiv.
 - **Scientific Reports, iScience**: 금지 목록.
 - 후보로 고려할 만한 것: Cell Reports, PLoS Biology, Bioinformatics, Journal of Chemical Information and Modeling.
 
-## 머신러닝 학회 항목 제거
+## 기존 추가 항목 제거
 
-Byeori가 기본으로 넣어 둔 `lab_additions` 중 family가 "Machine learning conference"인 6개
-(ICLR, NeurIPS, ICML, PMLR, AISTATS, COLT; OpenAlex ID 7개)는 `--merge` 때 함께 지운다
-(`fill_openalex_ids.py`의 `DROP_FAMILIES`). Journal of Data Science는 학회가 아니라 남겨 두었다.
-지우려면 `journals.json`의 `lab_additions`에서 그 항목을 직접 삭제하면 된다.
+Byeori가 기본으로 넣어 둔 `lab_additions` 7개(ICLR, NeurIPS, ICML, PMLR, AISTATS, COLT,
+Journal of Data Science; OpenAlex ID 8개)는 구조생물학과 무관하므로 `--merge` 때 함께 지운다
+(`fill_openalex_ids.py`의 `DROP_FAMILIES`, `DROP_KEYS`).
 
 ## OpenAlex source ID 한도
 
 Byeori의 주제 검색은 목록의 모든 OpenAlex source ID를 하나의 필터로 보내는데, OpenAlex는
-필터당 100개까지만 받는다. 기존 73개 − 머신러닝 학회 7개 + 이 초안 21~22개 ≈ **87~88개**.
+필터당 100개까지만 받는다. 기존 73개 − 제거 8개 + 이 초안 21~22개 ≈ **86~87개**.
 
 ## 사용법 (맥미니에서)
 
@@ -60,7 +59,7 @@ python3 fill_openalex_ids.py --no-lookup --merge ~/byeori/src/byeori/policies/jo
 패키징하므로 로컬 수정이 올라간다).
 
 병합 후 Byeori 자체 테스트 중 `tests/test_journal_policy.py`, `tests/test_journal_policy_file.py`의
-15개가 실패한다. 개발 연구실의 목록을 그대로 적어 둔 테스트(머신러닝 학회가 있어야 함, eLife·PNAS·
+18개가 실패한다. 개발 연구실의 목록을 그대로 적어 둔 테스트(머신러닝 학회·Journal of Data Science가 있어야 함, eLife·PNAS·
 NAR은 목록 밖이어야 함 등)라서 목록을 바꾸면 실패하는 것이 정상이며, 배포는 테스트를 실행하지 않는다.
 대신 다음으로 확인한다:
 
