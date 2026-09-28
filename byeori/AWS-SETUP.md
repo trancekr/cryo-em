@@ -22,9 +22,10 @@ cd ~/cryo-em && git pull && claude
    (`aws configure`, `read -rs`)은 사용자가 **별도 터미널 창**에서 직접 실행하도록 안내하고, 에이전트는 결과만 확인한다.
 4. **리전과 프로필.** Byeori 명령은 항상 `cd ~/byeori && source .byeori.env` 후 실행한다(`.byeori.env`가
    `AWS_PROFILE`, `AWS_REGION=us-east-1`을 설정). CP2 이전의 `aws` 명령에는 `--profile "$PROFILE" --region us-east-1`을 붙인다.
-5. **배포는 항상 `bash ~/cryo-em/byeori/deploy_byeori.sh`로.** `uv run byeori deploy`를 직접 쓰면 비용 설정이 기본값(Opus 5,
+5. **💰 명령은 자동 모드가 막을 수 있다.** 막히면 우회하지 말고, 사용자에게 새 터미널에서 직접 실행할 명령을 한 줄씩 주고 결과를 받아 판단한다 (2026-09-28 CP4에서 발생).
+6. **배포는 항상 `bash ~/cryo-em/byeori/deploy_byeori.sh`로.** `uv run byeori deploy`를 직접 쓰면 비용 설정이 기본값(Opus 5,
    추론 high)으로 돌아간다.
-6. **기록.** 체크포인트가 끝날 때마다 `SETUP-LOG.md`에 아래 형식으로 추가한다. 계정 번호는 뒤 4자리만, 키 값은 절대 기록하지 않는다.
+7. **기록.** 체크포인트가 끝날 때마다 `SETUP-LOG.md`에 아래 형식으로 추가한다. 계정 번호는 뒤 4자리만, 키 값은 절대 기록하지 않는다.
    ```markdown
    ## CP<n> <이름> — PASS | FAIL | 보류   (YYYY-MM-DD HH:MM)
    - 확인한 것: ...
@@ -35,7 +36,7 @@ cd ~/cryo-em && git pull && claude
    **커밋하지 않는다.** `~/byeori`(joonan-lab/byeori 클론)의 파일은 읽기만 하고 수정·커밋하지 않는다
    (`.gitignore` 포함; 저널 목록은 이미 `cryoem-journals` 브랜치에 반영됨). 사용자가 클라우드 세션에
    공유하고 싶으면 로그 내용을 붙여 넣게 한다.
-7. **요약.** 체크포인트마다 사용자에게 3줄 이내로 요약한다: 결과, 다음에 할 일, 사용자가 할 일(있으면).
+8. **요약.** 체크포인트마다 사용자에게 3줄 이내로 요약한다: 결과, 다음에 할 일, 사용자가 할 일(있으면).
 
 ---
 
@@ -47,7 +48,7 @@ cd ~/cryo-em && git pull && claude
 | AWS 프로필 | `default` (사용자 `hanseonk`) | 프로필 기본 리전(ap-northeast-2)은 무시됨. Byeori는 `.byeori.env`의 리전을 씀 |
 | 스택 이름 | `byeori` | |
 | VPC | 새로 만듦(`true`) | 퍼블릭 서브넷만, NAT 없음 → 유휴 비용 0 |
-| 노트 모델 | Opus 5, `IngestReasoning=default` | 논문 1편 약 $0.135 (+추출 $0.02) |
+| 노트 모델 | Opus 5, `IngestReasoning=default` | 문서 예상 $0.135이나 **실측 $0.25** (cryo-EM 논문, 출력 7,273토큰; 2026-09-28) (+추출 $0.02) |
 | 질문 상한 | `QuestionBudgetUsd=5` | |
 | 그림 추출 이미지 | 건너뜀 | Docker 없음. 텍스트·노트에는 영향 없음 |
 
