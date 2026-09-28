@@ -4,7 +4,8 @@
 #   bash ~/cryo-em/byeori/ingest_batch.sh <folder>          # shows the plan and asks once
 #   bash ~/cryo-em/byeori/ingest_batch.sh <folder> --yes    # no question
 #
-# - Only the PDFs directly in <folder> (not subfolders). The files are only read.
+# - Only the PDFs directly in <folder> (not subfolders); other files are listed as skipped.
+#   The files are only read.
 # - Supplementary PDFs are appended to their paper, not added as papers. A file whose name has
 #   si / esm / supp / suppl / supplement(ary) / supporting in it is supplementary; it belongs to the
 #   paper whose file name starts with the part before that word:
@@ -54,6 +55,12 @@ norm() { printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/
 echo "==> reading what Byeori already holds"
 known="$(aws dynamodb scan --table-name "$AWS_KIRO_WIKI_TABLE" --projection-expression pdf_sha256 \
   --query "Items[].pdf_sha256.S" --output text | tr '\t' '\n')"
+
+# Only PDFs can go in; say what else is in the folder so nothing is left out silently.
+for other in "$FOLDER"/*; do
+  [ -f "$other" ] || continue
+  case "$other" in *.pdf|*.PDF) ;; *.DS_Store) ;; *) echo "  skip  $(basename "$other") (not a PDF; convert it to PDF to include it)" ;; esac
+done
 
 main_files=(); main_norms=(); si_files=(); si_bases=()
 for pdf in "$FOLDER"/*.pdf "$FOLDER"/*.PDF; do
