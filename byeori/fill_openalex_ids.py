@@ -38,6 +38,11 @@ SOURCE_ID_CAP = 100  # OpenAlex's limit of values per filter
 # Byeori's shipped additions this lab does not want: the ML conferences and Journal of Data Science.
 DROP_FAMILIES = ("Machine learning conference",)
 DROP_KEYS = ("journal of data science",)
+# Titles Byeori's shipped policy refuses outright that this lab reads (2026-09-28: a Scientific
+# Reports cryo-EM validation paper was parked). Taken off denied_journals, an upload of theirs is
+# read and a topic search shows them with the outside-the-list warning; OpenAlex discovery still
+# leaves them out (nature_portfolio_below_threshold is untouched).
+ALLOW_DENIED = ("scientific reports",)
 
 
 def lookup(issns: list[str], api_key: str | None, mailto: str | None) -> list[dict]:
@@ -82,6 +87,9 @@ def fill(min_works: int) -> dict:
 
 def merge(additions: dict, policy_path: Path) -> None:
     policy = json.loads(policy_path.read_text(encoding="utf-8"))
+    for k in [k for k in policy.get("denied_journals", []) if k in ALLOW_DENIED]:
+        policy["denied_journals"].remove(k)
+        print(f"allow {k} (was refused outright)")
     for k in [k for k, row in policy["lab_additions"].items()
               if row["family"] in DROP_FAMILIES or k in DROP_KEYS]:
         del policy["lab_additions"][k]

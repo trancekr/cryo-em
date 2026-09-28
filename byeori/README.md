@@ -27,7 +27,8 @@ Nature Chemical Biology, bioRxiv.
 
 넣지 않은 것:
 - **Communications Biology**: Byeori 정책이 `nature_portfolio_below_threshold`로 일부러 제외. 넣으려면 그 목록에서도 빼야 한다.
-- **Scientific Reports, iScience**: 금지 목록.
+- **Scientific Reports**: Byeori 원래 정책은 금지(`denied_journals`)였으나 2026-09-28 해제(`ALLOW_DENIED`). 직접 올린 논문은 읽히고, 주제 검색에는 "목록 밖" 경고와 함께 나온다. OpenAlex 자동 수집 대상은 아니다.
+- **iScience, Heliyon, Oncotarget**: 금지 목록 그대로.
 - 후보로 고려할 만한 것: Cell Reports, PLoS Biology, Bioinformatics, Journal of Chemical Information and Modeling.
 
 ## 기존 추가 항목 제거
