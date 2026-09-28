@@ -7,7 +7,9 @@
         "0969-2126",
         "1878-4186"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S7112016"
+      ]
     },
     "molecular cell": {
       "title": "Molecular Cell",
@@ -16,7 +18,9 @@
         "1097-2765",
         "1097-4164"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S156208185"
+      ]
     },
     "elife": {
       "title": "eLife",
@@ -24,7 +28,9 @@
       "issns": [
         "2050-084X"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S1336409049"
+      ]
     },
     "proceedings of the national academy of sciences": {
       "title": "Proceedings of the National Academy of Sciences",
@@ -33,7 +39,9 @@
         "0027-8424",
         "1091-6490"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S125754415"
+      ]
     },
     "science advances": {
       "title": "Science Advances",
@@ -41,7 +49,9 @@
       "issns": [
         "2375-2548"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S2737427234"
+      ]
     },
     "embo journal": {
       "title": "The EMBO Journal",
@@ -50,7 +60,9 @@
         "0261-4189",
         "1460-2075"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S127916151"
+      ]
     },
     "journal of molecular biology": {
       "title": "Journal of Molecular Biology",
@@ -59,7 +71,9 @@
         "0022-2836",
         "1089-8638"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S46058472"
+      ]
     },
     "nucleic acids research": {
       "title": "Nucleic Acids Research",
@@ -68,7 +82,9 @@
         "0305-1048",
         "1362-4962"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S134668137"
+      ]
     },
     "journal of biological chemistry": {
       "title": "Journal of Biological Chemistry",
@@ -77,7 +93,9 @@
         "0021-9258",
         "1083-351X"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S140251998"
+      ]
     },
     "journal of the american chemical society": {
       "title": "Journal of the American Chemical Society",
@@ -86,7 +104,9 @@
         "0002-7863",
         "1520-5126"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S111155417"
+      ]
     },
     "journal of structural biology": {
       "title": "Journal of Structural Biology",
@@ -95,7 +115,9 @@
         "1047-8477",
         "1095-8657"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S89954039"
+      ]
     },
     "iucrj": {
       "title": "IUCrJ",
@@ -103,7 +125,9 @@
       "issns": [
         "2052-2525"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S2737064587"
+      ]
     },
     "acta crystallographica section d structural biology": {
       "title": "Acta Crystallographica Section D Structural Biology",
@@ -113,7 +137,10 @@
         "0907-4449",
         "1399-0047"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S114502960",
+        "S4393918103"
+      ]
     },
     "acta crystallographica section f structural biology communications": {
       "title": "Acta Crystallographica Section F Structural Biology Communications",
@@ -121,7 +148,9 @@
       "issns": [
         "2053-230X"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S4210171526"
+      ]
     },
     "ultramicroscopy": {
       "title": "Ultramicroscopy",
@@ -130,7 +159,9 @@
         "0304-3991",
         "1879-2723"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S27731274"
+      ]
     },
     "microscopy and microanalysis": {
       "title": "Microscopy and Microanalysis",
@@ -139,7 +170,9 @@
         "1431-9276",
         "1435-8115"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S98208149"
+      ]
     },
     "protein science": {
       "title": "Protein Science",
@@ -148,7 +181,9 @@
         "0961-8368",
         "1469-896X"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S156919612"
+      ]
     },
     "biophysical journal": {
       "title": "Biophysical Journal",
@@ -157,7 +192,9 @@
         "0006-3495",
         "1542-0086"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S98085912"
+      ]
     },
     "current opinion in structural biology": {
       "title": "Current Opinion in Structural Biology",
@@ -166,7 +203,9 @@
         "0959-440X",
         "1879-033X"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S175155502"
+      ]
     },
     "annual review of biophysics": {
       "title": "Annual Review of Biophysics",
@@ -175,7 +214,9 @@
         "1936-122X",
         "1936-1238"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S4157722"
+      ]
     },
     "quarterly reviews of biophysics": {
       "title": "Quarterly Reviews of Biophysics",
@@ -184,7 +225,9 @@
         "0033-5835",
         "1469-8994"
       ],
-      "source_ids": []
+      "source_ids": [
+        "S148645025"
+      ]
     }
   }
 }

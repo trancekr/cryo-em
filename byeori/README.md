@@ -39,7 +39,7 @@ Journal of Data Science; OpenAlex ID 8개)는 구조생물학과 무관하므로
 ## OpenAlex source ID 한도
 
 Byeori의 주제 검색은 목록의 모든 OpenAlex source ID를 하나의 필터로 보내는데, OpenAlex는
-필터당 100개까지만 받는다. 기존 73개 − 제거 8개 + 이 초안 21~22개 ≈ **86~87개**.
+필터당 100개까지만 받는다. 기존 73개 − 제거 8개 + 이 초안 22개 = **87개** (2026-09-28 맥미니에서 확인).
 
 ## 맥미니에 적용하기 (한 번에)
 
@@ -59,8 +59,8 @@ Homebrew가 없으면 먼저 https://brew.sh 에서 설치한다.
 
 ## 수동으로 하기
 
-초안의 `source_ids`는 비어 있다. 작성 환경에서 OpenAlex에 접속할 수 없었기 때문이며, ISSN도
-OpenAlex로 한 번 확인하는 것이 좋다.
+초안의 `source_ids`는 2026-09-28 맥미니에서 OpenAlex로 조회한 값이다(21종 모두 확인됨).
+`fill_openalex_ids.py`를 다시 실행하면 최신 값으로 다시 조회한다.
 
 ```bash
 cd cryo-em/byeori
