@@ -271,3 +271,17 @@ aws cloudformation delete-stack --stack-name "$KIRO_WIKI_STACK"
 aws cloudformation wait stack-delete-complete --stack-name "$KIRO_WIKI_STACK"
 ```
 데이터 버킷(논문·위키)은 삭제되지 않고 남는다. 완전히 지우려면 `~/byeori/docs/INSTALL.md` 10단계.
+
+---
+
+## 설치 후: 논문 여러 편 넣기
+
+폴더 하나의 PDF를 한 번에 넣는다 (새 터미널에서, 사용자가 직접):
+```bash
+bash ~/cryo-em/byeori/ingest_batch.sh <PDF 폴더>
+```
+- 계획(추가·건너뜀 목록, 예상 비용)을 보여 주고 한 번만 묻는다. `--yes`면 묻지 않는다.
+- 이미 Byeori에 있는 PDF(같은 SHA-256)는 파일 이름이 달라도 건너뛴다. 같은 폴더에 다시 돌려도 중복되지 않는다.
+- stem은 파일 이름을 소문자·하이픈으로 바꾼 것(`s41467-026-71934-7`). 노트 제목은 논문에서 온다.
+- 업로드 → 추출(최대 40분 대기) → 노트(배포된 모델, Sonnet 5) → 색인 재생성 → validate → 논문별 상태 표.
+- 논문당 약 $0.10 (노트 $0.07 + 추출 $0.02 안팎).
