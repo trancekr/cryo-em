@@ -1,2 +1,3 @@
 *.filled.json
 __pycache__/
+SETUP-LOG.md
