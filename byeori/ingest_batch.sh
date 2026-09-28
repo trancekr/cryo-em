@@ -22,7 +22,8 @@
 #   (s41467-026-71934-7.pdf -> s41467-026-71934-7). The note's title comes from the paper itself.
 # - Notes are written by the deployed NoteModelId (Sonnet 5 via deploy_byeori.sh), about $0.07-0.10
 #   a paper plus about $0.02 for extraction; a long supplement costs more.
-# - Waits for extraction (up to 40 minutes), then runs aws-pipeline-stems, which rebuilds the
+# - Running it again carries on: a paper already in Byeori without a note is picked up again.
+# - Waits for extraction (30 minutes plus one per paper), then runs aws-pipeline-stems, which rebuilds the
 #   search index at the end.
 set -euo pipefail
 
@@ -93,7 +94,7 @@ while [ "$j" -lt "${#si_files[@]}" ]; do
 done
 
 echo "==> PDFs in $FOLDER"
-plan_files=(); plan_stems=(); plan_notes=()
+plan_files=(); plan_stems=(); plan_notes=(); resume_stems=()
 skipped=0
 i=0
 while [ "$i" -lt "${#main_files[@]}" ]; do
@@ -106,6 +107,11 @@ while [ "$i" -lt "${#main_files[@]}" ]; do
   done
   digest="$(shasum -a 256 "$pdf" | cut -d' ' -f1)"
   existing="$(status_of "$stem")"
+  # In Byeori already but without a note (an earlier run stopped, or a note failed): carry it on.
+  if [ -n "$existing" ] && [ "$existing" != "None" ] && [ "$(note_of "$stem")" != "source_ready" ]; then
+    echo "  resume $name ($existing, no note yet)"
+    resume_stems+=("$stem"); i=$((i + 1)); continue
+  fi
   if printf '%s\n' "$known" | grep -qx "$digest" || { [ -n "$existing" ] && [ "$existing" != "None" ]; }; then
     echo "  skip  $name (already in Byeori, or the same file earlier in this folder)"
     skipped=$((skipped + 1)); i=$((i + 1)); continue
@@ -132,13 +138,13 @@ w.write(sys.argv[1])' "$upload" "$pdf" "${sis[@]}" 2>"$WORK/merge.log" \
 done
 
 count="${#plan_stems[@]}"
-if [ "$count" -eq 0 ]; then
+if [ "$count" -eq 0 ] && [ "${#resume_stems[@]}" -eq 0 ]; then
   echo "nothing new to add ($skipped already in Byeori)"
   exit 0
 fi
-estimate="$(awk -v n="$count" -v c="$COST_PER_PAPER" 'BEGIN { printf "%.2f", n * c }')"
+estimate="$(awk -v n="$((count + ${#resume_stems[@]}))" -v c="$COST_PER_PAPER" 'BEGIN { printf "%.2f", n * c }')"
 echo
-echo "$count new paper(s), $skipped skipped. Estimated cost: about \$$estimate (notes by $(aws lambda get-function-configuration \
+echo "$count new paper(s), ${#resume_stems[@]} to resume, $skipped skipped. Estimated cost: about \$$estimate (notes by $(aws lambda get-function-configuration \
   --function-name "$AWS_KIRO_WIKI_INGEST_FUNCTION" --query Environment.Variables.NOTE_MODEL_ID --output text))."
 if [ "$YES" != 1 ]; then
   printf 'Proceed? [y/N] '
@@ -157,14 +163,17 @@ while [ "$i" -lt "$count" ]; do
   case "$state" in uploaded|already_present) stems+=("${plan_stems[$i]}") ;; *) printf '%s\n' "$out" | tail -3 ;; esac
   i=$((i + 1))
 done
+stems+=(${resume_stems[@]+"${resume_stems[@]}"})
 [ "${#stems[@]}" -gt 0 ] || { echo "no upload succeeded" >&2; exit 1; }
 
-tasks="${#stems[@]}"; [ "$tasks" -gt 4 ] && tasks=4
+# aws-extract leaves a paper whose text is already stored alone, so resumed papers cost nothing here.
+tasks="${#stems[@]}"; [ "$tasks" -gt 8 ] && tasks=8
 echo "==> 2/4 extract (${#stems[@]} paper(s), $tasks Fargate task(s))"
 uv run --quiet byeori aws-extract --stems "${stems[@]}" --tasks "$tasks" >/dev/null
 
-echo "==> 3/4 wait for extraction (checks every minute, up to 40 minutes)"
-deadline=$(( $(date +%s) + 2400 ))
+wait_min=$(( 30 + ${#stems[@]} ))
+echo "==> 3/4 wait for extraction (checks every minute, up to $wait_min minutes)"
+deadline=$(( $(date +%s) + wait_min * 60 ))
 settle_until=0
 while :; do
   waiting=0; ready=0; parked=0; failed=0
@@ -184,7 +193,7 @@ while :; do
     [ "$settle_until" -eq 0 ] && settle_until=$(( now + 300 ))
     [ "$now" -ge "$settle_until" ] && break
   fi
-  [ "$now" -ge "$deadline" ] && { echo "  stopped waiting after 40 minutes"; break; }
+  [ "$now" -ge "$deadline" ] && { echo "  stopped waiting after $wait_min minutes; run this again later to carry on"; break; }
   sleep 60
 done
 
@@ -212,5 +221,5 @@ cat <<'EOF'
 source_ready                  note written and searchable
 fulltext_ready_unclassified   paper not identified at OpenAlex; parked, no note (try another copy, or leave it)
 extract_failed                GROBID could not read it; try: uv run byeori aws-extract --stems <stem> --preprocess ocr
-fulltext_ready                text ready, no note yet; rerun this script, or: uv run byeori aws-pipeline-stems --stems <stem>
+fulltext_ready                text ready, no note yet; run this script again on the same folder
 EOF
