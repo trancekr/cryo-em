@@ -1,3 +1,6 @@
 *.filled.json
 __pycache__/
 SETUP-LOG.md
+curation/notes/
+curation/terms.tsv
+curation/candidates.json
