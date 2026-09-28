@@ -100,9 +100,11 @@ while [ "$i" -lt "${#main_files[@]}" ]; do
   digest="$(shasum -a 256 "$pdf" | cut -d' ' -f1)"
   existing="$(status_of "$stem")"
   if printf '%s\n' "$known" | grep -qx "$digest" || { [ -n "$existing" ] && [ "$existing" != "None" ]; }; then
-    echo "  skip  $name (already in Byeori)"
+    echo "  skip  $name (already in Byeori, or the same file earlier in this folder)"
     skipped=$((skipped + 1)); i=$((i + 1)); continue
   fi
+  known="$known
+$digest"   # a second copy of the same file in this folder is skipped too
   upload="$pdf"; extra=""
   if [ "${#sis[@]}" -gt 0 ]; then
     upload="$WORK/$stem.pdf"
@@ -112,10 +114,12 @@ from pypdf import PdfWriter
 w = PdfWriter()
 for p in sys.argv[2:]:
     w.append(p)
-w.write(sys.argv[1])' "$upload" "$pdf" "${sis[@]}"
-    extra=" + $(for f in "${sis[@]}"; do printf '%s ' "$(basename "$f")"; done)"
+w.write(sys.argv[1])' "$upload" "$pdf" "${sis[@]}" 2>"$WORK/merge.log" \
+      || { echo "  could not join $name with its supplement:"; tail -3 "$WORK/merge.log"; exit 1; }
+    # pypdf's "Annotation sizes differ" warnings are about link annotations, not the text; hidden.
+    extra=" +$(for f in "${sis[@]}"; do printf ' %s' "$(basename "$f")"; done)"
   fi
-  echo "  add   $name$extra-> $stem"
+  echo "  add   $name$extra -> $stem"
   plan_files+=("$upload"); plan_stems+=("$stem"); plan_notes+=("${#sis[@]}")
   i=$((i + 1))
 done
