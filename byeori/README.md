@@ -41,7 +41,23 @@ Journal of Data Science; OpenAlex ID 8개)는 구조생물학과 무관하므로
 Byeori의 주제 검색은 목록의 모든 OpenAlex source ID를 하나의 필터로 보내는데, OpenAlex는
 필터당 100개까지만 받는다. 기존 73개 − 제거 8개 + 이 초안 21~22개 ≈ **86~87개**.
 
-## 사용법 (맥미니에서)
+## 맥미니에 적용하기 (한 번에)
+
+맥미니 터미널에서:
+
+```bash
+git clone -b claude/byeori-mac-mini-compatibility-0dl60f https://github.com/trancekr/cryo-em ~/cryo-em
+bash ~/cryo-em/byeori/setup_macmini.sh
+```
+
+`setup_macmini.sh`가 하는 일: macOS·칩 확인 → Homebrew로 git·uv·awscli 설치(없을 때만) →
+Byeori(v0.1.0-beta.1)를 `~/byeori`에 clone → `uv sync` → OpenAlex ID 조회 결과 출력 →
+**확인 후** `journals.json` 병합, `~/byeori`의 `cryoem-journals` 브랜치에 커밋 → 판정 확인.
+AWS에는 아무것도 만들지 않는다. 다시 실행해도 끝난 단계는 건너뛴다.
+옵션: `--yes`(묻지 않고 병합), `--with-docker`(colima·docker 설치), `BYEORI_DIR=...`(clone 위치).
+Homebrew가 없으면 먼저 https://brew.sh 에서 설치한다.
+
+## 수동으로 하기
 
 초안의 `source_ids`는 비어 있다. 작성 환경에서 OpenAlex에 접속할 수 없었기 때문이며, ISSN도
 OpenAlex로 한 번 확인하는 것이 좋다.
