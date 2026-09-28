@@ -42,7 +42,7 @@ cd ~/cryo-em && git pull && claude
 | 항목 | 값 | 비고 |
 |---|---|---|
 | 리전 | `us-east-1` | Byeori 검증 리전. 모델은 `global.` 경로라 서울을 골라도 처리 위치는 해외일 수 있음 |
-| AWS 프로필 | 사용자의 기존 프로필 | 프로필 기본 리전(아시아·태평양)은 무시됨. Byeori는 `.byeori.env`의 리전을 씀 |
+| AWS 프로필 | `default` (사용자 `hanseonk`) | 프로필 기본 리전(ap-northeast-2)은 무시됨. Byeori는 `.byeori.env`의 리전을 씀 |
 | 스택 이름 | `byeori` | |
 | VPC | 새로 만듦(`true`) | 퍼블릭 서브넷만, NAT 없음 → 유휴 비용 0 |
 | 노트 모델 | Opus 5, `IngestReasoning=default` | 논문 1편 약 $0.135 (+추출 $0.02) |
@@ -60,10 +60,17 @@ git -C ~/byeori branch --show-current
 git -C ~/byeori log -1 --oneline
 aws configure list-profiles
 ```
-사용자에게 Byeori에 쓸 프로필 이름을 물어 `PROFILE`로 정한 뒤:
+Byeori에 쓸 프로필은 **`default`** (2026-09-28 확인: `default`·`cryosparc`는 같은 사용자, 권한 시뮬레이션 17개 모두 allowed). `PROFILE=default`로 두고:
 ```bash
 aws sts get-caller-identity --profile "$PROFILE"
-aws iam list-attached-user-policies --user-name "$(aws sts get-caller-identity --profile "$PROFILE" --query Arn --output text | awk -F/ '{print $NF}')" --profile "$PROFILE" 2>&1 | head -20
+aws iam simulate-principal-policy --profile "$PROFILE" \
+  --policy-source-arn "$(aws sts get-caller-identity --profile "$PROFILE" --query Arn --output text)" \
+  --action-names iam:CreateRole iam:PutRolePolicy iam:AttachRolePolicy iam:PassRole \
+    iam:CreateServiceLinkedRole ecs:CreateCluster ecs:RegisterTaskDefinition \
+    ecr:CreateRepository states:CreateStateMachine events:PutRule cloudtrail:CreateTrail \
+    ssm:PutParameter bedrock:InvokeModel s3:CreateBucket lambda:CreateFunction \
+    dynamodb:CreateTable ec2:CreateVpc \
+  --query "EvaluationResults[].[EvalActionName,EvalDecision]" --output table
 ```
 
 | 판단 기준 | PASS |
@@ -72,7 +79,7 @@ aws iam list-attached-user-policies --user-name "$(aws sts get-caller-identity -
 | 도구 | uv, aws(v2), git 버전이 나옴 |
 | Byeori 브랜치 | `cryoem-journals`, 최근 커밋이 "Structural-biology journal list for the lab" |
 | 자격 증명 | `get-caller-identity`가 계정·ARN 출력 |
-| 권한 | `AdministratorAccess`가 붙어 있음 (역할/SSO라 조회가 안 되면 **사용자 확인 필요**로 두고 진행: CP4에서 드러남) |
+| 권한 | 시뮬레이션 결과 전부 `allowed` (조직 SCP는 시뮬레이션에 안 잡히므로 CP4에서 최종 확인) |
 
 | 대응 | |
 |---|---|
