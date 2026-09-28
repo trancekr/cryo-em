@@ -5,12 +5,22 @@
 #   bash ~/cryo-em/byeori/ingest_batch.sh <folder> --yes    # no question
 #
 # - Only the PDFs directly in <folder> (not subfolders). The files are only read.
-# - A PDF whose bytes are already in Byeori (same SHA-256, under any name) is skipped, so running
-#   it again on the same folder, or on Downloads with papers already added, adds nothing twice.
+# - Supplementary PDFs are appended to their paper, not added as papers. A file whose name has
+#   si / esm / supp / suppl / supplement(ary) / supporting in it is supplementary; it belongs to the
+#   paper whose file name starts with the part before that word:
+#       leonarski-2024-si.pdf            -> leonarski-2024-ion-binding-rna-mg.pdf
+#       sanchez-garcia-2021-deepemhancer-si.pdf -> sanchez-garcia-2021-deepemhancer.pdf
+#   The paper and its supplements are joined into one PDF (paper first) and that is uploaded, so
+#   the note is written from both; cryo-EM data and refinement tables are often only in the SI.
+#   A supplement that matches no paper, or more than one, is skipped with a message: rename it
+#   <paper file name>-si.pdf. (Uploaded on its own, a supplement carries the paper's DOI and is
+#   identified as the paper, which parks the real paper.)
+# - A paper is skipped when its stem is already in Byeori or its bytes are (same SHA-256), so
+#   running this again on the same folder adds nothing twice.
 # - The stem is the file name in lowercase with other characters turned into hyphens
 #   (s41467-026-71934-7.pdf -> s41467-026-71934-7). The note's title comes from the paper itself.
 # - Notes are written by the deployed NoteModelId (Sonnet 5 via deploy_byeori.sh), about $0.07-0.10
-#   a paper plus about $0.02 for extraction.
+#   a paper plus about $0.02 for extraction; a long supplement costs more.
 # - Waits for extraction (up to 40 minutes), then runs aws-pipeline-stems, which rebuilds the
 #   search index at the end.
 set -euo pipefail
@@ -20,9 +30,12 @@ YES=0
 [ "${2:-}" = "--yes" ] && YES=1
 BYEORI_DIR="${BYEORI_DIR:-$HOME/byeori}"
 COST_PER_PAPER="0.10"
+SI_WORD='(^|-)(si|esm|supp|suppl|supplement|supplementary|supporting)(-|[0-9]|$)'
 
 [ -d "$FOLDER" ] || { echo "no such folder: $FOLDER" >&2; exit 1; }
 FOLDER="$(cd "$FOLDER" && pwd)"
+WORK="$(mktemp -d)"
+trap 'rm -rf "$WORK"' EXIT
 cd "$BYEORI_DIR"
 # shellcheck disable=SC1091
 source .byeori.env
@@ -36,36 +49,75 @@ note_of() {
   aws dynamodb get-item --table-name "$AWS_KIRO_WIKI_TABLE" --key "{\"work_id\":{\"S\":\"$1\"}}" \
     --projection-expression source_note_status --query "Item.source_note_status.S" --output text 2>/dev/null
 }
+norm() { printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//'; }
 
 echo "==> reading what Byeori already holds"
 known="$(aws dynamodb scan --table-name "$AWS_KIRO_WIKI_TABLE" --projection-expression pdf_sha256 \
   --query "Items[].pdf_sha256.S" --output text | tr '\t' '\n')"
 
-echo "==> PDFs in $FOLDER"
-plan_files=()
-plan_stems=()
-skipped=0
+main_files=(); main_norms=(); si_files=(); si_bases=()
 for pdf in "$FOLDER"/*.pdf "$FOLDER"/*.PDF; do
   [ -f "$pdf" ] || continue
+  n="$(norm "$(basename "${pdf%.*}")")"
+  if printf '%s' "$n" | grep -qE "$SI_WORD"; then
+    si_files+=("$pdf")
+    si_bases+=("$(printf '%s' "$n" | sed -E "s/$SI_WORD.*//; s/-+$//")")
+  else
+    main_files+=("$pdf"); main_norms+=("$n")
+  fi
+done
+
+# Which paper each supplement belongs to: the one paper whose name starts with its base.
+si_owner=()
+j=0
+while [ "$j" -lt "${#si_files[@]}" ]; do
+  base="${si_bases[$j]}"; owner=""; hits=0
+  i=0
+  while [ "$i" -lt "${#main_files[@]}" ]; do
+    case "${main_norms[$i]}" in "$base"*) [ "${#base}" -ge 5 ] && { owner="$i"; hits=$((hits + 1)); } ;; esac
+    i=$((i + 1))
+  done
+  [ "$hits" -eq 1 ] || owner=""
+  si_owner+=("${owner:--}")
+  if [ -z "$owner" ]; then
+    echo "  skip  $(basename "${si_files[$j]}") (supplement: $hits matching papers; rename it <paper file name>-si.pdf)"
+  fi
+  j=$((j + 1))
+done
+
+echo "==> PDFs in $FOLDER"
+plan_files=(); plan_stems=(); plan_notes=()
+skipped=0
+i=0
+while [ "$i" -lt "${#main_files[@]}" ]; do
+  pdf="${main_files[$i]}"; name="$(basename "$pdf")"
+  stem="${main_norms[$i]}"; [ "${#stem}" -ge 3 ] || stem="paper-$stem"
+  sis=(); j=0
+  while [ "$j" -lt "${#si_files[@]}" ]; do
+    [ "${si_owner[$j]}" = "$i" ] && sis+=("${si_files[$j]}")
+    j=$((j + 1))
+  done
   digest="$(shasum -a 256 "$pdf" | cut -d' ' -f1)"
-  name="$(basename "$pdf")"
-  # Supplementary files carry the paper's DOI, so one would be identified as the paper itself and
-  # could take its place. They are left out; Byeori keeps supplements apart from papers.
-  if printf '%s' "${name%.*}" | grep -qiE '(^|[^a-z])(si|esm|supp|suppl|supplement|supplementary|supporting)([^a-z]|$)'; then
-    echo "  skip  $name (looks like supplementary material)"
-    skipped=$((skipped + 1))
-    continue
-  fi
-  if printf '%s\n' "$known" | grep -qx "$digest"; then
+  existing="$(status_of "$stem")"
+  if printf '%s\n' "$known" | grep -qx "$digest" || { [ -n "$existing" ] && [ "$existing" != "None" ]; }; then
     echo "  skip  $name (already in Byeori)"
-    skipped=$((skipped + 1))
-    continue
+    skipped=$((skipped + 1)); i=$((i + 1)); continue
   fi
-  stem="$(printf '%s' "${name%.*}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')"
-  [ "${#stem}" -ge 3 ] || stem="paper-$stem"
-  echo "  add   $name -> $stem"
-  plan_files+=("$pdf")
-  plan_stems+=("$stem")
+  upload="$pdf"; extra=""
+  if [ "${#sis[@]}" -gt 0 ]; then
+    upload="$WORK/$stem.pdf"
+    uv run --quiet --no-project --with pypdf python -c '
+import sys
+from pypdf import PdfWriter
+w = PdfWriter()
+for p in sys.argv[2:]:
+    w.append(p)
+w.write(sys.argv[1])' "$upload" "$pdf" "${sis[@]}"
+    extra=" + $(for f in "${sis[@]}"; do printf '%s ' "$(basename "$f")"; done)"
+  fi
+  echo "  add   $name$extra-> $stem"
+  plan_files+=("$upload"); plan_stems+=("$stem"); plan_notes+=("${#sis[@]}")
+  i=$((i + 1))
 done
 
 count="${#plan_stems[@]}"
@@ -87,7 +139,8 @@ echo "==> 1/4 upload"
 stems=()
 i=0
 while [ "$i" -lt "$count" ]; do
-  out="$(uv run --quiet byeori upload-pdf "${plan_files[$i]}" --stem "${plan_stems[$i]}" 2>&1)" || true
+  source_tag="upload-pdf"; [ "${plan_notes[$i]}" -gt 0 ] && source_tag="upload-pdf+supplement"
+  out="$(uv run --quiet byeori upload-pdf "${plan_files[$i]}" --stem "${plan_stems[$i]}" --source "$source_tag" 2>&1)" || true
   state="$(printf '%s' "$out" | grep -o '"state": *"[a-z_]*"' | head -1 | sed 's/.*"\([a-z_]*\)"$/\1/')"
   echo "  ${plan_stems[$i]}: ${state:-error}"
   case "$state" in uploaded|already_present) stems+=("${plan_stems[$i]}") ;; *) printf '%s\n' "$out" | tail -3 ;; esac

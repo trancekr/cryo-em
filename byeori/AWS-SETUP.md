@@ -281,7 +281,17 @@ aws cloudformation wait stack-delete-complete --stack-name "$KIRO_WIKI_STACK"
 bash ~/cryo-em/byeori/ingest_batch.sh <PDF 폴더>
 ```
 - 계획(추가·건너뜀 목록, 예상 비용)을 보여 주고 한 번만 묻는다. `--yes`면 묻지 않는다.
-- 이미 Byeori에 있는 PDF(같은 SHA-256)는 파일 이름이 달라도 건너뛴다. 같은 폴더에 다시 돌려도 중복되지 않는다.
+- 이미 Byeori에 있는 PDF(같은 SHA-256, 또는 같은 stem)는 건너뛴다. 같은 폴더에 다시 돌려도 중복되지 않는다.
+- **보충자료(SI)는 본문 뒤에 붙여 한 PDF로 올린다.** 이름에 si·esm·supp·supplementary·supporting이 든 파일은 앞부분이
+  같은 본문 파일에 붙는다(`leonarski-2024-si.pdf` → `leonarski-2024-ion-binding-rna-mg.pdf`). 짝이 없으면 건너뛰고
+  `<본문 파일 이름>-si.pdf`로 바꾸라고 알려 준다. SI를 따로 올리면 본문 DOI로 식별되어 본문 자리를 차지한다.
+- 같은 논문의 다른 파일(출판본·재다운로드)은 한 폴더에 하나만 둔다. 둘 다 올리면 나중 것이 대기(`unclassified`)된다.
 - stem은 파일 이름을 소문자·하이픈으로 바꾼 것(`s41467-026-71934-7`). 노트 제목은 논문에서 온다.
 - 업로드 → 추출(최대 40분 대기) → 노트(배포된 모델, Sonnet 5) → 색인 재생성 → validate → 논문별 상태 표.
-- 논문당 약 $0.10 (노트 $0.07 + 추출 $0.02 안팎).
+- 논문당 약 $0.10 (노트 $0.07 + 추출 $0.02 안팎). SI가 길면 더 든다.
+
+잘못 들어간 논문 지우기 (Byeori에는 삭제 명령이 없다):
+```bash
+bash ~/cryo-em/byeori/remove_paper.sh <stem> [<stem> ...]
+```
+무엇이 있는지 보여 주고 한 번 묻고, 목록·원본·노트를 지운 뒤 색인을 다시 만든다. 영구 삭제.
