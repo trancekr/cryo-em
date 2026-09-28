@@ -31,6 +31,11 @@ status_of() {
   aws dynamodb get-item --table-name "$AWS_KIRO_WIKI_TABLE" --key "{\"work_id\":{\"S\":\"$1\"}}" \
     --projection-expression ingest_status --query "Item.ingest_status.S" --output text 2>/dev/null
 }
+# The note has its own field: a noted paper keeps ingest_status fulltext_ready.
+note_of() {
+  aws dynamodb get-item --table-name "$AWS_KIRO_WIKI_TABLE" --key "{\"work_id\":{\"S\":\"$1\"}}" \
+    --projection-expression source_note_status --query "Item.source_note_status.S" --output text 2>/dev/null
+}
 
 echo "==> reading what Byeori already holds"
 known="$(aws dynamodb scan --table-name "$AWS_KIRO_WIKI_TABLE" --projection-expression pdf_sha256 \
@@ -44,6 +49,13 @@ for pdf in "$FOLDER"/*.pdf "$FOLDER"/*.PDF; do
   [ -f "$pdf" ] || continue
   digest="$(shasum -a 256 "$pdf" | cut -d' ' -f1)"
   name="$(basename "$pdf")"
+  # Supplementary files carry the paper's DOI, so one would be identified as the paper itself and
+  # could take its place. They are left out; Byeori keeps supplements apart from papers.
+  if printf '%s' "${name%.*}" | grep -qiE '(^|[^a-z])(si|esm|supp|suppl|supplement|supplementary|supporting)([^a-z]|$)'; then
+    echo "  skip  $name (looks like supplementary material)"
+    skipped=$((skipped + 1))
+    continue
+  fi
   if printf '%s\n' "$known" | grep -qx "$digest"; then
     echo "  skip  $name (already in Byeori)"
     skipped=$((skipped + 1))
@@ -114,7 +126,7 @@ done
 
 ready_stems=()
 for s in "${stems[@]}"; do
-  [ "$(status_of "$s")" = "fulltext_ready" ] && ready_stems+=("$s")
+  [ "$(status_of "$s")" = "fulltext_ready" ] && [ "$(note_of "$s")" != "source_ready" ] && ready_stems+=("$s")
 done
 if [ "${#ready_stems[@]}" -gt 0 ]; then
   echo "==> 4/4 notes for ${#ready_stems[@]} paper(s) (then the index is rebuilt)"
@@ -127,12 +139,14 @@ fi
 echo
 echo "==> result"
 for s in "${stems[@]}"; do
-  printf '  %-45s %s\n' "$s" "$(status_of "$s")"
+  note="$(note_of "$s")"
+  if [ "$note" = "source_ready" ]; then shown="source_ready"; else shown="$(status_of "$s")"; [ "$note" != "None" ] && [ -n "$note" ] && shown="$shown (note: $note)"; fi
+  printf '  %-45s %s\n' "$s" "$shown"
 done
 cat <<'EOF'
 
 source_ready                  note written and searchable
 fulltext_ready_unclassified   paper not identified at OpenAlex; parked, no note (try another copy, or leave it)
 extract_failed                GROBID could not read it; try: uv run byeori aws-extract --stems <stem> --preprocess ocr
-fulltext_ready                text ready but the note failed; rerun this script, or: uv run byeori aws-pipeline-stems --only-failed
+fulltext_ready                text ready, no note yet; rerun this script, or: uv run byeori aws-pipeline-stems --stems <stem>
 EOF
