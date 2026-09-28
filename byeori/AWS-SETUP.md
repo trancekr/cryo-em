@@ -48,7 +48,7 @@ cd ~/cryo-em && git pull && claude
 | AWS 프로필 | `default` (사용자 `hanseonk`) | 프로필 기본 리전(ap-northeast-2)은 무시됨. Byeori는 `.byeori.env`의 리전을 씀 |
 | 스택 이름 | `byeori` | |
 | VPC | 새로 만듦(`true`) | 퍼블릭 서브넷만, NAT 없음 → 유휴 비용 0 |
-| 노트 모델 | Opus 5, `IngestReasoning=default` | 문서 예상 $0.135이나 **실측 $0.25** (cryo-EM 논문, 출력 7,273토큰; 2026-09-28) (+추출 $0.02) |
+| 노트 모델 | **Sonnet 5** (2026-09-28 전환), `IngestReasoning=default`, 예비 모델 Opus 5 | 실측 Sonnet $0.067 / Opus $0.25 (cryo-EM 논문 각 1편, 수치 정확도 동등) (+추출 $0.02) |
 | 질문 상한 | `QuestionBudgetUsd=5` | |
 | 그림 추출 이미지 | 건너뜀 | Docker 없음. 텍스트·노트에는 영향 없음 |
 

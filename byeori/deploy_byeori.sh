@@ -2,16 +2,20 @@
 # Deploy Byeori with this lab's cost settings, every time.
 #
 # `byeori deploy` does not remember Key=Value overrides: a plain deploy puts back Opus 5 with
-# IngestReasoning=high (about $0.30 a paper). Deploy through this script instead so the lab's
-# settings are always passed. Extra Key=Value arguments are added after them and win.
+# IngestReasoning=high (about $0.30 a paper). Notes are written by Sonnet 5 since 2026-09-28: on two
+# cryo-EM papers it matched Opus 5 on every number checked, at about a third of the cost
+# (Opus $0.25 a paper measured). The fallback for a declined note stays Opus 5.
+# Deploy through this script so the lab's settings are always passed. Extra Key=Value arguments
+# are added after them and win.
 #
 #   bash ~/cryo-em/byeori/deploy_byeori.sh
-#   bash ~/cryo-em/byeori/deploy_byeori.sh NoteModelId=global.anthropic.claude-sonnet-5
+#   bash ~/cryo-em/byeori/deploy_byeori.sh NoteModelId=global.anthropic.claude-opus-5   # back to Opus
 set -euo pipefail
 
 BYEORI_DIR="${BYEORI_DIR:-$HOME/byeori}"
 LAB_SETTINGS=(
-  IngestReasoning=default      # no thinking for notes: about $0.135 a paper on Opus 5
+  NoteModelId=global.anthropic.claude-sonnet-5   # about $0.07-0.10 a paper
+  IngestReasoning=default      # no thinking for notes
   SynthesisReasoning=medium
   QuestionBudgetUsd=5          # ceiling per research question, in dollars
 )
