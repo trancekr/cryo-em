@@ -31,7 +31,9 @@ cd ~/cryo-em && git pull && claude
    - 판단: ...
    - 다음: ...
    ```
-   `SETUP-LOG.md`는 `.gitignore`에 있다(이 저장소는 공개일 수 있으므로 커밋하지 않는다). 사용자가 클라우드 세션에
+   로그 파일은 **`~/cryo-em/byeori/SETUP-LOG.md`** 하나뿐이다(`~/cryo-em/byeori/.gitignore`에 이미 있음).
+   **커밋하지 않는다.** `~/byeori`(joonan-lab/byeori 클론)의 파일은 읽기만 하고 수정·커밋하지 않는다
+   (`.gitignore` 포함; 저널 목록은 이미 `cryoem-journals` 브랜치에 반영됨). 사용자가 클라우드 세션에
    공유하고 싶으면 로그 내용을 붙여 넣게 한다.
 7. **요약.** 체크포인트마다 사용자에게 3줄 이내로 요약한다: 결과, 다음에 할 일, 사용자가 할 일(있으면).
 
