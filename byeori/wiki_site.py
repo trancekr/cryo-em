@@ -139,7 +139,9 @@ TEMPLATE = """<!doctype html>
 NAV_JS = r"""
 (function () {
   var root = document.body.dataset.root, list = document.getElementById('list'), q = document.getElementById('q');
-  var here = location.pathname.split('/').slice(-2).join('/');
+  // This page's path relative to the site root, e.g. "sources/x.html", to mark it in the list.
+  var parts = location.pathname.split('/'), depth = root === '.' ? 0 : root.split('/').length;
+  var herePath = decodeURIComponent(parts.slice(-(depth + 1)).join('/'));
   var kinds = [['overviews', 'Fields'], ['questions', 'Questions'], ['concepts', 'Concepts'], ['sources', 'Papers']];
   function esc(s) { return s.replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
   function render(filter) {
@@ -151,11 +153,23 @@ NAV_JS = r"""
       if (!items.length) return;
       var open = f || k[0] !== 'sources' ? ' open' : '';
       out += '<details' + open + '><summary>' + k[1] + ' <span>' + items.length + '</span></summary><ul>';
-      items.forEach(function (p) {
-        var cur = p.p.split('/').slice(-2).join('/') === here ? ' class="cur"' : '';
-        var label = p.k === 'overviews' && p.i ? '<b>' + esc(p.g) + '</b>' : esc(p.t);
-        out += '<li' + cur + (p.k === 'overviews' && !p.i ? ' style="padding-left:10px"' : '') + '><a href="' + root + '/' + p.p + '">' + label + '</a>' + (p.y ? ' <span>' + p.y + '</span>' : '') + '</li>';
-      });
+      function item(p, label) {
+        var cur = p.p === herePath ? ' class="cur"' : '';
+        return '<li' + cur + '><a href="' + root + '/' + p.p + '" title="' + esc(p.t) + '">' + label + '</a>' + (p.y ? '<span>' + p.y + '</span>' : '') + '</li>';
+      }
+      if (k[0] === 'overviews') {
+        // One collapsible block per field: the field's landscape page, then its subtopics.
+        var groups = {};
+        items.forEach(function (p) { (groups[p.g] = groups[p.g] || []).push(p); });
+        Object.keys(groups).sort().forEach(function (g) {
+          var gi = groups[g], mine = gi.some(function (p) { return p.p === herePath; });
+          out += '<li class="grp"><details' + (f || mine ? ' open' : '') + '><summary>' + esc(g || 'other') + ' <span>' + gi.length + '</span></summary><ul>';
+          gi.forEach(function (p) { out += item(p, p.i ? 'Overview' : esc(p.t)); });
+          out += '</ul></details></li>';
+        });
+      } else {
+        items.forEach(function (p) { out += item(p, esc(p.t)); });
+      }
       out += '</ul></details>';
     });
     list.innerHTML = out || '<p class="none">No match</p>';
@@ -175,7 +189,11 @@ body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 -apple
 #side .home { display: block; font-weight: 700; font-size: 17px; color: var(--fg); text-decoration: none; margin-bottom: 10px; }
 #q { width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); font-size: 14px; margin-bottom: 10px; }
 details { margin: 6px 0; } summary { cursor: pointer; font-weight: 600; } summary span, #side li span { color: var(--muted); font-weight: 400; font-size: 12px; }
-#side ul { list-style: none; margin: 4px 0 8px; padding: 0; } #side li { padding: 2px 6px; border-radius: 6px; line-height: 1.35; margin: 2px 0; }
+#side ul { list-style: none; margin: 4px 0 8px; padding: 0; }
+#side li { display: flex; gap: 6px; align-items: baseline; padding: 2px 6px; border-radius: 6px; line-height: 1.35; margin: 1px 0; }
+#side li > a { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#side li > span { flex: none; }
+#side li.grp { display: block; padding: 0 0 0 4px; } #side li.grp summary { font-weight: 500; } #side li.grp ul { margin-left: 12px; }
 #side li.cur { background: var(--cur); } #side a { color: var(--fg); text-decoration: none; } #side a:hover { color: var(--link); }
 main { flex: 1; min-width: 0; max-width: 900px; padding: 28px 40px 80px; }
 main a { color: var(--link); text-decoration: none; } main a:hover { text-decoration: underline; }
