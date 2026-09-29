@@ -5,7 +5,13 @@ Byeori의 자동 분류(`aws-classify-notes`)는 **제목만** 보고, 개념 �
 분야는 제목만으로 정해진다. 이 작업은 맥미니의 Claude Code(Max, API 비용 없음)가 노트 본문을 읽고
 두 파일을 만든다. 사람이 확인한 뒤 `apply_curation.sh`로 반영한다.
 
-시작: `cd ~/cryo-em && git pull && claude` 후 **"byeori/CURATE.md 대로 큐레이션 해줘"**.
+시작:
+```bash
+cd ~/cryo-em && git pull
+bash ~/cryo-em/byeori/curate_prepare.sh     # 사용자가 터미널에서: 노트·요약본·개념 후보를 받는다 (AWS 읽기만)
+claude                                       # 그 다음 Claude Code에서
+```
+**"byeori/CURATE.md 대로 큐레이션 해줘"**.
 
 ---
 
@@ -13,21 +19,20 @@ Byeori의 자동 분류(`aws-classify-notes`)는 **제목만** 보고, 개념 �
 
 - AWS에 쓰는 명령은 실행하지 않는다. 이 작업의 결과물은 아래 두 파일뿐이다. 반영은 사용자가 한다.
 - 노트는 `byeori/curation/notes/`에 받은 사본만 읽는다(`.gitignore`에 있음).
+- **노트 전문을 다 읽지 않는다.** `curation/digest.md`(논문당 제목·요약·주요 기여 몇 줄)로 분류하고, 그것으로
+  판단이 안 서는 논문만 `curation/notes/<stem>.md`를 연다. 87편 전문은 한 세션에 다 들어가지 않는다.
+- **명령 출력을 화면에 쏟지 않는다.** 긴 내용은 파일로 읽고, 사용자에게는 진행 상황만 한 줄씩 알린다.
+- **20편마다 `fields.tsv`에 저장한다.** 중단돼도 이어서 할 수 있게, 빈 field 칸이 남은 줄부터 이어 간다.
 - 판단이 애매한 논문은 추측하지 말고 `fields.tsv`의 keywords 칸 끝에 `?확인필요: 이유`를 적는다.
 
-### 1. 노트 받기 (읽기 전용)
+### 1. 재료 확인
 
-```bash
-cd ~/byeori && source .byeori.env
-aws s3 sync "s3://$AWS_KIRO_WIKI_BUCKET/wiki/sources/" ~/cryo-em/byeori/curation/notes/ \
-  --exclude "*" --include "*.md" --exclude "failed/*" --only-show-errors
-ls ~/cryo-em/byeori/curation/notes/ | wc -l
-```
+사용자가 `curate_prepare.sh`를 돌렸으면 `byeori/curation/`에 `digest.md`, `candidates.tsv`, `terms.tsv`,
+`fields.tsv`(stem만 채운 틀)가 있다. 없으면 사용자에게 그 스크립트를 먼저 돌려 달라고 한다.
 
 ### 2. 분야 분류 → `byeori/curation/fields.tsv`
 
-각 노트의 `## One-line Summary`, `## 2. Key Contributions`, `## 3. Methodology and Architecture` 앞부분을 읽고
-한 줄씩 쓴다. 탭 구분, 첫 줄은 `#`로 시작하는 머리글.
+`digest.md`를 읽고 `fields.tsv`의 빈 칸(field, protein_class, keywords)을 채운다. 탭 구분.
 
 ```
 #stem	field	protein_class	keywords
@@ -46,18 +51,12 @@ park-2026-small-protein-ligand	cryoem-structures	small soluble protein-ligand co
 
 ### 3. 개념 정리 → `byeori/curation/overrides.json`
 
-Byeori가 뽑은 개념 후보(정확한 slug)와, 참고용 전체 Glossary 용어표를 받는다.
+`candidates.tsv`(Byeori의 개념 후보, 정확한 slug)와 `terms.tsv`(전체 Glossary 용어, 참고용)를 읽는다.
 
-```bash
-cd ~/byeori && source .byeori.env
-aws s3 cp "s3://$AWS_KIRO_WIKI_BUCKET/runs/synthesis/concepts/candidates.json" ~/cryo-em/byeori/curation/candidates.json --only-show-errors
-python3 ~/cryo-em/byeori/glossary_terms.py ~/cryo-em/byeori/curation/notes --min 3 > ~/cryo-em/byeori/curation/terms.tsv
-```
-
-- **slug는 `candidates.json`의 `concepts[].slug`를 그대로 쓴다.** Byeori는 용어를 자체 규칙(끝의 복수 s 제거 등)으로
-  slug로 바꾸므로, `terms.tsv`의 slug는 대략적인 참고용이다. `candidates.json`에 없는 용어를 merge할 때는
+- **slug는 `candidates.tsv`의 slug를 그대로 쓴다.** Byeori는 용어를 자체 규칙(끝의 복수 s 제거 등)으로
+  slug로 바꾸므로, `terms.tsv`의 slug는 대략적인 참고용이다. `candidates.tsv`에 없는 용어를 merge할 때는
   `terms.tsv`의 slug에서 끝의 복수 `s`를 뺀 형태도 함께 적는다.
-- `candidates.json`의 `aliases`, `members`(논문 목록)를 보면 이미 합쳐진 것과 아닌 것을 알 수 있다.
+- `candidates.tsv`의 aliases 칸을 보면 이미 합쳐진 것과 아닌 것을 알 수 있다.
 
 세 가지를 정한다.
 
@@ -92,5 +91,5 @@ bash ~/cryo-em/byeori/apply_curation.sh --apply  # 반영 + 합성 계획 다시
 ## 새 논문을 넣은 뒤
 
 `ingest_batch.sh`로 들어온 새 논문은 분야가 비어 있다(`other`). 몇십 편 쌓이면 이 작업을 다시 하되,
-`fields.tsv`에 없는 stem만 추가하면 된다. 단백질 종류별 분야는 `cryoem-structures`의 한 `protein_class`가
+`curate_prepare.sh`를 다시 돌리면 새 stem만 `fields.tsv` 끝에 빈 줄로 붙는다. 단백질 종류별 분야는 `cryoem-structures`의 한 `protein_class`가
 15~20편이 되면 연다: `apply_curation.sh`의 `field_scope`에 한 줄 추가하고, 해당 논문의 field 칸을 바꾼다.
