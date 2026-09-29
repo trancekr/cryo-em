@@ -3,6 +3,7 @@
 #
 #   bash ~/cryo-em/byeori/ingest_batch.sh <folder>          # shows the plan and asks once
 #   bash ~/cryo-em/byeori/ingest_batch.sh <folder> --yes    # no question
+#   bash ~/cryo-em/byeori/ingest_batch.sh paper.pdf paper_SI.pdf   # or name the files themselves
 #
 # - Only the PDFs directly in <folder> (not subfolders); other files are listed as skipped.
 #   The files are only read.
@@ -27,17 +28,29 @@
 #   search index at the end.
 set -euo pipefail
 
-FOLDER="${1:?usage: ingest_batch.sh <folder> [--yes]}"
 YES=0
-[ "${2:-}" = "--yes" ] && YES=1
+inputs=()
+for arg in "$@"; do
+  case "$arg" in --yes) YES=1 ;; *) inputs+=("$arg") ;; esac
+done
+[ "${#inputs[@]}" -gt 0 ] || { echo "usage: ingest_batch.sh <folder> | <file.pdf> [<file_SI.pdf> ...] [--yes]" >&2; exit 2; }
 BYEORI_DIR="${BYEORI_DIR:-$HOME/byeori}"
 COST_PER_PAPER="0.10"
 SI_WORD='(^|-)(si|esm|supp|suppl|supplement|supplementary|supporting)(-|[0-9]|$)'
 
-[ -d "$FOLDER" ] || { echo "no such folder: $FOLDER" >&2; exit 1; }
-FOLDER="$(cd "$FOLDER" && pwd)"
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
+if [ "${#inputs[@]}" -eq 1 ] && [ -d "${inputs[0]}" ]; then
+  FOLDER="$(cd "${inputs[0]}" && pwd)"
+else
+  # Files named one by one: gather them (as links; nothing is copied) and treat that as the folder.
+  FOLDER="$WORK/files"
+  mkdir -p "$FOLDER"
+  for f in "${inputs[@]}"; do
+    [ -f "$f" ] || { echo "no such file or folder: $f" >&2; exit 1; }
+    ln -s "$(cd "$(dirname "$f")" && pwd)/$(basename "$f")" "$FOLDER/$(basename "$f")"
+  done
+fi
 cd "$BYEORI_DIR"
 # shellcheck disable=SC1091
 source .byeori.env
