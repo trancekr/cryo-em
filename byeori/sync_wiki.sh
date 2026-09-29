@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Copy the published wiki from S3 into a local folder to read in Obsidian (or any Markdown viewer).
+# Copy the published wiki from S3 into a local folder, then build browser pages from it
+# (~/ByeoriWiki-site/index.html; wiki_site.py). The Markdown folder also opens as an Obsidian vault.
 #
 #   bash ~/cryo-em/byeori/sync_wiki.sh            # into ~/ByeoriWiki
 #   WIKI_DIR=~/somewhere bash ~/cryo-em/byeori/sync_wiki.sh
@@ -19,4 +20,6 @@ aws s3 sync "s3://$AWS_KIRO_WIKI_BUCKET/wiki/" "$WIKI_DIR/" --delete --exclude "
 for d in sources concepts overviews questions; do
   [ -d "$WIKI_DIR/$d" ] && printf '  %-10s %s pages\n' "$d" "$(find "$WIKI_DIR/$d" -name '*.md' | wc -l | tr -d ' ')"
 done
-echo "wiki in $WIKI_DIR (open this folder as a vault in Obsidian; start from index.md)"
+SITE_DIR="${SITE_DIR:-$HOME/ByeoriWiki-site}"
+uv run --quiet --no-project --with markdown python "$(dirname "$0")/wiki_site.py" "$WIKI_DIR" "$SITE_DIR"
+echo "open in a browser:  open $SITE_DIR/index.html"
