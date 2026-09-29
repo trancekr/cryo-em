@@ -23,6 +23,7 @@ import markdown
 
 LINK = re.compile(r"\[\[([^\]|#]+)(?:#[^\]|]*)?(?:\|([^\]]+))?\]\]")
 FRONT = re.compile(r"\A---\n(.*?)\n---\n", re.S)
+SITE_NAME = os.environ.get("WIKI_SITE_NAME", "Cryo-EM HK Wiki")
 KINDS = [("overviews", "Fields"), ("questions", "Questions"), ("concepts", "Concepts"), ("sources", "Papers")]
 
 
@@ -103,6 +104,7 @@ def main() -> None:
             f' <span class="kind">{b.split("/", 1)[0]}</span></li>' for b in back)
         root = os.path.relpath(out, here)
         doc = TEMPLATE.format(
+            site=html.escape(SITE_NAME),
             title=html.escape(pg["title"]), root=root, kind=key.split("/", 1)[0],
             info=f'<p class="info">{info}</p>' if info else "", content=content,
             back=f"<section class=back><h2>Linked from ({len(back)})</h2><ul>{back_html}</ul></section>" if back else "")
@@ -119,18 +121,19 @@ def main() -> None:
                  for k in sorted(pages) if k.startswith("questions/"))
     stats = " · ".join(f"{counts[k]} {label.lower()}" for k, label in KINDS)
     (out / "index.html").write_text(TEMPLATE.format(
-        title="Byeori wiki", root=".", kind="home", info=f'<p class="info">{stats}</p>',
+        site=html.escape(SITE_NAME),
+        title=SITE_NAME, root=".", kind="home", info=f'<p class="info">{stats}</p>',
         content=f"<h2>Fields</h2><ul>{home}</ul><h2>Questions</h2><ul>{qs}</ul>"
                 + (markdown.markdown(LINK.sub(lambda m: m.group(2) or m.group(1), pages["index"]["body"]),
                                      extensions=["tables"]) if "index" in pages else ""),
-        back=""), encoding="utf-8")
+        back="").replace(f"<title>{html.escape(SITE_NAME)} · ", "<title>", 1), encoding="utf-8")
     print(f"{len(pages)} pages -> {out}/index.html")
 
 
 TEMPLATE = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title}</title><link rel="stylesheet" href="{root}/style.css"></head>
-<body data-root="{root}"><nav id="side"><a class="home" href="{root}/index.html">Byeori wiki</a>
+<title>{title} · {site}</title><link rel="stylesheet" href="{root}/style.css"></head>
+<body data-root="{root}"><nav id="side"><a class="home" href="{root}/index.html">{site}</a>
 <input id="q" type="search" placeholder="Filter titles…" autocomplete="off"><div id="list"></div></nav>
 <main><p class="kind">{kind}</p><h1>{title}</h1>{info}{content}{back}</main>
 <script src="{root}/nav.js"></script></body></html>
