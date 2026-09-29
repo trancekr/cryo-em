@@ -68,10 +68,13 @@ fi
 if [ -f "$OVERRIDES" ]; then
   uv run --quiet byeori aws-synthesis-manifest --kind overrides --content "$(cat "$OVERRIDES")" | tail -3
 fi
-echo "==> making the catalog agree with the notes (the synthesis planner reads the catalog)"
-uv run --quiet byeori aws-sync-note-categories --apply | tail -5
+# Order matters: the sync copies each note's field from the search index into the catalog, so the
+# index has to be rebuilt from the refiled notes first. Synced from a stale index, every note's
+# catalog field went back to "other" (2026-09-29).
 echo "==> rebuilding the search index"
 uv run --quiet byeori build-index | tail -3
+echo "==> making the catalog agree with the notes (the synthesis planner reads the catalog)"
+uv run --quiet byeori aws-sync-note-categories --apply | tail -8
 echo "==> planning synthesis again (plan only; no pages written)"
 uv run --quiet byeori aws-synthesis-plan --scope all | tail -5
 echo
