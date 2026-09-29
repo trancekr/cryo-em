@@ -8,7 +8,7 @@
 # - Only the PDFs directly in <folder> (not subfolders); other files are listed as skipped.
 #   The files are only read.
 # - Supplementary PDFs are appended to their paper, not added as papers. A file whose name has
-#   si / esm / supp / suppl / supplement(ary) / supporting in it is supplementary; it belongs to the
+#   si / sm / esm / supp / suppl / supplement(ary) / supporting in it is supplementary; it belongs to the
 #   paper whose file name starts with the part before that word:
 #       leonarski-2024-si.pdf            -> leonarski-2024-ion-binding-rna-mg.pdf
 #       sanchez-garcia-2021-deepemhancer-si.pdf -> sanchez-garcia-2021-deepemhancer.pdf
@@ -36,7 +36,7 @@ done
 [ "${#inputs[@]}" -gt 0 ] || { echo "usage: ingest_batch.sh <folder> | <file.pdf> [<file_SI.pdf> ...] [--yes]" >&2; exit 2; }
 BYEORI_DIR="${BYEORI_DIR:-$HOME/byeori}"
 COST_PER_PAPER="0.10"
-SI_WORD='(^|-)(si|esm|supp|suppl|supplement|supplementary|supporting)(-|[0-9]|$)'
+SI_WORD='(^|-)(si|sm|esm|supp|suppl|supplement|supplementary|supporting)(-|[0-9]|$)'
 
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
