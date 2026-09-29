@@ -115,3 +115,11 @@ uv run byeori aws-synthesis-status          # 진행 상황
   Pintilie 2020을 넣었지만 Q-score 정의가 그대로 σ = 0.4로 남아 있었다. 원 논문의 값은 0.6).
 - **틀린 문장만 고칠 때는** `uv run byeori aws-synthesis-page concept <slug> --mode update --corrections "무엇이 틀렸고 어떻게 고칠지"`.
   페이지 전체를 새로 쓰지 않고 지적한 부분만 고친다(약 $0.7). 2026-09-29 Q-score 정의의 "해상도·원소와 무관" 과장을 이렇게 고쳤다.
+
+## 질문(`aws-answer`) 뒤에 확인할 것
+
+- 답변이 개념 페이지를 새로 썼다고(`replaced: true`) 해도 실제로 남았는지 확인한다. 2026-09-29 `cryo-em-small-particle-size-limit`는
+  새 본문(Henderson 1995·2004 등 인용)이 뒤이은 링크 갱신에 예전 본문으로 덮여 사라졌고, 에이전트 트레이스에도 남지 않았다.
+  확인: `aws s3 cp s3://$AWS_KIRO_WIKI_BUCKET/wiki/concepts/<slug>.md - | grep -o "sources/[a-z0-9-]*" | sort | uniq -c`
+- 질문에서 생긴 개념 페이지는 개념 목록(manifest)에 없어 `aws-synthesis-page concept`의 generate·update 모두 거부된다.
+  그때는 페이지 맨 위에 최신 페이지를 가리키는 안내문을 넣었다(원본은 먼저 내려받아 둔다).

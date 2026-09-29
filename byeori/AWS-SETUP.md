@@ -224,7 +224,7 @@ uv run byeori aws-extract-status        # 2~3분 간격으로 최대 15분 반�
 | `fulltext_ready` | PASS → 노트 작성으로 |
 | `pdf_uploaded` / 진행 중 | 대기 후 재확인 |
 | asset 작업 `CannotPullContainerError` | **정상**(그림 추출 이미지 없음). 무시 |
-| `fulltext_ready_unclassified` | 식별 대기 또는 실패. 5분 더 기다려 재확인. 계속이면 논문 선택 문제 → 다른 논문으로 (이 베타엔 개별 수정 방법 없음) |
+| `fulltext_ready_unclassified` | 식별 대기 또는 실패. 5분 더 기다려 재확인. 계속이면 `grobid.tei.xml` 머리의 title·DOI를 본다. 잡지 인쇄본(*Science* 등)은 1쪽 위에 앞 논문 끝이 붙어 있어 제목이 비고 남의 DOI가 잡힌다(2026-09-29 Russo 2014). `remove_paper.sh`로 지우고, 보충 자료 표지(제목·DOI가 깔끔한 쪽)를 맨 앞에 둔 PDF로 다시 넣는다 |
 | `extract_failed` | `aws-extract` 한 번 재실행. 또 실패하면 멈추고 보고 |
 
 노트 작성과 확인:
