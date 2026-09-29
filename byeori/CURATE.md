@@ -56,7 +56,9 @@ park-2026-small-protein-ligand	cryoem-structures	small soluble protein-ligand co
 - **slug는 `candidates.tsv`의 slug를 그대로 쓴다.** Byeori는 용어를 자체 규칙(끝의 복수 s 제거 등)으로
   slug로 바꾸므로, `terms.tsv`의 slug는 대략적인 참고용이다. `candidates.tsv`에 없는 용어를 merge할 때는
   `terms.tsv`의 slug에서 끝의 복수 `s`를 뺀 형태도 함께 적는다.
-- `candidates.tsv`의 aliases 칸을 보면 이미 합쳐진 것과 아닌 것을 알 수 있다.
+- `candidates.tsv`의 aliases 칸을 보면 이미 합쳐진 것과 아닌 것을 알 수 있다. **단, 같은 개념이 `candidates.tsv`에
+  별도 줄(slug)로 남아 있으면 합쳐진 것이 아니다.** 반드시 `merge`에 넣는다. 2026-09-29에 "이미 합쳐졌다"고 보고
+  넘긴 `electron-cryo-microscopy`, `cryogenic-electron-microscopy`, `emdb`가 따로 개념 페이지로 만들어져 지워야 했다.
 
 세 가지를 정한다.
 
