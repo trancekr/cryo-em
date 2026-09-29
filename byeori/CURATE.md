@@ -108,3 +108,7 @@ uv run byeori aws-synthesis-status          # 진행 상황
   모든 노트로 센다.
 - 비용: Opus 5 기준 페이지당 약 $0.6 (Q-score 개념 페이지 실측: 입력 86k, 출력 6.7k 토큰).
 
+- **적게 바뀐 페이지는 본문을 다시 쓰지 않는다.** 근거 노트가 5편 이상 또는 20% 이상 바뀌어야 전체를 새로 쓰고,
+  그보다 적으면 노트 목록 같은 코드 부분만 갱신한다(`synthesis_manifest.py`의 `stale_mode`). 핵심 원전을 새로 넣었으면
+  해당 페이지를 직접 다시 쓴다: `uv run byeori aws-synthesis-page concept <slug> --mode generate` (2026-09-29:
+  Pintilie 2020을 넣었지만 Q-score 정의가 그대로 σ = 0.4로 남아 있었다. 원 논문의 값은 0.6).
