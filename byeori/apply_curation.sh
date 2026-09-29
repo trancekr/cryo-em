@@ -75,7 +75,16 @@ echo "==> rebuilding the search index"
 uv run --quiet byeori build-index | tail -3
 echo "==> making the catalog agree with the notes (the synthesis planner reads the catalog)"
 uv run --quiet byeori aws-sync-note-categories --apply | tail -8
-echo "==> planning synthesis again (plan only; no pages written)"
-uv run --quiet byeori aws-synthesis-plan --scope all | tail -5
+# A field needs at least 3 subtopics of 5 notes to get overview pages; planning a smaller one fails the
+# whole run (CategoryPlanningIncomplete, 2026-09-29), so only fields of 15 or more notes are named.
+# Concept pages count over every note whatever fields are named.
+big=()
+for f in $fields; do
+  n="$(grep -v '^#' "$FIELDS" | awk -F'\t' -v f="$f" '$2==f' | wc -l | tr -d ' ')"
+  [ "$n" -ge 15 ] && big+=(--category "$f")
+done
+echo "==> planning synthesis again (plan only; no pages written): ${big[*]}"
+uv run --quiet byeori aws-synthesis-plan --scope all ${big[@]+"${big[@]}"} | tail -5
 echo
 echo "In a few minutes: uv run byeori aws-synthesis-manifest --scope all | head -80"
+echo "To write the pages: uv run byeori aws-synthesis-run --scope all ${big[*]}"

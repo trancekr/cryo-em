@@ -93,3 +93,16 @@ bash ~/cryo-em/byeori/apply_curation.sh --apply  # 반영 + 합성 계획 다시
 `ingest_batch.sh`로 들어온 새 논문은 분야가 비어 있다(`other`). 몇십 편 쌓이면 이 작업을 다시 하되,
 `curate_prepare.sh`를 다시 돌리면 새 stem만 `fields.tsv` 끝에 빈 줄로 붙는다. 단백질 종류별 분야는 `cryoem-structures`의 한 `protein_class`가
 15~20편이 되면 연다: `apply_curation.sh`의 `field_scope`에 한 줄 추가하고, 해당 논문의 field 칸을 바꾼다.
+
+## 개념·개요 페이지 만들기
+
+```bash
+uv run byeori aws-synthesis-run --scope all --category cryoem-processing
+uv run byeori aws-synthesis-status          # 진행 상황
+```
+
+- **`--category`에는 15편 이상인 분야만 넣는다.** 소주제를 3개(각 5편 이상) 못 만드는 분야가 끼면 실행 전체가
+  `CategoryPlanningIncomplete`로 멈춘다(2026-09-29, `cryoem-structures` 2편). 개념 페이지는 이 옵션과 상관없이
+  모든 노트로 센다.
+- 비용: Opus 5 기준 페이지당 약 $0.6 (Q-score 개념 페이지 실측: 입력 86k, 출력 6.7k 토큰).
+
