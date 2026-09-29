@@ -51,8 +51,15 @@ for f in $fields; do
   # shellcheck disable=SC2207
   stems=($(grep -v '^#' "$FIELDS" | awk -F'\t' -v f="$f" '$2==f {print $1}'))
   flag=(); [ "$APPLY" = 1 ] && flag=(--apply)
-  uv run --quiet byeori aws-file-notes "$f" --stems "${stems[@]}" ${flag[@]+"${flag[@]}"} \
-    | tr -d '\n' | sed 's/  */ /g'; echo
+  # A dry run opens nothing, so a field new in fields.tsv is refused here; --apply opens it first.
+  if ! out="$(uv run --quiet byeori aws-file-notes "$f" --stems "${stems[@]}" ${flag[@]+"${flag[@]}"} 2>&1)"; then
+    if [ "$APPLY" != 1 ] && grep -q "is not a field of this wiki" <<<"$out"; then
+      echo "  $f: ${#stems[@]} paper(s); new field, opened by --apply"
+      continue
+    fi
+    echo "$out" >&2; exit 1
+  fi
+  tr -d '\n' <<<"$out" | sed 's/  */ /g'; echo
 done
 
 if [ -f "$OVERRIDES" ]; then
