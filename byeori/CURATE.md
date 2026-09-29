@@ -44,6 +44,7 @@ park-2026-small-protein-ligand	cryoem-structures	small soluble protein-ligand co
 |---|---|
 | `cryoem-processing` | 영상 처리부터 원자 모델까지의 **방법·소프트웨어·검증**: motion/CTF, picking, 2D/3D classification, reconstruction, heterogeneity(cryoDRGN 등), 해상도 추정, 맵 샤프닝·후처리, model building(수동·자동·AI), refinement, validation, 구조 예측(AlphaFold)과 맵 적합, 데이터베이스·표준(EMDB, wwPDB), 리뷰 |
 | `cryoem-structures` | 특정 단백질·복합체의 **새 실험 구조**를 보고하는 논문. 방법 개발이 주목적이고 구조는 예시일 뿐이면 `cryoem-processing` |
+| `cryoem-small-particles` | **작은 입자(약 100 kDa 이하)** 를 푸는 방법과 그 결과: scaffold·fiducial(Fab, nanobody, megabody, Legobody, BRIL, 설계 케이지), phase plate·저전압 영상, 저 SNR 입자의 정렬·재구성(BLUSH, ab initio 등), 이렇게 푼 작은 단백질·RNA 구조. 일반 처리 방법 논문이 작은 입자를 예시로 쓴 정도면 `cryoem-processing` |
 
 - `protein_class`: `cryoem-structures`일 때만 적는다. 나중에 단백질 종류별 분야를 열 때 쓴다
   (예: membrane transporter, GPCR, ribosome/RNA, CRISPR nuclease, kinase, viral protein, small soluble protein).
