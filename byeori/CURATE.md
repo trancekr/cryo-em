@@ -112,3 +112,5 @@ uv run byeori aws-synthesis-status          # 진행 상황
   그보다 적으면 노트 목록 같은 코드 부분만 갱신한다(`synthesis_manifest.py`의 `stale_mode`). 핵심 원전을 새로 넣었으면
   해당 페이지를 직접 다시 쓴다: `uv run byeori aws-synthesis-page concept <slug> --mode generate` (2026-09-29:
   Pintilie 2020을 넣었지만 Q-score 정의가 그대로 σ = 0.4로 남아 있었다. 원 논문의 값은 0.6).
+- **틀린 문장만 고칠 때는** `uv run byeori aws-synthesis-page concept <slug> --mode update --corrections "무엇이 틀렸고 어떻게 고칠지"`.
+  페이지 전체를 새로 쓰지 않고 지적한 부분만 고친다(약 $0.7). 2026-09-29 Q-score 정의의 "해상도·원소와 무관" 과장을 이렇게 고쳤다.
