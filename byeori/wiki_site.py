@@ -76,7 +76,8 @@ def main() -> None:
     nav = []
     for key, pg in pages.items():
         kind = key.split("/", 1)[0]
-        if kind not in dict(KINDS):
+        # Pages left behind as "moved" stubs after a re-plan keep old links working but stay out of the list.
+        if kind not in dict(KINDS) or pg["meta"].get("redirect"):
             continue
         group = key.split("/")[1] if kind == "overviews" and key.count("/") >= 2 else ""
         nav.append({"k": kind, "g": group, "p": key + ".html", "t": pg["title"],

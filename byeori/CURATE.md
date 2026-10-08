@@ -123,3 +123,13 @@ uv run byeori aws-synthesis-status          # 진행 상황
   확인: `aws s3 cp s3://$AWS_KIRO_WIKI_BUCKET/wiki/concepts/<slug>.md - | grep -o "sources/[a-z0-9-]*" | sort | uniq -c`
 - 질문에서 생긴 개념 페이지는 개념 목록(manifest)에 없어 `aws-synthesis-page concept`의 generate·update 모두 거부된다.
   그때는 페이지 맨 위에 최신 페이지를 가리키는 안내문을 넣었다(원본은 먼저 내려받아 둔다).
+
+## 소주제를 다시 나눌 때 (`--replan`)
+
+- 새 논문이 기존 소주제에 맞지 않아 `<분야>-other`가 가장 큰 소주제가 되면 다시 나눈다:
+  `uv run byeori aws-synthesis-plan --scope all --category <분야> --replan` → 매니페스트 확인 → `aws-synthesis-run`.
+  그 분야 페이지가 전부 새로 쓰인다(2026-10-08 cryoem-processing 12개 + 개요, 약 $8~12).
+- 소주제 이름이 바뀌면 예전 페이지가 S3에 남고, 노트·개념 페이지 맨 아래 관련 목록은 예전 주소를 계속 가리킨다(약 120개).
+  예전 페이지를 지우지 말고 새 페이지를 가리키는 "Moved" 페이지(front matter `redirect:`)로 바꾼다. 노트는 손대지 않는다
+  (노트 내용이 바뀌면 지문이 바뀌어 다시 쓰기 비용이 든다). `wiki_site.py`는 `redirect` 페이지를 사이드바에서 숨긴다.
+- zsh에서 `grep --include=*.md`는 `'*.md'`로 따옴표를 쳐야 한다. 안 그러면 grep이 실행되지 않고 결과가 비어 보인다.
