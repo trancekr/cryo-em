@@ -128,13 +128,19 @@ def main() -> None:
                 + (markdown.markdown(LINK.sub(lambda m: m.group(2) or m.group(1), pages["index"]["body"]),
                                      extensions=["tables"]) if "index" in pages else ""),
         back="").replace(f"<title>{html.escape(SITE_NAME)} · ", "<title>", 1), encoding="utf-8")
+    guide = Path(__file__).with_name("GUIDE.md")
+    if guide.exists():
+        text = re.sub(r"^# .*\n", "", guide.read_text(encoding="utf-8"), count=1)
+        (out / "guide.html").write_text(TEMPLATE.format(
+            site=html.escape(SITE_NAME), title="사용 안내", root=".", kind="guide", info="",
+            content=markdown.markdown(text, extensions=["tables", "fenced_code", "sane_lists"]), back=""), encoding="utf-8")
     print(f"{len(pages)} pages -> {out}/index.html")
 
 
 TEMPLATE = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title} · {site}</title><link rel="stylesheet" href="{root}/style.css"></head>
-<body data-root="{root}"><nav id="side"><a class="home" href="{root}/index.html">{site}</a>
+<body data-root="{root}"><nav id="side"><a class="home" href="{root}/index.html">{site}</a><a class="guide" href="{root}/guide.html">사용 안내</a>
 <input id="q" type="search" placeholder="Filter titles…" autocomplete="off"><div id="list"></div></nav>
 <main><p class="kind">{kind}</p><h1>{title}</h1>{info}{content}{back}</main>
 <script src="{root}/nav.js"></script></body></html>
@@ -190,7 +196,8 @@ CSS = """
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", sans-serif; display: flex; }
 #side { position: sticky; top: 0; height: 100vh; overflow-y: auto; width: 320px; flex: none; background: var(--side); border-right: 1px solid var(--line); padding: 16px 12px; font-size: 14px; }
-#side .home { display: block; font-weight: 700; font-size: 17px; color: var(--fg); text-decoration: none; margin-bottom: 10px; }
+#side .home { display: inline-block; font-weight: 700; font-size: 17px; color: var(--fg); text-decoration: none; margin-bottom: 10px; }
+#side .guide { float: right; font-size: 13px; color: var(--link); text-decoration: none; margin-top: 3px; }
 #q { width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); font-size: 14px; margin-bottom: 10px; }
 details { margin: 6px 0; } summary { cursor: pointer; font-weight: 600; } summary span, #side li span { color: var(--muted); font-weight: 400; font-size: 12px; }
 #side ul { list-style: none; margin: 4px 0 8px; padding: 0; }
