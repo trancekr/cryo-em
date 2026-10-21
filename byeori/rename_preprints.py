@@ -16,7 +16,7 @@ import json
 import re
 import shutil
 import sys
-import urllib.request
+import subprocess
 from pathlib import Path
 
 PREPRINT = re.compile(r"^(\d{4}\.\d{2}\.\d{2}\.\d{5,})(v\d+)?(\.full)?(?P<rest>[-_].*)?\.pdf$", re.I)
@@ -24,11 +24,17 @@ STOP = {"a", "an", "the", "of", "for", "and", "in", "on", "by", "with", "to", "u
 
 
 def fetch(url: str) -> dict | None:
+    # curl, not urllib: macOS Python builds often lack CA certificates and fail every HTTPS request
+    # (2026-10-21, both lookups "failed"); the system curl uses the keychain.
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "cryo-em-hk-wiki/1 (mailto:none)"})
-        with urllib.request.urlopen(req, timeout=20) as r:
-            return json.load(r)
-    except Exception:
+        out = subprocess.run(["curl", "-sSL", "--max-time", "20", "-A", "cryo-em-hk-wiki/1", url],
+                             capture_output=True, text=True, timeout=30)
+        if out.returncode != 0:
+            print(f"    {url}: {out.stderr.strip()[:120]}", file=sys.stderr)
+            return None
+        return json.loads(out.stdout)
+    except Exception as e:
+        print(f"    {url}: {type(e).__name__} {str(e)[:100]}", file=sys.stderr)
         return None
 
 
