@@ -46,7 +46,11 @@ add_papers() {
     local paths; paths="$(read_paths $'PDF 폴더(또는 PDF 파일들)를 이 창에 끌어다 놓고 Enter: ')" || { echo "취소"; return; }
     while IFS= read -r p; do args+=("$p"); done <<< "$paths"
   fi
-  bash "$HERE/ingest_batch.sh" "${args[@]}"
+  # bioRxiv downloads (2026.10.07.757472v1.full.pdf) get Surname_Year_title names from their DOI first.
+  local stage; stage="$(mktemp -d)/papers"
+  local use=()
+  while IFS= read -r p; do [ -n "$p" ] && use+=("$p"); done < <(python3 "$HERE/rename_preprints.py" "$stage" "${args[@]}")
+  bash "$HERE/ingest_batch.sh" "${use[@]}"
   echo
   echo "다음: 메뉴 3(분야 정리) → 4(페이지 만들기). 위키에 바로 반영만 하려면 메뉴 6."
 }
