@@ -3,7 +3,7 @@
 
     python3 rename_preprints.py <stage dir> <folder|pdf> [...]
 
-A download such as 2026.10.07.757472v1.full.pdf carries its DOI (10.1101/2026.10.07.757472) in the
+A download such as 2026.10.07.757472v1.full.pdf carries its bioRxiv number (DOI 10.64898/ or, older, 10.1101/ + 2026.10.07.757472) in the
 name; Byeori would turn it into the stem 2026-10-07-757472v1-full. This looks the DOI up (Crossref,
 then the bioRxiv API) and copies the file into <stage dir> as Surname_Year_short-title.pdf. A
 supplement named <download name>_SI.pdf (or -supp, -media-1 ...) follows its paper's new name.
@@ -38,16 +38,22 @@ def fetch(url: str) -> dict | None:
         return None
 
 
-def lookup(doi: str) -> tuple[str, str, str] | None:
-    """(first author surname, year, title) for a 10.1101 DOI."""
-    m = (fetch(f"https://api.crossref.org/works/{doi}") or {}).get("message")
-    if m and m.get("title"):
-        fam = (m.get("author") or [{}])[0].get("family", "")
-        parts = (m.get("posted") or m.get("created") or {}).get("date-parts", [[None]])[0]
-        return fam, str(parts[0] or doi.split("/")[1][:4]), m["title"][0]
-    c = ((fetch(f"https://api.biorxiv.org/details/biorxiv/{doi}") or {}).get("collection") or [None])[-1]
-    if c and c.get("title"):
-        return c.get("authors", "").split(";")[0].split(",")[0].strip(), c.get("date", "")[:4], c["title"]
+# bioRxiv DOIs moved from the 10.1101 prefix to 10.64898 (seen on a 2026-10-10 preprint).
+PREFIXES = ("10.64898", "10.1101")
+
+
+def lookup(number: str) -> tuple[str, str, str] | None:
+    """(first author surname, year, title) for a bioRxiv number such as 2026.10.07.757472."""
+    for prefix in PREFIXES:
+        doi = f"{prefix}/{number}"
+        m = (fetch(f"https://api.crossref.org/works/{doi}") or {}).get("message")
+        if m and m.get("title"):
+            fam = (m.get("author") or [{}])[0].get("family", "")
+            parts = (m.get("posted") or m.get("created") or {}).get("date-parts", [[None]])[0]
+            return fam, str(parts[0] or number[:4]), m["title"][0]
+        c = ((fetch(f"https://api.biorxiv.org/details/biorxiv/{doi}") or {}).get("collection") or [None])[-1]
+        if c and c.get("title"):
+            return c.get("authors", "").split(";")[0].split(",")[0].strip(), c.get("date", "")[:4], c["title"]
     return None
 
 
@@ -66,7 +72,7 @@ def main() -> None:
     for p in pdfs:
         m = PREPRINT.match(p.name)
         if m and not m.group("rest") and m.group(1) not in names:
-            found = lookup(f"10.1101/{m.group(1)}")
+            found = lookup(m.group(1))
             if found:
                 names[m.group(1)] = new_name(*found)
                 print(f"  {p.name} -> {names[m.group(1)]}.pdf  ({found[2][:90]})", file=sys.stderr)
