@@ -26,6 +26,7 @@ field_scope() {
     cryoem-processing) echo "cryo-EM methods from images to validated atomic models: motion correction, CTF, particle picking, 2D/3D classification, reconstruction, heterogeneity, resolution estimation, map sharpening, model building, refinement, validation, software" ;;
     cryoem-structures) echo "papers reporting new experimental cryo-EM structures of specific proteins or complexes" ;;
     cryoem-small-particles) echo "cryo-EM of small particles (under about 100 kDa): scaffolds and fiducials (Fab, nanobody, megabody, Legobody, BRIL, designed cages), phase plates and low-voltage imaging, alignment and reconstruction methods for low-SNR particles, and small protein or RNA structures solved this way" ;;
+    cryoet-in-situ) echo "cryo-electron tomography and in situ structural biology: specimen thinning (cryo-FIB lamellae), tilt-series acquisition and alignment, tomogram reconstruction and denoising, subtomogram averaging, template matching and particle localization in cells and tissues, and in situ structures, including uses in drug discovery" ;;
     *) echo "" ;;
   esac
 }
