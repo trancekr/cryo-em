@@ -4,6 +4,8 @@
 #   hk                      # menu
 #   hk add <folder|pdf...>  # add papers (what the "HK Wiki" app runs when PDFs are dropped on it)
 #   hk install              # set up the `hk` command and the "HK Wiki" app (once)
+#   hk send <pdf...>        # from any computer with the AWS credentials: put PDFs in the S3 inbox
+#   hk inbox                # on the Mac mini: add what is in the inbox
 #
 # It only calls the scripts next to it and the byeori CLI. Steps that cost money say how much and
 # ask first; steps that need judgement (curation, rewriting pages) stop and show a summary.
@@ -220,6 +222,45 @@ install() {
 
 guide() { open "$SITE_DIR/guide.html" 2>/dev/null || open "$HERE/GUIDE.md"; }
 
+# A paper inbox in the Byeori bucket (s3://<bucket>/inbox/): any machine with the AWS credentials can drop
+# PDFs there (hk send, no Byeori needed), and the Mac mini adds them later (hk inbox).
+data_bucket() {
+  aws s3api list-buckets --query "Buckets[?starts_with(Name,'byeori-databucket')].Name | [0]" --output text 2>/dev/null
+}
+
+send() {
+  local b; b="$(data_bucket)"
+  [ -n "$b" ] && [ "$b" != None ] || { echo "Byeori 버킷을 찾지 못했습니다(AWS 자격 증명 확인)." >&2; return 1; }
+  local args=()
+  if [ "$#" -gt 0 ]; then args=("$@")
+  else
+    local paths; paths="$(read_paths $'보낼 PDF(또는 폴더)를 이 창에 끌어다 놓고 Enter: ')" || { echo "취소"; return; }
+    while IFS= read -r p; do args+=("$p"); done <<< "$paths"
+  fi
+  local n=0
+  for a in "${args[@]}"; do
+    if [ -d "$a" ]; then
+      aws s3 cp "$a" "s3://$b/inbox/" --recursive --exclude "*" --include "*.pdf" --include "*.PDF" --only-show-errors && n=$((n + 1))
+    else
+      aws s3 cp "$a" "s3://$b/inbox/$(basename "$a")" --only-show-errors && n=$((n + 1)) && echo "  보냄 $(basename "$a")"
+    fi
+  done
+  echo "받은 논문함에 올렸습니다. 맥미니에서 hk inbox (또는 메뉴 9)로 추가하세요."
+}
+
+inbox() {
+  env_on
+  local b="$AWS_KIRO_WIKI_BUCKET"
+  local list; list="$(aws s3 ls "s3://$b/inbox/" 2>/dev/null | grep -iE '\.pdf$' | sed -E 's/^[^ ]+ +[^ ]+ +[^ ]+ +//')"
+  if [ -z "$list" ]; then say "받은 논문함이 비어 있습니다."; return; fi
+  say "받은 논문함"; printf '  %s\n' "$list"
+  local d; d="$(mktemp -d)/inbox"; mkdir -p "$d"
+  aws s3 cp "s3://$b/inbox/" "$d/" --recursive --exclude "*/*" --only-show-errors
+  add_papers "$d"
+  ask "받은 논문함을 비울까요? (결과가 source_ready인지 확인한 뒤 y)" && \
+    while IFS= read -r f; do aws s3 mv "s3://$b/inbox/$f" "s3://$b/inbox/done/$f" --only-show-errors; done <<< "$list" && echo "비웠습니다(inbox/done/에 보관)."
+}
+
 menu() {
   while :; do
     printf '\n\033[1m=== Cryo-EM HK Wiki ===\033[0m\n'
@@ -231,12 +272,13 @@ menu() {
     echo "  6) 위키 열기 (최신으로 맞춤)"
     echo "  7) 이번 달 비용"
     echo "  8) 사용 안내"
+    echo "  9) 받은 논문함 추가 (다른 컴퓨터에서 hk send로 보낸 PDF)"
     echo "  0) 끝"
     local c; read -r -p "번호: " c
     case "$c" in
       1) add_papers; pause ;; 2) status; pause ;; 3) curate; pause ;; 4) pages; pause ;;
-      5) question; pause ;; 6) open_wiki ;; 7) costs; pause ;; 8) guide ;;
-      0|q|"") return ;; *) echo "1~8 또는 0" ;;
+      5) question; pause ;; 6) open_wiki ;; 7) costs; pause ;; 8) guide ;; 9) inbox; pause ;;
+      0|q|"") return ;; *) echo "1~9 또는 0" ;;
     esac
   done
 }
@@ -244,7 +286,9 @@ menu() {
 case "${1:-}" in
   add) shift; add_papers "$@"; read -r -p $'\n끝났습니다. Enter를 누르면 창을 닫아도 됩니다.' _ ;;
   install) install ;;
+  send) shift; send "$@" ;;
+  inbox) inbox ;;
   status) status ;; costs) costs ;; wiki) open_wiki ;;
   "") menu ;;
-  *) echo "usage: hk [add <folder|pdf...> | status | costs | wiki | install]" >&2; exit 2 ;;
+  *) echo "usage: hk [add <folder|pdf...> | send <pdf...> | inbox | status | costs | wiki | install]" >&2; exit 2 ;;
 esac
