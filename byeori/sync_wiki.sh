@@ -21,5 +21,7 @@ for d in sources concepts overviews questions; do
   [ -d "$WIKI_DIR/$d" ] && printf '  %-10s %s pages\n' "$d" "$(find "$WIKI_DIR/$d" -name '*.md' | wc -l | tr -d ' ')"
 done
 SITE_DIR="${SITE_DIR:-$HOME/ByeoriWiki-site}"
-uv run --quiet --no-project --with markdown python "$(dirname "$0")/wiki_site.py" "$WIKI_DIR" "$SITE_DIR"
+# Answers from hk 5 → a (local Claude Code) live outside the S3 copy, so a sync never deletes them.
+LOCAL_DIR="${LOCAL_DIR:-$HOME/ByeoriWiki-local}"
+uv run --quiet --no-project --with markdown python "$(dirname "$0")/wiki_site.py" "$WIKI_DIR" "$SITE_DIR" "$LOCAL_DIR"
 echo "open in a browser:  open $SITE_DIR/index.html"

@@ -24,7 +24,7 @@ import markdown
 LINK = re.compile(r"\[\[([^\]|#]+)(?:#[^\]|]*)?(?:\|([^\]]+))?\]\]")
 FRONT = re.compile(r"\A---\n(.*?)\n---\n", re.S)
 SITE_NAME = os.environ.get("WIKI_SITE_NAME", "Cryo-EM HK Wiki")
-KINDS = [("overviews", "Fields"), ("questions", "Questions"), ("concepts", "Concepts"), ("sources", "Papers")]
+KINDS = [("overviews", "Fields"), ("my-questions", "My questions"), ("questions", "Questions"), ("concepts", "Concepts"), ("sources", "Papers")]
 
 
 def front_matter(text: str) -> tuple[dict[str, str], str]:
@@ -61,6 +61,13 @@ def main() -> None:
         key = rel.with_suffix("").as_posix()
         meta, body = front_matter(p.read_text(encoding="utf-8", errors="replace"))
         pages[key] = {"meta": meta, "body": body, "title": page_title(key, meta, body)}
+    # Answers written by the local Claude Code (hk 5 → a), kept outside the synced S3 copy.
+    local = Path(sys.argv[3]).expanduser() / "questions" if len(sys.argv) > 3 else None
+    if local and local.is_dir():
+        for p in sorted(local.glob("*.md")):
+            key = "my-questions/" + p.stem
+            meta, body = front_matter(p.read_text(encoding="utf-8", errors="replace"))
+            pages[key] = {"meta": meta, "body": body, "title": page_title(key, meta, body)}
 
     backlinks: dict[str, set[str]] = defaultdict(set)
     for key, pg in pages.items():
@@ -120,11 +127,13 @@ def main() -> None:
                    for f in fields if f"overviews/{f}/index" in pages)
     qs = "".join(f'<li><a href="{k}.html">{html.escape(pages[k]["title"])}</a></li>'
                  for k in sorted(pages) if k.startswith("questions/"))
+    mine = "".join(f'<li><a href="{k}.html">{html.escape(pages[k]["title"])}</a> <span class="kind">{html.escape(pages[k]["meta"].get("date", ""))}</span></li>'
+                   for k in sorted((k for k in pages if k.startswith("my-questions/")), reverse=True)[:10])
     stats = " · ".join(f"{counts[k]} {label.lower()}" for k, label in KINDS)
     (out / "index.html").write_text(TEMPLATE.format(
         site=html.escape(SITE_NAME),
         title=SITE_NAME, root=".", kind="home", info=f'<p class="info">{stats}</p>',
-        content=f"<h2>Fields</h2><ul>{home}</ul><h2>Questions</h2><ul>{qs}</ul>"
+        content=f"<h2>Fields</h2><ul>{home}</ul>" + (f"<h2>My questions</h2><ul>{mine}</ul>" if mine else "") + f"<h2>Questions</h2><ul>{qs}</ul>"
                 + (markdown.markdown(LINK.sub(lambda m: m.group(2) or m.group(1), pages["index"]["body"]),
                                      extensions=["tables"]) if "index" in pages else ""),
         back="").replace(f"<title>{html.escape(SITE_NAME)} · ", "<title>", 1), encoding="utf-8")
@@ -152,7 +161,7 @@ NAV_JS = r"""
   // This page's path relative to the site root, e.g. "sources/x.html", to mark it in the list.
   var parts = location.pathname.split('/'), depth = root === '.' ? 0 : root.split('/').length;
   var herePath = decodeURIComponent(parts.slice(-(depth + 1)).join('/'));
-  var kinds = [['overviews', 'Fields'], ['questions', 'Questions'], ['concepts', 'Concepts'], ['sources', 'Papers']];
+  var kinds = [['overviews', 'Fields'], ['my-questions', 'My questions'], ['questions', 'Questions'], ['concepts', 'Concepts'], ['sources', 'Papers']];
   function esc(s) { return s.replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
   function render(filter) {
     var f = (filter || '').toLowerCase(), out = '';
@@ -160,6 +169,7 @@ NAV_JS = r"""
       var items = PAGES.filter(function (p) { return p.k === k[0] && (!f || (p.t + ' ' + p.p).toLowerCase().indexOf(f) >= 0); });
       if (k[0] === 'overviews') items.sort(function (a, b) { return a.g.localeCompare(b.g) || (b.i - a.i) || a.t.localeCompare(b.t); });
       else if (k[0] === 'sources') items.sort(function (a, b) { return a.t.localeCompare(b.t); });
+      else if (k[0] === 'my-questions') items.sort(function (a, b) { return b.p.localeCompare(a.p); });
       if (!items.length) return;
       var open = f || k[0] !== 'sources' ? ' open' : '';
       out += '<details' + open + '><summary>' + k[1] + ' <span>' + items.length + '</span></summary><ul>';

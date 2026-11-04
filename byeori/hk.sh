@@ -155,9 +155,37 @@ print(d.get("status", "?"), f"{done}/{tot}")')"
   case "$s" in SUCCEEDED*) bash "$HERE/sync_wiki.sh" >/dev/null && echo "웹 위키를 새로 만들었습니다(메뉴 6으로 열기)." ;; esac
 }
 
+LOCAL_DIR="${LOCAL_DIR:-$HOME/ByeoriWiki-local}"
+
 question() {
+  say "질문하기"
+  echo "  a  무료: 이 컴퓨터의 Claude Code가 위키 사본을 읽고 답함 (Max 요금제, 추가 비용 없음)."
+  echo "     답은 웹 위키 'My questions'에 저장. 이어서 추가 질문 가능."
+  echo "  b  위키에 저장: Byeori(Bedrock)가 답하고 질문 페이지·관련 페이지까지 고침 (\$1~3, 최대 \$5)."
+  echo "     중요한 질문, 위키에 남겨 다른 페이지와 연결할 질문에만."
+  local c; read -r -p "선택 [a/b, Enter=a] " c
+  case "${c:-a}" in a|A) local_question ;; b|B) bedrock_question ;; *) echo "취소" ;; esac
+}
+
+local_question() {
+  command -v claude >/dev/null || { echo "Claude Code(claude)가 없습니다. https://claude.com/claude-code 에서 설치한 뒤 다시."; return; }
+  echo "위키 사본을 최신으로 맞추는 중..."
+  bash "$HERE/sync_wiki.sh" >/dev/null || { echo "위키 동기화 실패"; return; }
+  mkdir -p "$LOCAL_DIR/questions"
+  cp "$HERE/local_qa/CLAUDE.md" "$LOCAL_DIR/CLAUDE.md"
+  local q; read -r -p "질문 (Enter만 누르면 Claude Code에서 직접 입력): " q
+  echo "Claude Code가 열립니다. 답이 나오면 추가 질문을 이어서 해도 되고, 끝나면 /exit."
+  if [ -n "$q" ]; then
+    (cd "$LOCAL_DIR" && claude --add-dir "$HOME/ByeoriWiki" --permission-mode acceptEdits "$q")
+  else
+    (cd "$LOCAL_DIR" && claude --add-dir "$HOME/ByeoriWiki" --permission-mode acceptEdits)
+  fi
+  bash "$HERE/sync_wiki.sh" >/dev/null && echo "웹 위키 'My questions'에 반영했습니다(메뉴 6)."
+}
+
+bedrock_question() {
   env_on
-  say "질문하기 (한 번 최대 \$5, 보통 \$1~3, 5~15분)"
+  say "질문하기: 위키에 저장 (한 번 최대 \$5, 보통 \$1~3, 5~15분)"
   echo "영어로 쓰는 편이 노트 검색이 잘 됩니다. 한 줄로 입력하세요."
   local q; read -r -p "질문: " q
   [ -n "$q" ] || { echo "취소"; return; }
@@ -268,7 +296,7 @@ menu() {
     echo "  2) 현재 상태"
     echo "  3) 분야 정리 (새 논문 분류)"
     echo "  4) 페이지 만들기"
-    echo "  5) 질문하기"
+    echo "  5) 질문하기 (a 무료 / b 위키에 저장)"
     echo "  6) 위키 열기 (최신으로 맞춤)"
     echo "  7) 이번 달 비용"
     echo "  8) 사용 안내"
