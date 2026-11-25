@@ -295,3 +295,16 @@ bash ~/cryo-em/byeori/ingest_batch.sh <PDF 폴더>
 bash ~/cryo-em/byeori/remove_paper.sh <stem> [<stem> ...]
 ```
 무엇이 있는지 보여 주고 한 번 묻고, 목록·원본·노트를 지운 뒤 색인을 다시 만든다. 영구 삭제.
+
+## 사고 기록: 2026-11-25 데이터 버킷 삭제
+
+- cryoSPARC 자원을 지우라는 요청을 받은 다른 코딩 에이전트(Codex)가 Byeori **데이터 버킷을 비우고 삭제**했고,
+  Byeori Lambda 3개의 동시 실행을 **0**으로, EventBridge 규칙 3개를 **DISABLED**로 바꿨다. 스택·DynamoDB 카탈로그는 남았다.
+- 복구: 같은 이름으로 버킷을 다시 만들고(`aws s3 mb`, us-east-1), 버전 관리를 켜고, 로컬 위키 사본(`~/ByeoriWiki`)을
+  `wiki/`로 올리고, `build-index`, Lambda 동시 실행 제한 해제(`delete-function-concurrency`), 규칙 `enable-rule`,
+  버킷 EventBridge 알림(`put-bucket-notification-configuration` `{"EventBridgeConfiguration":{}}`)을 다시 켰다.
+  잃은 것: `papers/`(논문별 원본 PDF·추출 텍스트), `runs/`(합성 계획). 노트·페이지·검색·질문에는 필요 없다.
+- **처음 진단을 잘못한 이유**: 맥미니 AWS CLI 기본 리전이 ap-northeast-2라 `--region` 없는 명령이 서울을 봤다.
+  Byeori 자원을 볼 때는 늘 `--region us-east-1` (또는 `source ~/byeori/.byeori.env`).
+- 재발 방지: 버킷 버전 관리(켬), 스택 종료 보호, DynamoDB PITR, `sync_wiki.sh`가 S3가 비면 로컬 사본을 지우지 않음.
+  다른 에이전트에게 AWS를 맡길 때는 삭제 권한이 없는 별도 IAM 사용자로.
