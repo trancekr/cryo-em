@@ -289,6 +289,45 @@ inbox() {
     while IFS= read -r f; do aws s3 mv "s3://$b/inbox/$f" "s3://$b/inbox/done/$f" --only-show-errors; done <<< "$list" && echo "비웠습니다(inbox/done/에 보관)."
 }
 
+# Everything an over-eager cleanup broke on 2026-11-25, checked in one pass (read-only).
+check() {
+  env_on
+  local R="--region ${AWS_REGION:-us-east-1}" bad=0 v
+  say "Byeori 점검 (us-east-1, 읽기만)"
+  ok()   { printf '  \033[32mOK\033[0m   %s\n' "$*"; }
+  fail() { printf '  \033[31m문제\033[0m %s\n' "$*"; bad=$((bad + 1)); }
+  # shellcheck disable=SC2086
+  v="$(aws cloudformation describe-stacks --stack-name "$KIRO_WIKI_STACK" $R --query 'Stacks[0].[StackStatus,EnableTerminationProtection]' --output text 2>/dev/null)"
+  case "$v" in *COMPLETE*True*) ok "스택 $v" ;; *) fail "스택: ${v:-없음} (종료 보호 꺼짐 또는 스택 없음)" ;; esac
+  # shellcheck disable=SC2086
+  v="$(aws s3api get-bucket-versioning --bucket "$AWS_KIRO_WIKI_BUCKET" $R --query Status --output text 2>&1)"
+  [ "$v" = Enabled ] && ok "데이터 버킷, 버전 관리 켜짐" || fail "데이터 버킷: $v"
+  # shellcheck disable=SC2086
+  v="$(aws s3 ls "s3://$AWS_KIRO_WIKI_BUCKET/wiki/sources/" $R 2>/dev/null | wc -l | tr -d ' ')"
+  [ "$v" -gt 0 ] && ok "노트 ${v}개" || fail "노트 0개 (버킷이 비었음: 로컬 ~/ByeoriWiki 를 지우지 말 것)"
+  # shellcheck disable=SC2086
+  v="$(aws s3api get-bucket-notification-configuration --bucket "$AWS_KIRO_WIKI_BUCKET" $R --output json 2>/dev/null | grep -c EventBridgeConfiguration)"
+  [ "$v" -gt 0 ] && ok "버킷 EventBridge 알림" || fail "버킷 EventBridge 알림 꺼짐"
+  # shellcheck disable=SC2086
+  v="$(aws dynamodb describe-continuous-backups --table-name "$AWS_KIRO_WIKI_TABLE" $R --query 'ContinuousBackupsDescription.PointInTimeRecoveryDescription.PointInTimeRecoveryStatus' --output text 2>&1)"
+  [ "$v" = ENABLED ] && ok "카탈로그 테이블, PITR 켜짐" || fail "카탈로그 테이블/PITR: $v"
+  local f c
+  # shellcheck disable=SC2086
+  for f in $(aws lambda list-functions $R --query "Functions[?starts_with(FunctionName,'$KIRO_WIKI_STACK-')].FunctionName" --output text); do
+    c="$(aws lambda get-function-concurrency --function-name "$f" $R --query ReservedConcurrentExecutions --output text 2>/dev/null)"
+    [ "$c" = 0 ] && fail "$f 동시 실행 0 (정지됨): aws lambda delete-function-concurrency --function-name $f $R" || ok "${f%-*} 실행 가능"
+  done
+  # shellcheck disable=SC2086
+  while read -r n st; do
+    [ -n "$n" ] || continue
+    [ "$st" = ENABLED ] && ok "규칙 ${n%-*}" || fail "규칙 $n $st: aws events enable-rule --name $n $R"
+  done < <(aws events list-rules $R --query "Rules[?starts_with(Name,'$KIRO_WIKI_STACK-')].[Name,State]" --output text)
+  # shellcheck disable=SC2086
+  v="$(aws cloudtrail get-trail-status --name "$KIRO_WIKI_STACK-wiki-edits" $R --query '[IsLogging,LatestDeliveryError]' --output text 2>&1)"
+  case "$v" in True*None*|"True	") ok "감사 기록(CloudTrail) 정상" ;; *) fail "감사 기록: $v" ;; esac
+  [ "$bad" = 0 ] && say "모두 정상" || say "문제 ${bad}건: 위 줄의 명령으로 고치거나 AWS-SETUP.md '사고 기록' 참고"
+}
+
 menu() {
   while :; do
     printf '\n\033[1m=== Cryo-EM HK Wiki ===\033[0m\n'
@@ -301,11 +340,12 @@ menu() {
     echo "  7) 이번 달 비용"
     echo "  8) 사용 안내"
     echo "  9) 받은 논문함 추가 (다른 컴퓨터에서 hk send로 보낸 PDF)"
+    echo "  c) AWS 점검 (버킷·Lambda·규칙·백업이 살아 있는지)"
     echo "  0) 끝"
     local c; read -r -p "번호: " c
     case "$c" in
       1) add_papers; pause ;; 2) status; pause ;; 3) curate; pause ;; 4) pages; pause ;;
-      5) question; pause ;; 6) open_wiki ;; 7) costs; pause ;; 8) guide ;; 9) inbox; pause ;;
+      5) question; pause ;; 6) open_wiki ;; 7) costs; pause ;; 8) guide ;; 9) inbox; pause ;; c|C) check; pause ;;
       0|q|"") return ;; *) echo "1~9 또는 0" ;;
     esac
   done
@@ -316,7 +356,8 @@ case "${1:-}" in
   install) install ;;
   send) shift; send "$@" ;;
   inbox) inbox ;;
+  check) check ;;
   status) status ;; costs) costs ;; wiki) open_wiki ;;
   "") menu ;;
-  *) echo "usage: hk [add <folder|pdf...> | send <pdf...> | inbox | status | costs | wiki | install]" >&2; exit 2 ;;
+  *) echo "usage: hk [add <folder|pdf...> | send <pdf...> | inbox | check | status | costs | wiki | install]" >&2; exit 2 ;;
 esac
