@@ -306,5 +306,9 @@ bash ~/cryo-em/byeori/remove_paper.sh <stem> [<stem> ...]
   잃은 것: `papers/`(논문별 원본 PDF·추출 텍스트), `runs/`(합성 계획). 노트·페이지·검색·질문에는 필요 없다.
 - **처음 진단을 잘못한 이유**: 맥미니 AWS CLI 기본 리전이 ap-northeast-2라 `--region` 없는 명령이 서울을 봤다.
   Byeori 자원을 볼 때는 늘 `--region us-east-1` (또는 `source ~/byeori/.byeori.env`).
+- 감사 버킷(`byeori-auditbucket-…`, CloudTrail `byeori-wiki-edits`의 저장소)도 함께 지워졌다. 같은 이름으로 다시 만들고
+  템플릿의 `AuditBucketPolicy`를 다시 붙였다. **zsh에서 `$A:trail`처럼 변수 뒤에 `:t`가 오면 zsh 수정자로 먹혀**
+  `…7681rail/…`이 되어 정책이 틀어졌다(`InsufficientS3BucketPolicyException`). 변수는 `${A}`로 쓰거나 ARN을 그대로 적는다.
+  정책 확인: `aws cloudtrail update-trail --name byeori-wiki-edits --s3-bucket-name <감사 버킷> --region us-east-1`가 오류 없이 끝나면 맞다.
 - 재발 방지: 버킷 버전 관리(켬), 스택 종료 보호, DynamoDB PITR, `sync_wiki.sh`가 S3가 비면 로컬 사본을 지우지 않음.
   다른 에이전트에게 AWS를 맡길 때는 삭제 권한이 없는 별도 IAM 사용자로.
